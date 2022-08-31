@@ -13,9 +13,64 @@ html, body {
   margin-right: 10px;
 }
 
+.navbar-light .navbar-nav .nav-link{
+  font-size: 18px;
+}
+
 h1 {
   font-weight: lighter;
 }
+
+#home-ban{
+  position: relative;
+}
+
+#home-entry {
+  background: url("../img/backgroundhome.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+  min-height: 650px;
+}
+
+#home-entry:after {
+    position: absolute;
+    content:"";
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    background: linear-gradient(to bottom, rgba(255,0,0,0) 0%, #242A4D 100%);
+}
+
+
+#home-greet{
+  position: absolute;
+  margin-top: 150px;
+  margin-left: 10%;
+  max-width: 80%;
+  font-size: 3em;
+  color: white;
+  font-family: "Montserrat", "Helvetica Neue", helvetica, arial, sans-serif;
+  font-weight: 500;
+}
+
+@media (min-width:414px) {
+    #home-greet{
+      position: absolute;
+      margin-top: 150px;
+      margin-left: 10%;
+      max-width: 60%;
+      font-size: 5em;
+      color: white;
+      font-family: "Montserrat", "Helvetica Neue", helvetica, arial, sans-serif;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+}
+
 
 .wrapper {
   padding-top: 4em;
@@ -53,6 +108,13 @@ h1 {
   padding-left: 40px;
   padding-right: 40px;
   font-size: 0.8em;
+}
+
+.mgs-mainblk-txt{
+  text-align: justify;
+  color: #3C3C3C;
+  padding: 40px;
+  font-size: 1.2em;
 }
 
 .mgs-questiondefinition{
