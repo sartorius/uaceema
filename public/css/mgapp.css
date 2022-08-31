@@ -25,14 +25,45 @@ h1 {
   position: relative;
 }
 
+.img-home1{
+  background: url("../img/backgroundhome1.jpg") no-repeat center center fixed;
+}
+
+.img-home2{
+  background: url("../img/backgroundhome2.jpg") no-repeat center center fixed;
+}
+
+.img-home3{
+  background: url("../img/backgroundhome3.jpg") no-repeat center center fixed;
+}
+
+.img-home4{
+  background: url("../img/backgroundhome4.jpg") no-repeat center center fixed;
+}
+
+.img-home5{
+  background: url("../img/backgroundhome5.jpg") no-repeat center center fixed;
+}
+.img-home6{
+  background: url("../img/backgroundhome6.jpg") no-repeat center center fixed;
+}
+.img-home7{
+  background: url("../img/backgroundhome7.jpg") no-repeat center center fixed;
+}
+
 #home-entry {
-  background: url("../img/backgroundhome.jpg") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 
-  min-height: 650px;
+  min-height: 450px;
+}
+
+@media (min-width:414px){
+    #home-entry {
+      min-height: 650px;
+    }
 }
 
 #home-entry:after {

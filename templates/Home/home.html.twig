@@ -1,10 +1,11 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
 <div id="home-ban" class="row">
-  <div id="home-entry"  class="col-lg-12">
+  {% set home_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
+  <div id="home-entry"  class="img-home{{ home_i }} col-lg-12">
   </div>
   <div id="home-greet" class="col-lg-6">
-    UACEEM : Donnez vous toutes les chances
+    UACEEM : Donnez-vous toutes les chances
   </div>
 </div>
 
