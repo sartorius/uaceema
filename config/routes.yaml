@@ -9,3 +9,12 @@ kernel:
 main:
     path:       /
     controller: App\Controller\HomeController::index
+mention:
+    path:       /mention
+    controller: App\Controller\MentionController::index
+profile:
+    path:       /profile
+    controller: App\Controller\ProfileController::show
+login:
+    path:       /login
+    controller: App\Controller\ConnectionController::login

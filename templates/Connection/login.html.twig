@@ -1,0 +1,44 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+
+  <div class="col-lg-6">
+    <div class="mgs-questiondefinition">
+      <form action="#" method="post" class="mg-verify-page" autocomplete="new-password">
+          <div>
+            <div class="mg-verify-logo">
+            <img src="{{ path('main') }}img/LogoRefSQRounded400X400.png" style="width:125px; height:125px; opacity: 0.5;"
+                      title="MGScoreCertificate" alt="MGScore Certification">
+            </div>
+            <div class="row">
+              <div class="col-lg-6 form-group">
+
+                <textarea class="form-control" rows="1" id="inputMG" name="inputRefName" placeholder="Username"></textarea>
+              </div>
+              <div class="col-lg-3 form-group">
+                {# <textarea class="form-control" rows="1" id="inputMGCode" name="inputRef" placeholder="Mot de passe"></textarea> #}
+                <input class="form-control" rows="1" id="inputMGCode" type="password" name="inputRef" placeholder="Mot de passe">
+              </div>
+              <div class="col-lg-3 form-group mg-verify-bar">
+                <input type="submit" name="formSubmit" id="btnVerify" class="btn btn btn-outline-dark btn-md btn-block" value="Se Connecter"/>
+              </div>
+              {% if mgverifynotfound is defined %}
+                  <div class="col-lg-12 alert alert-danger" role="alert">
+                    Navré&nbsp;<i class="far fa-frown"></i>&nbsp;le nom et la référence ne nous sont pas connus
+                  </div>
+              {% endif %}
+            </div>
+          </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}
