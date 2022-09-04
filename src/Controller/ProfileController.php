@@ -21,13 +21,13 @@ class ProfileController extends AbstractController
 
     $logger->debug("This page: " . $page);
 
-    if(strlen($page) < 6){
+    if(strlen($page) < 11){
       // Error Code 404
       $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
     }
     else{
 
-      $logger->debug("Secret: " . substr($page, 0, 5) . " ID: " . substr($page, 5, strlen($page) - 5));
+      $logger->debug("Secret: " . substr($page, 0, 10) . " ID: " . substr($page, 10, strlen($page) - 10));
 
       // Be carefull if you have array of array
       $dbconnectioninst = DBConnectionManager::getInstance();
