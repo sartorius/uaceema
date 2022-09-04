@@ -46,7 +46,6 @@ class ConnectionController extends AbstractController
 
   public function verify(Environment $twig, LoggerInterface $logger)
   {
-    $renderTarget = 'Connection/login.html.twig';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
       if ( (!empty($_POST["inputUserName"]))
@@ -59,10 +58,10 @@ class ConnectionController extends AbstractController
           $the_connection->connectMe($_POST["inputUserName"], $_POST["inputPassword"], $logger);
 
           if (session_status() == PHP_SESSION_NONE) {
-              $content = $twig->render($renderTarget, ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'mgverifynotfound' => 'no']);
+              $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'mgverifynotfound' => 'no']);
           }
           else{
-              $content = $twig->render($renderTarget, ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+              $content = $twig->render('Home/home.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'connected' => 'yes']);
               $logger->debug('Show me session: ' . $_SESSION["firstname"]);
           }
 

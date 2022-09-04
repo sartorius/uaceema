@@ -1,5 +1,13 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
+{% if connected is defined %}
+    <div class="row">
+        <div class="col-lg-12 alert alert-primary" role="alert">
+          <span class="nav-text">Vous êtes connecté</span>&nbsp;<span class="icon-hand-peace-o nav-icon-fa nav-text"></span>
+        </div>
+    </div>
+{% endif %}
+
 <div id="home-ban" class="row">
   {% set home_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
   <div id="home-entry"  class="img-home{{ home_i }} col-lg-12">
@@ -10,7 +18,9 @@
 </div>
 
 
+
 <div class="row">
+
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
   <div class="col-lg-6 mgs-mainblk-txt">
