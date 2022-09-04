@@ -26,20 +26,31 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" id="mg-nav-but-verf" href="#">Université</a>
+            <a class="nav-link" id="mg-nav-but-home" href="#">Université</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="mg-nav-but-sent" href="/mention">Formation</a>
+            <a class="nav-link" id="mg-nav-but-men" href="/mention">Formation</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="mg-nav-but-sent" href="#">Actualité</a>
+            <a class="nav-link" id="mg-nav-but-new" href="#">Actualité</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="mg-nav-but-sent" href="/profile">Partenariat</a>
+            <a class="nav-link" id="mg-nav-but-part" href="/profile">Partenariat</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="mg-nav-but-shw" href="#">Inscription</a>
           </li>
+          {# Test Connection #}
+          {% if amiconnected is defined and amiconnected is not null and amiconnected != "" %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsr" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{ amiconnected }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownUsr">
+                      <a class="dropdown-item" href="/logout"><span class="nav-text">Déconnecter</span> <span class="icon-arrow-circle-right nav-icon-fa nav-text"></span></a>
+                    </div>
+                  </li>
+          {% endif %}
         </ul>
       </div>
     </nav>

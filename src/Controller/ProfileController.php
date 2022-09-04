@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
+use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
 
@@ -28,7 +29,7 @@ class ProfileController extends AbstractController
 
 
 
-    $content = $twig->render('Profile/main.html.twig');
+    $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
     return new Response($content);
   }
 }

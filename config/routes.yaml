@@ -18,3 +18,9 @@ profile:
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login
+logout:
+    path:       /logout
+    controller: App\Controller\ConnectionController::logout
+verify_connection:
+    path:       /verify-connection
+    controller: App\Controller\ConnectionController::verify

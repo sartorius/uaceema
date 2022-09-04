@@ -516,3 +516,10 @@ textarea[name=inputRef] {
 }
 
 /******************** CUSTOM CHECKBOX RESULT END ********************/
+
+.nav-text {
+  vertical-align: middle;
+}
+.nav-icon-fa{
+  font-size: 24px;
+}
