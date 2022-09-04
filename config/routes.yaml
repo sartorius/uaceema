@@ -9,12 +9,18 @@ kernel:
 main:
     path:       /
     controller: App\Controller\HomeController::index
+universite:
+    path:       /universite
+    controller: App\Controller\StaticController::universite
 mention:
     path:       /mention
-    controller: App\Controller\MentionController::index
-profile:
-    path:       /profile
-    controller: App\Controller\ProfileController::show
+    controller: App\Controller\StaticController::mention
+news:
+    path:       /news
+    controller: App\Controller\StaticController::news
+partner:
+    path:       /partner
+    controller: App\Controller\StaticController::partner
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login
@@ -24,3 +30,8 @@ logout:
 verify_connection:
     path:       /verify-connection
     controller: App\Controller\ConnectionController::verify
+profile:
+    path:       /profile/{page}
+    controller: App\Controller\ProfileController::show
+    defaults:
+        page:   0
