@@ -13,6 +13,7 @@ INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_r
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'lalrako3819'), '9248153d95104975573f18e2852d6647', 'DAF', NULL, 5);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako6172'), '2df68a85f1932ca876926252bbaa0820', 'CGE', NULL);
 
+-- SHOW USERS
 
 DROP TABLE IF EXISTS uac_showuser;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
