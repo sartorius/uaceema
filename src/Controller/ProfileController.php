@@ -53,7 +53,7 @@ class ProfileController extends AbstractController
                  JOIN mdl_role mr ON mr.id = uas.roleid
                  LEFT JOIN mdl_files mf ON mu.picture = mf.id
                  WHERE UPPER(mu.username) = \'' . $param_username . '\'
-                 AND uas.secret = ' . $param_secret )->fetchAll(PDO::FETCH_ASSOC);
+                 AND CONVERT(uas.secret, CHAR) = \'' . $param_secret . '\'' )->fetchAll(PDO::FETCH_ASSOC);
 
       $logger->debug("Show me: " . count($result));
 
