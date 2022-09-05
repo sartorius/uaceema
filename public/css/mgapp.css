@@ -534,3 +534,14 @@ textarea[name=inputRef] {
   margin-right: auto;
   width: 50%;
 }
+
+.img-profile{
+  border-radius: 50%;
+}
+
+.user-title{
+    text-align: center;
+    font-weight: lighter;
+    font-size: 24px;
+    margin-bottom: 20px;
+}

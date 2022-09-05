@@ -8,3 +8,23 @@
 11:14:32.186 debug	Hash password: lelionestleroi 3182a20c71d20d919cb1f3b3035d5924
 11:14:32.186 debug	Hash password: unrequindanslocean 3165cef3bc67568c7d30f5a184f43766
 11:14:32.186 debug	Hash password: leratdesvilles a2d426e5a92f1bbf418a35869ffc7cc2
+
+http://localhost:8888/aceemintranet/pluginfile.php/43/user/icon/boost/f1?rev=119
+
+
+SELECT
+		mu.id AS ID,
+          mu.username AS USERNAME,
+           uas.secret AS SECRET,
+           CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
+           mr.shortname AS ROLE_SHORTNAME,
+           UPPER(mu.firstname) AS FIRSTNAME,
+           UPPER(mu.lastname) AS LASTNAME,
+           mu.email AS EMAIL,
+           mu.phone1 AS PHONE,
+           mu.phone2 AS PARENT_PHONE,
+           mf.contextid AS PIC_CONTEXT_ID,
+           mu.picture AS PICTURE_ID
+  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+           JOIN mdl_role mr ON mr.id = uas.roleid
+           LEFT JOIN mdl_files mf ON mu.picture = mf.id;
