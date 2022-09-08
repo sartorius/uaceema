@@ -39,7 +39,8 @@ class StaticController extends AbstractController
 
     $debug_session = "Pass variable to check";
 
-    MailManager::sendSimpleEmail();
+    // This email works !!
+    //MailManager::sendSimpleEmail();
 
     $content = $twig->render('Static/partner.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
 
