@@ -32,9 +32,9 @@ class MailManager
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+            ->subject('[UACEEM] Bienvenu à l\'ACEEM')
+            ->text('Bienvenu à l\'ACEEM, nous sommes heureux de vous avoir parmi nous !')
+            ->html('<p>Bienvenu à l\'ACEEM, nous sommes heureux de vous avoir parmi nous !</p><br><p>Ne pas répondre à cet email. Votre réponse ne sera pas reçue.</p>');
 
         $mailer->send($email);
     }
