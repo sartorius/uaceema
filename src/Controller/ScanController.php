@@ -81,6 +81,8 @@ class ScanController extends AbstractController
               $read_value = $read_value . ' - ' . $read['username'] . ' ' . $read['date'] . ' ' . $read['time'];
           }
 
+          sleep(2);
+
           // Send all this back to client
           return new JsonResponse(array(
               'status' => 'OK',

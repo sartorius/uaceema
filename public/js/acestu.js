@@ -1,7 +1,7 @@
 function basicEncodeACE(str){
   return '' + str;
 }
-
+let globalMaxRead = 100;
 // Main PRINT PDF is here !
 
 function printCarteEtudiantPDF(){
@@ -67,7 +67,7 @@ function verityContentScan(){
 
   if ($('#scan-ace').val().length == 10){
 
-    let readInput = $('#scan-ace').val().toUpperCase();
+    let readInput = $('#scan-ace').val().toUpperCase().replace(/[^a-z0-9]/gi,'');
     //console.log('We have read: ' + $('#scan-ace').val());
     $('#last-read-bc').html(readInput);
 
@@ -82,13 +82,23 @@ function verityContentScan(){
          "date" : date,
          "time" : time
     });
-    $('#left-cloud').html(100 - dataTagToJsonArray.length);
+    if((globalMaxRead - dataTagToJsonArray.length) < 10){
+        $('#left-cloud').html('<i style="color:red;">' + (globalMaxRead - dataTagToJsonArray.length) + '<i>');
+    }
+    else{
+        $('#left-cloud').html(globalMaxRead - dataTagToJsonArray.length);
+    }
     let lastread = $('#code-lu').html();
     $('#code-lu').html(readInput + ' à ' + time + '<br>' + lastread);
     $('#scan-ace').val('');
     $("#btn-load-bc").show();
+
+    if((globalMaxRead - dataTagToJsonArray.length) < 1){
+        loadScan();
+    }
   }
   else if($('#scan-ace').val().length > 10) {
+    // Great length
     $('#scan-ace').val('');
   }
   else {
@@ -100,6 +110,10 @@ function verityContentScan(){
 
 function loadScan(){
   // We call an asynchronous ajax
+  $("#btn-load-bc").hide();
+  $("#scan-ace").hide();
+  $("#waiting-gif").show();
+  $('#last-read-bc').html('En attente chargement');
 
   $.ajax('/loadscan', {
       type: 'POST',  // http method
@@ -107,10 +121,22 @@ function loadScan(){
               loaddata: JSON.stringify(dataTagToJsonArray)
       },  // data to submit
       success: function (data, status, xhr) {
+          $("#waiting-gif").hide();
+          $('#last-read-bc').html('<i style="color:green;"><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement réussi.<br>Vous pouvez continuer les scans.</i>');
+          $('#last-read-time').html('');
+          $('#left-cloud').html(globalMaxRead);
+          $('#code-lu').html('');
+          $('#scan-ace').val('');
+          $("#scan-ace").show();
+          dataTagToJsonArray = [];
           console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+
 
       },
       error: function (jqXhr, textStatus, errorMessage) {
+          $("#waiting-gif").hide();
+          $("#btn-load-bc").show();
+          $("#scan-ace").show();
           console.log('Error')
       }
   });
@@ -167,6 +193,7 @@ $(document).ready(function() {
   }
   // We check here the graph **************************************************** OLD
   else if($('#mg-graph-identifier').text() == 'ua-scan'){
+    $('#left-cloud').html(globalMaxRead);
     // Do nothing
     $( "#scan-ace" ).keyup(function() {
       verityContentScan();
