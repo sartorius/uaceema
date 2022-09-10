@@ -76,11 +76,15 @@ class ScanController extends AbstractController
 
 
           //echo $param_jsondata[0]['username'];
+          $read_value = '';
+          foreach ($param_jsondata as $read) {
+              $read_value = $read_value . ' - ' . $read['username'] . ' ' . $read['date'] . ' ' . $read['time'];
+          }
 
           // Send all this back to client
           return new JsonResponse(array(
               'status' => 'OK',
-              'message' => 'Tout va bien les cocos: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $param_jsondata[0]['username'] . ' : ' . $param_jsondata[0]['time']),
+              'message' => 'Tout va bien les cocos: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $read_value),
           200);
       }
 
