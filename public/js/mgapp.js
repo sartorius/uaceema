@@ -4,15 +4,52 @@ function basicEncodeACE(str){
 
 // Main PRINT PDF is here !
 
-function generatePrintedPDF(){
+function printCarteEtudiantPDF(){
 	//$("body").addClass("loading");
   //$("#screen-load").show();
   console.log('Click on generatePrintedPDF');
-  var doc = new jsPDF();
-  doc.text(15, 15, $('#id-username').html());
+
   //console.log('Element print read: mbc-' + i );
   // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
   //console.log('here is i value: ' + i);
+
+
+  /*
+  html2canvas($('#blk-selfie'),{
+  useCORS: true, //By passing this option in function Cross origin images will be rendered properly in the downloaded version of the PDF
+  onrendered: function (canvas) {
+   //your functions here
+   var imgSelfie=canvas.toDataURL("image/png");
+
+   window.open(imgSelfie);
+  }
+  });
+
+
+  // Manage first the selfie
+  html2canvas($('#blk-selfie'),{
+        onrendered:function(canvas){
+
+        var imgSelfie=canvas.toDataURL("image/png");
+
+        window.open(imgSelfie);
+
+        //var doc = new jsPDF('l', 'cm');
+
+       }
+    });
+    */
+
+
+  var doc = new jsPDF();
+  doc.text(15, 15, $('#id-username').html());
+
+  doc.addImage(document.getElementById('selfie'), //img src
+                'JPG', //format
+                20, //x oddOffsetX is to define if position 1 or 2
+                20, //y
+                150, //Width
+                150, null, 'FAST'); //Height // Fast is to get less big files
 
   doc.addImage(document.getElementById('barcode').src, //img src
                 'PNG', //format
@@ -23,6 +60,7 @@ function generatePrintedPDF(){
 
   //doc.addSvgAsImage(document.getElementById('mbc-1'), 50, 50, 200, 85);
   doc.save('CarteEtudiantUACEEM_Print');
+
 
   //$("body").removeClass("loading");
   //$("#screen-load").hide();
@@ -69,10 +107,10 @@ $(document).ready(function() {
     });
 
     let getUrlProfile = $('#mg-profile-url').text();
-    new QRCode(document.getElementById("mbc-0"), { text: getUrlProfile, width: 128, height: 128 });
+    new QRCode(document.getElementById("mbc-0"), { text: getUrlProfile, width: 200, height: 200 });
 
     $("#btn-print-bc").click(function() {
-        generatePrintedPDF();
+        printCarteEtudiantPDF();
     });
 
 
