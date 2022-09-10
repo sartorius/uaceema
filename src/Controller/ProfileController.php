@@ -48,7 +48,10 @@ class ProfileController extends AbstractController
            mu.phone1 AS PHONE,
            mu.phone2 AS PARENT_PHONE,
            mf.contextid AS PIC_CONTEXT_ID,
-           mu.picture AS PICTURE_ID
+           mu.picture AS PICTURE_ID,
+           SUBSTRING(mf.contenthash, 1, 2) AS D1,
+           SUBSTRING(mf.contenthash, 3, 2) AS D2,
+           mf.contenthash AS FILENAME
         FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
                  JOIN mdl_role mr ON mr.id = uas.roleid
                  LEFT JOIN mdl_files mf ON mu.picture = mf.id
