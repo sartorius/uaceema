@@ -5,60 +5,57 @@ function basicEncodeACE(str){
 // Main PRINT PDF is here !
 
 function printCarteEtudiantPDF(){
-	//$("body").addClass("loading");
-  //$("#screen-load").show();
+
   console.log('Click on generatePrintedPDF');
 
-  //console.log('Element print read: mbc-' + i );
-  // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
-  //console.log('here is i value: ' + i);
+  // Document of 210mm wide and 297mm high > A4
+  // new jsPDF('p', 'mm', [297, 210]);
+  // Here format A7
+  let doc = new jsPDF('p', 'mm', [120, 70]);
+
+  doc.setFont("Courier");
+  doc.setFontType("bold");
+  doc.setFontSize(9);
+  doc.setTextColor(175,180,187);
+  doc.text(15, 15, "Code barre d'assiduité");
 
 
-  /*
-  html2canvas($('#blk-selfie'),{
-  useCORS: true, //By passing this option in function Cross origin images will be rendered properly in the downloaded version of the PDF
-  onrendered: function (canvas) {
-   //your functions here
-   var imgSelfie=canvas.toDataURL("image/png");
-
-   window.open(imgSelfie);
-  }
-  });
-
-
-  // Manage first the selfie
-  html2canvas($('#blk-selfie'),{
-        onrendered:function(canvas){
-
-        var imgSelfie=canvas.toDataURL("image/png");
-
-        window.open(imgSelfie);
-
-        //var doc = new jsPDF('l', 'cm');
-
-       }
-    });
-    */
-
-
-  var doc = new jsPDF();
-  doc.text(15, 15, $('#id-username').html());
 
   doc.addImage(document.getElementById('selfie'), //img src
                 'JPG', //format
                 20, //x oddOffsetX is to define if position 1 or 2
                 20, //y
-                150, //Width
-                150, null, 'FAST'); //Height // Fast is to get less big files
+                30, //Width
+                30, null, 'FAST'); //Height // Fast is to get less big files
+
+
+  doc.addImage(document.getElementById('mask-selfie'), //img src
+                'PNG', //format
+                17, //x oddOffsetX is to define if position 1 or 2
+                19, //y
+                36, //Width
+                32, null, 'FAST'); //Height // Fast is to get less big files
+
 
   doc.addImage(document.getElementById('barcode').src, //img src
                 'PNG', //format
-                50, //x oddOffsetX is to define if position 1 or 2
-                50, //y
+                10, //x oddOffsetX is to define if position 1 or 2
+                70, //y
                 50, //Width
                 40, null, 'FAST'); //Height // Fast is to get less big files
+  doc.setTextColor(48,91,159);
+  doc.setFontSize(14);
+  doc.text(20, 63, $('#id-username').html().toUpperCase());
+
+  doc.addImage(document.getElementById('logo-carte'), //img src
+                'PNG', //format
+                42, //x oddOffsetX is to define if position 1 or 2
+                110, //y
+                25, //Width
+                8, null, 'FAST'); //Height // Fast is to get less big files
 
   //doc.addSvgAsImage(document.getElementById('mbc-1'), 50, 50, 200, 85);
+
   doc.save('CarteEtudiantUACEEM_Print');
 
 

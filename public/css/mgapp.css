@@ -627,6 +627,9 @@ textarea[name=inputRef] {
 #mg-profile-url{
   visibility: hidden;
 }
+.img-carte{
+    display: none;
+}
 
 .btn-profil{
   margin-top: 25px;

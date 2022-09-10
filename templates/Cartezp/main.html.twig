@@ -37,6 +37,7 @@
 
     <div class="btn-profil mid-blc">
       <button id="btn-print-bc" class="btn btn-default btn-lg btn-print btn-block">Télécharger&nbsp;<i class="icon-download nav-text"></i></button>
+      <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Vous pouvez également prendre un screenshot de cette page et utiliser la photo pour pointer à l'entrée. Votre badge sera ainsi disponible dans la gallerie de votre téléphone.</span><br><br>
     </div>
 
     <hr>
@@ -68,6 +69,8 @@
 
     <div id="mg-profile-url">{{ profile_url }}{{ profile['PAGE'] }}</div>
 
+    <img id="mask-selfie" src="{{ path('main') }}img/masqueSelfie.png" style="width:332px; height: 285px; opacity: 1;" class="img-carte" >
+    <img id="logo-carte" src="{{ path('main') }}img/logotext620x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >
   </div>
   <div class="col-lg-4 mgs-mainblk-txt">
   </div>
