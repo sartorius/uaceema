@@ -35,3 +35,8 @@ profile:
     controller: App\Controller\ProfileController::show
     defaults:
         page:   0
+cartezp:
+    path:       /cartezp/{page}
+    controller: App\Controller\CartezpController::show
+    defaults:
+        page:   0

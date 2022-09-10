@@ -25,6 +25,8 @@ SELECT
            UPPER(mu.lastname) AS LASTNAME,
            mu.email AS EMAIL,
            mu.phone1 AS PHONE,
+           mu.address AS ADDRESS,
+           mu.city AS CITY,
            mu.phone2 AS PARENT_PHONE,
            mf.contextid AS PIC_CONTEXT_ID,
            mu.picture AS PICTURE_ID

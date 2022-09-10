@@ -1,3 +1,35 @@
+function basicEncodeACE(str){
+  return '123'+ str;
+}
+
+// Main PRINT PDF is here !
+
+function generatePrintedPDF(){
+	//$("body").addClass("loading");
+  //$("#screen-load").show();
+  console.log('Click on generatePrintedPDF');
+  var doc = new jsPDF();
+  doc.text(15, 15, $('#id-username').html());
+  //console.log('Element print read: mbc-' + i );
+  // addImage(imageData, format, x, y, width, height, alias, compression, rotation)
+  //console.log('here is i value: ' + i);
+
+  doc.addImage(document.getElementById('barcode').src, //img src
+                'PNG', //format
+                50, //x oddOffsetX is to define if position 1 or 2
+                50, //y
+                50, //Width
+                40, null, 'FAST'); //Height // Fast is to get less big files
+
+  //doc.addSvgAsImage(document.getElementById('mbc-1'), 50, 50, 200, 85);
+  doc.save('CarteEtudiantUACEEM_Print');
+
+  //$("body").removeClass("loading");
+  //$("#screen-load").hide();
+}
+
+/****************************************   Up is for UACEEM    ****************************************/
+
 function verityFieldNameRef(){
   if(($('#inputMG').val().length > 0)
             && ($('#inputMGCode').val().length > 0)){
@@ -20,8 +52,33 @@ function leftSideUtils(){
 $(document).ready(function() {
   console.log('We are in MGAPP JS');
 
-  // We check here the graph
-  if($('#mg-graph-identifier').text() == 'advert'){
+  if($('#mg-graph-identifier').text() == 'ua-cartz'){
+    // Do something on cartz
+    let getBarcodeACE = basicEncodeACE($('#id-username').html());
+    /*
+    JsBarcode("#mbc-1", getBarcodeACE, {
+      width: 1.5,
+      height: 85,
+      displayValue: false
+    });
+    */
+    JsBarcode("#barcode", getBarcodeACE, {
+      width: 1.5,
+      height: 85,
+      displayValue: false
+    });
+
+    let getUrlProfile = $('#mg-profile-url').text();
+    new QRCode(document.getElementById("mbc-0"), { text: getUrlProfile, width: 128, height: 128 });
+
+    $("#btn-print-bc").click(function() {
+        generatePrintedPDF();
+    });
+
+
+  }
+  // We check here the graph **************************************************** OLD
+  else if($('#mg-graph-identifier').text() == 'advert'){
     demo1();
     demo2();
     demo3();

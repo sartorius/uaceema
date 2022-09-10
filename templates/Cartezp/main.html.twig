@@ -1,0 +1,75 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+{% include 'Dirty/dirtyqrcode.html.twig' %}
+{% include 'Dirty/dirtyjsbarcode.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
+
+<div id="mg-graph-identifier">ua-cartz</div>
+
+<div class="row">
+  <div class="col-lg-4 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt">
+
+
+    {% if profile['PICTURE_ID'] == 0 %}
+            <div class="mgs-mainblk-txt">
+                  <img src="{{ path('main') }}img/nophoto.png" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
+            </div>
+    {% else %}
+            <div class="mgs-mainblk-txt">
+                  <img src="{{ moodle_url }}{{ profile['PIC_CONTEXT_ID'] }}/user/icon/boost/f3?rev={{ profile['PICTURE_ID'] }}" style="width:150px; height:150px; opacity: 1;" title="Photo" alt="Photo" class="uac-img-center img-profile">
+            </div>
+    {% endif %}
+
+
+    <div class="user-title">
+        {{ profile['FIRSTNAME']|capitalize }} {{ profile['LASTNAME'] }}
+    </div>
+
+
+    <div class="monosp-ft-title">
+      <div class="center">
+        <img id="barcode"/>
+      </div>
+      <span class="mgs-ace-note">Votre code Barre d'assiduité</span>
+    </div>
+
+    <div class="btn-profil mid-blc">
+      <button id="btn-print-bc" class="btn btn-default btn-lg btn-print btn-block">Télécharger&nbsp;<i class="icon-download nav-text"></i></button>
+    </div>
+
+    <hr>
+    <div class="carte-profile">
+      <span class="icon-phone-square nav-icon-fa nav-text"></span> {{ profile['PHONE'] }} <br>
+      <span class="icon-envelope-o nav-icon-fa nav-text"></span> {{ profile['EMAIL'] }} <br>
+    </div>
+    <hr>
+    <div class="carte-profile">
+      <span class="icon-envelope-square nav-icon-fa nav-text"></span> {{ profile['ADDRESS'] }} <br>
+      <span class="icon-building-o nav-icon-fa nav-text"></span> {{ profile['CITY'] }}
+    </div>
+    <hr>
+    <div class="carte-profile">
+      <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Seul(es) vous et vos parents doivent connaître les informations suivantes, elles ne doivent pas être partagées.</span><br><br>
+      <span class="icon-user-secret nav-icon-fa nav-text"></span> Username :<br> <i class="carte-profile-sec"><span id="id-username">{{ profile['USERNAME'] }}</span></i><br>
+      <span class="icon-key nav-icon-fa nav-text"></span> Clef secrète :<br> <i class="carte-profile-sec">{{ profile['PAGE'] }}</i>
+    </div>
+    <hr>
+
+    <div class="monosp-ft-title">
+      <div class="center">
+        <div id="mbc-0" class="qr-one">
+        </div>
+      </div>
+      <br>
+      <span class="mgs-ace-note">Votre QRCode Dashboard</span>
+    </div>
+
+    <div id="mg-profile-url">{{ profile_url }}{{ profile['PAGE'] }}</div>
+
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

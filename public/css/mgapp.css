@@ -1,3 +1,40 @@
+:root {
+  --main-ace-color: #305B9F;
+  --main-ace-color-light: #89a9dc;
+  --main-ace-color-contrast: #172d4f;
+  --light-ace-color: #c4d4ed;
+}
+
+
+/* Bootstrap */
+
+.btn-default{
+   color: white !important;
+   background-color:var(--main-ace-color);
+   border-color:#130022;
+ }
+.btn.btn-default:hover,
+.btn.btn-default:focus,
+.btn.btn-default:active,
+.btn.btn-default.active {
+    color: var(--main-ace-color-contrast) !important;
+    background-color: var(--main-ace-color-light);
+}
+
+.btn-default-light{
+   color: $main-color;
+   background-color:var(--main-ace-color-light);
+   border-color:#130022;
+ }
+.btn.btn-default-light:hover,
+.btn.btn-default-light:focus,
+.btn.btn-default-light:active,
+.btn.btn-default-light.active {
+    color: #45007B;
+    background-color: var(--main-ace-color-contrast);
+}
+
+
 html, body {
   height: 100%;
   margin: 0;
@@ -115,6 +152,7 @@ h1 {
 #mg-graph-identifier{
   visibility: hidden;
 }
+
 
 .progress-bar{
   display: none;
@@ -528,6 +566,18 @@ textarea[name=inputRef] {
   font-size: 20px;
 }
 
+@media (min-width:414px){
+    .error-img{
+      max-width: 50%;
+      max-height: 50%;
+    }
+}
+
+.error-img{
+  max-width: 100%;
+  max-height: 100%;
+}
+
 .uac-img-center{
   display: block;
   margin-left: auto;
@@ -540,8 +590,45 @@ textarea[name=inputRef] {
 }
 
 .user-title{
+    font-family: "Roboto Mono";
     text-align: center;
     font-weight: lighter;
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 30px;
+    margin-bottom: 40px;
+    color: var(--light-ace-color);
+}
+
+.carte-profile{
+    color: var(--main-ace-color);
+}
+
+.carte-profile-sec{
+    color: var(--light-ace-color);
+}
+
+.mgs-ace-note{
+    color: #b3b3b3;
+    font-size: 0.7em;
+}
+
+.monosp-ft-title{
+  text-align: center;
+  margin-top: 2.5em;
+}
+
+.center{
+  text-align: center;
+}
+
+.qr-one > img{
+  display: inline !important;
+}
+
+#mg-profile-url{
+  visibility: hidden;
+}
+
+.btn-profil{
+  margin-top: 25px;
+  margin-bottom: 20px;
 }
