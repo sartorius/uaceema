@@ -1,5 +1,5 @@
 function basicEncodeACE(str){
-  return '123'+ str;
+  return '' + str;
 }
 
 // Main PRINT PDF is here !
@@ -42,7 +42,7 @@ function printCarteEtudiantPDF(){
                 10, //x oddOffsetX is to define if position 1 or 2
                 70, //y
                 50, //Width
-                40, null, 'FAST'); //Height // Fast is to get less big files
+                30, null, 'FAST'); //Height // Fast is to get less big files
   doc.setTextColor(48,91,159);
   doc.setFontSize(14);
   doc.text(20, 63, $('#id-username').html().toUpperCase());
@@ -61,6 +61,59 @@ function printCarteEtudiantPDF(){
 
   //$("body").removeClass("loading");
   //$("#screen-load").hide();
+}
+function verityContentScan(){
+  // Do something
+
+  if ($('#scan-ace').val().length == 10){
+
+    let readInput = $('#scan-ace').val().toUpperCase();
+    //console.log('We have read: ' + $('#scan-ace').val());
+    $('#last-read-bc').html(readInput);
+
+    let today = new Date();
+    let date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0');
+    let time = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0') + ":" + today.getSeconds().toString().padStart(2, '0');
+    let dateTime = date+' '+time;
+    $('#last-read-time').html(time);
+
+    dataTagToJsonArray.push({
+         "username" : readInput,
+         "date" : date,
+         "time" : time
+    });
+    $('#left-cloud').html(100 - dataTagToJsonArray.length);
+    let lastread = $('#code-lu').html();
+    $('#code-lu').html(readInput + ' à ' + time + '<br>' + lastread);
+    $('#scan-ace').val('');
+    $("#btn-load-bc").show();
+  }
+  else if($('#scan-ace').val().length > 10) {
+    $('#scan-ace').val('');
+  }
+  else {
+    //Do nothing
+
+
+  }
+}
+
+function loadScan(){
+  // We call an asynchronous ajax
+
+  $.ajax('/loadscan', {
+      type: 'POST',  // http method
+      data: { loadusername: $('#load-username').html(),
+              loaddata: JSON.stringify(dataTagToJsonArray)
+      },  // data to submit
+      success: function (data, status, xhr) {
+          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+          console.log('Error')
+      }
+  });
 }
 
 /****************************************   Up is for UACEEM    ****************************************/
@@ -113,6 +166,18 @@ $(document).ready(function() {
 
   }
   // We check here the graph **************************************************** OLD
+  else if($('#mg-graph-identifier').text() == 'ua-scan'){
+    // Do nothing
+    $( "#scan-ace" ).keyup(function() {
+      verityContentScan();
+    });
+
+    $("#btn-load-bc").click(function() {
+        loadScan();
+    });
+
+    $("#btn-load-bc").hide();
+  }
   else if($('#mg-graph-identifier').text() == 'advert'){
     // Do nothing
   }

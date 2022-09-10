@@ -13,7 +13,7 @@ class ConnectionManager
 
 
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
-      $result = $dbconnectioninst->query('SELECT ua.id AS ID, mdl.username AS USERNAME, mdl.firstname AS FIRSTNAME, mdl.lastname AS LASTNAME, mdl.email AS EMAIL FROM mdl_user mdl JOIN uac_admin ua on ua.id = mdl.id WHERE mdl.username = \'' . $input_username . '\' AND ua.pwd = \'' . MD5($input_pwd) . '\'')->fetchAll(PDO::FETCH_ASSOC);
+      $result = $dbconnectioninst->query('SELECT ua.id AS ID, mdl.username AS USERNAME, mdl.firstname AS FIRSTNAME, mdl.lastname AS LASTNAME, ua.scale_right AS SCALE_RIGHT, mdl.email AS EMAIL FROM mdl_user mdl JOIN uac_admin ua on ua.id = mdl.id WHERE mdl.username = \'' . $input_username . '\' AND ua.pwd = \'' . MD5($input_pwd) . '\'')->fetchAll(PDO::FETCH_ASSOC);
 
       if(count($result) == 0){
           //We found nothing retrieve zero
@@ -42,6 +42,7 @@ class ConnectionManager
           $_SESSION["username"] = $result[0]['USERNAME'];
           $_SESSION["firstname"] = $result[0]['FIRSTNAME'];
           $_SESSION["lastname"] = $result[0]['LASTNAME'];
+          $_SESSION["scale_right"] = $result[0]['SCALE_RIGHT'];
           $_SESSION["email"] = $result[0]['EMAIL'];
 
           /*
@@ -76,6 +77,18 @@ class ConnectionManager
       }
       if (isset($_SESSION['username'])) {
           return $_SESSION["username"];
+      }
+      else{
+          return '';
+      }
+  }
+
+  public static function whatScaleRight(){
+      if (session_status() == PHP_SESSION_NONE) {
+          session_start();
+      }
+      if (isset($_SESSION['scale_right'])) {
+          return $_SESSION["scale_right"];
       }
       else{
           return '';

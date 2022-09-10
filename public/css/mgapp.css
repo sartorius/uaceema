@@ -635,3 +635,21 @@ textarea[name=inputRef] {
   margin-top: 25px;
   margin-bottom: 20px;
 }
+.ace-sm{
+  font-size: 20px;
+}
+.ace-xs{
+  font-size: 12px;
+}
+.acbc-read{
+  margin-top: 20px;
+}
+
+.mgs-readacebc{
+  font-size: 1.5em;
+  color: #C60000;
+}
+.mgs-readacebc-lg{
+  font-size: 2.0em;
+  color: #C60000;
+}

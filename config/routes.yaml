@@ -40,3 +40,9 @@ cartezp:
     controller: App\Controller\CartezpController::show
     defaults:
         page:   0
+scan:
+    path:       /scan
+    controller: App\Controller\ScanController::scan
+loadscan:
+    path:       /loadscan
+    controller: App\Controller\ScanController::loadscan
