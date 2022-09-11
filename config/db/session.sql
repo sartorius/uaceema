@@ -36,3 +36,7 @@ SELECT
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
            JOIN mdl_role mr ON mr.id = uas.roleid
            LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+
+
+-- Avoir la date
+select mu.username, CAST(FROM_UNIXTIME(mu.timecreated) as date), mu.timecreated from mdl_user mu where LENGTH(mu.username) < 10

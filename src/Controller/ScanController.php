@@ -81,7 +81,7 @@ class ScanController extends AbstractController
           $query_value = 'INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (';
           $first_comma = '';
           foreach ($param_jsondata as $read) {
-              $query_value = $query_value . $first_comma . $param_userid . ', \'' . $read['username'] . '\', \''  . $read['date'] . '\', \'' . $read['time'] . '\', \'NEW\' )';
+              $query_value = $query_value . $first_comma . $param_userid . ', LOWER(\'' . $read['username'] . '\'), \''  . $read['date'] . '\', \'' . $read['time'] . '\', \'NEW\' )';
               $first_comma = ', (';
           }
           $query_value = $query_value . ';';
