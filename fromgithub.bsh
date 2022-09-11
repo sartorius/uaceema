@@ -2,5 +2,4 @@
 
 git pull;
 # Set up the local value now
-mv .env .env.local.old;
 mv .env.MMN .env.local;
