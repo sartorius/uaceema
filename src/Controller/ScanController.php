@@ -29,6 +29,7 @@ class ScanController extends AbstractController
         $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                   'firstname' => $_SESSION["firstname"],
                                                   'lastname' => $_SESSION["lastname"],
+                                                  'id' => $_SESSION["id"],
                                                   'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     else{
@@ -39,7 +40,7 @@ class ScanController extends AbstractController
   }
 
 
-  public function loadscan(Request $request)
+  public function loadscan(Request $request, LoggerInterface $logger, )
   {
 
 
@@ -57,6 +58,7 @@ class ScanController extends AbstractController
 
           // Get data from ajax
           $param_username = $request->request->get('loadusername');
+          $param_userid = $request->request->get('loaduserid');
 
           //$param_json = $request->request->get('loaddata');
           $param_jsondata = json_decode($request->request->get('loaddata'), true);
@@ -76,17 +78,28 @@ class ScanController extends AbstractController
 
 
           //echo $param_jsondata[0]['username'];
-          $read_value = '';
+          $query_value = 'INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (';
+          $first_comma = '';
           foreach ($param_jsondata as $read) {
-              $read_value = $read_value . ' - ' . $read['username'] . ' ' . $read['date'] . ' ' . $read['time'];
+              $query_value = $query_value . $first_comma . $param_userid . ', \'' . $read['username'] . '\', \''  . $read['date'] . '\', \'' . $read['time'] . '\', \'NEW\' )';
+              $first_comma = ', (';
           }
+          $query_value = $query_value . ';';
 
           sleep(2);
+
+          // Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me: " . count($result));
+
 
           // Send all this back to client
           return new JsonResponse(array(
               'status' => 'OK',
-              'message' => 'Tout va bien les cocos: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $read_value),
+              'message' => 'Tout va bien les cocos: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $query_value),
           200);
       }
 

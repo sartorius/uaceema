@@ -118,6 +118,7 @@ function loadScan(){
   $.ajax('/loadscan', {
       type: 'POST',  // http method
       data: { loadusername: $('#load-username').html(),
+              loaduserid: $('#load-userid').html(),
               loaddata: JSON.stringify(dataTagToJsonArray)
       },  // data to submit
       success: function (data, status, xhr) {
@@ -137,6 +138,7 @@ function loadScan(){
           $("#waiting-gif").hide();
           $("#btn-load-bc").show();
           $("#scan-ace").show();
+          $('#last-read-bc').html('<span class="icon-times-circle nav-icon-fa nav-text"></span>&nbsp;Échec du chargement - erreur: ' + textStatus + '/' + errorMessage + '. Veuillez recommencer.');
           console.log('Error')
       }
   });
