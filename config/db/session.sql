@@ -40,3 +40,6 @@ SELECT
 
 -- Avoir la date
 select mu.username, CAST(FROM_UNIXTIME(mu.timecreated) as date), mu.timecreated from mdl_user mu where LENGTH(mu.username) < 10
+
+
+/var/www/aceemintranet_data/filedir

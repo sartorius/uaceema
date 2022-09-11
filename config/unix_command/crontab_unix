@@ -1,0 +1,3 @@
+#We are in the crontab les gars !!!
+*/10 * * * * php /var/www/html/aceemintranet/admin/cli/cron.php >> /home/ratinahirana/cron.php.log;
+0 1 * * * rm -f /home/ratinahirana/cron.php.log;
