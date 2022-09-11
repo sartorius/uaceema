@@ -25,6 +25,11 @@
 <!-- This one cannot be minimized -->
 <script src="{{ path('main') }}js/mgappunminimize.js"></script>
 
-<script src="{{ path('main') }}js/acestu.js"></script>
+{% if app_environment == 'dev' %}
+        <script src="{{ path('main') }}js/acestu.js"></script>
+{% else %}
+        <script src="{{ path('main') }}js/acestu.js"></script>
+{% endif %}
+
 
 </html>

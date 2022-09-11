@@ -1,5 +1,10 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    # Register your global variables under the globals key:
+    globals:
+        mycustom_variable: 12345
+        # Obtain it from the .env file:
+        app_environment: '%env(APP_ENV)%'
 
 when@test:
     twig:

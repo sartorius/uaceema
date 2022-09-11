@@ -9,8 +9,15 @@
 
   <link rel="stylesheet" href="{{ path('main') }}css/bootstrap.min.css">
   <link rel="stylesheet" href="{{ path('main') }}css/all.min.css">
-  <link rel="stylesheet" href="{{ path('main') }}css/mgapp.css">
-  <link rel="stylesheet" href="{{ path('main') }}css/manja.css">
+  {# Need to handle the app_environment #}
+  {% if app_environment == 'dev' %}
+
+          <link rel="stylesheet" href="{{ path('main') }}css/mgapp.css">
+          <link rel="stylesheet" href="{{ path('main') }}css/manja.css">
+  {% else %}
+          <link rel="stylesheet" href="{{ path('main') }}css/mgapp.css">
+          <link rel="stylesheet" href="{{ path('main') }}css/manja.css">
+  {% endif %}
 
   <style>
       @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap');

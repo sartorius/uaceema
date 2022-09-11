@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+# sudo apt-get install yui-compressor
+# mgapp plus utilise
+# yui-compressor /public/js/mgapp.js > mgapp.min.js;
+yui-compressor /public/js/acestu.js > acestu.min.js;
+yui-compressor /public/css/mgapp.css > mgapp.min.css;
+yui-compressor /public/css/manja.css > manja.min.css;
