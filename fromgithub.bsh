@@ -3,4 +3,4 @@
 git pull;
 # Set up the local value now
 mv .env .env.local;
-mv .env.MNN .env;
+mv .env.MMN .env;
