@@ -1,3 +1,5 @@
+
+-- Make sure this in the cron every minute !!!
 -- Insert
   INSERT IGNORE INTO uac_showuser (roleid, username)
   SELECT MAX(roleid), username FROM mdl_role_assignments mra

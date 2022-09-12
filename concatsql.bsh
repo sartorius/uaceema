@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+rm -f ./config/db/_all.sql
+cat ./config/db/param_table.sql >> ./config/db/_all.sql
+cat ./config/db/connection_table.sql >> ./config/db/_all.sql
+cat ./config/db/scan_table.sql >> ./config/db/_all.sql
