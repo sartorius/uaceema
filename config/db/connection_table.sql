@@ -9,13 +9,15 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_admin` (
   PRIMARY KEY (`id`));
 
 -- /!\ IL FAUT AVOIR CRÉE LES UTILISATEURS AVANT DE CHARGER CES REQUÊTES D'ABORD
-
+/*
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'benrand123'), 'e716e0cf70d3c6dbd840945d890f074d', 'Recteur', NULL, 5);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'harrako912'), '78e740abec0d61e6dd52452e6d9c2a32', 'SG', NULL, 5);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'lalrako381'), '9248153d95104975573f18e2852d6647', 'DAF', NULL, 5);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako617'), '2df68a85f1932ca876926252bbaa0820', 'CGE', NULL);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mikrama654'), 'c24d593b9266e7b8d0887d0dc7259705', 'Agent', NULL);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mborako321'), 'd064a894fb8645879312b10d366cd604', 'Agent', NULL);
+
+*/
 
 -- SHOW USERS
 
@@ -28,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
   PRIMARY KEY (`username`));
 
 
-
+/*
   -- Insert
     INSERT IGNORE INTO uac_showuser (roleid, username)
     SELECT MAX(roleid), username FROM mdl_role_assignments mra
@@ -37,6 +39,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
     GROUP BY username;
   -- Add secret
     UPDATE uac_showuser SET secret = 3000000000 + FLOOR(RAND()*1000000000), last_update = NOW() WHERE secret IS NULL;
+*/
+
   -- Control to save !
   SELECT
       mu.id AS ID,

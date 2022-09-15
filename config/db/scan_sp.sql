@@ -3,7 +3,11 @@ DROP PROCEDURE IF EXISTS SRV_MNG_Scan$$
 CREATE PROCEDURE `SRV_MNG_Scan` (IN param DATE)
 BEGIN
     DECLARE inv_date	DATE;
+    DECLARE inv_flow_id	BIGINT;
     -- CALL SRV_MNG_Scan(NULL);
+
+
+
 
     -- If the parameter is null, we consider the day of today !
     IF param IS NULL THEN
@@ -17,6 +21,9 @@ BEGIN
       SELECT param INTO inv_date;
 
    END IF;
+
+   INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES ('SCANXXX', 'NEW', inv_date, 0, NOW());
+   SELECT LAST_INSERT_ID() INTO inv_flow_id;
 
    -- Do the treatment here
    -- We must map the data here
@@ -40,6 +47,8 @@ BEGIN
     SET status = 'MIS'
     WHERE scan_date = inv_date AND status = 'NEW';
 
+    -- End of the flow correctly
+    UPDATE uac_working_flow SET status = 'END' WHERE id = inv_flow_id;
 
    SELECT CONCAT('SRV_MNG_Scan - END OK: ', NOW());
 
