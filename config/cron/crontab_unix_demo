@@ -4,9 +4,14 @@
 
 # CRON UAC
 */5 * * * * php /var/www/html/uaceema/config/server/mng_uac_showuser.php >> /home/ratinahirana/cron.mng_uac_showuser.php.log;
-*/5 * * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
+*/3 * * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
+
 
 # Delete log
 0 4 * * * rm -f /home/ratinahirana/cron.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_uac_showuser.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_scan.php.log;
+0 4 * * * rm -f /home/ratinahirana/cron.prg_scan.php.log;
+
+# Purge
+0 4 * * * php /var/www/html/uaceema/config/server/prg_scan.php >> /home/ratinahirana/cron.prg_scan.php.log;
