@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_param` (
   `par_date` DATE NULL,
   PRIMARY KEY (`key_code`));
 
--- INSERT INTO uac_param (key_code, description, par_int, par_code, par_date) VALUES ('SCANXXX', 'Flow retard', NULL, NULL, CURDATE());
+INSERT INTO uac_param (key_code, description, par_int, par_code, par_date) VALUES ('SCANXXX', 'Flow retard', NULL, NULL, CURDATE());
+INSERT INTO uac_param (key_code, description, par_int, par_code, par_date) VALUES ('SCANPRG', 'Flow purge scan', 7, NULL, CURDATE());
 
 
 DROP TABLE IF EXISTS uac_working_flow;

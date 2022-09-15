@@ -68,7 +68,21 @@ class ProfileController extends AbstractController
             // We found the student
             $logger->debug("We found: " . $result[0]['FIRSTNAME'] . ' ' . $result[0]['LASTNAME']);
 
-            $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0], 'moodle_url' => $_ENV['MDL_URL']]);
+            // Retrieve the result for assiduité
+
+            $result_assiduite = $dbconnectioninst->query('
+            SELECT
+                scan_date AS SCANDATE,
+                scan_time AS SCANTIME
+              FROM uac_scan
+                       WHERE user_id = ' . $result[0]['ID'] . ' ORDER BY SCANDATE, SCANTIME DESC; ' )->fetchAll(PDO::FETCH_ASSOC);
+
+
+            // End of assiduité
+
+
+
+            $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0], 'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL']]);
       }
     }
 

@@ -10,5 +10,5 @@ $selecteddb = DB_NAME;
 // We create the DB connection here !
 $mysqli = new mysqli($hostname, $username, $password, $selecteddb);
 
-$readquery = "INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (1, 'LATOYA2', '2022-09-12', '01:41:24', 'NEW')";
+$readquery = "CALL SRV_MNG_Scan(NULL)";
 $mysqli->query( $readquery );

@@ -1,9 +1,9 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
 <div class="row">
-  <div class="col-lg-3 mgs-mainblk-txt">
+  <div class="col-lg-4 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 mgs-mainblk-txt">
+  <div class="col-lg-4 mgs-mainblk-txt">
 
 
     {% if profile['PICTURE_ID'] == 0 %}
@@ -20,9 +20,18 @@
     <div class="user-title">
         {{ profile['FIRSTNAME'] }} {{ profile['LASTNAME'] }}
     </div>
-    Donec nec euismod purus. Nam pretium dignissim ante nec dapibus. Mauris ut ex vitae felis condimentum lacinia ut eu ipsum. Phasellus est nibh, scelerisque sit amet tincidunt quis, varius quis arcu. Sed volutpat lectus at porttitor ullamcorper. Nam sit amet felis convallis, egestas neque eget, tristique leo. Curabitur quis magna et eros blandit scelerisque. Aliquam tempor ante id augue egestas sagittis. Suspendisse fermentum iaculis diam, nec rhoncus nisi dapibus nec. Suspendisse imperdiet libero in nisi molestie posuere. Aliquam et dolor diam. Integer a interdum nisi. Maecenas a vulputate nisi, ut tempor neque. Phasellus id tellus ut sem consequat porttitor. Maecenas eget bibendum urna.
+    <hr>
+    <div id="pr-assid" class="carte-profile">
+      <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité</div>
+      <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous ne conservons que le scan le plus tôt de la journée concernée ainsi qu'un historique de 7 jours sauf pour les retards.</span><br><br>
+      {% for assiduite in assiduites %}
+          <i class='ass-ontime'><span class="icon-check-circle nav-icon-fa nav-text"></span>&nbsp;À l'heure: {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
+      {% endfor %}
+
+
+    </div>
   </div>
-  <div class="col-lg-3 mgs-mainblk-txt">
+  <div class="col-lg-4 mgs-mainblk-txt">
   </div>
 </div>
 

@@ -654,6 +654,11 @@ textarea[name=inputRef] {
   color: #C60000;
 }
 
+.ass-ontime{
+    font-size: 0.8em;
+    color: #045000;
+}
+
 #waiting-gif{
   display: none;
 }
