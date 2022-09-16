@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `flow_code` CHAR(7) NOT NULL,
   `status` CHAR(3) NOT NULL,
   `working_date` DATE NULL,
-  `working_part` TINYINT NULL,
+  `working_part` TINYINT NOT NULL DEFAULT 0,
   `last_update` DATETIME NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
