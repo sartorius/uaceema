@@ -8,13 +8,16 @@
 */20 * * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
 15 */4 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
+# Service
+15 * * * * wget http://127.0.0.1:8000/servmail/LSQKFJSQIDFILZAEOZIALZKEJRLHSK727 >> /home/ratinahirana/cron.service.mail.log;
 
 # Delete log
 0 4 * * * rm -f /home/ratinahirana/cron.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_uac_showuser.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_scan.php.log;
-0 4 * * * rm -f /home/ratinahirana/cron.prg_scan.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_welcome_mail.php.log;
+0 4 * * * rm -f /home/ratinahirana/cron.prg_reset_daily.php.log;
+0 4 * * * rm -f /home/ratinahirana/cron.service.mail.log;
 
 # Purge
-0 4 * * * php /var/www/html/uaceema/config/server/prg_scan.php >> /home/ratinahirana/cron.prg_scan.php.log;
+0 4 * * * php /var/www/html/uaceema/config/server/prg_reset_daily.php >> /home/ratinahirana/cron.prg_reset_daily.php.log;

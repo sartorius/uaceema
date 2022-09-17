@@ -46,3 +46,8 @@ scan:
 loadscan:
     path:       /loadscan
     controller: App\Controller\ScanController::loadscan
+servmail:
+    path:       /servmail/{key}
+    controller: App\Controller\ServmailController::send
+    defaults:
+        key:   0

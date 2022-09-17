@@ -8,7 +8,7 @@ $hostname = DB_HOST;
 $selecteddb = DB_NAME;
 
 $dt=time();
-echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] START config/server/prg_scan.php' . PHP_EOL;
+echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] START config/server/prg_reset_daily.php' . PHP_EOL;
 
 // We create the DB connection here !
 $mysqli = new mysqli($hostname, $username, $password, $selecteddb);
@@ -16,5 +16,8 @@ $mysqli = new mysqli($hostname, $username, $password, $selecteddb);
 $readquery = "CALL SRV_PRG_Scan()";
 $mysqli->query( $readquery );
 
+$readquery = 'UPDATE uac_param SET par_int = 0 WHERE key_code = \'DMAILCT\'';
+$mysqli->query( $readquery );
+
 $dt=time();
-echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] END config/server/prg_scan.php' . PHP_EOL;
+echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] END config/server/prg_reset_daily.php' . PHP_EOL;
