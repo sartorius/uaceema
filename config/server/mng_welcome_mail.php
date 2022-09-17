@@ -8,13 +8,13 @@ $hostname = DB_HOST;
 $selecteddb = DB_NAME;
 
 $dt=time();
-echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] START config/server/mng_uac_showuser.php' . PHP_EOL;
+echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] START: config/server/mng_welcome_mail.php' . PHP_EOL;
 
 // We create the DB connection here !
 $mysqli = new mysqli($hostname, $username, $password, $selecteddb);
 
-$readquery = "CALL SRV_UPD_UACShower()";
+$readquery = "CALL SRV_CRT_MailWelcomeNewUser()";
 $mysqli->query( $readquery );
 
 $dt=time();
-echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] END config/server/mng_uac_showuser.php' . PHP_EOL;
+echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] END config/server/mng_welcome_mail.php' . PHP_EOL;

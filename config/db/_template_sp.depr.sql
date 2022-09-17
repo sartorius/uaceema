@@ -1,4 +1,34 @@
 DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_CRT_XXX$$
+CREATE PROCEDURE `SRV_CRT_XXX` ()
+BEGIN
+    DECLARE flow_code	CHAR(7);
+    DECLARE inv_flow_id	BIGINT;
+    -- CALL SRV_PRG_Scan();
+
+    SELECT 'MLWELCO' INTO flow_code;
+
+    INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+    SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+
+
+    -- End of the flow correctly
+    UPDATE uac_working_flow SET status = 'END' WHERE id = inv_flow_id;
+END$$
+-- Remove $$ for OVH
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_REF_GetTracking$$
 CREATE PROCEDURE `CLI_REF_GetTracking` (IN `param_ref` VARCHAR(255))
 BEGIN
