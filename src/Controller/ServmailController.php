@@ -35,7 +35,7 @@ class ServmailController extends AbstractController
       $list_of_mail = '';
       foreach ($result as $row => $line) {
         sleep(1);
-        //MailManager::sendWelcomeEmail('ratinahirana@gmail.com', $line['FIRSTNAME'], $line['USERNAME'], $line['MATRICULE']);
+        MailManager::sendWelcomeEmail('ratinahirana@gmail.com', $line['FIRSTNAME'], $line['USERNAME'], $line['MATRICULE']);
 
         $list_of_mail = $list_of_mail .  ' ' .
               $line['USERNAME'] . ' - ' .
@@ -49,9 +49,6 @@ class ServmailController extends AbstractController
       }
 
 
-
-      // This email works !!
-      //MailManager::sendSimpleEmail();
 
       $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ' . count($result) . '/' . $list_of_mail]);
     }
