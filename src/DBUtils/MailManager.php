@@ -32,7 +32,7 @@ class MailManager
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
-            ->subject('[UACEEM] Bienvenu à l\'ACEEM 2')
+            ->subject('[UACEEM] Bienvenu à l\'ACEEM Send Grid')
             ->text('Bienvenu à l\'ACEEM, nous sommes heureux de vous avoir parmi nous !')
             ->html('<p>Bienvenu à l\'ACEEM, nous sommes heureux de vous avoir parmi nous !</p><br><p>Ne pas répondre à cet email. Votre réponse ne sera pas reçue.</p>');
 
