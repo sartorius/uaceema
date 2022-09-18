@@ -26,7 +26,7 @@ class MailManager
       $mailer = new Mailer($transport);
 
       $email = (new Email())
-            ->from('ne-pas-repondre@mgsuivi.com')
+            ->from('ne-pas-repondre@uaceem.com')
             ->to('ratinahirana@gmail.com')
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
@@ -45,7 +45,7 @@ class MailManager
       $mailer = new Mailer($transport);
 
       $email = (new Email())
-            ->from('ne-pas-repondre@mgsuivi.com')
+            ->from('ne-pas-repondre@uaceem.com')
             ->to($receiver)
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')

@@ -35,6 +35,8 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+
+
   public function partner(Environment $twig)
   {
 
@@ -47,6 +49,21 @@ class StaticController extends AbstractController
 
     return new Response($content);
   }
+
+  public function tutoinscription(Environment $twig)
+  {
+
+    $debug_session = "Pass variable to check";
+
+    // This email works !!
+    //MailManager::sendSimpleEmail();
+
+    $content = $twig->render('Static/tutoinscription.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+
+    return new Response($content);
+  }
+
+
 
   public function universite(Environment $twig, LoggerInterface $logger)
   {

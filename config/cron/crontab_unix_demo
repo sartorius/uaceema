@@ -9,7 +9,7 @@
 
 
 # Service
-5 * * * * /usr/bin/wget http://127.0.0.1:8000/servmail/LSQKFJSQIDFILZAEOZIALZKEJRLHSK727 >> /home/ratinahirana/cron.service.mail.log;
+*/5 * * * * /usr/bin/wget http://127.0.0.1:8000/servmail/LSQKFJSQIDFILZAEOZIALZKEJRLHSK727 >> /home/ratinahirana/cron.service.mail.log;
 
 # Delete log
 0 4 * * * rm -f /home/ratinahirana/cron.php.log;

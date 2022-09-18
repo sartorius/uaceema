@@ -55,6 +55,7 @@ html, body {
 }
 
 h1 {
+  font-size: 3.2em;
   font-weight: lighter;
 }
 
@@ -661,4 +662,21 @@ textarea[name=inputRef] {
 
 #waiting-gif{
   display: none;
+}
+
+.expl-text{
+  margin-top: 60px;
+  font-size: 0.9em;
+  color: var(--main-ace-color);
+}
+
+.expl-title{
+  margin-top: 40px;
+  font-size: 2.1em;
+  color: var(--light-ace-color);
+  font-weight: 400;
+}
+
+.expl-bold{
+  font-weight: 600;
 }
