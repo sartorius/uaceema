@@ -27,7 +27,7 @@ class ServmailController extends AbstractController
       // The key is OK
 
 
-
+      /*
       $email = new \SendGrid\Mail\Mail();
       $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
       $email->setSubject("Bienvenu à l'UACEEM !");
@@ -45,6 +45,7 @@ class ServmailController extends AbstractController
       } catch (Exception $e) {
           echo 'Caught exception: '. $e->getMessage() ."\n";
       }
+      */
 
       /*
       // Be carefull if you have array of array
