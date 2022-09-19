@@ -1,6 +1,5 @@
 <?php
 // src/Controller/HomeController.php
-
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +13,8 @@ use Psr\Log\LoggerInterface;
 use App\DBUtils\MailManager;
 use \PDO;
 
+require '../vendor/autoload.php'; // If you're using Composer (recommended)
+
 class ServmailController extends AbstractController
 {
   public function send(Environment $twig, LoggerInterface $logger, $key)
@@ -25,6 +26,27 @@ class ServmailController extends AbstractController
     if(isset($key) && ($key == 'LSQKFJSQIDFILZAEOZIALZKEJRLHSK727')){
       // The key is OK
 
+
+
+      $email = new \SendGrid\Mail\Mail();
+      $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
+      $email->setSubject("Bienvenu à l'UACEEM !");
+      $email->addTo("ratinahirana@gmail.com", "Example User");
+      $email->addContent("text/plain", "Nous sommes heureux de vous accueillir parmi nous !");
+      $email->addContent(
+          "text/html", "<strong>Nous sommes heureux de vous accueillir parmi nous !</strong>"
+      );
+      $sendgrid = new \SendGrid($_ENV['MAIL_SEND_GRID_API']);
+      try {
+          $response = $sendgrid->send($email);
+          print $response->statusCode() . "\n";
+          print_r($response->headers());
+          print $response->body() . "\n";
+      } catch (Exception $e) {
+          echo 'Caught exception: '. $e->getMessage() ."\n";
+      }
+
+      /*
       // Be carefull if you have array of array
       $dbconnectioninst = DBConnectionManager::getInstance();
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
@@ -48,9 +70,9 @@ class ServmailController extends AbstractController
 
       }
 
+      */
 
-
-      $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ' . count($result) . '/' . $list_of_mail]);
+      $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ']);
     }
     else{
       $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'Unknown Service']);

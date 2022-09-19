@@ -1,0 +1,10 @@
+
+
+
+export SENDGRID_API_KEY='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';
+
+curl --request POST \
+      --url https://api.sendgrid.com/v3/mail/send \
+      --header "Authorization: Bearer $SENDGRID_API_KEY" \
+      --header 'Content-Type: application/json' \
+      --data '{"personalizations": [{"to": [{"email": "ratinahirana@gmail.com"}]}],"from": {"email": "ne-pas-repondre@uaceem.com"},"subject": "Sending with SendGrid is Fun Hello hello","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
