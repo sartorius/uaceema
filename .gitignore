@@ -21,6 +21,7 @@
 
 ###> Link for mdl_data
 /public/img/mdl_data
+/public/img/logo32x32.jpg
 /.env.PROD
 # You have to create you own per environment
 /config/server/_server_config.php
