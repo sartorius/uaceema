@@ -50,18 +50,6 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
-  public function tutoinscription(Environment $twig)
-  {
-
-    $debug_session = "Pass variable to check";
-
-    // This email works !!
-    //MailManager::sendSimpleEmail();
-
-    $content = $twig->render('Static/tutoinscription.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
-
-    return new Response($content);
-  }
 
 
 
@@ -74,6 +62,20 @@ class StaticController extends AbstractController
     $debug_session = "Pass variable to check";
 
     $content = $twig->render('Static/universite.html.twig', ['debug' => $debug_session, 'mac_address' => $ipAddress, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+
+    return new Response($content);
+  }
+
+  public function mentionslegales(Environment $twig)
+  {
+
+    $content = $twig->render('Static/mentionslegales.html.twig');
+
+    return new Response($content);
+  }
+  public function contact(Environment $twig)
+  {
+    $content = $twig->render('Static/contact.html.twig');
 
     return new Response($content);
   }

@@ -140,6 +140,12 @@ h1 {
     }
 }
 
+.mapouter{
+  max-width: 100%;
+}
+.gmap_canvas{
+  max-width: 100%;
+}
 
 .wrapper {
   padding-top: 4em;
@@ -187,6 +193,7 @@ h1 {
   font-size: 1.2em;
 }
 
+
 .mgs-questiondefinition{
   text-align: justify;
   font-size: 0.9em;
@@ -194,9 +201,7 @@ h1 {
   padding-right: 15px;
 }
 
-
 .mgs-footer{
-  text-align: right;
   color: #636363;
   font-size: 0.8em;
   border-top-style: solid;
@@ -205,10 +210,42 @@ h1 {
   margin-top: 5em;
 }
 
-.mgs-footer-inbox{
-  padding-top: 1em;
-  padding-right: 3em;
+.mgs-footer a{
+  color: #626262;
+}
+
+.mgs-footer a:hover{
+  color: var(--main-ace-color);
+  text-decoration: none;
+}
+
+.mgs-footer-inbox-left {
+  text-align: left;
+  padding-top: 1.1em;
+  padding-left: 2.8em;
+}
+
+.mgs-footer-inbox-right{
+  text-align: left;
+  padding-top: 1.1em;
+  padding-left: 2.8em;
   padding-bottom: 2.5em;
+}
+
+@media (min-width:414px){
+      .mgs-footer-inbox-left {
+        text-align: left;
+        padding-top: 1.5em;
+        padding-left: 2.8em;
+        padding-bottom: 2.5em;
+      }
+
+      .mgs-footer-inbox-right{
+        text-align: right;
+        padding-top: 1em;
+        padding-right: 3em;
+        padding-bottom: 2.5em;
+      }
 }
 
 .footer {
@@ -586,6 +623,12 @@ textarea[name=inputRef] {
   width: 50%;
 }
 
+.uac-img-center-full{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .img-profile{
   border-radius: 50%;
 }
@@ -636,9 +679,14 @@ textarea[name=inputRef] {
   margin-top: 25px;
   margin-bottom: 20px;
 }
-.ace-sm{
+.ace-md{
   font-size: 20px;
 }
+
+.ace-sm{
+  font-size: 14px;
+}
+
 .ace-xs{
   font-size: 12px;
 }

@@ -12,6 +12,12 @@ main:
 universite:
     path:       /universite
     controller: App\Controller\StaticController::universite
+mentionslegales:
+    path:       /mentionslegales
+    controller: App\Controller\StaticController::mentionslegales
+contact:
+    path:       /contact
+    controller: App\Controller\StaticController::contact
 mention:
     path:       /mention
     controller: App\Controller\StaticController::mention
@@ -23,7 +29,7 @@ partner:
     controller: App\Controller\StaticController::partner
 tutoinscription:
     path:       /tutoinscription
-    controller: App\Controller\StaticController::tutoinscription
+    controller: App\Controller\TutorialController::tutoinscription
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login
