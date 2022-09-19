@@ -60,3 +60,6 @@ servmail:
     controller: App\Controller\ServmailController::send
     defaults:
         key:   0
+loadedt:
+    path:       /loadedt
+    controller: App\Controller\AdminEDTController::loadedt
