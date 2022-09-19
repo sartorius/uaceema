@@ -1,7 +1,6 @@
 
 
 
-export SENDGRID_API_KEY='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';
 
 curl --request POST \
       --url https://api.sendgrid.com/v3/mail/send \
