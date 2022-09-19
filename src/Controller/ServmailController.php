@@ -2,6 +2,8 @@
 // src/Controller/HomeController.php
 namespace App\Controller;
 
+require '../vendor/autoload.php'; // If you're using Composer (recommended)
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +15,7 @@ use Psr\Log\LoggerInterface;
 use App\DBUtils\MailManager;
 use \PDO;
 
-require '../vendor/autoload.php'; // If you're using Composer (recommended)
+
 
 class ServmailController extends AbstractController
 {
