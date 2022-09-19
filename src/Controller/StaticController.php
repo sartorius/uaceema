@@ -35,6 +35,14 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+  public function apply(Environment $twig)
+  {
+
+
+    $content = $twig->render('Static/apply.html.twig');
+
+    return new Response($content);
+  }
 
 
   public function partner(Environment $twig)
