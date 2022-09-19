@@ -2,7 +2,7 @@
 // src/Controller/HomeController.php
 namespace App\Controller;
 
-require '../vendor/autoload.php'; // If you're using Composer (recommended)
+require __DIR__ . '/../../vendor/autoload.php'; // If you're using Composer (recommended)
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,8 +74,9 @@ class ServmailController extends AbstractController
       }
 
       */
+      $path = __DIR__;
 
-      $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ']);
+      $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ' . $path ]);
     }
     else{
       $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'Unknown Service']);
