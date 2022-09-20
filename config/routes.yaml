@@ -66,3 +66,6 @@ servmail:
 loadedt:
     path:       /loadedt
     controller: App\Controller\AdminEDTController::loadedt
+checkandloadedt:
+    path:       /checkandloadedt
+    controller: App\Controller\AdminEDTController::checkandloadedt

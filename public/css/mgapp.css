@@ -6,6 +6,8 @@
   --main-gray-25:#A7A7A7;
   --main-gray-50:#5A5A5A;
   --main-gray-75:#393939;
+  --err-ace-color: #90000F;
+  --val-ace-color: #00561A;
 }
 
 
@@ -846,3 +848,18 @@ textarea[name=inputRef] {
   color: var(--main-gray-50);
 }
 /*******************/
+/*********  LOADER  **********/
+.err{
+  color : var(--err-ace-color);
+}
+.report-dis{
+  padding-top: 50px;
+}
+.report-title{
+  font-size: 1.5em;
+  margin-top: 1.5em;
+  color: var(--main-ace-color);
+}
+.report-val{
+  color: var(--val-ace-color);
+}

@@ -10,9 +10,13 @@
           <img id="selfie" src="{{ path('main') }}img/mid_img370x850.png" style="width:490px; height:220px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
     </div>
     <hr>
+
+    {% if errtype != "" %}
+          <span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;{{ errtype }}</span><br>
+    {% endif %}
     Chargez les emplois du temps de la semaine&nbsp;<span class="icon-upload nav-icon-fa nav-text"></span><br><br>
     <div>
-        <form action="upload.php" method="post" enctype="multipart/form-data">
+        <form action="/checkandloadedt" method="post" enctype="multipart/form-data">
           Choisissez un fichier en .csv &nbsp;
           <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
 

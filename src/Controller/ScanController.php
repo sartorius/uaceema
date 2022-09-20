@@ -19,7 +19,9 @@ class ScanController extends AbstractController
   public function scan(Environment $twig, LoggerInterface $logger)
   {
 
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     $scale_right = ConnectionManager::whatScaleRight();
 
 

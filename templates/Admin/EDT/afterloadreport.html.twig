@@ -1,0 +1,16 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Rapport d'intégration</h1>
+    <div class="report-dis">
+        {{ reportcmt | raw }}
+    </div>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}
