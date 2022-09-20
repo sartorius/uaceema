@@ -78,7 +78,6 @@ class AdminEDTController extends AbstractController
         $friday = '';
         $saturday = '';
         $days = array();
-        $days_name = array('na', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
         // Code is valid here. We can work
         if ( !file_exists($_FILES['fileToUpload']['tmp_name']) ) {
           $report_comment = $report_comment . '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
@@ -114,14 +113,58 @@ class AdminEDTController extends AbstractController
                         $niveau = $data[1];
                     }
                     if ( $i ==  6){
-                        $monday = $data[1];
-                        $tuesday = $data[2];
-                        $wednesday = $data[3];
-                        $thursday = $data[4];
-                        $friday = $data[5];
-                        $saturday = $data[6];
+                        $read_date = explode("/", $data[1]);
+                        $monday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($monday)) != 1){
+                            $file_is_still_valid = false;
+                            $logger->debug('Monday: ' . date('w', strtotime($monday)) . '/' . $monday);
+                        }
+
+                        $read_date = explode("/", $data[2]);
+                        $tuesday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($tuesday)) != 2){
+                            $file_is_still_valid = false;
+                            $logger->debug('Tuesday: ' . date('w', strtotime($tuesday)) . '/' . $tuesday);
+                        }
+
+                        $read_date = explode("/", $data[3]);
+                        $wednesday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($wednesday)) != 3){
+                            $file_is_still_valid = false;
+                            $logger->debug('Wednesday: ' . date('w', strtotime($wednesday)) . '/' . $wednesday);
+                        }
+
+                        $read_date = explode("/", $data[4]);
+                        $thursday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($thursday)) != 4){
+                            $file_is_still_valid = false;
+                            $logger->debug('Thursday: ' . date('w', strtotime($thursday)) . '/' . $thursday);
+                        }
+
+                        $read_date = explode("/", $data[5]);
+                        $friday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($friday)) != 5){
+                            $file_is_still_valid = false;
+                            $logger->debug('Friday: ' . date('w', strtotime($friday)) . '/' . $friday);
+                        }
+
+
+                        $read_date = explode("/", $data[6]);
+                        $saturday = $read_date[2] . '-' . $read_date[1] . '-' . $read_date[0];
+                        if(date('w', strtotime($saturday)) != 6){
+                            $file_is_still_valid = false;
+                            $logger->debug('Saturday: ' . date('w', strtotime($saturday)) . '/' . $saturday);
+                        }
+
                         // Prepare Array for work
                         array_push($days, 'na', $monday, $tuesday, $wednesday, $thursday, $friday, $saturday);
+
+                        if(!$file_is_still_valid){
+                          $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR112 Erreur lecture fichier : Les Jours ne correspondent pas aux dates</span>' . '<br>'
+                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
+                                                            . 'Il semble que le fichier ne soit pas un csv.<br>'
+                                                            . 'Veuillez contacter le support technique.';
+                        }
                     }
 
                     // Courses are starting at 7
@@ -130,13 +173,15 @@ class AdminEDTController extends AbstractController
                         // Shift is [mention][niveau][Jour][Heure début][Cours][Durée]
                         for ($k = 1; $k <= 6; $k++) {
                             $logger->debug('i/k: ' . $i . '/' . $k);
+
+                            // Initiate the line
+                            $insert_lines = $insert_lines . '<br>' . $mention . '/' . $niveau . '/' . date('l', strtotime($days[$k])) . ':' . $days[$k] . '/' . $i ;
                             switch ($data[$k]) {
                                 case '':
-                                    $insert_lines = $insert_lines . '<br>' . $mention . '/' . $niveau . '/' . $days_name[$k] . ':' . $days[$k] . '/' . $i . 'h/Shift vide';
+                                    $insert_lines = $insert_lines . 'h/Shift vide';
                                     break;
                                 default:
-
-                                    $insert_lines = $insert_lines . '<br>' . $mention . '/' . $niveau . '/' . $days_name[$k] . ':' . $days[$k] . '/' . $i . 'h/[' . $data[$k] . ']' ;
+                                    $insert_lines = $insert_lines . 'h/[' . $data[$k] . ']' ;
                             }
                         }
                     }
