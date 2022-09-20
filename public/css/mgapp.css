@@ -3,6 +3,9 @@
   --main-ace-color-light: #89a9dc;
   --main-ace-color-contrast: #172d4f;
   --light-ace-color: #c4d4ed;
+  --main-gray-25:#A7A7A7;
+  --main-gray-50:#5A5A5A;
+  --main-gray-75:#393939;
 }
 
 
@@ -633,6 +636,10 @@ textarea[name=inputRef] {
   border-radius: 50%;
 }
 
+.img-rd-sq{
+  border-radius: 2%;
+}
+
 .user-title{
     font-family: "Roboto Mono";
     text-align: center;
@@ -829,5 +836,13 @@ textarea[name=inputRef] {
   margin-top: 1.5em;
   color: var(--main-ace-color);
 
+}
+
+.news-exb{
+  padding-top: 35px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 0.7em;
+  color: var(--main-gray-50);
 }
 /*******************/
