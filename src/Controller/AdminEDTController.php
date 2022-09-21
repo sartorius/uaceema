@@ -68,6 +68,7 @@ class AdminEDTController extends AbstractController
 
         /**************************** START : CHECK THE FILE CONTENT HERE ****************************/
         $report_comment = '';
+        $report_queries = '';
         $insert_lines = '';
         $mention = '';
         $niveau = '';
@@ -78,6 +79,7 @@ class AdminEDTController extends AbstractController
         $friday = '';
         $saturday = '';
         $days = array();
+        $insert_queries = array();
         // Code is valid here. We can work
         if ( !file_exists($_FILES['fileToUpload']['tmp_name']) ) {
           $report_comment = $report_comment . '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
@@ -183,6 +185,11 @@ class AdminEDTController extends AbstractController
                                 default:
                                     $insert_lines = $insert_lines . 'h/[' . $data[$k] . ']' ;
                             }
+
+                            $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, raw_course_title, create_date)' .
+                                                  'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $_FILES['fileToUpload']['name'] . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', \'' .
+                                                   date('l', strtotime($days[$k])) . '\', \'' . $days[$k] . '\' );';
+                            array_push($insert_queries, $my_insert_query);
                         }
                     }
 
@@ -193,6 +200,7 @@ class AdminEDTController extends AbstractController
                                                                                    . str_replace(array("\r", "\n"), 'XXXX', $data[4])  . ' | '
                                                                                    . str_replace(array("\r", "\n"), 'XXXX', $data[5])  . ' | '
                                                                                    . str_replace(array("\r", "\n"), 'XXXX', $data[6]);
+
                     $i = $i + 1;
                   }
 
@@ -208,13 +216,23 @@ class AdminEDTController extends AbstractController
                                                     . 'Jeudi: ' . $thursday . '<br>'
                                                     . 'Vendredi: ' . $friday . '<br>'
                                                     . 'Samedi: ' . $saturday . '<br><hr><br>'
+                                                    . 'Nombre de lignes de Emploi du Temps: ' . ($i - 1) . '<br>'
                                                     . $insert_lines;
+
 
 
 
 
                   if($file_is_still_valid){
                     // Do the DB Load operation here
+                    for($j = 0;$j < count($insert_queries);$j++){
+                      $report_queries = $report_queries . '<br>' . $insert_queries[$j];
+                    }
+
+                    $report_queries = '<br><hr><div class="ace-sm report-val"> Number of input: ' . count($insert_queries) . '<br><br>' . $report_queries . '</div>';
+
+
+
                     $report_comment = $report_comment . '<br>Load in DB.';
                   }
                   else{
@@ -233,7 +251,7 @@ class AdminEDTController extends AbstractController
         }
         /**************************** END : CHECK THE FILE CONTENT HERE ****************************/
 
-        $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $report_comment]);
+        $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $report_comment, 'reportqueries' => $report_queries]);
 
     }
     else{

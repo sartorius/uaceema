@@ -861,5 +861,6 @@ textarea[name=inputRef] {
   color: var(--main-ace-color);
 }
 .report-val{
+  text-align: left;
   color: var(--val-ace-color);
 }
