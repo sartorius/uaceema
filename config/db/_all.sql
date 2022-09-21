@@ -20,6 +20,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 200, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Compteur limit of email per day', 0, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILBA', 'Batch email per day', 15, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTLOAD', 'Integration des EDT', NULL, NULL);
 
 
 DROP TABLE IF EXISTS uac_working_flow;
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `status` CHAR(3) NOT NULL,
   `working_date` DATE NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
+  `filename` VARCHAR(300) NULL,
   `last_update` DATETIME NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
@@ -101,14 +103,19 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
              LEFT JOIN mdl_files mf ON mu.picture = mf.id;
 DROP TABLE IF EXISTS uac_load_scan;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
   `scan_username` VARCHAR(50) NOT NULL,
   `scan_date` DATE NOT NULL,
   `scan_time` TIME NOT NULL,
   `status` CHAR(3) NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 -- INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (1, 'TOTO', '2022-09-11', '01:41:24', 'NEW');
+
+
+
+
 
 
 
@@ -164,17 +171,41 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_mail` (
 -- Not compatible with the output of Workbench
 DROP TABLE IF EXISTS uac_load_edt;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
-  `id` BIGINT GENERATED ALWAYS AS (),
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
   `status` CHAR(3) NOT NULL,
   `flow_id` BIGINT NULL,
   `filename` VARCHAR(300) NOT NULL,
   `mention` VARCHAR(100) NOT NULL,
   `niveau` CHAR(2) NOT NULL,
+  `uaoption` VARCHAR(45) NULL,
   `monday_ofthew` DATE NOT NULL,
   `label_day` VARCHAR(20) NOT NULL,
   `day` DATE NOT NULL,
-  `hour_starts_at` VARCHAR(45) NOT NULL,
+  `hour_starts_at` TINYINT NOT NULL,
+  `raw_duration` VARCHAR(10) NULL,
+  `duration_hour` TINYINT NULL,
+  `log_pos` VARCHAR(10) NULL,
+  `raw_course_title` VARCHAR(2000) NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+-- INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, duration, log_pos, raw_course_title, create_date) VALUES (user_id, 'NEW', );
+
+
+DROP TABLE IF EXISTS uac_edt;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `flow_id` BIGINT NULL,
+  `mention` VARCHAR(100) NOT NULL,
+  `niveau` CHAR(2) NOT NULL,
+  `uaoption` VARCHAR(45) NULL,
+  `monday_ofthew` DATE NOT NULL,
+  `label_day` VARCHAR(20) NOT NULL,
+  `day` DATE NOT NULL,
+  `hour_starts_at` TINYINT NOT NULL,
+  `duration_hour` TINYINT NULL,
   `raw_course_title` VARCHAR(2000) NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
@@ -394,5 +425,52 @@ BEGIN
     END IF;
 
 
+END$$
+-- Remove $$ for OVH
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_CRT_EDT$$
+CREATE PROCEDURE `SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_option VARCHAR(45), IN param_monday_date DATE)
+BEGIN
+    DECLARE flow_code	CHAR(7);
+    DECLARE inv_flow_id	BIGINT;
+    -- CALL SRV_PRG_Scan();
+    -- EDTLOAD
+
+    SELECT 'EDTLOAD' INTO flow_code;
+
+    INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
+    SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+    UPDATE uac_load_edt SET flow_id = inv_flow_id, status = 'INP' WHERE filename = param_filename AND status = 'NEW';
+
+    -- Clean if the file has already been loaded
+
+    IF param_option IS NULL THEN
+      -- handle case option is NULL
+          DELETE FROM uac_edt
+            WHERE monday_ofthew = param_monday_date
+            AND mention = param_mention
+            AND niveau = param_niveau
+            AND uaoption IS NULL;
+
+   ELSE
+         DELETE FROM uac_edt
+           WHERE monday_ofthew = param_monday_date
+           AND mention = param_mention
+           AND niveau = param_niveau
+           AND uaoption = param_option;
+   END IF;
+
+
+    INSERT IGNORE INTO uac_edt (flow_id, mention, niveau, uaoption, monday_ofthew, label_day, day, hour_starts_at, duration_hour, raw_course_title)
+            SELECT inv_flow_id, param_mention, param_niveau, param_option, param_monday_date, label_day, day, hour_starts_at, duration_hour, raw_course_title
+            FROM uac_load_edt
+            WHERE status = 'INP'
+            AND flow_id = inv_flow_id;
+
+    UPDATE uac_load_edt SET status = 'END' WHERE filename = param_filename AND status = 'INP';
+
+    -- End of the flow correctly
+    UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 END$$
 -- Remove $$ for OVH
