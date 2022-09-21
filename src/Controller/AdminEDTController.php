@@ -65,7 +65,18 @@ class AdminEDTController extends AbstractController
                                                   'scale_right' => ConnectionManager::whatScaleRight()]);
 
 
-        $result_for_one_file = $this->extractFileInsertLines($_FILES['fileToUpload'], $logger);
+        if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
+            // We are in one file mode
+            $result_for_one_file = $this->extractFileInsertLines($_FILES['fileToUpload'], $logger);
+        } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
+            // We are in zip mode
+            // Work on the zip
+        } else {
+            // Error
+            $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
+                                            "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv ou un .zip");
+        }
+
 
 
         $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries']]);
@@ -102,7 +113,7 @@ class AdminEDTController extends AbstractController
             $report_comment = $report_comment . '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
                                               . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                               . 'Il semble que le fichier que vous avez chargé n\'existe pas.' . '<br>'
-                                              . 'Veuillez contacter le support technique.';
+                                              . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
           }
           else{
             // Properly do the importation here
@@ -179,10 +190,10 @@ class AdminEDTController extends AbstractController
                           array_push($days, 'na', $monday, $tuesday, $wednesday, $thursday, $friday, $saturday);
 
                           if(!$file_is_still_valid){
-                            $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR112 Erreur lecture fichier : Les Jours ne correspondent pas aux dates</span>' . '<br>'
+                            $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR112 Erreur lecture fichier : Les jours ne correspondent pas aux dates</span>' . '<br>'
                                                               . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
-                                                              . 'Il semble que le fichier ne soit pas un csv.<br>'
-                                                              . 'Veuillez contacter le support technique.';
+                                                              . 'Vérifiez que les jours sont bons : Est-ce que ' . $data[1] . ' est bien un lundi ? <br>'
+                                                              . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
                           }
                       }
 
@@ -196,21 +207,43 @@ class AdminEDTController extends AbstractController
                               // Initiate the line
                               $raw_course_title = 'NULL';
                               $insert_lines = $insert_lines . '<br>' . $mention . '/' . $niveau . '/' . date('l', strtotime($days[$k])) . ':' . $days[$k] . '/' . $i ;
+                              $course_details = array();
+                              $kduration = '';
+                              $hduration = 0;
+                              $verify_duration = '';
                               switch ($data[$k]) {
                                   case '':
                                       $insert_lines = $insert_lines . 'h/Shift vide';
+                                      $kduration = 'NULL';
                                       break;
                                   default:
                                       $insert_lines = $insert_lines . 'h/[' . $data[$k] . ']' ;
-                                      $raw_course_title = $data[$k];
+                                      $raw_course_title = ltrim($data[$k],"\n");
+                                      $raw_course_title = rtrim($raw_course_title,"\n");
                                       $raw_course_title = str_replace('"', "", $raw_course_title);
                                       $raw_course_title = str_replace("'", "", $raw_course_title);
+                                      $course_details = explode("\n", $raw_course_title);
+                                      $kduration = '\'' . $course_details[count($course_details) - 1] . '\'';
+                                      $verify_duration = preg_match("/[1]?[0-9][h](30|15)?$/", $course_details[count($course_details) - 1]);
+                                      if($verify_duration == 0){
+                                          // The duration does not match
+                                          $file_is_still_valid = false;
+                                          $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR9012 Erreur de lecture de durée près de : ligne ' . $i . ' - colonne ' . $k . '</span>' . '<br>'
+                                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
+                                                                            . 'Les durées doivent être de la forme Xh ou XXh ou XXh30 - exemple 2h30 ou 1h.<br>'
+                                                                            . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
+
+                                      }
+                                      // We take only the hour
+                                      $hduration = explode("h", $course_details[count($course_details) - 1])[0];
                                       $raw_course_title = '\'' . $raw_course_title . '\'';
+
+                                      $logger->debug('Read course: ' . count($course_details) . '/' . $data[$k]);
                               }
 
-                              $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, raw_course_title)' .
-                                                    'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $load_file['name'] . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', \'' .
-                                                     date('l', strtotime($days[$k])) . '\', \'' . $days[$k] . '\', \'' . $days[$k] . '\', ' . $raw_course_title . ');';
+                              $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, raw_duration, duration_hour, log_pos, raw_course_title)' .
+                                                    'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $load_file['name'] . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', UPPER(\'' .
+                                                     date('l', strtotime($days[$k])) . '\'), \'' . $days[$k] . '\', ' . $i . ', ' . $kduration . ', ' . $hduration . ', \'' . $i . ':' . $k . ':' . $verify_duration . '\', ' . $raw_course_title . ');';
                               array_push($insert_queries, $my_insert_query);
                           }
                       }
@@ -247,26 +280,43 @@ class AdminEDTController extends AbstractController
 
                     if($file_is_still_valid){
                       // Do the DB Load operation here
+                      $dbqueries_insert = '';
                       for($j = 0;$j < count($insert_queries);$j++){
                         $report_queries = $report_queries . '<br>' . $insert_queries[$j];
+                        $dbqueries_insert = $dbqueries_insert . ' ' . $insert_queries[$j];
                       }
 
-                      $report_queries = '<br><hr><div class="ace-sm report-val"> Number of input: ' . count($insert_queries) . '<br><br>' . $report_queries . '</div>';
+
+
+                      // Be carefull if you have array of array
+                      $dbconnectioninst = DBConnectionManager::getInstance();
+
+                      $result = $dbconnectioninst->query($dbqueries_insert)->fetchAll(PDO::FETCH_ASSOC);
+
+                      $logger->debug("Show me: " . count($result));
+
+                      // Perform the importation
+                      // Change the option here !
+                      $import_query = "CALL SRV_CRT_EDT('" . $load_file['name'] . "', '" . $mention . "', '" . $niveau . "', NULL, '" . $monday . "')";
+                      $result = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+
+                      $report_queries = '<br><hr><div class="ace-sm report-val"> Number of input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
 
 
 
-                      $report_comment = $report_comment . '<br>Load in DB.';
+                      $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Load in DB.';
                     }
                     else{
                       // Display the error here
-                      $report_comment = $report_comment . '<br>Error when load in DB.';
+                      $report_comment = $report_comment . '<br>Error8927 when load in DB.';
                     }
 
             } catch (\Exception $e) {
                 $report_comment = $report_comment . '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1724 Erreur lecture fichier : ' . $e->getMessage() . '</span>' . '<br>'
                                                   . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                                   . 'Il semble que le fichier ne soit pas un csv.<br>'
-                                                  . 'Veuillez contacter le support technique.';
+                                                  . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
             }
 
             $report_comment = $report_comment . '</div>';

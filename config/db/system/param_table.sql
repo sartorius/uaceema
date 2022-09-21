@@ -20,6 +20,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 200, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Compteur limit of email per day', 0, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILBA', 'Batch email per day', 15, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTLOAD', 'Integration des EDT', NULL, NULL);
 
 
 DROP TABLE IF EXISTS uac_working_flow;
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `status` CHAR(3) NOT NULL,
   `working_date` DATE NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
+  `filename` VARCHAR(300) NULL,
   `last_update` DATETIME NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
