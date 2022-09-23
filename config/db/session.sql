@@ -22,7 +22,13 @@ ainndel546 - Andry Rakoto.jpg
 ainnval527 - Andry Rakoto.jpg
 akenmat151 - Andry Rakoto.jpg
 
-export PATH='/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH'
+
+
+PRISE DE CONTACT AVEC MONSIEUR LE PRESIDENT DU GROUPE EDUCATIF ACEEM
+PRESENCE OBLIGATOIRE
+SALLE: 303
+Prsdt RATREMA William
+1h
 
 
 SG-min - Andry Rakoto.jpg

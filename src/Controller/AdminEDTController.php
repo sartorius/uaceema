@@ -16,6 +16,47 @@ use \PDO;
 
 class AdminEDTController extends AbstractController
 {
+  public function validateedt(Environment $twig, LoggerInterface $logger, $flow)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+
+    if(isset($scale_right) && ($scale_right == 0)){
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+
+        $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                  'firstname' => $_SESSION["firstname"],
+                                                  'lastname' => $_SESSION["lastname"],
+                                                  'id' => $_SESSION["id"],
+                                                  'scale_right' => ConnectionManager::whatScaleRight()]);
+
+
+        $validate_query = "UPDATE uac_edt SET visibility = 'V' WHERE flow_id =" . $flow . ";";
+        // Be carefull if you have array of array
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result = $dbconnectioninst->query($validate_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result));
+
+
+        $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'errtype' => '', 'validated' => $flow]);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    }
+    return new Response($content);
+  }
+
+
+
+
+
   public function loadedt(Environment $twig, LoggerInterface $logger)
   {
 
@@ -65,21 +106,30 @@ class AdminEDTController extends AbstractController
                                                   'scale_right' => ConnectionManager::whatScaleRight()]);
 
 
-        if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
-            // We are in one file mode
-            $result_for_one_file = $this->extractFileInsertLines($_FILES['fileToUpload'], $logger);
-        } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
-            // We are in zip mode
-            // Work on the zip
+        $logger->debug("Filename: " . $_FILES['fileToUpload']['name']);
+        if (strlen($_FILES['fileToUpload']['name']) == 0){
+            $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1115 Le Fichier est vide.</span>' . '<br>',
+                                            "extract_queries"=>"Erreur Lecture de fichier.<br>");
+            $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'errtype' => '', 'nofile' => 'nofile']);
+
         } else {
-            // Error
-            $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
-                                            "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv ou un .zip");
+              if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
+                  // We are in one file mode
+                  $result_for_one_file = $this->extractFileInsertLines($_FILES['fileToUpload'], $logger);
+              } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
+                  // We are in zip mode
+                  // Work on the zip
+              } else {
+                  // Error
+                  $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
+                                                  "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv");
+              }
+              $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'], 'sp_result' => $result_for_one_file['sp_result']]);
         }
 
 
 
-        $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'], 'sp_result' => $result_for_one_file['sp_result']]);
+
 
     }
     else{
@@ -118,7 +168,7 @@ class AdminEDTController extends AbstractController
           else{
             // Properly do the importation here
             if (is_uploaded_file($load_file['tmp_name'])) {
-              $report_comment = $report_comment . '<br>' . "<div class='report-title'>" . "<span class='icon-check-square nav-icon-fa nav-text'></span>&nbsp;Fichier : ". $load_file['name'] ."<br>a été pris en compte avec succés." . "</div>";
+              $report_comment = $report_comment . '<br>' . "<div class='report-title'>" . "<span class='icon-check-square nav-icon-fa nav-text'></span>&nbsp;Fichier : ". $load_file['name'] ."<br>Traces techniques:" . "</div>";
 
             }
 
@@ -129,6 +179,7 @@ class AdminEDTController extends AbstractController
             $i = 1;
             $file_is_still_valid = true;
             $report_comment = $report_comment . '<div class="ace-sm report-val">';
+            $max_cell_length = 129;
 
             try {
 
@@ -222,6 +273,15 @@ class AdminEDTController extends AbstractController
                                       $raw_course_title = rtrim($raw_course_title,"\n");
                                       $raw_course_title = str_replace('"', "", $raw_course_title);
                                       $raw_course_title = str_replace("'", "", $raw_course_title);
+                                      // Check the size of raw course raw_course_title
+                                      if(strlen($raw_course_title) > $max_cell_length){
+                                          $file_is_still_valid = false;
+                                          $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR4523 Erreur la cellule en : ligne ' . $i . ' - colonne ' . $k . ' est trop longue. Elle fait ' . strlen($raw_course_title) - $max_cell_length . ' caractères de trop.</span>' . '<br>'
+                                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
+                                                                            . 'Veuillez réduire la taille du texte.<br>'
+                                                                            . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
+                                          $resultsp = array();
+                                      }
                                       $course_details = explode("\n", $raw_course_title);
                                       $kduration = '\'' . $course_details[count($course_details) - 1] . '\'';
                                       $verify_duration = preg_match("/[1]?[0-9][h](30|15)?$/", $course_details[count($course_details) - 1]);

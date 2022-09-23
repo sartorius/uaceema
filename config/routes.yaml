@@ -69,3 +69,8 @@ loadedt:
 checkandloadedt:
     path:       /checkandloadedt
     controller: App\Controller\AdminEDTController::checkandloadedt
+validateedt:
+    path:       /validateedt/{flow}
+    controller: App\Controller\AdminEDTController::validateedt
+    defaults:
+        flow:   0

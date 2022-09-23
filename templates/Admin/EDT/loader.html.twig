@@ -1,5 +1,29 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
+
+{% if validated is defined %}
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-7 alert alert-success alert-uac" role="alert">
+          <span class="nav-text">Votre emploi du temps a bien été validé #{{ validated }}. Vous pouvez intégrer un autre emploi du temps.</span>&nbsp;<span class="icon-check nav-icon-fa nav-text"></span>
+        </div>
+        <div class="col-lg-3">
+        </div>
+    </div>
+{% endif %}
+{% if nofile is defined %}
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-7 alert alert-danger alert-uac" role="alert">
+          <span class="icon-times-circle nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Votre fichier n'a pas été reconnu.</span>
+        </div>
+        <div class="col-lg-3">
+        </div>
+    </div>
+{% endif %}
+
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
