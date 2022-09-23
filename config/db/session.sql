@@ -15,6 +15,22 @@ symfony server:start
 http://localhost:8888/aceemintranet/pluginfile.php/43/user/icon/boost/f1?rev=119
 
 
+adellav445 - Andry Rakoto.jpg
+agnealc472 - Andry Rakoto.jpg
+aimeshi103 - Andry Rakoto.jpg
+ainndel546 - Andry Rakoto.jpg
+ainnval527 - Andry Rakoto.jpg
+akenmat151 - Andry Rakoto.jpg
+
+export PATH='/Library/Frameworks/Python.framework/Versions/3.7/bin:$PATH'
+
+
+SG-min - Andry Rakoto.jpg
+download - Herinirina Ratinahirana.jpg
+
+
+https://drive.google.com/open?id=1TWgy_0CdEZ-Wa8m8pnSNeYZptALLsH0I
+
 SELECT
 		mu.id AS ID,
           mu.username AS USERNAME,
