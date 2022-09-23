@@ -1,18 +1,227 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
-<div class="row">
-  <div class="col-lg-3 mgs-mainblk-txt">
-  </div>
-  <div class="col-lg-6 mgs-mainblk-txt">
-    <h1>Rapport d'intégration</h1>
-    <div class="report-dis">
-        {{ reportcmt | raw }}
-        {{ reportqueries | raw }}
-
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 mgs-mainblk-txt">
+        <h1>Rapport d'intégration EDT</h1>
     </div>
   </div>
-  <div class="col-lg-3 mgs-mainblk-txt">
+  <div class="row">
+    <div class="col-lg-12 info-cartouche">
+        <strong>Mention:</strong> {{ sp_result[0]['mention'] }}<br>
+        <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
+        <strong>Option:</strong> {{ sp_result[0]['uaoption'] }}<br>
+        <strong>Date du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
+    </div>
+
   </div>
+</div>
+<div class="container">
+    <div class="row">
+
+      <div class="col-1 edt-cell-day edt-cell-in">
+        &nbsp;
+      </div>
+      <div class="col-2 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Lundi
+      </div>
+      <div class="col-2 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Mardi
+      </div>
+      <div class="col-2 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Mercredi
+      </div>
+      <div class="col-2 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Jeudi
+      </div>
+      <div class="col-2 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Vendredi
+      </div>
+      <div class="col-1 edt-cell-day edt-bg-hd-b edt-cell-top">
+        Samedi
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-1 edt-cell-dt edt-cell-lf">
+        Heure
+      </div>
+      <div class="col-2 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[0]['nday'] }}
+      </div>
+      <div class="col-2 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[1]['nday'] }}
+      </div>
+      <div class="col-2 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[2]['nday'] }}
+      </div>
+      <div class="col-2 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[3]['nday'] }}
+      </div>
+      <div class="col-2 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[4]['nday'] }}
+      </div>
+      <div class="col-1 edt-cell-dt edt-bg-dt edt-cell-in">
+        {{ sp_result[5]['nday'] }}
+      </div>
+    </div>
+
+    {% set i = 1 %}
+    {% set col = 1 %}
+    {# Daily count debt is a counter to count the course duration #}
+    {% set dailycountdebt1 = 0 %}
+    {% set dailycountdebt2 = 0 %}
+    {% set dailycountdebt3 = 0 %}
+    {% set dailycountdebt4 = 0 %}
+    {% set dailycountdebt5 = 0 %}
+    {% set dailycountdebt6 = 0 %}
+
+    {% for line in sp_result %}
+        {# It is a start line here #}
+        {% if (i + 5) is divisible by(6) %}
+        <div class="row">
+        {% endif %}
+
+            {% if i == 1 %}
+                <div class="col-1  edt-cell edt-bg-hr edt-cell-lf">
+                  {{ line['hour_starts_at'] }}h
+                </div>
+                {% set col = 2 %}
+            {% elseif i == 6 %}
+                {% set col = 1 %}
+            {% else %}
+                {% set col = 2 %}
+            {% endif %}
+
+                  {% if line['duration_hour'] != 0 %}
+                      {% if line['duration_hour'] == 1 %}
+                          <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                      {% else %}
+                          {# The bottom will be continued#}
+                          <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                      {% endif %}
+
+                      {{ line['raw_course_title'] }}
+                      {% if i == 1 %}
+                        {% set dailycountdebt1 = line['duration_hour'] %}
+                      {% elseif i == 2 %}
+                        {% set dailycountdebt2 = line['duration_hour'] %}
+                      {% elseif i == 3 %}
+                        {% set dailycountdebt3 = line['duration_hour'] %}
+                      {% elseif i == 4 %}
+                        {% set dailycountdebt4 = line['duration_hour'] %}
+                      {% elseif i == 5 %}
+                        {% set dailycountdebt5 = line['duration_hour'] %}
+                      {% else %}
+                        {% set dailycountdebt6 = line['duration_hour'] %}
+                      {% endif %}
+                  {% else %}
+                      {# Empty cell#}
+                      {% if i == 1 %}
+                          {% if dailycountdebt1 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt1 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% elseif i == 2 %}
+                          {% if dailycountdebt2 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt2 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% elseif i == 3 %}
+                          {% if dailycountdebt3 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt3 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% elseif i == 4 %}
+                          {% if dailycountdebt4 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt4 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% elseif i == 5 %}
+                          {% if dailycountdebt5 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt5 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% else %}
+                          {% if dailycountdebt6 > 1 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                            {# Merged Cell #}
+                          {% elseif dailycountdebt6 > 0 %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                            {# Merged Cell #}
+                          {% else %}
+                            <div class="col-{{ col }}  edt-cell edt-bg-free edt-cell-in">
+                          {% endif %}
+                      {% endif %}
+                  {% endif %}
+                          </div>
+
+        {# It is a end line here #}
+        {% if i is divisible by(6) %}
+            </div>
+            {% set i = 1 %}
+            {% set dailycountdebt1 = dailycountdebt1 - 1 %}
+            {% set dailycountdebt2 = dailycountdebt2 - 1 %}
+            {% set dailycountdebt3 = dailycountdebt3 - 1 %}
+            {% set dailycountdebt4 = dailycountdebt4 - 1 %}
+            {% set dailycountdebt5 = dailycountdebt5 - 1 %}
+            {% set dailycountdebt6 = dailycountdebt6 - 1 %}
+
+        {% else %}
+            {% set i = i + 1 %}
+        {% endif %}
+
+    {% endfor %}
+
+
+
+
+
+
+
+
+
+</div>
+<div class="container">
+    <div class="row">
+      <div class="col-lg-3 mgs-mainblk-txt">
+      </div>
+      <div class="col-lg-6 mgs-mainblk-txt">
+
+        <div class="report-dis">
+            {{ reportcmt | raw }}
+            {{ reportqueries | raw }}
+
+        </div>
+      </div>
+      <div class="col-lg-3 mgs-mainblk-txt">
+      </div>
+    </div>
 </div>
 
 {% include 'RawTemplate/_footer.html.twig' %}

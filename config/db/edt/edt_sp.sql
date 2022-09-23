@@ -33,8 +33,8 @@ BEGIN
    END IF;
 
 
-    INSERT IGNORE INTO uac_edt (flow_id, mention, niveau, uaoption, monday_ofthew, label_day, day, hour_starts_at, duration_hour, raw_course_title)
-            SELECT inv_flow_id, param_mention, param_niveau, param_option, param_monday_date, label_day, day, hour_starts_at, duration_hour, raw_course_title
+    INSERT IGNORE INTO uac_edt (flow_id, mention, niveau, uaoption, monday_ofthew, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title)
+            SELECT inv_flow_id, param_mention, param_niveau, param_option, param_monday_date, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title
             FROM uac_load_edt
             WHERE status = 'INP'
             AND flow_id = inv_flow_id;
@@ -43,5 +43,21 @@ BEGIN
 
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
+
+    -- Return the list for control
+    SELECT
+      flow_id,
+      mention,
+      niveau,
+      uaoption,
+      DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+      DATE_FORMAT(day, "%d/%m") AS nday,
+      day_code,
+      hour_starts_at,
+      duration_hour,
+      raw_course_title
+    FROM uac_edt WHERE flow_id = inv_flow_id ORDER BY hour_starts_at, day_code ASC;
+
+
 END$$
 -- Remove $$ for OVH

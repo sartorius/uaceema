@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
   `monday_ofthew` DATE NOT NULL,
   `label_day` VARCHAR(20) NOT NULL,
   `day` DATE NOT NULL,
+  `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,
   `raw_duration` VARCHAR(10) NULL,
   `duration_hour` TINYINT NULL,
@@ -24,18 +25,20 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
 
 -- INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, duration, log_pos, raw_course_title, create_date) VALUES (user_id, 'NEW', );
 
-
+-- Visibility is I or V to validate
 DROP TABLE IF EXISTS uac_edt;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `flow_id` BIGINT NULL,
   `cohort_id` BIGINT UNSIGNED NULL,
+  `visibility` CHAR(1) NOT NULL DEFAULT 'I',
   `mention` VARCHAR(100) NOT NULL,
   `niveau` CHAR(2) NOT NULL,
   `uaoption` VARCHAR(45) NULL,
   `monday_ofthew` DATE NOT NULL,
   `label_day` VARCHAR(20) NOT NULL,
   `day` DATE NOT NULL,
+  `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,
   `duration_hour` TINYINT NULL,
   `raw_course_title` VARCHAR(2000) NULL,

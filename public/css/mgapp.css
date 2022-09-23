@@ -864,3 +864,73 @@ textarea[name=inputRef] {
   text-align: left;
   color: var(--val-ace-color);
 }
+
+/*********  EDT Display  **********/
+.info-cartouche{
+  font-size: 14px;
+  color: var(--main-ace-color);
+  margin-bottom: 25px;
+}
+.edt-cell-day{
+  text-align: center;
+  padding-top: 5px;
+  height: 30px;
+  border-color: #667A8C;
+  border-style: solid;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.edt-cell{
+  text-align: center;
+  padding-top: 3px;
+  height: 75px;
+  border-color: #667A8C;
+  border-style: solid;
+}
+
+.edt-cell-top{
+  border-width: 1px 1px 1px 0px; /* 0px top, 1px right, 1px bottom and 0px left */
+}
+
+.edt-cell-in{
+  font-size: 9px;
+  border-width: 0px 1px 1px 0px; /* 0px top, 1px right, 1px bottom and 0px left */
+}
+
+.edt-cell-in-top-mid{
+  font-size: 10px;
+  border-width: 0px 1px 0px 0px; /* 0px top, 1px right, 1px bottom and 0px left */
+}
+
+.edt-cell-lf{
+  border-width: 0px 1px 1px 1px; /* 0px top, 1px right, 1px bottom and 0px left */
+}
+
+.edt-bg-hd-b{
+  background-color: #2D2E2F;
+  color: white;
+}
+
+.edt-bg-bd{
+  background-color: #EAF2F9;
+}
+.edt-bg-hr{
+  background-color: #F7F1FD;
+}
+
+.edt-cell-dt{
+  text-align: center;
+  font-size: 0.7em;
+  padding-top: 4px;
+  height: 25px;
+  border-color: #667A8C;
+  border-style: solid;
+}
+.edt-bg-dt{
+  background-color: #F1F7FD;
+}
+
+.edt-bg-free{
+  background-color: #F8FCFF;
+}

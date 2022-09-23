@@ -79,7 +79,7 @@ class AdminEDTController extends AbstractController
 
 
 
-        $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries']]);
+        $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'], 'sp_result' => $result_for_one_file['sp_result']]);
 
     }
     else{
@@ -241,9 +241,9 @@ class AdminEDTController extends AbstractController
                                       $logger->debug('Read course: ' . count($course_details) . '/' . $data[$k]);
                               }
 
-                              $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, raw_duration, duration_hour, log_pos, raw_course_title)' .
+                              $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, day_code, hour_starts_at, raw_duration, duration_hour, log_pos, raw_course_title)' .
                                                     'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $load_file['name'] . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', UPPER(\'' .
-                                                     date('l', strtotime($days[$k])) . '\'), \'' . $days[$k] . '\', ' . $i . ', ' . $kduration . ', ' . $hduration . ', \'' . $i . ':' . $k . ':' . $verify_duration . '\', ' . $raw_course_title . ');';
+                                                     date('l', strtotime($days[$k])) . '\'), \'' . $days[$k] . '\', ' . date('w', strtotime($days[$k])) . ', ' . $i . ', ' . $kduration . ', ' . $hduration . ', \'' . $i . ':' . $k . ':' . $verify_duration . '\', ' . $raw_course_title . ');';
                               array_push($insert_queries, $my_insert_query);
                           }
                       }
@@ -298,14 +298,12 @@ class AdminEDTController extends AbstractController
                       // Perform the importation
                       // Change the option here !
                       $import_query = "CALL SRV_CRT_EDT('" . $load_file['name'] . "', '" . $mention . "', '" . $niveau . "', NULL, '" . $monday . "')";
-                      $result = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+                      $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
 
 
                       $report_queries = '<br><hr><div class="ace-sm report-val"> Number of input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
-
-
-
-                      $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Load in DB.';
+                      $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Load in DB. Return count: ' . count($resultsp)  . '<br>';
                     }
                     else{
                       // Display the error here
@@ -323,7 +321,7 @@ class AdminEDTController extends AbstractController
           }
           /**************************** END : CHECK THE FILE CONTENT HERE ****************************/
 
-          return array("extract_report"=>$report_comment, "extract_queries"=>$report_queries);
+          return array("extract_report"=>$report_comment, "extract_queries"=>$report_queries, "sp_result"=>$resultsp);
 
   }
 
