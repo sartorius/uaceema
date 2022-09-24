@@ -879,6 +879,32 @@ textarea[name=inputRef] {
 }
 
 /*******************/
+/*********  SCAN  **********/
+.header-scan{
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: white;
+  padding-top: 1px;
+  height: 16px;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.header-scan-bg-in{
+  color: white;
+  background-color: #007041;
+}
+
+.header-scan-bg-out{
+  color: #F0ED00;
+  background-color: #282828;
+}
+
+.ua-scan-mn{
+  margin-left: 5px;
+}
+
 /*********  LOADER  **********/
 .uac-sm-version{
   display: block;

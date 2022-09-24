@@ -1,49 +1,72 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
-<div id="mg-graph-identifier">ua-scan</div>
+{% if rule == 'in' %}
+    <div id="mg-graph-identifier">ua-scan-in</div>
+{% else %}
+    <div id="mg-graph-identifier">ua-scan-out</div>
+{% endif %}
+
 
 <script>
   let dataTagToJsonArray = new Array();
 </script>
 
 
-
-<div class="row">
-  <div class="col-lg-4 mgs-mainblk-txt">
-
-  </div>
-  <div class="col-lg-4 mgs-mainblk-txt">
-
-
-    <div class="carte-profile ace-xs">
-      {{ firstname }}&nbsp;{{ lastname }}/<i id="load-username">{{ amiconnected }}</i>/<i id="load-userid">{{ id }}</i> <br>
-    </div>
-    <div class="carte-profile ace-sm">
-      <span class="icon-clock-o nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-time"></i>&nbsp;
-      <span class="icon-cloud-upload nav-icon-fa nav-text"></span>&nbsp;<i id="left-cloud"></i><br>
-      <i id="last-read-bc" class="mgs-readacebc-lg"></i>
-    </div>
-    <img id="waiting-gif" src="{{ path('main') }}img/waiting.gif" style="width:175px; height:175px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
-    <hr>
-
-    <div>
-        <input class="form-control mgs-readacebc" rows="1" id="scan-ace" name="inputUserName" placeholder="Scan barre assiduité">
-    </div>
-    <div class="btn-profil mid-blc">
-      <button id="btn-load-bc" class="btn btn-default btn-lg btn-print btn-block">Charger les codes barres &nbsp;<i class="icon-cloud-upload nav-text"></i></button>
-    </div>
-    <div class="user-title acbc-read">
-        <span class="icon-barcode nav-icon-fa nav-text"></span>&nbsp;Codes Reconnus
-    </div>
-
-    <div id="code-lu">
-
-    </div>
+      <div class="row">
+        <div class="col-lg-4">
+        </div>
+        <div class="col-lg-4">
+            {% if rule == 'in' %}
+                <div class="header-scan header-scan-bg-in">
+                  ENTRÉE
+                </div>
+            {% else %}
+                <div class="header-scan header-scan-bg-out">
+                  SORTIE
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-lg-4">
+        </div>
+      </div>
 
 
-  </div>
-  <div class="col-lg-4 mgs-mainblk-txt">
-  </div>
-</div>
+      <div class="row">
+        <div class="col-lg-4 mgs-mainblk-txt">
+
+        </div>
+        <div class="col-lg-4 mgs-mainblk-txt ua-scan-mn">
+
+
+          <div class="carte-profile ace-xs">
+            {{ firstname }}&nbsp;{{ lastname }}/<i id="load-username">{{ amiconnected }}</i>/<i id="load-userid">{{ id }}</i> <br>
+          </div>
+          <div class="carte-profile ace-sm">
+            <span class="icon-clock-o nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-time"></i>&nbsp;
+            <span class="icon-cloud-upload nav-icon-fa nav-text"></span>&nbsp;<i id="left-cloud"></i><br>
+            <i id="last-read-bc" class="mgs-readacebc-lg"></i>
+          </div>
+          <img id="waiting-gif" src="{{ path('main') }}img/waiting.gif" style="width:175px; height:175px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
+          <hr>
+
+          <div>
+              <input class="form-control mgs-readacebc" rows="1" id="scan-ace" name="inputUserName" placeholder="Scan barre assiduité">
+          </div>
+          <div class="btn-profil mid-blc">
+            <button id="btn-load-bc" class="btn btn-default btn-lg btn-print btn-block">Charger les codes barres &nbsp;<i class="icon-cloud-upload nav-text"></i></button>
+          </div>
+          <div class="user-title acbc-read">
+              <span class="icon-barcode nav-icon-fa nav-text"></span>&nbsp;Codes Reconnus
+          </div>
+
+          <div id="code-lu">
+
+          </div>
+
+
+        </div>
+        <div class="col-lg-4 mgs-mainblk-txt">
+        </div>
+      </div>
 
 {% include 'RawTemplate/_footer.html.twig' %}

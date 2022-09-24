@@ -1,14 +1,14 @@
 <div class="container">
   <div class="row">
     <div class="col-6">
-        {% if week > -1 %}
+        {% if week > prec_maxweek %}
             <a class="btn btn-default btn-lg btn-block" href="/profile/{{ page }}/{{ week - 1 }}" role="button"><span class="icon-arrow-circle-left nav-text"></span>&nbsp;Préc.</a>
         {% else %}
             <a class="btn btn-default btn-lg btn-block disabled" href="#/" role="button" aria-disabled="true"><span class="icon-arrow-circle-left nav-text"></span>&nbsp;Préc.</a>
         {% endif %}
     </div>
     <div class="col-6">
-        {% if week < 2 %}
+        {% if week < next_maxweek %}
               <a class="btn btn-default btn-lg btn-block" href="/profile/{{ page }}/{{ week + 1 }}" role="button">Suiv.&nbsp;<span class="icon-arrow-circle-right nav-text"></span></a>
         {% else %}
               <a class="btn btn-default btn-lg btn-block disabled" href="#/" role="button" aria-disabled="true">Suiv.&nbsp;<span class="icon-arrow-circle-right nav-text"></span></a>

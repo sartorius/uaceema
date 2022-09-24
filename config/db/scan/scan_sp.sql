@@ -28,12 +28,12 @@ BEGIN
    -- Do the treatment here
    -- We must map the data here
 
-   INSERT INTO uac_scan (user_id, agent_id, scan_date, scan_time, status)
-      SELECT mu.id, uls.user_id, uls.scan_date, MIN(uls.scan_time), 'NEW'
+   INSERT INTO uac_scan (user_id, in_out, agent_id, scan_date, scan_time, status)
+      SELECT mu.id, uls.in_out, uls.user_id, uls.scan_date, MIN(uls.scan_time), 'NEW'
       FROM uac_load_scan uls JOIN mdl_user mu on UPPER(mu.username) = UPPER(uls.scan_username)
       WHERE uls.scan_date = inv_date
       AND uls.status = 'NEW'
-      GROUP BY mu.id, uls.user_id, uls.scan_date;
+      GROUP BY mu.id, uls.in_out, uls.user_id, uls.scan_date;
 
    -- Set the load lines has read
    UPDATE uac_load_scan

@@ -54,7 +54,7 @@ cartezp:
     defaults:
         page:   0
 scan:
-    path:       /scan
+    path:       /scan/{rule}
     controller: App\Controller\ScanController::scan
 loadscan:
     path:       /loadscan

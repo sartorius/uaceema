@@ -80,9 +80,11 @@ class ProfileController extends AbstractController
 
             // End of assiduité
 
+            $prec_maxweek = $_ENV['PRECMAXWEEK'];
+            $next_maxweek = $_ENV['NEXTMAXWEEK'];
             // We force week to keep in -1 + 2
             if(is_numeric($week)){
-              if (($week < -1) or ($week > 2)){
+              if (($week < $prec_maxweek) or ($week > $next_maxweek)){
                 $week = 0;
               }
             }else{
@@ -115,7 +117,7 @@ class ProfileController extends AbstractController
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
                                       "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
-                                      "week"=>$week, "page"=>$page,
+                                      "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);
       }
     }

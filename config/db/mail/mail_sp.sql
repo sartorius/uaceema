@@ -1,3 +1,5 @@
+-- This push account without email to be sent
+-- These account will be prepared to be sent in uac_mail
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_MailWelcomeNewUser$$
 CREATE PROCEDURE `SRV_CRT_MailWelcomeNewUser` ()
@@ -40,6 +42,8 @@ END$$
 -- Remove $$ for OVH
 
 
+-- This is getting the list of email according to the limit
+-- This is handling the daily limit of email to be sent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_GRP_WelcomeEMail$$
 CREATE PROCEDURE `SRV_GRP_WelcomeEMail` ()

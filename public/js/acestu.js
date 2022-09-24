@@ -115,11 +115,18 @@ function loadScan(){
   $("#waiting-gif").show();
   $('#last-read-bc').html('En attente chargement');
 
+  //We say here if it is an in or an out
+  let order = 'I';
+  if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
+    order = 'O';
+  }
+
   $.ajax('/loadscan', {
       type: 'POST',  // http method
       data: { loadusername: $('#load-username').html(),
               loaduserid: $('#load-userid').html(),
-              loaddata: JSON.stringify(dataTagToJsonArray)
+              loaddata: JSON.stringify(dataTagToJsonArray),
+              loardorder: order
       },  // data to submit
       success: function (data, status, xhr) {
           $("#waiting-gif").hide();
@@ -130,7 +137,7 @@ function loadScan(){
           $('#scan-ace').val('');
           $("#scan-ace").show();
           dataTagToJsonArray = [];
-          console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
+          //console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
 
 
       },
@@ -194,7 +201,12 @@ $(document).ready(function() {
 
   }
   // We check here the graph **************************************************** OLD
-  else if($('#mg-graph-identifier').text() == 'ua-scan'){
+  else if((($('#mg-graph-identifier').text() == 'ua-scan-in')) ||
+            ($('#mg-graph-identifier').text() == 'ua-scan-out')){
+
+
+
+
     $('#left-cloud').html(globalMaxRead);
     // Do nothing
     $( "#scan-ace" ).keyup(function() {

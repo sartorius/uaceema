@@ -16,7 +16,7 @@ use \PDO;
 
 class ScanController extends AbstractController
 {
-  public function scan(Environment $twig, LoggerInterface $logger)
+  public function scan(Environment $twig, LoggerInterface $logger, $rule)
   {
 
     if (session_status() == PHP_SESSION_NONE) {
@@ -28,10 +28,21 @@ class ScanController extends AbstractController
     if(isset($scale_right) && ($scale_right == 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
-        $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+        $twig_page = '';
+
+        if(isset($rule) && (($rule == 'in') or ($rule == 'out'))){
+            $twig_page = 'Scan/main.html.twig';
+        }
+        else{
+          $rule = 'unk';
+          $twig_page = 'Static/error314.html.twig';
+        }
+
+        $content = $twig->render($twig_page, ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                   'firstname' => $_SESSION["firstname"],
                                                   'lastname' => $_SESSION["lastname"],
                                                   'id' => $_SESSION["id"],
+                                                  'rule' => $rule,
                                                   'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     else{
@@ -61,6 +72,7 @@ class ScanController extends AbstractController
           // Get data from ajax
           $param_username = $request->request->get('loadusername');
           $param_userid = $request->request->get('loaduserid');
+          $param_order = $request->request->get('loardorder');
 
           //$param_json = $request->request->get('loaddata');
           $param_jsondata = json_decode($request->request->get('loaddata'), true);
@@ -80,11 +92,11 @@ class ScanController extends AbstractController
 
 
           //echo $param_jsondata[0]['username'];
-          $query_value = 'INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (';
+          $query_value = 'INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status, in_out) VALUES (';
           $first_comma = '';
           foreach ($param_jsondata as $read)
           {
-              $query_value = $query_value . $first_comma . $param_userid . ', LOWER(\'' . $read['username'] . '\'), \''  . $read['date'] . '\', \'' . $read['time'] . '\', \'NEW\' )';
+              $query_value = $query_value . $first_comma . $param_userid . ', LOWER(\'' . $read['username'] . '\'), \''  . $read['date'] . '\', \'' . $read['time'] . '\', \'NEW\', \'' . $param_order . '\')';
               $first_comma = ', (';
           }
           $query_value = $query_value . ';';

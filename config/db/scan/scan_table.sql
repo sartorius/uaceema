@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
   `scan_date` DATE NOT NULL,
   `scan_time` TIME NOT NULL,
   `status` CHAR(3) NOT NULL,
+  `in_out` CHAR(1) NOT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 -- INSERT INTO uac_load_scan (user_id, scan_username, scan_date, scan_time, status) VALUES (1, 'TOTO', '2022-09-11', '01:41:24', 'NEW');
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan` (
   `status` CHAR(3) NOT NULL,
   `edt_involved` INT UNSIGNED NOT NULL DEFAULT 0,
   `valid_exc_uid` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `in_out` CHAR(1) NOT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
