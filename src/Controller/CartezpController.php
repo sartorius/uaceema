@@ -19,11 +19,16 @@ class CartezpController extends AbstractController
   {
 
 
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    //'scale_right' => ConnectionManager::whatScaleRight()
+
     $logger->debug("This page: " . $page);
 
     if(strlen($page) < 11){
       // Error Code 404
-      $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+      $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     else{
 
@@ -66,13 +71,13 @@ class CartezpController extends AbstractController
 
       if(count($result) != 1){
             // We did not find the page we go out
-            $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+            $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
       }else{
             // We found the student
             $logger->debug("We found: " . $result[0]['FIRSTNAME'] . ' ' . $result[0]['LASTNAME']);
 
-            $content = $twig->render('Cartezp/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0], 'profile_url' => $profile_url, 'moodle_url' => $_ENV['MDL_URL']]);
+            $content = $twig->render('Cartezp/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0], 'profile_url' => $profile_url, 'moodle_url' => $_ENV['MDL_URL']]);
       }
     }
 

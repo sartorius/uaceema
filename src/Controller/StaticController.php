@@ -20,7 +20,7 @@ class StaticController extends AbstractController
 
     $debug_session = "Pass variable to check";
 
-    $content = $twig->render('Static/mention.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Static/mention.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
@@ -30,16 +30,16 @@ class StaticController extends AbstractController
 
     $debug_session = "Pass variable to check";
 
-    $content = $twig->render('Static/news.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Static/news.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
 
   public function apply(Environment $twig)
   {
+    $debug_session = "Pass variable to check";
 
-
-    $content = $twig->render('Static/apply.html.twig');
+    $content = $twig->render('Static/apply.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
@@ -53,7 +53,7 @@ class StaticController extends AbstractController
     // This email works !!
     //MailManager::sendSimpleEmail();
 
-    $content = $twig->render('Static/partner.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Static/partner.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
@@ -69,7 +69,7 @@ class StaticController extends AbstractController
 
     $debug_session = "Pass variable to check";
 
-    $content = $twig->render('Static/universite.html.twig', ['debug' => $debug_session, 'mac_address' => $ipAddress, 'amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Static/universite.html.twig', ['debug' => $debug_session, 'mac_address' => $ipAddress, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
@@ -77,13 +77,13 @@ class StaticController extends AbstractController
   public function mentionslegales(Environment $twig)
   {
 
-    $content = $twig->render('Static/mentionslegales.html.twig');
+    $content = $twig->render('Static/mentionslegales.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
   public function contact(Environment $twig)
   {
-    $content = $twig->render('Static/contact.html.twig');
+    $content = $twig->render('Static/contact.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }

@@ -16,7 +16,7 @@ class HomeController extends AbstractController
   public function index(Environment $twig, LoggerInterface $logger)
   {
 
-    $content = $twig->render('Home/home.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Home/home.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     //$logger->debug('Home Show me session: ' . $_SESSION["username"]);
     return new Response($content);

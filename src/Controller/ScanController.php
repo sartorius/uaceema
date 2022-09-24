@@ -47,7 +47,7 @@ class ScanController extends AbstractController
     }
     else{
         // Error Code 404
-        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
   }
@@ -114,7 +114,7 @@ class ScanController extends AbstractController
           // Send all this back to client
           return new JsonResponse(array(
               'status' => 'OK',
-              'message' => 'Tout va bien les cocos: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $query_value),
+              'message' => 'Tout est OK: ' . $param_username . ' : ' . sizeof($param_jsondata) . ' : ' . $query_value),
           200);
       }
 

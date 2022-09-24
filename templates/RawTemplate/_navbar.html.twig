@@ -47,8 +47,9 @@
                       {{ amiconnected }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownUsr">
-                      <a class="dropdown-item" href="/profile/3556868861ROSMAGG008"><span class="nav-text">Test profile</span></a>
-                      <a class="dropdown-item" href="/loadedt"><span class="icon-cloud-upload nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Charger EDT</span></a>
+                      {% if (scale_right is defined) and (scale_right is not null) and (scale_right > 0) %}
+                          <a class="dropdown-item" href="/loadedt"><span class="icon-cloud-upload nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Charger EDT</span></a>
+                      {% endif %}
                       <a class="dropdown-item" href="/scan/in"><span class="icon-sign-in nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Scan Entrée</span></a>
 
                       <a class="dropdown-item" href="/scan/out"><span class="icon-sign-out nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Scan Sortie</span></a>

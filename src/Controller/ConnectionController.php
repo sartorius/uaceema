@@ -17,7 +17,7 @@ class ConnectionController extends AbstractController
   public function login(Environment $twig, LoggerInterface $logger)
   {
 
-    $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+    $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     return new Response($content);
   }
 
@@ -39,7 +39,7 @@ class ConnectionController extends AbstractController
     else{
         //$logger->debug('Not clean session:' . $_SESSION["username"]);
     }
-    $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'logmeout' => 'yes']);
+    $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'logmeout' => 'yes']);
     return new Response($content);
   }
 
@@ -58,10 +58,10 @@ class ConnectionController extends AbstractController
           $the_connection->connectMe($_POST["inputUserName"], $_POST["inputPassword"], $logger);
 
           if (session_status() == PHP_SESSION_NONE) {
-              $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'mgverifynotfound' => 'no']);
+              $content = $twig->render('Connection/login.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'mgverifynotfound' => 'no']);
           }
           else{
-              $content = $twig->render('Home/home.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'connected' => 'yes']);
+              $content = $twig->render('Home/home.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'connected' => 'yes']);
               $logger->debug('Show me session: ' . $_SESSION["firstname"]);
           }
 

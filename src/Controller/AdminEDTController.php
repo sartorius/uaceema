@@ -22,18 +22,14 @@ class AdminEDTController extends AbstractController
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
+    //'scale_right' => ConnectionManager::whatScaleRight()
 
     $scale_right = ConnectionManager::whatScaleRight();
 
 
-    if(isset($scale_right) && ($scale_right == 0)){
+    // Level ONE is necessary to load EDT
+    if(isset($scale_right) && ($scale_right > 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
-
-        $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                  'firstname' => $_SESSION["firstname"],
-                                                  'lastname' => $_SESSION["lastname"],
-                                                  'id' => $_SESSION["id"],
-                                                  'scale_right' => ConnectionManager::whatScaleRight()]);
 
 
         $validate_query = "UPDATE uac_edt SET visibility = 'V' WHERE flow_id =" . $flow . ";";
@@ -43,12 +39,17 @@ class AdminEDTController extends AbstractController
         $logger->debug("Show me: " . count($result));
 
 
-        $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'errtype' => '', 'validated' => $flow]);
+        $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                  'firstname' => $_SESSION["firstname"],
+                                                                  'lastname' => $_SESSION["lastname"],
+                                                                  'id' => $_SESSION["id"],
+                                                                  'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                  'errtype' => '', 'validated' => $flow]);
 
     }
     else{
         // Error Code 404
-        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
   }
@@ -66,23 +67,23 @@ class AdminEDTController extends AbstractController
 
     $scale_right = ConnectionManager::whatScaleRight();
 
+    $logger->debug("scale_right: " . $scale_right);
 
-    if(isset($scale_right) && ($scale_right == 0)){
+    if(isset($scale_right) && ($scale_right > 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
-        $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                  'firstname' => $_SESSION["firstname"],
-                                                  'lastname' => $_SESSION["lastname"],
-                                                  'id' => $_SESSION["id"],
-                                                  'scale_right' => ConnectionManager::whatScaleRight()]);
 
-
-        $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'errtype' => '']);
+        $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'errtype' => '']);
 
     }
     else{
         // Error Code 404
-        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
   }
@@ -96,21 +97,20 @@ class AdminEDTController extends AbstractController
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
-    if(isset($scale_right) && ($scale_right == 0)){
+    if(isset($scale_right) && ($scale_right > 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
-
-        $content = $twig->render('Scan/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                  'firstname' => $_SESSION["firstname"],
-                                                  'lastname' => $_SESSION["lastname"],
-                                                  'id' => $_SESSION["id"],
-                                                  'scale_right' => ConnectionManager::whatScaleRight()]);
 
 
         $logger->debug("Filename: " . $_FILES['fileToUpload']['name']);
         if (strlen($_FILES['fileToUpload']['name']) == 0){
             $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1115 Le Fichier est vide.</span>' . '<br>',
                                             "extract_queries"=>"Erreur Lecture de fichier.<br>");
-            $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'errtype' => '', 'nofile' => 'nofile']);
+            $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                    'firstname' => $_SESSION["firstname"],
+                                                                    'lastname' => $_SESSION["lastname"],
+                                                                    'id' => $_SESSION["id"],
+                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'errtype' => '', 'nofile' => 'nofile']);
 
         } else {
               if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
@@ -124,7 +124,13 @@ class AdminEDTController extends AbstractController
                   $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
                                                   "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv");
               }
-              $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'], 'sp_result' => $result_for_one_file['sp_result']]);
+              $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                                'firstname' => $_SESSION["firstname"],
+                                                                                'lastname' => $_SESSION["lastname"],
+                                                                                'id' => $_SESSION["id"],
+                                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                                'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'],
+                                                                                'sp_result' => $result_for_one_file['sp_result']]);
         }
 
 
@@ -134,7 +140,7 @@ class AdminEDTController extends AbstractController
     }
     else{
         // Error Code 404
-        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot()]);
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
   }

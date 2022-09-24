@@ -76,6 +76,7 @@ class ServmailController extends AbstractController
       */
       $path = __DIR__;
 
+      // Not called by operational
       $content = $twig->render('Service/servmail.html.twig', ['resultService' => 'KEY is OK ' . $path ]);
     }
     else{
