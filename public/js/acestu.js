@@ -210,11 +210,41 @@ $(document).ready(function() {
   // We check here the graph **************************************************** OLD
   else if($('#mg-graph-identifier').text() == 'ua-profile'){
     console.log('in ua Profile');
+
+    if (!($(".uac-sm-p1-version").css('display') == 'none')){
+        // 'element' is hidden
+        const d = new Date();
+        let currentday = d.getDay();
+        console.log('currentday: ' + currentday);
+        if(currentday < 4){
+            $(".uac-sm-p1-version").hide();
+            $(".uac-sm-p2-version").show();
+        }
+        else{
+            $(".uac-sm-p1-version").show();
+            $(".uac-sm-p2-version").hide();
+        }
+    }
+
+
     $("#edt-disp-line").click(function() {
         console.log('Click #edt-disp-line');
         //$(".uac-bkp-version").css("visibility", "visible");
         $(".uac-bkp-version").show();
         $("#edt-disp-line").hide();
+    });
+
+    $(".edt-switch-wp").click(function() {
+      if (!($(".uac-sm-p1-version").css('display') == 'none')){
+          // 'element' is hidden
+          $(".uac-sm-p1-version").hide();
+          $(".uac-sm-p2-version").show();
+      }
+      else{
+        $(".uac-sm-p1-version").show();
+        $(".uac-sm-p2-version").hide();
+      }
+
     });
   }
   else if($('#mg-graph-identifier').text() == 'advert'){

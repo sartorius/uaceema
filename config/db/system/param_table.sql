@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `working_date` DATE NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
   `filename` VARCHAR(300) NULL,
+  `comment` VARCHAR(500) NULL,
   `last_update` DATETIME NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));

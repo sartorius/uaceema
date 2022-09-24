@@ -16,8 +16,8 @@ INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_cod
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('SYURLIE', 'URL Internet', 'https://www.uaceem.com', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANXXX', 'Flow retard', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MLWELCO', 'Mail Welcome qui envoie details', NULL, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANPRG', 'Flow purge scan', 7, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 200, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANPRG', 'Flow purge scan', 5, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 90, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Compteur limit of email per day', 0, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILBA', 'Batch email per day', 15, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTLOAD', 'Integration des EDT', NULL, NULL);
@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `working_date` DATE NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
   `filename` VARCHAR(300) NULL,
+  `comment` VARCHAR(500) NULL,
   `last_update` DATETIME NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
@@ -46,16 +47,30 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_admin` (
   `accounting_write` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
+/*********************************************************
+**********************************************************
+**********************************************************
+**********************************************************
+******************   WARNING  ****************************
+**********************************************************
+**********************************************************
+**********************************************************
+**********************************************************
+*********************************************************/
+
+
+
 -- /!\ IL FAUT AVOIR CRÉE LES UTILISATEURS AVANT DE CHARGER CES REQUÊTES D'ABORD
-/*
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'benrand123'), 'e716e0cf70d3c6dbd840945d890f074d', 'Recteur', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'harrako912'), '78e740abec0d61e6dd52452e6d9c2a32', 'SG', NULL, 5);
+
+INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'benrand123'), 'e716e0cf70d3c6dbd840945d890f074d', 'Recteur', NULL, 7);
+INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'harrako912'), '78e740abec0d61e6dd52452e6d9c2a32', 'SG', NULL, 7);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'lalrako381'), '9248153d95104975573f18e2852d6647', 'DAF', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako617'), '2df68a85f1932ca876926252bbaa0820', 'CGE', NULL);
+INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako617'), '3182a20c71d20d919cb1f3b3035d5924', 'CGE', NULL, 5);
+INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tokrako283'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
+INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tsirako227'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mikrama654'), 'c24d593b9266e7b8d0887d0dc7259705', 'Agent', NULL);
 INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mborako321'), 'd064a894fb8645879312b10d366cd604', 'Agent', NULL);
 
-*/
 
 -- SHOW USERS
 
@@ -80,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
 */
 
   -- Control to save !
+  /*
   SELECT
       mu.id AS ID,
             mu.username AS USERNAME,
@@ -101,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
     FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
              JOIN mdl_role mr ON mr.id = uas.roleid
              LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+*/
 DROP TABLE IF EXISTS uac_load_scan;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -182,6 +199,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
   `monday_ofthew` DATE NOT NULL,
   `label_day` VARCHAR(20) NOT NULL,
   `day` DATE NOT NULL,
+  `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,
   `raw_duration` VARCHAR(10) NULL,
   `duration_hour` TINYINT NULL,
@@ -193,17 +211,20 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
 
 -- INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, duration, log_pos, raw_course_title, create_date) VALUES (user_id, 'NEW', );
 
-
+-- Visibility is I or V to validate
 DROP TABLE IF EXISTS uac_edt;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `flow_id` BIGINT NULL,
+  `cohort_id` BIGINT UNSIGNED NULL,
+  `visibility` CHAR(1) NOT NULL DEFAULT 'I',
   `mention` VARCHAR(100) NOT NULL,
   `niveau` CHAR(2) NOT NULL,
   `uaoption` VARCHAR(45) NULL,
   `monday_ofthew` DATE NOT NULL,
   `label_day` VARCHAR(20) NOT NULL,
   `day` DATE NOT NULL,
+  `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,
   `duration_hour` TINYINT NULL,
   `raw_course_title` VARCHAR(2000) NULL,
@@ -462,8 +483,8 @@ BEGIN
    END IF;
 
 
-    INSERT IGNORE INTO uac_edt (flow_id, mention, niveau, uaoption, monday_ofthew, label_day, day, hour_starts_at, duration_hour, raw_course_title)
-            SELECT inv_flow_id, param_mention, param_niveau, param_option, param_monday_date, label_day, day, hour_starts_at, duration_hour, raw_course_title
+    INSERT IGNORE INTO uac_edt (flow_id, mention, niveau, uaoption, monday_ofthew, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title)
+            SELECT inv_flow_id, param_mention, param_niveau, param_option, param_monday_date, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title
             FROM uac_load_edt
             WHERE status = 'INP'
             AND flow_id = inv_flow_id;
@@ -472,5 +493,108 @@ BEGIN
 
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
+
+    -- Return the list for control
+    SELECT
+      flow_id,
+      mention,
+      niveau,
+      uaoption,
+      DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+      DATE_FORMAT(day, "%d/%m") AS nday,
+      day_code,
+      hour_starts_at,
+      duration_hour,
+      raw_course_title
+    FROM uac_edt WHERE flow_id = inv_flow_id ORDER BY hour_starts_at, day_code ASC;
+
+
+END$$
+-- Remove $$ for OVH
+
+-- Read the EDT for a specific username
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_FWEDT$$
+CREATE PROCEDURE `CLI_GET_FWEDT` (IN param_username VARCHAR(25), IN param_week TINYINT, IN param_bkp CHAR(1))
+BEGIN
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_monday_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+    DECLARE count_result_set	INT;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL (7 * param_week) DAY) INTO inv_cur_date;
+    -- inv_cur_dayw will be 7 or 1 for week end
+    -- Check the week involved
+    SELECT DAYOFWEEK(inv_cur_date) INTO inv_cur_dayw;
+
+    -- If WE, we take next Monday
+    IF inv_cur_dayw IN (7) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 2 DAY) INTO inv_monday_date;
+    ELSEIF inv_cur_dayw IN (1) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 1 DAY) INTO inv_monday_date;
+    ELSE
+        SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO inv_monday_date;
+    END IF;
+
+
+    SELECT COUNT(1) INTO count_result_set FROM uac_edt WHERE monday_ofthew = inv_monday_date AND visibility = 'V';
+
+    IF (count_result_set = 0) THEN
+          SELECT
+              NULL AS flow_id,
+              NULL AS mention,
+              NULL AS niveau,
+              NULL AS uaoption,
+              NULL AS label_day_fr,
+              DATE_FORMAT(inv_monday_date, "%d/%m/%Y") AS mondayw,
+              DATE_FORMAT(inv_cur_date, "%d/%m") AS nday,
+              0 AS day_code,
+              0 AS hour_starts_at,
+              0 AS duration_hour,
+              NULL AS raw_course_title;
+    ELSE
+      -- We have result
+          IF (param_bkp = 'N') THEN
+                -- Return the list for control
+                SELECT
+                  flow_id,
+                  mention,
+                  niveau,
+                  uaoption,
+                  label_day,
+                  DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+                  DATE_FORMAT(day, "%d/%m") AS nday,
+                  day_code,
+                  hour_starts_at,
+                  duration_hour,
+                  raw_course_title
+                FROM uac_edt WHERE monday_ofthew = inv_monday_date AND visibility = 'V'
+                ORDER BY hour_starts_at, day_code ASC;
+
+         ELSE
+                 -- Return the list for control
+                 SELECT
+                   flow_id,
+                   mention,
+                   niveau,
+                   uaoption,
+                   CASE
+                      WHEN day_code = 1 THEN "LUNDI"
+                      WHEN day_code = 2 THEN "MARDI"
+                      WHEN day_code = 3 THEN "MERCREDI"
+                      WHEN day_code = 4 THEN "JEUDI"
+                      WHEN day_code = 5 THEN "VENDREDI"
+                      ELSE "SAMEDI"
+                      END AS label_day_fr,
+                   DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+                   DATE_FORMAT(day, "%d/%m") AS nday,
+                   day_code,
+                   hour_starts_at,
+                   duration_hour,
+                   raw_course_title
+                 FROM uac_edt WHERE monday_ofthew = inv_monday_date AND visibility = 'V'
+                 ORDER BY day_code, hour_starts_at  ASC;
+         END IF;
+    END IF;
 END$$
 -- Remove $$ for OVH
