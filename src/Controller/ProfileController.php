@@ -15,7 +15,7 @@ use \PDO;
 
 class ProfileController extends AbstractController
 {
-  public function show(Environment $twig, LoggerInterface $logger, $page)
+  public function show(Environment $twig, LoggerInterface $logger, $page, $week)
   {
 
 
@@ -80,23 +80,43 @@ class ProfileController extends AbstractController
 
             // End of assiduité
 
+            // We force week to keep in -1 + 2
+            if(is_numeric($week)){
+              if (($week < -1) or ($week > 2)){
+                $week = 0;
+              }
+            }else{
+              $week = 0;
+            }
+
             /** Manage emploi du temps **/
             // Be carefull if you have array of array
             $dbconnectioninst = DBConnectionManager::getInstance();
             // Perform the importation
             // Change the option here !
-            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "')";
+            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'N')";
             $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            $import_query = "CALL CLI_GET_SMEDT('" . $result[0]['USERNAME'] . "')";
-            $resultsp_sm = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+            $week_p_one = array();
+            $week_p_two = array();
 
+            for($k = 0; $k < count($resultsp); $k++){
+                if($resultsp[$k]['day_code'] < 4){
+                  array_push($week_p_one, $resultsp[$k]);
+                }
+                else{
+                  array_push($week_p_two, $resultsp[$k]);
+                }
+            }
 
-
-
+            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'Y')";
+            $resultspbackup = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0],
-                                      'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], "sp_result"=>$resultsp, "resultsp_sm"=>$resultsp_sm]);
+                                      'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
+                                      "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
+                                      "week"=>$week, "page"=>$page,
+                                      "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);
       }
     }
 

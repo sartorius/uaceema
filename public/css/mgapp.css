@@ -914,7 +914,7 @@ textarea[name=inputRef] {
 
 /*********  EDT Display  **********/
 .info-cartouche{
-  font-size: 10px;
+  font-size: 11px;
   color: var(--main-ace-color);
   margin-bottom: 5px;
 }
@@ -954,7 +954,7 @@ textarea[name=inputRef] {
 .edt-cell{
   text-align: left;
   padding-top: 3px;
-  height: 140px;
+  height: 120px;
   border-color: #667A8C;
   border-style: solid;
   padding-left: 3px;
@@ -988,12 +988,12 @@ textarea[name=inputRef] {
 
 
 .edt-cell-in{
-  font-size: 7px;
+  font-size: 9px;
   border-width: 0px 1px 1px 0px; /* 0px top, 1px right, 1px bottom and 0px left */
 }
 
 .edt-cell-in-top-mid{
-  font-size: 7px;
+  font-size: 9px;
   border-width: 0px 1px 0px 0px; /* 0px top, 1px right, 1px bottom and 0px left */
 }
 
@@ -1091,7 +1091,20 @@ textarea[name=inputRef] {
   background-size:50px 50px;
 }
 
+.edt-bg-free-4{
+  background-color: hsl(2, 57%, 70%);
+  background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
+  repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
+  repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
+}
+
 .button-edt-validate{
   margin-top: 60px;
   margin-bottom: 60px;
+}
+
+.uac-bkp-version{
+  display: none;
+  font-size: 12px;
+  color: var(--main-ace-color);
 }

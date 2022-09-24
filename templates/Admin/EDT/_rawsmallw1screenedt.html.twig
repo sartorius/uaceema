@@ -1,0 +1,128 @@
+{% if resultsp_sm|length > 1 %}
+        {% set free_i = random(['1', '2', '3', '4']) %}
+
+        <div class="container">
+            <div class="row">
+
+              <div class="col-2 edt-cell-day edt-cell-in">
+                &nbsp;
+              </div>
+              <div class="col-3 edt-cell-day edt-bg-hd-b edt-cell-top">
+                {{ day_1 }}
+              </div>
+              <div class="col-3 edt-cell-day edt-bg-hd-b edt-cell-top">
+                {{ day_2 }}
+              </div>
+              <div class="col-3 edt-cell-day edt-bg-hd-b edt-cell-top">
+                {{ day_3 }}
+              </div>
+            </div>
+
+            <div class="row">
+
+              <div class="col-2 edt-cell-dt edt-cell-lf">
+                H
+              </div>
+              <div class="col-3 edt-cell-dt edt-bg-dt edt-cell-in">
+                {{ resultsp_sm[0]['nday'] }}
+              </div>
+              <div class="col-3 edt-cell-dt edt-bg-dt edt-cell-in">
+                {{ resultsp_sm[1]['nday'] }}
+              </div>
+              <div class="col-3 edt-cell-dt edt-bg-dt edt-cell-in">
+                {{ resultsp_sm[2]['nday'] }}
+              </div>
+            </div>
+
+            {% set i = 1 %}
+            {% set col = 1 %}
+            {# Daily count debt is a counter to count the course duration #}
+            {% set dailycountdebt1 = 0 %}
+            {% set dailycountdebt2 = 0 %}
+            {% set dailycountdebt3 = 0 %}
+
+            {% for line in resultsp_sm %}
+                {# It is a start line here #}
+                {% if (i + 2) is divisible by(3) %}
+                <div class="row">
+                {% endif %}
+
+                    {% if i == 1 %}
+                        <div class="col-2 edt-cell edt-bg-hr edt-cell-hr-fsize edt-cell-lf">
+                          {{ line['hour_starts_at'] }}h
+                        </div>
+                        {% set col = 3 %}
+                    {% else %}
+                        {% set col = 3 %}
+                    {% endif %}
+
+                          {% if line['duration_hour'] != 0 %}
+                              {% if line['duration_hour'] == 1 %}
+                                  <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                              {% else %}
+                                  {# The bottom will be continued#}
+                                  <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                              {% endif %}
+
+                                  {{ line['raw_course_title'] }}
+
+                              {% if i == 1 %}
+                                {% set dailycountdebt1 = line['duration_hour'] %}
+                              {% elseif i == 2 %}
+                                {% set dailycountdebt2 = line['duration_hour'] %}
+                              {% else %}
+                                {% set dailycountdebt3 = line['duration_hour'] %}
+                              {% endif %}
+
+                          {% else %}
+                              {# Empty cell#}
+                              {% if i == 1 %}
+                                  {% if dailycountdebt1 > 1 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                                    {# Merged Cell #}
+                                  {% elseif dailycountdebt1 > 0 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                                    {# Merged Cell #}
+                                  {% else %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-free-{{ free_i }} edt-cell-in">
+                                  {% endif %}
+                              {% elseif i == 2 %}
+                                  {% if dailycountdebt2 > 1 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                                    {# Merged Cell #}
+                                  {% elseif dailycountdebt2 > 0 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                                    {# Merged Cell #}
+                                  {% else %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-free-{{ free_i }} edt-cell-in">
+                                  {% endif %}
+                              {% else %}
+                                  {% if dailycountdebt3 > 1 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
+                                    {# Merged Cell #}
+                                  {% elseif dailycountdebt3 > 0 %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
+                                    {# Merged Cell #}
+                                  {% else %}
+                                    <div class="col-{{ col }}  edt-cell edt-bg-free-{{ free_i }} edt-cell-in">
+                                  {% endif %}
+                              {% endif %}
+                          {% endif %}
+                                  </div>
+
+                {# It is a end line here #}
+                {% if i is divisible by(3) %}
+                    </div>
+                    {% set i = 1 %}
+                    {% set dailycountdebt1 = dailycountdebt1 - 1 %}
+                    {% set dailycountdebt2 = dailycountdebt2 - 1 %}
+                    {% set dailycountdebt3 = dailycountdebt3 - 1 %}
+
+                {% else %}
+                    {% set i = i + 1 %}
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+{% endif %}

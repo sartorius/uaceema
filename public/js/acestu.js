@@ -166,7 +166,7 @@ function leftSideUtils(){
 
 
 $(document).ready(function() {
-  console.log('We are in MGAPP JS');
+  console.log('We are in MGAPP JS ACEU NOT MGAPP');
 
   if($('#mg-graph-identifier').text() == 'ua-cartz'){
     // Do something on cartz
@@ -206,6 +206,16 @@ $(document).ready(function() {
     });
 
     $("#btn-load-bc").hide();
+  }
+  // We check here the graph **************************************************** OLD
+  else if($('#mg-graph-identifier').text() == 'ua-profile'){
+    console.log('in ua Profile');
+    $("#edt-disp-line").click(function() {
+        console.log('Click #edt-disp-line');
+        //$(".uac-bkp-version").css("visibility", "visible");
+        $(".uac-bkp-version").show();
+        $("#edt-disp-line").hide();
+    });
   }
   else if($('#mg-graph-identifier').text() == 'advert'){
     // Do nothing

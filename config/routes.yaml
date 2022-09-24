@@ -43,10 +43,11 @@ verify_connection:
     path:       /verify-connection
     controller: App\Controller\ConnectionController::verify
 profile:
-    path:       /profile/{page}
+    path:       /profile/{page}/{week}
     controller: App\Controller\ProfileController::show
     defaults:
         page:   0
+        week:   0
 cartezp:
     path:       /cartezp/{page}
     controller: App\Controller\CartezpController::show

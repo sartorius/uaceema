@@ -85,7 +85,7 @@ function leftSideUtils(){
 
 
 $(document).ready(function() {
-  console.log('We are in MGAPP JS');
+  console.log('We are in MGAPP JS 1');
 
   if($('#mg-graph-identifier').text() == 'ua-cartz'){
     // Do something on cartz
