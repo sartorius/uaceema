@@ -1,37 +1,74 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
-
-<div class="row">
-  <div class="col-lg-4 mgs-mainblk-txt">
-  </div>
-  <div class="col-lg-4 mgs-mainblk-txt">
-
-
-    {% if profile['PICTURE_ID'] == 0 %}
-            <div id="blk-selfie" class="mgs-mainblk-txt">
-                  <img id="selfie" src="{{ path('main') }}img/nophoto.png" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
-            </div>
-    {% else %}
-            <div id="blk-selfie" class="mgs-mainblk-txt">
-                  <img id="selfie" src="{{ path('main') }}img/mdl_data/{{ profile['D1'] }}/{{ profile['D2'] }}/{{ profile['FILENAME'] }}" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
-            </div>
-    {% endif %}
+<div class="container">
+    <div class="row">
+      <div class="col-2 mgs-mainblk-txt">
+      </div>
+      <div class="col-8 mgs-mainblk-txt">
 
 
-    <div class="user-title">
-        {{ profile['FIRSTNAME'] }} {{ profile['LASTNAME'] }}
+        {% if profile['PICTURE_ID'] == 0 %}
+                <div id="blk-selfie" class="mgs-mainblk-txt">
+                      <img id="selfie" src="{{ path('main') }}img/nophoto.png" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
+                </div>
+        {% else %}
+                <div id="blk-selfie" class="mgs-mainblk-txt">
+                      <img id="selfie" src="{{ path('main') }}img/mdl_data/{{ profile['D1'] }}/{{ profile['D2'] }}/{{ profile['FILENAME'] }}" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
+                </div>
+        {% endif %}
+
+
+        <div class="user-title">
+            {{ profile['FIRSTNAME'] }} {{ profile['LASTNAME'] }}
+        </div>
+        <hr>
+        <div id="pr-assid" class="carte-profile">
+          <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité</div>
+          <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous ne conservons que le scan le plus tôt de la journée concernée ainsi qu'un historique de 7 jours sauf pour les retards.</span><br><br>
+          {% for assiduite in assiduites %}
+              <i class='ass-ontime'><span class="icon-check-circle nav-icon-fa nav-text"></span>&nbsp;À l'heure: {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
+          {% endfor %}
+
+
+
+        </div>
+      </div>
+      <div class="col-2 mgs-mainblk-txt">
+      </div>
     </div>
-    <hr>
-    <div id="pr-assid" class="carte-profile">
-      <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité</div>
-      <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous ne conservons que le scan le plus tôt de la journée concernée ainsi qu'un historique de 7 jours sauf pour les retards.</span><br><br>
-      {% for assiduite in assiduites %}
-          <i class='ass-ontime'><span class="icon-check-circle nav-icon-fa nav-text"></span>&nbsp;À l'heure: {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
-      {% endfor %}
-
-
+</div>
+<hr>
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
+        <div class="carte-profile pr-title"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;Emploi du temps</div><br>
+        <div class="info-cartouche">
+          <strong>Mention:</strong> {{ sp_result[0]['mention'] }}<br>
+          <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
+          <strong>Option:</strong> {{ sp_result[0]['uaoption'] }}<br>
+          <strong>Date du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
+        </div>
+    </div>
+    <div class="col-2">
     </div>
   </div>
-  <div class="col-lg-4 mgs-mainblk-txt">
+</div>
+<div class='uac-sm-version'>
+    {% include 'Admin/EDT/_rawsmallscreenedt.html.twig' %}
+</div>
+<div class='uac-lg-version'>
+    {% include 'Admin/EDT/_rawlargescreenedt.html.twig' %}
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+        <a class="btn btn-default btn-lg btn-block" href="/loadedt" role="button"><span class="icon-arrow-circle-left nav-text"></span>&nbsp;Préc.</a>
+    </div>
+    <div class="col-6">
+        <a class="btn btn-default btn-lg btn-block" href="/loadedt" role="button">Suiv.&nbsp;<span class="icon-arrow-circle-right nav-text"></span></a>
+    </div>
   </div>
 </div>
 

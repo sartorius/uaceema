@@ -80,9 +80,23 @@ class ProfileController extends AbstractController
 
             // End of assiduité
 
+            /** Manage emploi du temps **/
+            // Be carefull if you have array of array
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            // Perform the importation
+            // Change the option here !
+            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "')";
+            $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            $import_query = "CALL CLI_GET_SMEDT('" . $result[0]['USERNAME'] . "')";
+            $resultsp_sm = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
 
-            $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0], 'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL']]);
+
+
+
+            $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'profile' => $result[0],
+                                      'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], "sp_result"=>$resultsp, "resultsp_sm"=>$resultsp_sm]);
       }
     }
 

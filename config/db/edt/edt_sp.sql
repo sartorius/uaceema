@@ -61,3 +61,48 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+-- Read the EDT for a specific username
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_FWEDT$$
+CREATE PROCEDURE `CLI_GET_FWEDT` (IN param_username VARCHAR(25))
+BEGIN
+    -- Return the list for control
+    SELECT
+      flow_id,
+      mention,
+      niveau,
+      uaoption,
+      DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+      DATE_FORMAT(day, "%d/%m") AS nday,
+      day_code,
+      hour_starts_at,
+      duration_hour,
+      raw_course_title
+    FROM uac_edt WHERE monday_ofthew = '2022-09-26' AND visibility = 'V'
+    ORDER BY hour_starts_at, day_code ASC;
+END$$
+-- Remove $$ for OVH
+
+-- Read the EDT for a specific username
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_SMEDT$$
+CREATE PROCEDURE `CLI_GET_SMEDT` (IN param_username VARCHAR(25))
+BEGIN
+    -- Return the list for control
+    SELECT
+      flow_id,
+      mention,
+      niveau,
+      uaoption,
+      DATE_FORMAT(monday_ofthew, "%d/%m/%Y") AS mondayw,
+      DATE_FORMAT(day, "%d/%m") AS nday,
+      day_code,
+      hour_starts_at,
+      duration_hour,
+      raw_course_title
+    FROM uac_edt WHERE monday_ofthew = '2022-09-26' AND visibility = 'V'
+    AND day_code IN (1, 2, 3, 4, 5)
+    ORDER BY hour_starts_at, day_code ASC;
+END$$
+-- Remove $$ for OVH
