@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_edt` (
 
 -- INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, hour_starts_at, duration, log_pos, raw_course_title, create_date) VALUES (user_id, 'NEW', );
 
+-- compute_late_status Can be NEW, END or CAN if it is CAN then the day has been trouble by internet 
 -- Visibility is I or V to validate
 DROP TABLE IF EXISTS uac_edt;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (

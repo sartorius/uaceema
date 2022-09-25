@@ -258,6 +258,15 @@ $(document).ready(function() {
       }
 
     });
+
+    $("#edt-switch-in-out").click(function() {
+      if (!($("#blc-trace-in-out").css('display') == 'none')){
+        $("#blc-trace-in-out").hide();
+      }
+      else{
+        $("#blc-trace-in-out").show();
+      }
+    });
   }
   else if($('#mg-graph-identifier').text() == 'advert'){
     // Do nothing

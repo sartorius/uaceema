@@ -619,6 +619,10 @@ textarea[name=inputRef] {
   font-size: 24px;
 }
 
+.nav-icon-fa-sm{
+  font-size: 18px;
+}
+
 .footer-icon-fa{
   font-size: 20px;
 }
@@ -737,9 +741,14 @@ textarea[name=inputRef] {
   color: #C60000;
 }
 
-.ass-ontime{
+.ass-in-time{
     font-size: 0.8em;
-    color: #045000;
+    color: #007804;
+}
+
+.ass-out-time{
+    font-size: 0.8em;
+    color: #000A00;
 }
 
 #waiting-gif{
@@ -1141,4 +1150,12 @@ textarea[name=inputRef] {
   display: none;
   font-size: 12px;
   color: var(--main-ace-color);
+}
+
+
+/*******************/
+/*********  ASSIDUITE  **********/
+#blc-trace-in-out{
+  text-align: center;
+  display: none;
 }

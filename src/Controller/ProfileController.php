@@ -72,11 +72,29 @@ class ProfileController extends AbstractController
 
             $result_assiduite = $dbconnectioninst->query('
             SELECT
-                scan_date AS SCANDATE,
-                scan_time AS SCANTIME
-              FROM uac_scan
-                       WHERE user_id = ' . $result[0]['ID'] . ' ORDER BY SCANDATE, SCANTIME DESC; ' )->fetchAll(PDO::FETCH_ASSOC);
+                uas.in_out AS IN_OUT,
+                uas.scan_date AS SCANDATE,
+                uas.scan_time AS SCANTIME
+              FROM uac_scan uas
+                       WHERE user_id = ' . $result[0]['ID']
+                       . ' AND uas.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) '
+                       . ' ORDER BY SCANDATE, SCANTIME DESC; ' )->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+
+
+            $query_ass_recap = "SELECT uas.username AS USERNAME, sca.user_id AS USER_ID, ass.status AS STATUS, "
+                                      .  " uae.hour_starts_at AS DEBUT, uae.day AS JOUR, SUBSTRING(uae.raw_course_title, 1, 20) AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
+                                      . " CASE WHEN day_code = 1 THEN 'LUNDI' WHEN day_code = 2 THEN 'MARDI' WHEN day_code = 3 THEN 'MERCREDI' "
+                                      . " WHEN day_code = 4 THEN 'JEUDI' WHEN day_code = 5 THEN 'VENDREDI' ELSE 'SAMEDI' END AS LABEL_DAY_FR "
+                                      . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
+                      								. " JOIN uac_showuser uas ON mu.username = uas.username "
+                      									  . " JOIN uac_edt uae ON uae.id = ass.edt_id "
+                      									  . " LEFT JOIN uac_scan sca ON sca.id = ass.scan_id "
+                                          . " WHERE mu.id = " . $result[0]['ID'] . ";";
+
+            $result_assiduite_recap = $dbconnectioninst->query($query_ass_recap)->fetchAll(PDO::FETCH_ASSOC);
 
             // End of assiduité
 
@@ -116,6 +134,7 @@ class ProfileController extends AbstractController
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
+                                      'recap_assiduites'=>$result_assiduite_recap,
                                       "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);

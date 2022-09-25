@@ -24,11 +24,28 @@
         <hr>
         <div id="pr-assid" class="carte-profile">
           <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité</div>
-          <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous ne conservons que le scan le plus tôt de la journée concernée ainsi qu'un historique de 7 jours sauf pour les retards.</span><br><br>
-          {% for assiduite in assiduites %}
-              <i class='ass-ontime'><span class="icon-check-circle nav-icon-fa nav-text"></span>&nbsp;À l'heure: {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
-          {% endfor %}
+          <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous affichons tous les scans entrée et sortie d'un historique de 7 jours sauf pour les retards et absences. Vous êtes absent au delà de 10min de retard.</span><br><br>
 
+          <div id="blc-trace-recap">
+            <br>
+            {% for recap in recap_assiduites %}
+                {{ recap['LABEL_DAY_FR'] }}/{{ recap['SCAN_DATE'] }}/{{ recap['COURS'] }}/{{ recap['DEBUT'] }}h/{{ recap['SCAN_TIME'] }}/{{ recap['STATUS'] }}<br>
+            {% endfor %}
+          </div>
+
+
+          <button type="button" id="edt-switch-in-out" class="btn btn-default btn-sm btn-block"><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Voir/cacher les traces&nbsp;<span class="icon-arrow-circle-right nav-icon-fa-sm nav-text"></span></button>
+
+          <div id="blc-trace-in-out">
+            <br>
+            {% for assiduite in assiduites %}
+                {% if assiduite['IN_OUT'] == 'I' %}
+                    <i class='ass-in-time'><span class="icon-arrow-circle-right nav-icon-fa-sm nav-text"></span>&nbsp;Entrée {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
+                {% else %}
+                    <i class='ass-out-time'><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Sortie {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
+                {% endif %}
+            {% endfor %}
+          </div>
 
 
         </div>
@@ -91,7 +108,7 @@
               {% include 'Admin/EDT/_rawsmallw1screenedt.html.twig' %}
           </div>
 
-          
+
           <div class="row">
             <div class="col-2">
             </div>

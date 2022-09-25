@@ -16,6 +16,7 @@ BEGIN
     DECLARE inv_edt_id	BIGINT;
     DECLARE inv_edt_starts	TINYINT;
     DECLARE count_courses_todo INT;
+    DECLARE inv_cohort_id	BIGINT;
 
     DECLARE i INT default 0;
     SET i = 0;
@@ -90,7 +91,8 @@ BEGIN
                         wait_b_compute), TIME) < inv_time;
 
           -- Initialize the hour start at
-          SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt WHERE id = inv_edt_id;
+          SELECT hour_starts_at INTO inv_edt_starts, cohort_id INTO inv_cohort_id
+          FROM uac_edt WHERE id = inv_edt_id;
 
 
 
