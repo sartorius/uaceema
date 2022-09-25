@@ -35,16 +35,6 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
-  public function apply(Environment $twig)
-  {
-    $debug_session = "Pass variable to check";
-
-    $content = $twig->render('Static/apply.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
-
-    return new Response($content);
-  }
-
-
   public function partner(Environment $twig)
   {
 

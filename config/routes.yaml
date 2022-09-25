@@ -21,9 +21,6 @@ contact:
 mention:
     path:       /mention
     controller: App\Controller\StaticController::mention
-apply:
-    path:       /apply
-    controller: App\Controller\StaticController::apply
 news:
     path:       /news
     controller: App\Controller\StaticController::news
