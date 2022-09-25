@@ -91,12 +91,12 @@ BEGIN
                         wait_b_compute), TIME) < inv_time;
 
           -- Initialize the hour start at
-          SELECT hour_starts_at INTO inv_edt_starts, cohort_id INTO inv_cohort_id
-          FROM uac_edt WHERE id = inv_edt_id;
+          SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt WHERE id = inv_edt_id;
+          SELECT cohort_id INTO inv_cohort_id FROM uac_edt WHERE id = inv_edt_id;
 
 
-
-          -- ABS *** *** *** *** *** *** *** ***
+          -- ABS part 1 *** *** *** *** *** *** *** ***
+          -- On met ceux qu'on n'ont NI ENTRÉE NI SORTI
           -- MISSING LINK with the correct COHORT ID !
           -- Final list of student missing or late over 10min !
           INSERT IGNORE INTO uac_assiduite (flow_id, user_id, edt_id, scan_id, status)
@@ -106,14 +106,37 @@ BEGIN
           		SELECT t_student_in.username
           		FROM(
           					-- List of people who entered but not exit before 7:00
-          					select mu.username, in_out, max(usa.scan_time) AS scan_in from uac_scan usa
+          					select mu.username, max(usa.scan_time) AS scan_in from uac_scan usa
           					join mdl_user mu on usa.user_id = mu.id
                     -- late_definition is like ':10:00' Saying max 10 min late
           					WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(inv_edt_starts) = 1) THEN CONCAT('0', inv_edt_starts) ELSE inv_edt_starts END, late_definition), TIME)
                     AND usa.scan_date = inv_date
-                    group by mu.username, in_out
-          					having in_out = 'I'
+                    group by mu.username
           					) t_student_in
+          		);
+
+          -- ABS part 2 *** *** *** *** *** *** *** ***
+          -- On met ceux qui sont sortis juste avant le +10
+          -- MISSING LINK with the correct COHORT ID !
+          -- Final list of student missing or late over 10min !
+          INSERT IGNORE INTO uac_assiduite (flow_id, user_id, edt_id, scan_id, status)
+          SELECT inv_flow_id, mu.id, inv_edt_id, NULL, 'ABS' FROM mdl_user mu
+          		 JOIN uac_showuser uas ON mu.username = uas.username
+          WHERE mu.username IN (
+          		SELECT t_student_in.username
+          		FROM(
+          					-- List of people who entered but not exit before 7:00
+          					SELECT mu.username, usa.user_id, usa.scan_date, max(usa.scan_time) AS scan_in FROM uac_scan usa
+          					join mdl_user mu on usa.user_id = mu.id
+                    -- late_definition is like ':10:00' Saying max 10 min late
+          					WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(inv_edt_starts) = 1) THEN CONCAT('0', inv_edt_starts) ELSE inv_edt_starts END, late_definition), TIME)
+                    AND usa.scan_date = inv_date
+                    group by mu.username, usa.user_id, usa.scan_date
+          					) t_student_in JOIN uac_scan sca ON sca.scan_time = scan_in
+												AND sca.user_id = t_student_in.user_id
+												AND sca.scan_date = t_student_in.scan_date
+                        -- La personne est sortie avant le cours
+												AND sca.in_out = 'O'
           		);
 
           -- LAT *** *** *** *** *** *** *** ***

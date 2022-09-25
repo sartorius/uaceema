@@ -1161,7 +1161,7 @@ textarea[name=inputRef] {
 }
 
 .cell-recap-hd{
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .cell-recap{
@@ -1178,4 +1178,8 @@ textarea[name=inputRef] {
 .recap-mis{
   color: #E90000;
   font-weight: 800;
+}
+
+#jsGrid{
+  padding-bottom: 20px;
 }

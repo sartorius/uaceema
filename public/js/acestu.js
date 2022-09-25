@@ -170,6 +170,7 @@ function leftSideUtils(){
 
 
 function loadAssRecapGrid(){
+  /*
     responsivefields = [
         { name: "LABEL_DAY_FR",
           title: "Jour",
@@ -234,6 +235,60 @@ function loadAssRecapGrid(){
             return val;
           }
         }
+    ]; */
+
+    responsivefields = [
+        { name: "JOUR",
+          title: 'Date',
+          type: "text",
+          align: "center",
+          width: 25,
+          css: "cell-recap",
+          headercss: "cell-recap-hd",
+          itemTemplate: function(value, item) {
+            return item.LABEL_DAY_FR.substring(0, 3) + ' ' + value;
+          }
+        },
+        //Default width is auto
+        { name: "DEBUT",
+          title: "Début",
+          type: "text",
+          width: 33,
+          headercss: "cell-recap-hd",
+          css: "cell-recap",
+          itemTemplate: function(value, item) {
+            return value + 'h00';
+          }
+        },
+        //Default width is auto
+        { name: "SCAN_TIME",
+          title: "Scan",
+          type: "text",
+          width: 33,
+          css: "cell-recap",
+          headercss: "cell-recap-hd"
+        },
+        //Default width is auto
+        { name: "STATUS",
+          title: "Résultat",
+          type: "text",
+          width: 33,
+          css: "cell-recap",
+          headercss: "cell-recap-hd",
+          itemTemplate: function(value, item) {
+            let val = '';
+            if(value == 'PON'){
+              val = 'OK';
+            }
+            else if(value == 'LAT'){
+              val = '<i class="recap-lat">Retard</i>';
+            }
+            else{
+              val = '<i class="recap-mis">Absent(e)</i>';
+            }
+            return val;
+          }
+        }
     ];
 
 
@@ -242,6 +297,7 @@ function loadAssRecapGrid(){
     $("#jsGrid").jsGrid({
         height: "auto",
         width: "100%",
+        noDataContent: "Pas encore d'activité",
 
         sorting: true,
         paging: true,
