@@ -169,6 +169,93 @@ function leftSideUtils(){
 }
 
 
+function loadAssRecapGrid(){
+    responsivefields = [
+        { name: "LABEL_DAY_FR",
+          title: "Jour",
+          type: "text",
+          align: "right",
+          width: 40,
+          css: "cell-recap",
+          headercss: "cell-recap-hd"
+        },
+        { name: "JOUR",
+          title: 'Date',
+          type: "text",
+          align: "center",
+          width: 25,
+          css: "cell-recap",
+          headercss: "cell-recap-hd"
+        },
+        { name: "COURS",
+          title: 'Cours',
+          type: "text",
+          align: "center",
+          css: "cell-recap-sm",
+          headercss: "cell-recap-hd"
+        },
+        //Default width is auto
+        { name: "DEBUT",
+          title: "Début",
+          type: "text",
+          width: 33,
+          headercss: "cell-recap-hd",
+          css: "cell-recap",
+          itemTemplate: function(value, item) {
+            return value + 'h00';
+          }
+        },
+        //Default width is auto
+        { name: "SCAN_TIME",
+          title: "Scan",
+          type: "text",
+          width: 33,
+          css: "cell-recap",
+          headercss: "cell-recap-hd"
+        },
+        //Default width is auto
+        { name: "STATUS",
+          title: "Résultat",
+          type: "text",
+          width: 33,
+          css: "cell-recap",
+          headercss: "cell-recap-hd",
+          itemTemplate: function(value, item) {
+            let val = '';
+            if(value == 'PON'){
+              val = 'OK';
+            }
+            else if(value == 'LAT'){
+              val = '<i class="recap-lat">Retard</i>';
+            }
+            else{
+              val = '<i class="recap-mis">Absent</i>';
+            }
+            return val;
+          }
+        }
+    ];
+
+
+
+  if(dataTagToJsonArray.length > 0){
+    $("#jsGrid").jsGrid({
+        height: "auto",
+        width: "100%",
+
+        sorting: true,
+        paging: true,
+        data: dataTagToJsonArray,
+        fields: responsivefields
+    });
+    // After the grid
+    //refreshListener();
+  }
+  else{
+    $("#jsGrid").hide();
+  }
+}
+
 
 
 
@@ -222,6 +309,9 @@ $(document).ready(function() {
   // We check here the graph **************************************************** OLD
   else if($('#mg-graph-identifier').text() == 'ua-profile'){
     console.log('in ua Profile');
+    loadAssRecapGrid();
+
+
 
     if (!($(".uac-sm-p1-version").css('display') == 'none')){
         // 'element' is hidden
@@ -237,8 +327,6 @@ $(document).ready(function() {
             $(".uac-sm-p2-version").hide();
         }
     }
-
-
     $("#edt-disp-line").click(function() {
         console.log('Click #edt-disp-line');
         //$(".uac-bkp-version").css("visibility", "visible");

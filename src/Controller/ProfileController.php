@@ -84,8 +84,8 @@ class ProfileController extends AbstractController
 
 
 
-            $query_ass_recap = "SELECT uas.username AS USERNAME, sca.user_id AS USER_ID, ass.status AS STATUS, "
-                                      .  " uae.hour_starts_at AS DEBUT, uae.day AS JOUR, SUBSTRING(uae.raw_course_title, 1, 20) AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
+            $query_ass_recap = "SELECT ass.status AS STATUS, "
+                                      .  " uae.hour_starts_at AS DEBUT, DATE_FORMAT(uae.day, '%d/%m') AS JOUR, REPLACE(SUBSTRING(uae.raw_course_title, 1, 20), '\n', ' ') AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
                                       . " CASE WHEN day_code = 1 THEN 'LUNDI' WHEN day_code = 2 THEN 'MARDI' WHEN day_code = 3 THEN 'MERCREDI' "
                                       . " WHEN day_code = 4 THEN 'JEUDI' WHEN day_code = 5 THEN 'VENDREDI' ELSE 'SAMEDI' END AS LABEL_DAY_FR "
                                       . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "

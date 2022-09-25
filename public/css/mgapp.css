@@ -1159,3 +1159,23 @@ textarea[name=inputRef] {
   text-align: center;
   display: none;
 }
+
+.cell-recap-hd{
+  font-size: 15px;
+}
+
+.cell-recap{
+  font-size: 12px;
+}
+.cell-recap-sm{
+  font-size: 10px;
+  font-weight: 800;
+}
+.recap-lat{
+  color: #FF6800;
+  font-weight: 800;
+}
+.recap-mis{
+  color: #E90000;
+  font-weight: 800;
+}

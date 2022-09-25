@@ -1,10 +1,28 @@
-{% include 'RawTemplate/_hearder.html.twig' %}
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+
+{% if recap_assiduites is defined and recap_assiduites is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArray =JSON.parse('{{ recap_assiduites | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArray = "";
+    </script>
+{% endif %}
+
+
 <div id="mg-graph-identifier">ua-profile</div>
+
+
 <div class="container">
     <div class="row">
-      <div class="col-2 mgs-mainblk-txt">
+      <div class="col-1 mgs-mainblk-txt">
       </div>
-      <div class="col-8 mgs-mainblk-txt">
+      <div class="col-10 mgs-mainblk-txt">
 
 
         {% if profile['PICTURE_ID'] == 0 %}
@@ -26,11 +44,7 @@
           <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité</div>
           <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Nous affichons tous les scans entrée et sortie d'un historique de 7 jours sauf pour les retards et absences. Vous êtes absent au delà de 10min de retard.</span><br><br>
 
-          <div id="blc-trace-recap">
-            <br>
-            {% for recap in recap_assiduites %}
-                {{ recap['LABEL_DAY_FR'] }}/{{ recap['SCAN_DATE'] }}/{{ recap['COURS'] }}/{{ recap['DEBUT'] }}h/{{ recap['SCAN_TIME'] }}/{{ recap['STATUS'] }}<br>
-            {% endfor %}
+          <div id="jsGrid">
           </div>
 
 
@@ -45,12 +59,15 @@
                     <i class='ass-out-time'><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Sortie {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
                 {% endif %}
             {% endfor %}
+            {% if assiduites|length == 0 %}
+                Aucune trace d'entrée ou sortie disponible
+            {% endif %}
           </div>
 
 
         </div>
       </div>
-      <div class="col-2 mgs-mainblk-txt">
+      <div class="col-1 mgs-mainblk-txt">
       </div>
     </div>
 </div>
@@ -181,4 +198,4 @@
 
 {% endif %}
 
-{% include 'RawTemplate/_footer.html.twig' %}
+{% include 'RawTemplate/_footer.w.jsgrid.html.twig' %}

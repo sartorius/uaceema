@@ -68,6 +68,12 @@ select mu.username, CAST(FROM_UNIXTIME(mu.timecreated) as date), mu.timecreated 
 
 
 
+
+
+let dataTagToJson =JSON.parse('[{"USERNAME":"gaelcox286","USER_ID":467,"STATUS":"LAT","DEBUT":11,"JOUR":"2022-09-26","COURS":"MALAGASY\nSalle: 406\n","SCAN_DATE":"2022-09-26","SCAN_TIME":"11:09:00","LABEL_DAY_FR":"LUNDI"},{"USERNAME":"gaelcox286","USER_ID":467,"STATUS":"PON","DEBUT":13,"JOUR":"2022-09-26","COURS":"ANGLAIS\nSalle: 406\nM","SCAN_DATE":"2022-09-26","SCAN_TIME":"11:09:00","LABEL_DAY_FR":"LUNDI"},{"USERNAME":"gaelcox286","USER_ID":467,"STATUS":"PON","DEBUT":16,"JOUR":"2022-09-26","COURS":"INTRODUCTION RS\nSall","SCAN_DATE":"2022-09-26","SCAN_TIME":"14:19:00","LABEL_DAY_FR":"LUNDI"}]');
+
+
+
 -- EDT !!!
 
 
