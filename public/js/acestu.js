@@ -373,14 +373,14 @@ $(document).ready(function() {
         // 'element' is hidden
         const d = new Date();
         let currentday = d.getDay();
-        console.log('currentday: ' + currentday);
+        //console.log('currentday: ' + currentday);
         if(currentday < 4){
-            $(".uac-sm-p1-version").hide();
-            $(".uac-sm-p2-version").show();
-        }
-        else{
             $(".uac-sm-p1-version").show();
             $(".uac-sm-p2-version").hide();
+        }
+        else{
+            $(".uac-sm-p1-version").hide();
+            $(".uac-sm-p2-version").show();
         }
     }
     $("#edt-disp-line").click(function() {
