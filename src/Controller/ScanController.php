@@ -25,7 +25,7 @@ class ScanController extends AbstractController
     $scale_right = ConnectionManager::whatScaleRight();
 
 
-    if(isset($scale_right) && ($scale_right == 0)){
+    if(isset($scale_right) && ($scale_right > -1)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
         $twig_page = '';
