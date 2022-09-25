@@ -92,7 +92,7 @@ class ProfileController extends AbstractController
                       								. " JOIN uac_showuser uas ON mu.username = uas.username "
                       									  . " JOIN uac_edt uae ON uae.id = ass.edt_id "
                       									  . " LEFT JOIN uac_scan sca ON sca.id = ass.scan_id "
-                                          . " WHERE mu.id = " . $result[0]['ID'] . ";";
+                                          . " WHERE mu.id = " . $result[0]['ID'] . " ORDER BY uae.day, uae.hour_starts_at DESC;";
 
             $result_assiduite_recap = $dbconnectioninst->query($query_ass_recap)->fetchAll(PDO::FETCH_ASSOC);
 

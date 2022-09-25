@@ -262,7 +262,7 @@ function loadAssRecapGrid(){
         },
         //Default width is auto
         { name: "SCAN_TIME",
-          title: "Scan",
+          title: 'Scan',
           type: "text",
           width: 33,
           css: "cell-recap",
@@ -298,6 +298,13 @@ function loadAssRecapGrid(){
         height: "auto",
         width: "100%",
         noDataContent: "Pas encore d'activité",
+        pageIndex: 1,
+        pageSize: 10,
+        pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} de {pageCount}",
+        pagePrevText: "Prec",
+        pageNextText: "Suiv",
+        pageFirstText: "Prem",
+        pageLastText: "Dern",
 
         sorting: true,
         paging: true,
