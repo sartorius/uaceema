@@ -67,29 +67,164 @@ select mu.username, CAST(FROM_UNIXTIME(mu.timecreated) as date), mu.timecreated 
 
 
 
-adeldan281
-adelepe586
-adelfri040
-adellav445
-adelmal313
-adelmot245
 
-adelnot392
-adelpen142
-adelrod083
-adelscr387
-adelshe538
-adelthi094
-agnealc472
-agneatt540
-agnegro044
-aimefor021
-aimeshi103
-ainnayr174
-ainndel546
-ainnpay095
-ainnval527
-akenmat151
-akenphy062
-akentoo333
-alizdau523
+-- EDT !!!
+
+
+
+
+SELECT
+            mu.id
+    FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+             JOIN mdl_role mr ON mr.id = uas.roleid
+             LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+
+
+select * from uac_showuser uas;
+
+select mu.username, usa.* from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+order by scan_time asc;
+
+-- Group by In and Out
+select mu.username, in_out, count(1) from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+group by mu.username, in_out
+order by count(1) desc;
+
+
+-- Last value
+select mu.username, in_out, max(usa.scan_time) from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':05:00'), TIME)
+group by mu.username, in_out
+order by max(usa.scan_time) desc;
+
+
+
+
+delete from uac_assiduite;
+
+-- Final list of student on time !
+INSERT IGNORE INTO uac_assiduite (user_id, edt_id, scan_id, status)
+SELECT mu.id, 0, max_scan.id AS scan_id, 'PON' FROM (
+-- List of people who entered but not exit before 7:00
+select mu.username, in_out, max(usa.scan_time) AS scan_in from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':00:00'), TIME)
+group by mu.username, in_out
+having in_out = 'I'
+) t_student_in JOIN uac_showuser uas ON t_student_in.username = uas.username
+			   JOIN mdl_user mu on mu.username = uas.username
+			   	  JOIN uac_scan max_scan ON max_scan.user_id = mu.id
+			   	  							  AND max_scan.scan_time = scan_in
+			   	  							  AND max_scan.in_out = 'I'
+			   	  							  -- Day !!!
+			   	  							  AND 1=1;
+
+
+
+SELECT uas.username, ass.*, sca.* from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id
+								JOIN uac_showuser uas ON mu.username = uas.username
+									  LEFT JOIN uac_scan sca ON sca.id = ass.scan_id;
+
+select * from uac_assiduite;
+
+select mu.username, in_out, max(usa.scan_time) AS scan_in from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':00:00'), TIME)
+group by mu.username, in_out
+having in_out = 'I'
+order by scan_in desc;
+-- 82
+
+
+
+
+-- Final list of student late of 10min !
+-- SELECT t_student_in.username, t_student_in.scan_in, 'RETARD - MAX 10min' FROM (
+INSERT IGNORE INTO uac_assiduite (user_id, edt_id, scan_id, status)
+SELECT mu.id, 0, max_scan.id AS scan_id, 'L10' FROM (
+-- List of people who entered between 7:00 and 7:10
+select mu.username, in_out, max(usa.scan_time) AS scan_in from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+WHERE usa.scan_time > CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':00:00'), TIME)
+and usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':10:00'), TIME)
+group by mu.username, in_out
+having in_out = 'I'
+) t_student_in JOIN uac_showuser uas ON t_student_in.username = uas.username
+			   JOIN mdl_user mu on mu.username = uas.username
+			   	  JOIN uac_scan max_scan ON max_scan.user_id = mu.id
+			   	  							  AND max_scan.scan_time = scan_in
+			   	  							  AND max_scan.in_out = 'I'
+
+			   	  							  AND 1=1;
+order by t_student_in.scan_in desc;
+-- 16
+
+
+-- Final list of student missing or late after 10min !
+INSERT IGNORE INTO uac_assiduite (user_id, edt_id, scan_id, status)
+SELECT mu.id, 0, NULL, 'ABS' FROM mdl_user mu
+		 JOIN uac_showuser uas ON mu.username = uas.username
+WHERE mu.username NOT IN (
+		SELECT t_student_in.username
+		FROM(
+					-- List of people who entered but not exit before 7:00
+					select mu.username, in_out, max(usa.scan_time) AS scan_in from uac_scan usa
+					join mdl_user mu on usa.user_id = mu.id
+					WHERE usa.scan_time < CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':10:00'), TIME)
+					group by mu.username, in_out
+					having in_out = 'I'
+						-- 94
+					) t_student_in
+		);
+
+-- 509/603
+
+
+order by t_student_in.scan_in desc;
+
+
+
+
+
+
+SELECT mu.username, usa.* FROM uac_scan usa
+		 JOIN mdl_user mu ON usa.user_id = mu.id
+		  JOIN uac_showuser uas ON mu.username = uas.username
+WHERE mu.username = 'seredem177'
+order by scan_time asc;
+
+
+
+
+
+order by max(usa.scan_time) desc;
+
+
+
+SELECT CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':00:00'), TIME) AS TIME;
+
+SELECT CONCAT(CASE WHEN (CHAR_LENGTH(7) = 1) THEN CONCAT('0', 7) ELSE 7 END, ':00:00');
+
+
+select CHAR_LENGTH(2);
+
+select mu.username, count(1) from uac_scan usa
+join mdl_user mu on usa.user_id = mu.id
+group by mu.username
+order by count(1) desc;
+
+
+
+-- Courses of the day
+select * from uac_edt ue
+where day = '2022-09-26'
+and duration_hour > 0 order by hour_starts_at asc;
+
+
+-- Missing the course
+-- inv_course
+select * from uac_edt ue
+			where ue.id = 279;

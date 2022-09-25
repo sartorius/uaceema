@@ -25,8 +25,19 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan` (
   `scan_date` DATE NOT NULL,
   `scan_time` TIME NOT NULL,
   `status` CHAR(3) NOT NULL,
-  `valid_exc_uid` BIGINT UNSIGNED NOT NULL DEFAULT 0,
   `in_out` CHAR(1) NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+DROP TABLE IF EXISTS uac_assiduite;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_assiduite` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT NOT NULL,
+  `edt_id` BIGINT NOT NULL,
+  `scan_id` BIGINT NULL,
+  `status` CHAR(3) NOT NULL,
+  `valid_exec_uid` BIGINT NULL,
+  `valid_cmt` VARCHAR(500) NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 

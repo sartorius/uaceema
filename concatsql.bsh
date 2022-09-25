@@ -7,10 +7,12 @@ cat ./config/db/system/connection_table.sql >> ./config/db/_all.sql
 cat ./config/db/scan/scan_table.sql >> ./config/db/_all.sql
 cat ./config/db/mail/mail_table.sql >> ./config/db/_all.sql
 cat ./config/db/edt/edt_table.sql >> ./config/db/_all.sql
+cat ./config/db/edt/assiduite_table.sql >> ./config/db/_all.sql
 
 cat ./config/db/system/connection_sp.sql >> ./config/db/_all.sql
 cat ./config/db/scan/scan_sp.sql >> ./config/db/_all.sql
 cat ./config/db/mail/mail_sp.sql >> ./config/db/_all.sql
 cat ./config/db/edt/edt_sp.sql >> ./config/db/_all.sql
+cat ./config/db/edt/assiduite_sp.sql >> ./config/db/_all.sql
 
 cat ./config/db/system/execution.sql >> ./config/db/_all.sql

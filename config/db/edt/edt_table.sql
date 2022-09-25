@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (
   `flow_id` BIGINT NULL,
   `cohort_id` BIGINT UNSIGNED NULL,
   `visibility` CHAR(1) NOT NULL DEFAULT 'I',
+  `compute_late_status` CHAR(3) NOT NULL DEFAULT 'NEW',
   `mention` VARCHAR(100) NOT NULL,
   `niveau` CHAR(2) NOT NULL,
   `uaoption` VARCHAR(45) NULL,
@@ -42,5 +43,6 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt` (
   `hour_starts_at` TINYINT NOT NULL,
   `duration_hour` TINYINT NULL,
   `raw_course_title` VARCHAR(2000) NULL,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
