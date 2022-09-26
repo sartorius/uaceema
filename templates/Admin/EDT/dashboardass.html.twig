@@ -12,6 +12,7 @@
       let dataTagToJsonArray = "";
     </script>
 {% endif %}
+
 {% if stats_mis is defined and stats_mis is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
@@ -26,6 +27,19 @@
     </script>
 {% endif %}
 
+{% if stats_mis_pp is defined and stats_mis_pp is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayMisPP =JSON.parse('{{ stats_mis_pp | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayMisPP = "";
+    </script>
+{% endif %}
 
 <div id="mg-graph-identifier">dash-ass</div>
 
@@ -33,12 +47,12 @@
   <div class="col-1">
   </div>
   <div class="col-5">
-    <h1>Proportion retard</h1>
+    <h2>Proportion retard</h2>
     <hr>
     <canvas id="statPieLate"></canvas>
   </div>
   <div class="col-5">
-    <h1>Nombre retard</h1>
+    <h2>Nombre retard</h2>
     <hr>
     <canvas id="statBarLate"></canvas>
   </div>
@@ -49,12 +63,16 @@
 <div class="row">
   <div class="col-1">
   </div>
-  <div class="col-4">
-    <h1>Absence par quartier</h1>
+  <div class="col-6">
+    <h2>Absence par quartier</h2>
     <hr>
     <canvas id="statBarMis"></canvas>
   </div>
-  <div class="col-6">
+  <div class="col-4">
+    <h2>Top 30 des absences</h2>
+    <hr>
+    <div id="jsGrid">
+    </div>
   </div>
   <div class="col-1">
   </div>

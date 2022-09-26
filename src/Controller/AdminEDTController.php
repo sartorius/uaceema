@@ -41,6 +41,10 @@ class AdminEDTController extends AbstractController
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'ABS' "
 											    . " GROUP BY mu.city, ass.status; ";
+        $mis_query_pp = " SELECT CONCAT(mu.firstname, ' ', mu.lastname) AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
+									        . " JOIN uac_showuser uas ON mu.username = uas.username "
+                          . " WHERE ass.status = 'ABS' "
+											    . " GROUP BY mu.firstname, mu.lastname, ass.status ORDER BY COUNT(1) DESC LIMIT 30; ";
 
 
         $dbconnectioninst = DBConnectionManager::getInstance();
@@ -51,6 +55,9 @@ class AdminEDTController extends AbstractController
         $result_stat_mis = $dbconnectioninst->query($mis_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_stat_mis));
 
+        $result_stat_mis_pp = $dbconnectioninst->query($mis_query_pp)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_stat_mis_pp));
+
 
         $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'firstname' => $_SESSION["firstname"],
@@ -58,6 +65,7 @@ class AdminEDTController extends AbstractController
                                                                   'id' => $_SESSION["id"],
                                                                   'stats_late'=>$result_stat_late,
                                                                   'stats_mis'=>$result_stat_mis,
+                                                                  'stats_mis_pp'=>$result_stat_mis_pp,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
 

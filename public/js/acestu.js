@@ -322,40 +322,40 @@ function loadAssRecapGrid(){
 function runStat(){
   //Corlor
   var backgroundColorRef = [
-      '#E2CEFF',
-      '#FFCECE',
-      '#C7FFC7',
-      '#FFF9C7',
-      '#F1F1F1',
-      '#F8CEFF',
-      '#D6EDEE',
-      '#FEE9C9',
-      '#E2CEFF',
-      '#FFCECE',
-      '#C7FFC7',
-      '#FFF9C7',
-      '#F1F1F1',
-      '#F8CEFF',
-      '#D6EDEE',
-      '#FEE9C9'
+      '#e6e6ff',
+      '#ccccff',
+      '#b3b3ff',
+      '#ffffcc',
+      '#9999ff',
+      '#f7e6ff',
+      '#eeccff',
+      '#e6b3ff',
+      '#dd99ff',
+      '#f2ffe6',
+      '#e6ffcc',
+      '#d9ffb3',
+      '#ccff99',
+      '#ffffe6',
+      '#ffffb3',
+      '#ffff99'
   ];
   var borderColorRef = [
-      '#5700D5',
-      '#A80000',
-      '#079F00',
-      '#D2BC00',
-      '#505050',
-      '#9300AD',
-      '#009196',
-      '#C87900',
-      '#5700D5',
-      '#A80000',
-      '#079F00',
-      '#D2BC00',
-      '#505050',
-      '#9300AD',
-      '#009196',
-      '#C87900'
+      '#000099',
+      '#000080',
+      '#000066',
+      '#666600',
+      '#00004d',
+      '#7700b3',
+      '#660099',
+      '#550080',
+      '#440066',
+      '#4d9900',
+      '#408000',
+      '#336600',
+      '#264d00',
+      '#808000',
+      '#4d4d00',
+      '#333300'
   ];
 
   // Stat of status population
@@ -384,7 +384,9 @@ function runStat(){
           {
             label: "Retard par quartier",
             backgroundColor: backgroundColorRef,
-            data: listOfDataStat
+            borderColor: borderColorRef,
+            data: listOfDataStat,
+            borderWidth: 0.3
           }
         ]
       },
@@ -402,7 +404,8 @@ function runStat(){
             label: "Retard par quartier",
             backgroundColor: backgroundColorRef,
             borderColor: borderColorRef,
-            data: listOfDataStat
+            data: listOfDataStat,
+            borderWidth: 0.4
           }
         ]
       },
@@ -420,13 +423,60 @@ function runStat(){
             label: "Absence par quartier",
             backgroundColor: backgroundColorRef,
             borderColor: borderColorRef,
-            data: listOfDataStatMis
+            data: listOfDataStatMis,
+            borderWidth: 0.4
           }
         ]
       },
       options: {
       }
   });
+
+  responsivefieldsPP = [
+      { name: "NAME",
+        title: 'Etudiant',
+        type: "text",
+        align: "center",
+        width: 25,
+        css: "cell-recap",
+        headercss: "cell-recap-hd"
+      },
+      //Default width is auto
+      { name: "VAL",
+        title: "Nombre Absence",
+        type: "text",
+        align: "center",
+        width: 33,
+        headercss: "cell-recap-hd",
+        css: "cell-recap"
+      }
+  ];
+
+
+  if(dataTagToJsonArrayMisPP.length > 0){
+    $("#jsGrid").jsGrid({
+        height: "auto",
+        width: "100%",
+        noDataContent: "Pas encore d'activité",
+        pageIndex: 1,
+        pageSize: 11,
+        pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} de {pageCount}",
+        pagePrevText: "Prec",
+        pageNextText: "Suiv",
+        pageFirstText: "Prem",
+        pageLastText: "Dern",
+
+        sorting: true,
+        paging: true,
+        data: dataTagToJsonArrayMisPP,
+        fields: responsivefieldsPP
+    });
+    // After the grid
+    //refreshListener();
+  }
+  else{
+    $("#jsGrid").hide();
+  }
 }
 
 
