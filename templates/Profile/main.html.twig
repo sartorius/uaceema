@@ -14,6 +14,20 @@
     </script>
 {% endif %}
 
+{% if assiduites is defined and assiduites is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayTrace =JSON.parse('{{ assiduites | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayTrace = "";
+    </script>
+{% endif %}
+
 
 <div id="mg-graph-identifier">ua-profile</div>
 
@@ -52,16 +66,13 @@
 
           <div id="blc-trace-in-out">
             <br>
-            {% for assiduite in assiduites %}
-                {% if assiduite['IN_OUT'] == 'I' %}
-                    <i class='ass-in-time'><span class="icon-arrow-circle-right nav-icon-fa-sm nav-text"></span>&nbsp;Entrée {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
-                {% else %}
-                    <i class='ass-out-time'><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Sortie {{ assiduite['SCANDATE'] }}&nbsp;à&nbsp;{{ assiduite['SCANTIME'] }}</i><br>
-                {% endif %}
-            {% endfor %}
+              <div id="jsGridTrace">
+              </div>
             {% if assiduites|length == 0 %}
                 Aucune trace d'entrée ou sortie disponible
             {% endif %}
+
+
           </div>
 
 

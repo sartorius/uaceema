@@ -1168,6 +1168,9 @@ textarea[name=inputRef] {
 
 .cell-recap-hd{
   font-size: 14px;
+  color: white;
+  font-weight: 800;
+  background-color: var(--main-ace-color) !important;
 }
 
 .cell-recap{
@@ -1184,6 +1187,13 @@ textarea[name=inputRef] {
 .recap-mis{
   color: #E90000;
   font-weight: 800;
+}
+
+.cell-trace-hd{
+  font-size: 14px;
+  color: white;
+  font-weight: 800;
+  background-color: var(--main-gray-50) !important;
 }
 
 #jsGrid{

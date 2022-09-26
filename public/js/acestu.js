@@ -317,6 +317,64 @@ function loadAssRecapGrid(){
   else{
     $("#jsGrid").hide();
   }
+
+  responsivefieldsTrace = [
+      { name: "IN_OUT",
+        title: 'E/S',
+        type: "text",
+        align: "center",
+        width: 25,
+        css: "cell-recap",
+        headercss: "cell-trace-hd",
+        itemTemplate: function(value, item) {
+          let val = '';
+          if(value == 'I'){
+            val = '<i class="ass-in-time"><span class="icon-arrow-circle-right nav-icon-fa-sm nav-text"></span>&nbsp;Entrée</i>';
+          }
+          else{
+            val = '<i class="ass-out-time"><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Sortie</i>';
+          }
+          return val;
+        }
+      },
+      //Default width is auto
+      { name: "SCANDATE",
+        title: "Date",
+        type: "text",
+        width: 33,
+        headercss: "cell-trace-hd",
+        css: "cell-recap"
+      },
+      //Default width is auto
+      { name: "SCANTIME",
+        title: 'Hh:mm:ss',
+        type: "text",
+        width: 33,
+        headercss: "cell-trace-hd",
+        css: "cell-recap"
+      }
+  ];
+
+  $("#jsGridTrace").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Pas encore d'activité",
+      pageIndex: 1,
+      pageSize: 5,
+      pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} sur {pageCount}",
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: dataTagToJsonArrayTrace,
+      fields: responsivefieldsTrace
+  });
+
+
+
 }
 
 function runStat(){

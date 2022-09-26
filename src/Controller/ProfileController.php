@@ -70,17 +70,16 @@ class ProfileController extends AbstractController
 
             // Retrieve the result for assiduité
 
-            $result_assiduite = $dbconnectioninst->query('
-            SELECT
-                uas.in_out AS IN_OUT,
-                uas.scan_date AS SCANDATE,
-                uas.scan_time AS SCANTIME
-              FROM uac_scan uas
-                       WHERE user_id = ' . $result[0]['ID']
-                       . ' AND uas.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) '
-                       . ' ORDER BY SCANDATE, SCANTIME DESC; ' )->fetchAll(PDO::FETCH_ASSOC);
+            $query_ass_trace = " SELECT uas.in_out AS IN_OUT,  DATE_FORMAT(uas.scan_date, '%d/%m') AS SCANDATE, "
+                            . " uas.scan_time AS SCANTIME "
+                            . " FROM uac_scan uas "
+                                   . " WHERE user_id = " . $result[0]['ID']
+                                   . " AND uas.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)  "
+                                   . " ORDER BY ADDTIME(uas.scan_date, uas.scan_time) DESC;  ";
 
+            $result_assiduite = $dbconnectioninst->query($query_ass_trace)->fetchAll(PDO::FETCH_ASSOC);
 
+            $logger->debug("Query query_ass_trace: " . $query_ass_trace);
 
 
 
@@ -92,7 +91,10 @@ class ProfileController extends AbstractController
                       								. " JOIN uac_showuser uas ON mu.username = uas.username "
                       									  . " JOIN uac_edt uae ON uae.id = ass.edt_id "
                       									  . " LEFT JOIN uac_scan sca ON sca.id = ass.scan_id "
-                                          . " WHERE mu.id = " . $result[0]['ID'] . " ORDER BY uae.day, uae.hour_starts_at DESC;";
+                                          . " WHERE mu.id = " . $result[0]['ID']
+                                          . " ORDER BY ADDTIME(uae.day, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(uae.hour_starts_at) = 1) THEN CONCAT('0', uae.hour_starts_at) ELSE uae.hour_starts_at END, ':00:00'), TIME)) DESC;";
+
+            $logger->debug("Query query_ass_recap: " . $query_ass_recap);
 
             $result_assiduite_recap = $dbconnectioninst->query($query_ass_recap)->fetchAll(PDO::FETCH_ASSOC);
 
