@@ -33,7 +33,7 @@ BEGIN
 
 
         -- End of the flow correctly
-        UPDATE uac_working_flow SET status = 'END' WHERE id = inv_flow_id;
+        UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = CONCAT('Mail created: ', count_mail) WHERE id = inv_flow_id;
 
 
      END IF;

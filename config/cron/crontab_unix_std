@@ -1,4 +1,8 @@
 # We are in the crontab les gars !!!
+
+###################################### CHANGE THE CRON ADDRESS FOR PROD !!!
+
+
 # CRON Moodle
 */10 * * * * php /var/www/html/aceemintranet/admin/cli/cron.php >> /home/ratinahirana/cron.php.log;
 

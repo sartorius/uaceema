@@ -30,13 +30,24 @@ class ServmailController extends AbstractController
 
 
       /*
+
+      // This is the raw operation to send the email
+
+      $username = 'superus777';
+      $password = 'tongasoaaceem';
+      $cartezp = 'https://127.0.0.1:8000/cartezp/3739252247ANAESTU003';
+      $dashboard = 'https://127.0.0.1:8000/profile/3739252247ANAESTU003';
+
       $email = new \SendGrid\Mail\Mail();
       $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
       $email->setSubject("Bienvenu à l'UACEEM !");
       $email->addTo("ratinahirana@gmail.com", "Example User");
-      $email->addContent("text/plain", "Nous sommes heureux de vous accueillir parmi nous !");
+      $email->addContent("text/plain", "Bienvenu à l'université UACEEM !\nNous sommes très heureux de vous avoir parmi nous. Votre username est " . $username . " et votre mot de passe: " . $password . "\n Connectez vous sur https://intranet.uaceem.com"
+                          . " Le lien vers votre carte d'étudiant virtuelle : " . $cartezp . " \n"
+                          . " Le lien vers votre dashboard étudiant : " . $dashboard . " \n"
+                          . " \n Plus de détails sur https://www.uaceem.com/tutoinscription");
       $email->addContent(
-          "text/html", "<strong>Nous sommes heureux de vous accueillir parmi nous !</strong>"
+          "text/html", $twig->render('ModelMail/welcome_mail.html.twig', ['username' => $username, 'password' => $password, 'cartezp' => $cartezp, 'dashboard' => $dashboard ])
       );
       $sendgrid = new \SendGrid($_ENV['MAIL_SEND_GRID_API']);
       try {
@@ -47,10 +58,12 @@ class ServmailController extends AbstractController
       } catch (Exception $e) {
           echo 'Caught exception: '. $e->getMessage() ."\n";
       }
+
       */
 
-      /*
+
       // Be carefull if you have array of array
+      // This to retrieve the data for email
       $dbconnectioninst = DBConnectionManager::getInstance();
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
       $result = $dbconnectioninst->query('CALL SRV_GRP_WelcomeEMail()')->fetchAll(PDO::FETCH_ASSOC);
@@ -60,6 +73,7 @@ class ServmailController extends AbstractController
       $list_of_mail = '';
       foreach ($result as $row => $line) {
         sleep(1);
+        // We don't use Mail Manager but Sendmail
         //MailManager::sendWelcomeEmail('ratinahirana@gmail.com', $line['FIRSTNAME'], $line['USERNAME'], $line['MATRICULE']);
 
         $list_of_mail = $list_of_mail .  ' ' .
@@ -73,7 +87,7 @@ class ServmailController extends AbstractController
 
       }
 
-      */
+      
       $path = __DIR__;
 
       // Not called by operational

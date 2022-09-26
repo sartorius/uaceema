@@ -234,3 +234,407 @@ and duration_hour > 0 order by hour_starts_at asc;
 -- inv_course
 select * from uac_edt ue
 			where ue.id = 279;
+
+
+
+-------- SESSION 2
+
+
+
+select * from mdl_user order by 1 desc;
+
+select * from mdl_cohort;
+
+
+select * from mdl_cohort_members;
+
+
+
+SELECT
+            mu.id
+    FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+             JOIN mdl_role mr ON mr.id = uas.roleid
+             LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+
+select * from uac_edt;
+
+SELECT
+      mu.id AS ID,
+            mu.username AS USERNAME,
+             uas.secret AS SECRET,
+             CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
+             mr.shortname AS ROLE_SHORTNAME,
+             UPPER(mu.firstname) AS FIRSTNAME,
+             UPPER(mu.lastname) AS LASTNAME,
+             mu.email AS EMAIL,
+             mu.phone1 AS PHONE,
+             mu.address AS ADDRESS,
+             mu.city AS CITY,
+             mu.phone2 AS PARENT_PHONE,
+             mf.contextid AS PIC_CONTEXT_ID,
+             mu.picture AS PICTURE_ID,
+             SUBSTRING(mf.contenthash, 1, 2) AS D1,
+             SUBSTRING(mf.contenthash, 3, 2) AS D2,
+             mf.contenthash AS FILENAME
+    FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+             JOIN mdl_role mr ON mr.id = uas.roleid
+             LEFT JOIN mdl_files mf ON mu.picture = mf.id
+             WHERE mu.username = 'adeldan281';
+
+
+
+https://127.0.0.1:8000/profile/3192876874GAELCOX286/0
+https://127.0.0.1:8000/profile/3192876874GAELCOX286/0
+
+
+
+
+SELECT COUNT(1) FROM mdl_user
+WHERE NOT EXISTS (SELECT 1 FROM uac_mail
+                WHERE (flow_code, user_id) = ('MLWELCO', id))
+
+
+DROP TABLE IF EXISTS uac_mail;
+
+DROP TABLE IF EXISTS uac_mail;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_mail` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `flow_id` BIGINT NULL,
+  `flow_code` CHAR(7) NULL,
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `status` CHAR(3) NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `NOTIF` (`flow_code`, `user_id`));
+
+
+INSERT INTO uac_param (key_code, description, par_int, par_code, par_date) VALUES ('DMAILLI', 'Limit of email per day', 200, NULL, CURDATE());
+
+
+select * from mdl_user;
+
+
+select * from mdl_user_info_field;
+
+select * from mdl_user_info_data;
+
+
+select mu.username, muif.name, muid.data from mdl_user mu
+							JOIN mdl_user_info_data muid ON muid.userid = mu.id
+						  JOIN mdl_user_info_field muif ON muif.id = muid.fieldid
+						  						AND muif.shortname = 'matricule'
+						  		WHERE mu.username = 'celeyen013'
+						  		ORDER BY muif.categoryid, muif.sortorder;
+
+
+
+select * from uac_scan_ferie;
+SELECT
+		mu.id AS ID,
+          mu.username AS USERNAME,
+           uas.secret AS SECRET,
+           CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
+           mr.shortname AS ROLE_SHORTNAME,
+           UPPER(mu.firstname) AS FIRSTNAME,
+           UPPER(mu.lastname) AS LASTNAME,
+           mu.email AS EMAIL,
+           mu.phone1 AS PHONE,
+           mu.address AS ADDRESS,
+           mu.city AS CITY,
+           mu.phone2 AS PARENT_PHONE,
+           mf.contextid AS PIC_CONTEXT_ID,
+           mu.picture AS PICTURE_ID,
+           SUBSTRING(mf.contenthash, 1, 2) AS D1,
+           SUBSTRING(mf.contenthash, 3, 2) AS D2,
+           mf.contenthash AS FILENAME
+  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+           JOIN mdl_role mr ON mr.id = uas.roleid
+           LEFT JOIN mdl_files mf ON mu.picture = mf.id
+           where mu.id IN (24, 25, 27);
+
+
+select * from uac_showuser;
+
+select * from uac_param
+
+select * from uac_param;
+
+select CURDATE();
+
+
+
+
+
+
+select * from mdl_course_categories;
+
+
+INSERT INTO uac_param (key_code, description, par_int, par_code, par_date) VALUES ('SCANXXX', 'Flow retard', NULL, NULL, CURDATE());
+
+
+select * from uac_working_flow;
+
+
+select * from uac_load_scan;
+
+
+select * from uac_scan;
+
+
+
+
+select * from mdl_user;
+
+
+
+SELECT DATE_ADD(CURRENT_DATE, INTERVAL -10 DAY);
+
+UPDATE uac_load_scan SET status = 'NEW';
+DELETE FROM uac_scan;
+
+
+select * from uac_load_scan;
+
+SELECT * from uac_scan;
+
+select current_date;
+
+CALL SRV_MNG_Scan('2022-09-12');
+
+
+CALL SRV_MNG_Scan(NULL);
+
+
+select * from uac_working_flow;
+
+
+select CONCAT('', '');
+
+
+SELECT 1, user_id, scan_date, scan_time, 'NEW', 1 FROM uac_load_scan
+
+
+CALL SRV_PRG_Scan();
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_PRG_Scan$$
+CREATE PROCEDURE `SRV_PRG_Scan` ()
+BEGIN
+    DECLARE prg_date	DATE;
+    DECLARE prg_history_delta	INT;
+    -- CALL SRV_PRG_Scan();
+
+    SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'SCANPRG';
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
+
+    DELETE FROM uac_load_scan WHERE scan_date < prg_date;
+    DELETE FROM uac_working_flow WHERE flow_code = 'SCANXXX' AND create_date < prg_date;
+
+END$$
+-- Remove $$ for OVH
+
+
+
+select * from uac_mail;
+
+call SRV_CRT_MailWelcomeNewUser();
+
+select count(1) from uac_mail;
+
+
+-- delete from uac_mail;
+
+select * from uac_working_flow order by 1 desc;
+
+
+UPDATE uac_mail SET status = 'END' WHERE status = 'INP' and flow_code = inv_flow_code;
+              UPDATE uac_working_flow SET status = 'END' WHERE id IN (11, 12, 13, 8, 9);
+
+select * from uac_mail;
+
+
+UPDATE uac_mail SET status = 'BLK';
+
+select * from uac_load_scan order by 1 desc;
+
+
+select * from uac_scan order by 1 desc;
+
+UPDATE uac_mail SET status = 'END'
+WHERE id IN (
+    SELECT id FROM (
+        SELECT id FROM uac_mail
+        ORDER BY id ASC
+        LIMIT 0, 30
+    ) tmp
+)
+
+
+
+
+CALL SRV_GRP_WelcomeEMail();
+
+select count(1) FROM uac_showuser;
+
+UPDATE uac_mail SET status = 'BLK';
+UPDATE uac_mail um SET um.status = 'NEW'
+WHERE um.user_id IN (
+	select id from mdl_user mu where FROM_UNIXTIME(timecreated) > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
+);
+
+
+
+select count(1) from uac_mail where status = 'END';
+select * from uac_param;
+
+select FROM_UNIXTIME(mu.timecreated) from mdl_user mu
+
+
+select id from mdl_user mu where FROM_UNIXTIME(mu.timecreated) > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY);
+
+
+select * from uac_working_flow;
+
+select mdu.username, usa.* from uac_scan usa
+join mdl_user mdu on usa.user_id = mdu.id
+order by scan_time asc;
+
+
+select mdu.username, in_out, count(1) from uac_scan usa
+join mdl_user mdu on usa.user_id = mdu.id
+group by mdu.username, in_out
+order by count(1) desc;
+
+
+select mdu.username, count(1) from uac_scan usa
+join mdl_user mdu on usa.user_id = mdu.id
+group by mdu.username
+order by count(1) desc;
+
+
+
+
+
+
+-- delete from uac_scan;
+
+
+
+-- update uac_scan set scan_date = '2022-09-26'
+
+select * from uac_scan;
+
+update uac_load_scan SET status = 'NEW';
+
+delete from uac_mail;
+
+SELECT * FROM uac_edt
+      WHERE monday_ofthew = '2022-09-26'
+      AND mention = 'COMMUNICATION'
+      AND niveau = 'L1'
+      AND uaoption IS NULL;
+
+
+delete from uac_load_edt;
+
+select * from uac_load_edt;
+
+select * from uac_edt ue where ue.label_day = 'TUESDAY';
+
+select * from uac_working_flow;
+
+-- delete from uac_edt where monday_ofthew = '2022-09-26'
+
+
+select * from uac_edt ue order by hour_starts_at, day_code asc;
+
+
+select * from uac_edt ue order by day_code, hour_starts_at asc;
+
+
+CALL CLI_GET_FWEDT('test', -4, 'N');
+
+
+select * from uac_working_flow;
+
+
+select * from uac_load_edt where monday_ofthew = '2022-09-19' order by day_code, hour_starts_at;
+
+
+select * from uac_edt ue where day = '2022-09-26' and duration_hour > 0 order by hour_starts_at asc;
+
+select * from uac_param;
+
+select * from uac_admin;
+
+
+SELECT DAYOFWEEK(CURRENT_DATE);
+
+
+CALL SRV_MNG_Scan(NULL);
+
+
+
+
+CALL SRV_CRT_ComptAssdFlow('2022-09-27');
+
+
+SELECT uas.username, ass.*, sca.* from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id
+								JOIN uac_showuser uas ON mu.username = uas.username
+									  LEFT JOIN uac_scan sca ON sca.id = ass.scan_id
+									  WHERE uas.username = 'gaelcox286'
+
+
+SELECT mu.city AS city, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id
+									JOIN uac_showuser uas ON mu.username = uas.username
+											WHERE ass.status = 'ABS'
+											GROUP BY mu.city, ass.status
+
+
+SELECT REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id
+									JOIN uac_showuser uas ON mu.username = uas.username
+											WHERE ass.status = 'ABS'
+											GROUP BY mu.firstname, mu.lastname, ass.status
+												ORDER BY COUNT(1) DESC LIMIT 30
+
+
+select mu.* from mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+
+SELECT uas.username, sca.user_id, ass.status, uae.hour_starts_at, uae.day, REPLACE(SUBSTRING(uae.raw_course_title, 1, 20), '\n', 'xxx'), sca.scan_date, sca.scan_time
+FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id
+								JOIN uac_showuser uas ON mu.username = uas.username
+									  JOIN uac_edt uae ON uae.id = ass.edt_id
+									  LEFT JOIN uac_scan sca ON sca.id = ass.scan_id
+									  WHERE uas.username = 'gaelcox286'
+
+
+
+
+select * from uac_scan uas where uas.user_id = 338 order by scan_time desc;
+
+
+update uac_edt SET compute_late_status = 'NEW';
+delete from uac_assiduite;
+delete from uac_working_flow where flow_code = 'ASSIDUI';
+
+
+
+
+
+select * from uac_working_flow;
+
+SELECT mu.username, uas.* FROM uac_scan uas JOIN mdl_user mu ON mu.id = uas.user_id
+WHERE uas.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
+order by scan_date, scan_time desc;
+
+
+SELECT *
+          FROM uac_edt ue WHERE ue.compute_late_status = 'NEW'
+          AND ue.day = '2022-09-26'
+          AND duration_hour > 0
+
+
+
+select * from uac_load_scan;
