@@ -2,5 +2,6 @@
 
 rm -f ./config/db/_data/_data.sql
 
-cat ./config/db/_data/uac_scan_test_7.sql >> ./config/db/_data/_data.sql
-cat ./config/db/_data/uac_scan_test_8.sql >> ./config/db/_data/_data.sql
+cat ./config/db/_data/uac_scan_dev_4.sql >> ./config/db/_data/_data.sql
+cat ./config/db/_data/uac_scan_dev_5.sql >> ./config/db/_data/_data.sql
+cat ./config/db/_data/uac_scan_dev_6.sql >> ./config/db/_data/_data.sql

@@ -115,7 +115,7 @@ BEGIN
 
               -- End of the flow correctly
               UPDATE uac_mail SET status = 'END' WHERE status = 'INP' and flow_code = inv_flow_code;
-              UPDATE uac_working_flow SET status = 'END' WHERE id = inv_flow_id;
+              UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 
     END IF;
 
