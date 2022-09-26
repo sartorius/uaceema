@@ -72,3 +72,6 @@ validateedt:
     controller: App\Controller\AdminEDTController::validateedt
     defaults:
         flow:   0
+dashboardass:
+    path:       /dashboardass
+    controller: App\Controller\AdminEDTController::dashboardass

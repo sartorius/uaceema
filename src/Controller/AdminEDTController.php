@@ -16,6 +16,60 @@ use \PDO;
 
 class AdminEDTController extends AbstractController
 {
+
+  public function dashboardass(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    //'scale_right' => ConnectionManager::whatScaleRight()
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+
+    // Level ONE is necessary to load EDT
+    if(isset($scale_right) && ($scale_right > 4)){
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+
+
+        $late_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
+									        . " JOIN uac_showuser uas ON mu.username = uas.username "
+                          . " WHERE ass.status = 'LAT' "
+											    . " GROUP BY mu.city, ass.status; ";
+        $mis_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
+									        . " JOIN uac_showuser uas ON mu.username = uas.username "
+                          . " WHERE ass.status = 'ABS' "
+											    . " GROUP BY mu.city, ass.status; ";
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_stat_late = $dbconnectioninst->query($late_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_stat_late));
+
+
+        $result_stat_mis = $dbconnectioninst->query($mis_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_stat_mis));
+
+
+        $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                  'firstname' => $_SESSION["firstname"],
+                                                                  'lastname' => $_SESSION["lastname"],
+                                                                  'id' => $_SESSION["id"],
+                                                                  'stats_late'=>$result_stat_late,
+                                                                  'stats_mis'=>$result_stat_mis,
+                                                                  'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                  'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+
   public function validateedt(Environment $twig, LoggerInterface $logger, $flow)
   {
 

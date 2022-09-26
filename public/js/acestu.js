@@ -319,8 +319,119 @@ function loadAssRecapGrid(){
   }
 }
 
+function runStat(){
+  //Corlor
+  var backgroundColorRef = [
+      '#E2CEFF',
+      '#FFCECE',
+      '#C7FFC7',
+      '#FFF9C7',
+      '#F1F1F1',
+      '#F8CEFF',
+      '#D6EDEE',
+      '#FEE9C9',
+      '#E2CEFF',
+      '#FFCECE',
+      '#C7FFC7',
+      '#FFF9C7',
+      '#F1F1F1',
+      '#F8CEFF',
+      '#D6EDEE',
+      '#FEE9C9'
+  ];
+  var borderColorRef = [
+      '#5700D5',
+      '#A80000',
+      '#079F00',
+      '#D2BC00',
+      '#505050',
+      '#9300AD',
+      '#009196',
+      '#C87900',
+      '#5700D5',
+      '#A80000',
+      '#079F00',
+      '#D2BC00',
+      '#505050',
+      '#9300AD',
+      '#009196',
+      '#C87900'
+  ];
+
+  // Stat of status population
+  let listOfLabelStat = new Array();
+  let listOfDataStat = new Array();
+  for(i=0; i<dataTagToJsonArray.length; i++){
+    listOfLabelStat.push(dataTagToJsonArray[i].CITY);
+    listOfDataStat.push(dataTagToJsonArray[i].CPT);
+  }
+
+  // Stat of status population
+  let listOfLabelStatMis = new Array();
+  let listOfDataStatMis = new Array();
+  for(i=0; i<dataTagToJsonArrayMis.length; i++){
+    listOfLabelStatMis.push(dataTagToJsonArrayMis[i].CITY);
+    listOfDataStatMis.push(dataTagToJsonArrayMis[i].CPT);
+  }
 
 
+  var ctxClient = document.getElementById('statPieLate');
+  new Chart(ctxClient, {
+      type: 'doughnut',
+      data: {
+        labels: listOfLabelStat,
+        datasets: [
+          {
+            label: "Retard par quartier",
+            backgroundColor: backgroundColorRef,
+            data: listOfDataStat
+          }
+        ]
+      },
+      options: {
+      }
+  });
+
+  var ctxClientBar = document.getElementById('statBarLate');
+  new Chart(ctxClientBar, {
+      type: 'bar',
+      data: {
+        labels: listOfLabelStat,
+        datasets: [
+          {
+            label: "Retard par quartier",
+            backgroundColor: backgroundColorRef,
+            borderColor: borderColorRef,
+            data: listOfDataStat
+          }
+        ]
+      },
+      options: {
+      }
+  });
+
+  var ctxClientBarMis = document.getElementById('statBarMis');
+  new Chart(ctxClientBarMis, {
+      type: 'bar',
+      data: {
+        labels: listOfLabelStatMis,
+        datasets: [
+          {
+            label: "Absence par quartier",
+            backgroundColor: backgroundColorRef,
+            borderColor: borderColorRef,
+            data: listOfDataStatMis
+          }
+        ]
+      },
+      options: {
+      }
+  });
+}
+
+
+
+/***********************************************************************************************************/
 
 $(document).ready(function() {
   console.log('We are in MGAPP JS ACEU NOT MGAPP');
@@ -418,6 +529,10 @@ $(document).ready(function() {
         $("#blc-trace-in-out").show();
       }
     });
+  }
+  else if($('#mg-graph-identifier').text() == 'dash-ass'){
+    // Do nothing dash-ass
+    runStat();
   }
   else if($('#mg-graph-identifier').text() == 'advert'){
     // Do nothing

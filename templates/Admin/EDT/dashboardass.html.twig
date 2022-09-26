@@ -1,0 +1,65 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if stats_late is defined and stats_late is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArray =JSON.parse('{{ stats_late | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArray = "";
+    </script>
+{% endif %}
+{% if stats_mis is defined and stats_mis is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayMis =JSON.parse('{{ stats_mis | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayMis = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">dash-ass</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-5">
+    <h1>Proportion retard</h1>
+    <hr>
+    <canvas id="statPieLate"></canvas>
+  </div>
+  <div class="col-5">
+    <h1>Nombre retard</h1>
+    <hr>
+    <canvas id="statBarLate"></canvas>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<br><br>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-4">
+    <h1>Absence par quartier</h1>
+    <hr>
+    <canvas id="statBarMis"></canvas>
+  </div>
+  <div class="col-6">
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+
+{% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}
