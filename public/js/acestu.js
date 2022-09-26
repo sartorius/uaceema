@@ -1,7 +1,7 @@
 function basicEncodeACE(str){
   return '' + str;
 }
-let globalMaxRead = 100;
+let globalMaxRead = 1000;
 // Main PRINT PDF is here !
 
 function printCarteEtudiantPDF(){
@@ -82,6 +82,10 @@ function verityContentScan(){
          "date" : date,
          "time" : time
     });
+    // Save for any internet issue here
+    localStorage.removeItem("listOfScan");
+    localStorage.setItem("listOfScan", JSON.stringify(dataTagToJsonArray));
+
     if((globalMaxRead - dataTagToJsonArray.length) < 10){
         $('#left-cloud').html('<i style="color:red;">' + (globalMaxRead - dataTagToJsonArray.length) + '<i>');
     }
@@ -137,6 +141,7 @@ function loadScan(){
           $('#scan-ace').val('');
           $("#scan-ace").show();
           dataTagToJsonArray = [];
+          localStorage.clear();
           //console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
 
 
@@ -170,72 +175,6 @@ function leftSideUtils(){
 
 
 function loadAssRecapGrid(){
-  /*
-    responsivefields = [
-        { name: "LABEL_DAY_FR",
-          title: "Jour",
-          type: "text",
-          align: "right",
-          width: 40,
-          css: "cell-recap",
-          headercss: "cell-recap-hd"
-        },
-        { name: "JOUR",
-          title: 'Date',
-          type: "text",
-          align: "center",
-          width: 25,
-          css: "cell-recap",
-          headercss: "cell-recap-hd"
-        },
-        { name: "COURS",
-          title: 'Cours',
-          type: "text",
-          align: "center",
-          css: "cell-recap-sm",
-          headercss: "cell-recap-hd"
-        },
-        //Default width is auto
-        { name: "DEBUT",
-          title: "Début",
-          type: "text",
-          width: 33,
-          headercss: "cell-recap-hd",
-          css: "cell-recap",
-          itemTemplate: function(value, item) {
-            return value + 'h00';
-          }
-        },
-        //Default width is auto
-        { name: "SCAN_TIME",
-          title: "Scan",
-          type: "text",
-          width: 33,
-          css: "cell-recap",
-          headercss: "cell-recap-hd"
-        },
-        //Default width is auto
-        { name: "STATUS",
-          title: "Résultat",
-          type: "text",
-          width: 33,
-          css: "cell-recap",
-          headercss: "cell-recap-hd",
-          itemTemplate: function(value, item) {
-            let val = '';
-            if(value == 'PON'){
-              val = 'OK';
-            }
-            else if(value == 'LAT'){
-              val = '<i class="recap-lat">Retard</i>';
-            }
-            else{
-              val = '<i class="recap-mis">Absent</i>';
-            }
-            return val;
-          }
-        }
-    ]; */
 
     responsivefields = [
         { name: "JOUR",
@@ -257,7 +196,7 @@ function loadAssRecapGrid(){
           headercss: "cell-recap-hd",
           css: "cell-recap",
           itemTemplate: function(value, item) {
-            return value + 'h00';
+            return (value.toString().length == 1) ? ('0' + value + 'h00') : (value + 'h00');
           }
         },
         //Default width is auto
@@ -278,7 +217,7 @@ function loadAssRecapGrid(){
           itemTemplate: function(value, item) {
             let val = '';
             if(value == 'PON'){
-              val = 'OK';
+              val = 'À l\'heure';
             }
             else if(value == 'LAT'){
               val = '<i class="recap-lat">Retard</i>';
@@ -492,7 +431,7 @@ function runStat(){
 
   responsivefieldsPP = [
       { name: "NAME",
-        title: 'Etudiant',
+        title: 'Étudiant',
         type: "text",
         align: "center",
         width: 25,
@@ -573,10 +512,21 @@ $(document).ready(function() {
   else if((($('#mg-graph-identifier').text() == 'ua-scan-in')) ||
             ($('#mg-graph-identifier').text() == 'ua-scan-out')){
 
+    $('#left-cloud').html(globalMaxRead - dataTagToJsonArray.length);
+
+    // Update the list display if not empty
+    let retrieveRead = $('#code-lu').html().toString().replace(/ /gi,'').replace(/\n/gi,'');
+    let retrieveList = '';
+    if(retrieveRead.toString().length == 0){
+      // We go here if there is data. Else we don't get in the loop
+      for(let iretr = 0; iretr<dataTagToJsonArray.length; iretr++){
+          retrieveList = dataTagToJsonArray[iretr].username + ' à ' + dataTagToJsonArray[iretr].time + '<br>' + retrieveList;
+      }
+      $('#code-lu').html(retrieveList);
+    }
 
 
 
-    $('#left-cloud').html(globalMaxRead);
     // Do nothing
     $( "#scan-ace" ).keyup(function() {
       verityContentScan();
@@ -586,7 +536,12 @@ $(document).ready(function() {
         loadScan();
     });
 
-    $("#btn-load-bc").hide();
+    if(dataTagToJsonArray.length == 0){
+        $("#btn-load-bc").hide();
+    }
+    // else it is kept displayed
+
+
   }
   // We check here the graph **************************************************** OLD
   else if($('#mg-graph-identifier').text() == 'ua-profile'){

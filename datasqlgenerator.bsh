@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
-rm -f ./config/db/_all.sql
+rm -f ./config/db/_data/_data.sql
 
-cat ./config/db/_data/uac_scan_1.sql >> ./config/db/_data/_data.sql
-cat ./config/db/_data/uac_scan_2.sql >> ./config/db/_data/_data.sql
-cat ./config/db/_data/uac_scan_3.sql >> ./config/db/_data/_data.sql
+cat ./config/db/_data/uac_scan_test_7.sql >> ./config/db/_data/_data.sql
+cat ./config/db/_data/uac_scan_test_8.sql >> ./config/db/_data/_data.sql
