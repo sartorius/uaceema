@@ -83,8 +83,12 @@ function verityContentScan(){
          "time" : time
     });
     // Save for any internet issue here
-    localStorage.removeItem("listOfScan");
-    localStorage.setItem("listOfScan", JSON.stringify(dataTagToJsonArray));
+    let storeOrder = 'listOfScanIn';
+    if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
+      storeOrder = 'listOfScanOut';
+    }
+    localStorage.removeItem(storeOrder);
+    localStorage.setItem(storeOrder, JSON.stringify(dataTagToJsonArray));
 
     if((globalMaxRead - dataTagToJsonArray.length) < 10){
         $('#left-cloud').html('<i style="color:red;">' + (globalMaxRead - dataTagToJsonArray.length) + '<i>');
@@ -141,7 +145,13 @@ function loadScan(){
           $('#scan-ace').val('');
           $("#scan-ace").show();
           dataTagToJsonArray = [];
-          localStorage.clear();
+
+          // Save for any internet issue here
+          let storeOrder = 'listOfScanIn';
+          if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
+            storeOrder = 'listOfScanOut';
+          }
+          localStorage.removeItem(storeOrder);
           //console.log('answer: ' + xhr.responseText + ' - data: ' + data.toString());
 
 

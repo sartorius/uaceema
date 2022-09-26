@@ -8,7 +8,16 @@
 
 
 <script>
-  let dataTagToJsonArray = JSON.parse(localStorage.getItem("listOfScan"));
+
+  {% if rule == 'in' %}
+      let dataTagToJsonArray = JSON.parse(localStorage.getItem("listOfScanIn"));
+  {% else %}
+      let dataTagToJsonArray = JSON.parse(localStorage.getItem("listOfScanOut"));
+  {% endif %}
+
+
+
+
   if((typeof dataTagToJsonArray === undefined) || (dataTagToJsonArray == null)){
       dataTagToJsonArray = new Array();
   }
