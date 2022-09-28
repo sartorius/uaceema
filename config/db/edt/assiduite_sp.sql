@@ -59,7 +59,7 @@ BEGIN
         -- BODY START
         -- We need to loop all courses of the day
         SELECT COUNT(1) INTO count_courses_todo
-          FROM uac_edt ue WHERE ue.compute_late_status = 'NEW'
+          FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
           AND ue.day = inv_date
           -- We take only not empty courses
           AND ue.duration_hour > 0
@@ -79,7 +79,7 @@ BEGIN
 
           -- INITIALIZATION
           SELECT MAX(id) INTO inv_edt_id
-              FROM uac_edt ue WHERE ue.compute_late_status = 'NEW'
+              FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
               AND ue.day = inv_date
               -- We take only not empty courses
               AND ue.duration_hour > 0
@@ -91,8 +91,8 @@ BEGIN
                         wait_b_compute), TIME) < inv_time;
 
           -- Initialize the hour start at
-          SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt WHERE id = inv_edt_id;
-          SELECT cohort_id INTO inv_cohort_id FROM uac_edt WHERE id = inv_edt_id;
+          SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt_line WHERE id = inv_edt_id;
+          -- Je suis sensé bosser sur les cohorts id !!!
 
 
           -- ABS part 1 *** *** *** *** *** *** *** ***
@@ -176,7 +176,7 @@ BEGIN
           			   	  							  AND max_scan.scan_time = scan_in
           			   	  							  AND max_scan.in_out = 'I';
 
-          UPDATE uac_edt SET compute_late_status = 'END', last_update = NOW() WHERE id = inv_edt_id;
+          UPDATE uac_edt_line SET compute_late_status = 'END', last_update = NOW() WHERE id = inv_edt_id;
           SET i = i + 1;
         END WHILE;
 

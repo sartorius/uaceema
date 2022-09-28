@@ -1180,6 +1180,11 @@ textarea[name=inputRef] {
   font-size: 10px;
   font-weight: 800;
 }
+
+.cell-recap-l{
+  font-size: 14px;
+}
+
 .recap-lat{
   color: #FF6800;
   font-weight: 800;

@@ -68,10 +68,13 @@ checkandloadedt:
     path:       /checkandloadedt
     controller: App\Controller\AdminEDTController::checkandloadedt
 validateedt:
-    path:       /validateedt/{flow}
+    path:       /validateedt/{master_id}
     controller: App\Controller\AdminEDTController::validateedt
     defaults:
-        flow:   0
+        master_id:   0
+manageredt:
+    path:       /manageredt
+    controller: App\Controller\AdminEDTController::manageredt
 dashboardass:
     path:       /dashboardass
     controller: App\Controller\AdminEDTController::dashboardass

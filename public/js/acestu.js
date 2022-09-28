@@ -326,6 +326,105 @@ function loadAssRecapGrid(){
 
 }
 
+function loadAllEDTGrid(){
+
+
+      allEDTfields = [
+        { name: "S",
+          title: 'S#',
+          type: "text",
+          align: "center",
+          width: 8,
+          css: "cell-recap-l",
+          headercss: "cell-trace-hd"
+        },
+        //Default width is auto
+        { name: "monday_ofthew",
+          title: "Lundi",
+          type: "text",
+          width: 15,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "cohort_id",
+          title: "#Classe",
+          type: "text",
+          width: 10,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "mention",
+          title: "Mention",
+          type: "text",
+          width: 100,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "niveau",
+          title: 'Niveau',
+          type: "text",
+          width: 15,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "parcours",
+          title: 'Parcours',
+          type: "text",
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "groupe",
+          title: 'Groupe',
+          type: "text",
+          width: 33,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "master_id",
+          title: '#',
+          type: "text",
+          width: 33,
+          headercss: "cell-trace-hd",
+          css: "cell-recap-l",
+          itemTemplate: function(value, item) {
+            let val = '';
+            if((value == '') || (value == null)){
+              val = '<i class="err"><span class="icon-times-circle nav-icon-fa-sm nav-text"></span>&nbsp;Manquant</i>';
+            }
+            else{
+              val = '<span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp;Chargé';
+            }
+            return val;
+          }
+        }
+    ];
+
+    $("#jsGridAllEDT").jsGrid({
+        height: "auto",
+        width: "100%",
+        noDataContent: "Pas encore d'EDT disponible",
+        pageIndex: 1,
+        pageSize: 20,
+        pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} sur {pageCount}",
+        pagePrevText: "Prec",
+        pageNextText: "Suiv",
+        pageFirstText: "Prem",
+        pageLastText: "Dern",
+
+        sorting: true,
+        paging: true,
+        data: dataAllEDTToJsonArray,
+        fields: allEDTfields
+    });
+}
+
+
 function runStat(){
   //Corlor
   var backgroundColorRef = [
@@ -607,8 +706,9 @@ $(document).ready(function() {
     // Do nothing dash-ass
     runStat();
   }
-  else if($('#mg-graph-identifier').text() == 'advert'){
+  else if($('#mg-graph-identifier').text() == 'man-edt'){
     // Do nothing
+    loadAllEDTGrid();
   }
   else{
     //Do nothing

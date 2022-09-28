@@ -89,7 +89,7 @@ class ProfileController extends AbstractController
                                       . " WHEN day_code = 4 THEN 'JEUDI' WHEN day_code = 5 THEN 'VENDREDI' ELSE 'SAMEDI' END AS LABEL_DAY_FR "
                                       . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
                       								. " JOIN uac_showuser uas ON mu.username = uas.username "
-                      									  . " JOIN uac_edt uae ON uae.id = ass.edt_id "
+                      									  . " JOIN uac_edt_line uae ON uae.id = ass.edt_id "
                       									  . " LEFT JOIN uac_scan sca ON sca.id = ass.scan_id "
                                           . " WHERE mu.id = " . $result[0]['ID']
                                           . " ORDER BY ADDTIME(uae.day, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(uae.hour_starts_at) = 1) THEN CONCAT('0', uae.hour_starts_at) ELSE uae.hour_starts_at END, ':00:00'), TIME)) DESC;";

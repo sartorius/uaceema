@@ -1,0 +1,30 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if all_edt is defined and all_edt is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllEDTToJsonArray =JSON.parse('{{ all_edt | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataAllEDTToJsonArray = "";
+    </script>
+{% endif %}
+<div id="mg-graph-identifier">man-edt</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Liste des EDT</h2>
+    <hr>
+    <div id="jsGridAllEDT">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}
