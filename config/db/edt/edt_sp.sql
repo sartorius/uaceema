@@ -255,7 +255,9 @@ BEGIN
     SELECT DATE_ADD(CURRENT_DATE, INTERVAL 21 DAY) INTO inv_cur_date;
     SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_three;
 
-    SELECT * FROM (SELECT 	'S', 0 AS inv_w, DATE_FORMAT(monday_zero, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday FROM uac_cohort uc
+    SELECT * FROM (SELECT 'S0' AS s, 0 AS inv_w, DATE_FORMAT(monday_zero, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
+                        UPPER(CONCAT('S0', DATE_FORMAT(monday_zero, "%d/%m"), uc.id, urm.title, uc.niveau, urp.title, CASE WHEN uem.id IS NULL THEN 'MANQUANT' ELSE 'CHARGE' END)) AS raw_data
+                        FROM uac_cohort uc
                         JOIN uac_ref_mention urm ON urm.par_code = uc.mention
                         JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                         JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
@@ -264,7 +266,9 @@ BEGIN
                                                       AND uem.visibility = 'V'
                                                       AND uem.monday_ofthew = monday_zero ORDER BY cohort_id ASC) as a
     UNION ALL
-    SELECT * FROM (SELECT 	'S+1', 1 AS inv_w, DATE_FORMAT(monday_one, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday FROM uac_cohort uc
+    SELECT * FROM (SELECT 'S1' AS s, 1 AS inv_w, DATE_FORMAT(monday_one, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
+                        UPPER(CONCAT('S1', DATE_FORMAT(monday_one, "%d/%m"), uc.id, urm.title, uc.niveau, urp.title, CASE WHEN uem.id IS NULL THEN 'MANQUANT' ELSE 'CHARGE' END)) AS raw_data
+                        FROM uac_cohort uc
                         JOIN uac_ref_mention urm ON urm.par_code = uc.mention
                         JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                         JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
@@ -273,7 +277,9 @@ BEGIN
                                                       AND uem.visibility = 'V'
                                                       AND uem.monday_ofthew = monday_one ORDER BY cohort_id ASC) as b
     UNION ALL
-    SELECT * FROM (SELECT 	'S+2', 2 AS inv_w, DATE_FORMAT(monday_two, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday FROM uac_cohort uc
+    SELECT * FROM (SELECT	'S2' AS s, 2 AS inv_w, DATE_FORMAT(monday_two, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
+                        UPPER(CONCAT('S2', DATE_FORMAT(monday_two, "%d/%m"), uc.id, urm.title, uc.niveau, urp.title, CASE WHEN uem.id IS NULL THEN 'MANQUANT' ELSE 'CHARGE' END)) AS raw_data
+                        FROM uac_cohort uc
                         JOIN uac_ref_mention urm ON urm.par_code = uc.mention
                         JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                         JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
@@ -282,7 +288,9 @@ BEGIN
                                                       AND uem.visibility = 'V'
                                                       AND uem.monday_ofthew = monday_two ORDER BY cohort_id ASC) as c
     UNION ALL
-    SELECT * FROM (SELECT 	'S+3', 3 AS inv_w, DATE_FORMAT(monday_three, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday FROM uac_cohort uc
+    SELECT * FROM (SELECT 'S3' AS s, 3 AS inv_w, DATE_FORMAT(monday_three, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
+                        UPPER(CONCAT('S3', DATE_FORMAT(monday_three, "%d/%m"), uc.id, urm.title, uc.niveau, urp.title, CASE WHEN uem.id IS NULL THEN 'MANQUANT' ELSE 'CHARGE' END)) AS raw_data
+                        FROM uac_cohort uc
                         JOIN uac_ref_mention urm ON urm.par_code = uc.mention
                         JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                         JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id

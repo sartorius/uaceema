@@ -4,22 +4,54 @@
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
     let dataAllEDTToJsonArray =JSON.parse('{{ all_edt | json_encode | raw }}');
+    // We init here the filter value
+		var filteredDataAllEDTToJsonArray = Array.from(dataAllEDTToJsonArray);
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
 {% else %}
+    // Error
     <script>
       let dataAllEDTToJsonArray = "";
     </script>
 {% endif %}
+
+
 <div id="mg-graph-identifier">man-edt</div>
 
 <div class="row">
   <div class="col-1">
   </div>
   <div class="col-10">
-    <h2>Liste des EDT</h2>
+    <h2>Gestion des EDT</h2>
     <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-edt" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-edt" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+
+  <div class="col-7">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
     <div id="jsGridAllEDT">
     </div>
   </div>

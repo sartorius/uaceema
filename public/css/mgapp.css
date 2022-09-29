@@ -1204,3 +1204,9 @@ textarea[name=inputRef] {
 #jsGrid{
   padding-bottom: 20px;
 }
+
+/*********************************/
+/****** ALL DASHBOARD ******/
+.dash-bar{
+  margin-bottom: 20px;
+}

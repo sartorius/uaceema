@@ -326,11 +326,53 @@ function loadAssRecapGrid(){
 
 }
 
+/***************************************************************************/
+/***************************************************************************/
+/***************************************************************************/
+/***************************************************************************/
+/****************************** ALL EDT ************************************/
+/***************************************************************************/
+/***************************************************************************/
+/***************************************************************************/
+/***************************************************************************/
+
+function initAllEDTGrid(){
+  $('#filter-all-edt').keyup(function() {
+    filterDataAllEDT();
+  });
+  $('#re-init-dash-edt').click(function() {
+    $('#filter-all-edt').val('');
+    clearDataAllEDT();
+  });
+}
+
+function filterDataAllEDT(){
+  if(($('#filter-all-edt').val().length > 1) && ($('#filter-all-edt').val().length < 35)){
+    //console.log('We need to filter !' + $('#filter-all').val());
+    filteredDataAllEDTToJsonArray = dataAllEDTToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-all-edt').val().toUpperCase())
+                                  });
+    loadAllEDTGrid();
+  }
+  else if(($('#filter-all-edt').val().length < 2)) {
+    // We clear data
+    clearDataAllEDT();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+function clearDataAllEDT(){
+  filteredDataAllEDTToJsonArray = Array.from(dataAllEDTToJsonArray);
+  loadAllEDTGrid();
+};
+
 function loadAllEDTGrid(){
 
 
       allEDTfields = [
-        { name: "S",
+        { name: "s",
           title: 'S#',
           type: "text",
           align: "center",
@@ -398,7 +440,7 @@ function loadAllEDTGrid(){
               val = '<i class="err"><span class="icon-times-circle nav-icon-fa-sm nav-text"></span>&nbsp;Manquant</i>';
             }
             else{
-              val = '<span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp;Chargé';
+              val = '<i class="report-val"><span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp;Chargé</i>';
             }
             return val;
           }
@@ -410,7 +452,7 @@ function loadAllEDTGrid(){
         width: "100%",
         noDataContent: "Pas encore d'EDT disponible",
         pageIndex: 1,
-        pageSize: 20,
+        pageSize: 50,
         pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} sur {pageCount}",
         pagePrevText: "Prec",
         pageNextText: "Suiv",
@@ -419,7 +461,7 @@ function loadAllEDTGrid(){
 
         sorting: true,
         paging: true,
-        data: dataAllEDTToJsonArray,
+        data: filteredDataAllEDTToJsonArray,
         fields: allEDTfields
     });
 }
@@ -708,6 +750,7 @@ $(document).ready(function() {
   }
   else if($('#mg-graph-identifier').text() == 'man-edt'){
     // Do nothing
+    initAllEDTGrid();
     loadAllEDTGrid();
   }
   else{
