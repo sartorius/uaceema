@@ -53,21 +53,21 @@ function loadAllSTUGrid(){
           align: "left",
           width: 20,
           css: "cell-recap-l",
-          headercss: "cell-trace-hd"
+          headercss: "cell-recap-hd"
         },
         //Default width is auto
         { name: "FIRSTNAME",
           title: "Prénom",
           type: "text",
           width: 25,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
         { name: "LASTNAME",
           title: "Nom de famille",
           type: "text",
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -75,7 +75,7 @@ function loadAllSTUGrid(){
           title: "Mention",
           type: "text",
           width: 80,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -83,7 +83,7 @@ function loadAllSTUGrid(){
           title: 'Niveau',
           type: "text",
           width: 15,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -91,7 +91,7 @@ function loadAllSTUGrid(){
           title: 'Parcours',
           type: "text",
           width: 30,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -99,7 +99,7 @@ function loadAllSTUGrid(){
           title: 'Groupe',
           type: "text",
           width: 33,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         }
     ];

@@ -378,14 +378,14 @@ function loadAllEDTGrid(){
           align: "center",
           width: 8,
           css: "cell-recap-l",
-          headercss: "cell-trace-hd"
+          headercss: "cell-recap-hd"
         },
         //Default width is auto
         { name: "monday_ofthew",
           title: "Lundi",
           type: "text",
           width: 15,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -393,7 +393,7 @@ function loadAllEDTGrid(){
           title: "#Classe",
           type: "text",
           width: 10,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -401,7 +401,7 @@ function loadAllEDTGrid(){
           title: "Mention",
           type: "text",
           width: 100,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -409,14 +409,14 @@ function loadAllEDTGrid(){
           title: 'Niveau',
           type: "text",
           width: 15,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
         { name: "parcours",
           title: 'Parcours',
           type: "text",
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -424,7 +424,7 @@ function loadAllEDTGrid(){
           title: 'Groupe',
           type: "text",
           width: 33,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
         //Default width is auto
@@ -432,7 +432,7 @@ function loadAllEDTGrid(){
           title: '#',
           type: "text",
           width: 33,
-          headercss: "cell-trace-hd",
+          headercss: "cell-recap-hd",
           css: "cell-recap-l",
           itemTemplate: function(value, item) {
             let val = '';

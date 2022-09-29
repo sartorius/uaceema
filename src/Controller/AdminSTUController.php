@@ -17,7 +17,7 @@ use \PDO;
 class AdminSTUController extends AbstractController
 {
 
-  public function dashboardstu(Environment $twig, LoggerInterface $logger)
+  public function managerstu(Environment $twig, LoggerInterface $logger)
   {
 
     if (session_status() == PHP_SESSION_NONE) {
@@ -47,7 +47,7 @@ class AdminSTUController extends AbstractController
         $result_all_stu = $dbconnectioninst->query($allstu_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_stu));
 
-        $content = $twig->render('Admin/STU/dashboardstu.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+        $content = $twig->render('Admin/STU/managerstu.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'firstname' => $_SESSION["firstname"],
                                                                   'lastname' => $_SESSION["lastname"],
                                                                   'id' => $_SESSION["id"],
