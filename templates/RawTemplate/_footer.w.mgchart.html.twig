@@ -41,5 +41,10 @@
         <script src="{{ path('main') }}js/acestu.min.js"></script>
 {% endif %}
 
+{% if app_environment == 'dev' %}
+        <script src="{{ path('main') }}js/aceass.js"></script>
+{% else %}
+        <script src="{{ path('main') }}js/aceass.min.js"></script>
+{% endif %}
 
 </html>

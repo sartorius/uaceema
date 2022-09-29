@@ -1,0 +1,31 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+
+{% if sp_result|length > 1 %}
+
+
+
+      {% include 'Admin/EDT/edtheader.html.twig' %}
+
+      <div class="container">
+        <div class="row">
+          <div class="col-4">
+              <a class="btn btn-default btn-sm btn-block" href="/manageredt" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;<span class="icon-calendar nav-text"></span>&nbsp;Manager EDT</a>
+          </div>
+          <div class="col-8">
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class='uac-lg-version'>
+          {% include 'Admin/EDT/_rawlargescreenedt.html.twig' %}
+      </div>
+
+{% else %}
+
+      {% include 'Admin/EDT/missingmsgedt.html.twig' %}
+
+{% endif %}
+
+{% include 'RawTemplate/_footer.w.jsgrid.html.twig' %}

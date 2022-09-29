@@ -84,27 +84,10 @@
 </div>
 <hr>
 {% if sp_result|length > 1 %}
-      <div class="container">
-        <div class="row">
-          <div class="col-2">
-          </div>
-          <div class="col-8">
-              <div class="carte-profile pr-title"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;Emploi du temps</div><br>
-              <div class="info-cartouche">
-                <strong>Mention:</strong> {{ sp_result[0]['mention'] }}<br>
-                <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
-                <strong>Option:</strong> {{ sp_result[0]['parcours'] }}<br>
-                <strong>Option:</strong> {{ sp_result[0]['groupe'] }}<br>
-                <strong>Date du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
-              </div>
-          </div>
-          <div class="col-2">
-          </div>
-        </div>
-      </div>
 
 
 
+      {% include 'Admin/EDT/edtheader.html.twig' %}
 
       <div class='uac-sm-version'>
         <div class="row">
@@ -189,25 +172,8 @@
             </div>
       </div>
 {% else %}
-
-      <div class="container">
-        <div class="row">
-          <div class="col-2">
-          </div>
-          <div class="col-8">
-              <div class="carte-profile pr-title"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;Emploi du temps</div><br>
-              <div class="info-cartouche">
-                <strong>Date du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
-                <span class="icon-coffee nav-text"></span>&nbsp;Désolé ! L'emploi du temps pour cette semaine n'a pas encore été chargé.<br>
-                Si vous pensez qu'il s'agit d'une erreur, n'hésitez pas à nous contacter.
-              </div>
-          </div>
-          <div class="col-2">
-          </div>
-        </div>
-      </div>
+      {% include 'Admin/EDT/missingmsgedt.html.twig' %}
       {% include 'Profile/_navigationbutton.html.twig' %}
-
 {% endif %}
 
 {% include 'RawTemplate/_footer.w.jsgrid.html.twig' %}

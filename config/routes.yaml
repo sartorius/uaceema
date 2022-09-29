@@ -72,6 +72,11 @@ validateedt:
     controller: App\Controller\AdminEDTController::validateedt
     defaults:
         master_id:   0
+showedt:
+    path:       /showedt/{master_id}
+    controller: App\Controller\AdminEDTController::showedt
+    defaults:
+        master_id:   0
 manageredt:
     path:       /manageredt
     controller: App\Controller\AdminEDTController::manageredt

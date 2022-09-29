@@ -920,6 +920,10 @@ textarea[name=inputRef] {
   margin-left: 5px;
 }
 
+.ace-hidden-goto{
+  visibility: hidden;
+}
+
 /*********  LOADER  **********/
 .uac-sm-version{
   display: block;

@@ -301,3 +301,34 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+-- Display EDT for Administration
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_SHOWEDTForADM$$
+CREATE PROCEDURE `CLI_GET_SHOWEDTForADM` (IN param_master_id VARCHAR(25))
+BEGIN
+
+    SELECT
+      uem.id AS master_id,
+      urm.title AS mention,
+      uc.niveau AS niveau,
+      urp.title AS parcours,
+      urg.title AS groupe,
+      DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
+      DATE_FORMAT(uel.day, "%d/%m") AS nday,
+      uel.day_code AS day_code,
+      uel.hour_starts_at AS hour_starts_at,
+      uel.duration_hour AS duration_hour,
+      uel.raw_course_title AS raw_course_title
+    FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                          JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                          JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                          JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                          JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                          JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+    WHERE uem.id = param_master_id
+    AND uem.visibility = 'V'
+    ORDER BY uel.hour_starts_at, uel.day_code ASC;
+
+END$$
+-- Remove $$ for OVH

@@ -78,6 +78,59 @@ class AdminEDTController extends AbstractController
   }
 
 
+
+  public function showedt(Environment $twig, LoggerInterface $logger, $master_id)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    //'scale_right' => ConnectionManager::whatScaleRight()
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("Enter the show ! ");
+
+    //Check if we are coming from POST
+    if(isset($_POST["postmaster_id"]))
+    {
+        // Get data from ajax
+        $logger->debug("See postmaster_id: " . $_POST["postmaster_id"]);
+        $master_id = $_POST["postmaster_id"];
+    }
+
+
+    // Level ONE is necessary to load EDT
+    if($master_id == 0){
+        // Error 404
+        $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    else{
+          if(isset($scale_right) && ($scale_right > 0)){
+              $logger->debug("Firstname: " . $_SESSION["firstname"]);
+
+              $dbconnectioninst = DBConnectionManager::getInstance();
+
+              $import_query = "CALL CLI_GET_SHOWEDTForADM(" . $master_id . ")";
+              $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+              $content = $twig->render('Admin/EDT/showedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                        'firstname' => $_SESSION["firstname"],
+                                                                        'lastname' => $_SESSION["lastname"],
+                                                                        'id' => $_SESSION["id"],
+                                                                        "sp_result"=>$resultsp,
+                                                                        'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                        'errtype' => '', 'master_id' => $master_id]);
+
+          }
+          else{
+              // Error Code 404
+              $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+          }
+    }
+    return new Response($content);
+  }
+
   public function validateedt(Environment $twig, LoggerInterface $logger, $master_id)
   {
 

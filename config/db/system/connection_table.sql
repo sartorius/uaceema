@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
   `username` VARCHAR(30) NOT NULL,
   `roleid` TINYINT UNSIGNED NOT NULL,
   `secret` INT UNSIGNED NULL,
+  `cohort_id` INT NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`));
 
 

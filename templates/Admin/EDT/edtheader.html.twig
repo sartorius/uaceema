@@ -1,0 +1,20 @@
+{# BE CAREFULL sp_result must not be empty !!! #}
+
+<div class="container">
+  <div class="row">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
+        <div class="carte-profile pr-title"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;Emploi du temps</div><br>
+        <div class="info-cartouche">
+          <strong>Mention:</strong> {{ sp_result[0]['mention'] }}<br>
+          <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
+          <strong>Parcours:</strong> {{ sp_result[0]['parcours'] }}&nbsp;&nbsp;<strong>Groupe:</strong> {{ sp_result[0]['groupe'] }}<br>
+
+          <strong>Semaine du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
+        </div>
+    </div>
+    <div class="col-2">
+    </div>
+  </div>
+</div>
