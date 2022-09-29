@@ -40,7 +40,7 @@ class AdminSTUController extends AbstractController
                               . " FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username "
                               . " JOIN mdl_role mr ON mr.id = uas.roleid "
                               . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id "
-                              . " WHERE mr.shortname = 'student' ORDER BY CLASS_NIVEAU ASC; ";
+                              . " WHERE mr.shortname = 'student' ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC; ";
 
 
         $dbconnectioninst = DBConnectionManager::getInstance();
