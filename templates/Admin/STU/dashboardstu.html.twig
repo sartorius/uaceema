@@ -1,0 +1,86 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_all_stu is defined and result_all_stu is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllSTUToJsonArray =JSON.parse('{{ result_all_stu | json_encode | raw }}');
+    // We init here the filter value
+		var filteredDataAllSTUToJsonArray = Array.from(dataAllSTUToJsonArray);
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllSTUToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">das-stu</div>
+
+
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Gestion des étudiants</h2>
+    <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-stu" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-stu" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+
+  <div class="col-7">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllSTU">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+<div class="ace-hidden-goto">
+    <div class="row">
+      <div class="col-lg-3">
+    	</div>
+      <div class="col-lg-6">
+          <form action="/profile" method="post" id="mg-stu-page-form">
+            <input type="submit" name="formSubmit" class="btn btn-default btn-lg btn-block" id="mg-check-step-btn"
+                    value="Voir STU"/>
+
+            <textarea class="form-control step-hid" rows="1" id="read-stu-page" name="poststu_page" placeholder="code barre id" style="resize: none;"></textarea>
+          </form>
+      </div>
+      <div class="col-lg-3">
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+{% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}

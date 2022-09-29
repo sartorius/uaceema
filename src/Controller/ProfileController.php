@@ -20,6 +20,18 @@ class ProfileController extends AbstractController
 
 
     $logger->debug("This page: " . $page);
+    $from_admin = 'N';
+
+    //Check if we are coming from POST
+    if(isset($_POST["poststu_page"]))
+    {
+        // Get data from ajax
+        $logger->debug("See poststu_page: " . $_POST["poststu_page"]);
+        $page = $_POST["poststu_page"];
+        $from_admin = 'Y';
+    }
+
+
 
     if(strlen($page) < 11){
       // Error Code 404
@@ -136,7 +148,7 @@ class ProfileController extends AbstractController
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
-                                      'recap_assiduites'=>$result_assiduite_recap,
+                                      'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
                                       "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);

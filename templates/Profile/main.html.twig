@@ -31,7 +31,17 @@
 
 <div id="mg-graph-identifier">ua-profile</div>
 
-
+{% if from_admin == 'Y' %}
+      <div class="row">
+        <div class="col-1">
+        </div>
+        <div class="col-2">
+            <a class="btn btn-outline-dark btn-sm btn-block" href="/dashboardstu" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;<span class="icon-user nav-text"></span>&nbsp;Dashboard étudiant</a>
+        </div>
+        <div class="col-9">
+        </div>
+      </div>
+{% endif %}
 <div class="container">
     <div class="row">
       <div class="col-1 mgs-mainblk-txt">
@@ -139,8 +149,10 @@
 
 
 
+      {% if from_admin == 'N' %}
+        {% include 'Profile/_navigationbutton.html.twig' %}
+      {% endif %}
 
-      {% include 'Profile/_navigationbutton.html.twig' %}
       <div class="container">
         <br><br>
         <div class="row">

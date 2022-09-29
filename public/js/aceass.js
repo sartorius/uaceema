@@ -655,7 +655,7 @@ function runStat(){
 /***********************************************************************************************************/
 
 $(document).ready(function() {
-  console.log('We are in MGAPP JS ACEU NOT MGAPP');
+  console.log('We are in ACE-ASS');
 
   if($('#mg-graph-identifier').text() == 'ua-cartz'){
     // Do something on cartz

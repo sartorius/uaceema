@@ -197,3 +197,12 @@ select * from uac_cohort uc
 					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id;
 
 *******/
+
+
+DROP VIEW IF EXISTS v_class_cohort;
+CREATE VIEW v_class_cohort AS
+SELECT 	uc.id AS id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe FROM uac_cohort uc
+              				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+              					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+              					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id;

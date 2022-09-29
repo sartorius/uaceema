@@ -83,3 +83,6 @@ manageredt:
 dashboardass:
     path:       /dashboardass
     controller: App\Controller\AdminEDTController::dashboardass
+dashboardstu:
+    path:       /dashboardstu
+    controller: App\Controller\AdminSTUController::dashboardstu
