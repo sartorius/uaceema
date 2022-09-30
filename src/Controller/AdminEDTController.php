@@ -13,6 +13,7 @@ use App\DBUtils\DBConnectionManager;
 use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
+use \ZipArchive;
 
 class AdminEDTController extends AbstractController
 {
@@ -213,7 +214,13 @@ class AdminEDTController extends AbstractController
   }
 
 
-
+  /* ***************************************************************** */
+  /* ***************************************************************** */
+  /* ***************************************************************** */
+  /* *********************** LOADER ********************************** */
+  /* ***************************************************************** */
+  /* ***************************************************************** */
+  /* ***************************************************************** */
 
 
   public function loadedt(Environment $twig, LoggerInterface $logger)
@@ -250,6 +257,8 @@ class AdminEDTController extends AbstractController
   }
 
 
+
+
   public function checkandloadedt(Environment $twig, LoggerInterface $logger)
   {
 
@@ -280,10 +289,42 @@ class AdminEDTController extends AbstractController
               } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
                   // We are in zip mode
                   // Work on the zip
+                  $zip = new ZipArchive;
+
+                  if ($zip->open($_FILES["fileToUpload"]["tmp_name"]) === TRUE)
+                  {
+                       $logger->debug("We have opened the file ");
+                       for($i = 0; $i < $zip->numFiles; $i++)
+                       {
+                         $stat = $zip->statIndex($i);
+                         $logger->debug("Here is one file: " . basename( $stat['name']));
+                          /*
+                          $fp = $zip->getStream($zip->getNameIndex($i));
+                          $logger->debug("Here is one file: " . $fp);
+
+                          if(!$fp) exit("failed\n");
+                          while (!feof($fp)) {
+                              $contents = fread($fp, 8192);
+                              // do some stuff
+                          }
+                          fclose($fp);
+                          */
+                       }
+                  }
+                  else
+                  {
+                       $logger->debug("Error reading zip-archive: " . $zip->open($_FILES["fileToUpload"]["tmp_name"]));
+                  }
+
+
+
+                  $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Developpement Process: ' . $_FILES['fileToUpload']['name'] . '</span>' . '<br>',
+                                                  "extract_queries"=>"Developpement...<br>Nous attendons un .csv", "sp_result"=>null);
+
               } else {
                   // Error
                   $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
-                                                  "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv");
+                                                  "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv", "sp_result"=>null);
               }
               $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                 'firstname' => $_SESSION["firstname"],
