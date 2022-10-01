@@ -271,6 +271,8 @@ class AdminEDTController extends AbstractController
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
 
+        $zip_results = array();
+
         $logger->debug("Filename: " . $_FILES['fileToUpload']['name']);
         if (strlen($_FILES['fileToUpload']['name']) == 0){
             $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1115 Le Fichier est vide.</span>' . '<br>',
@@ -285,7 +287,8 @@ class AdminEDTController extends AbstractController
         } else {
               if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
                   // We are in one file mode
-                  $result_for_one_file = $this->extractFileInsertLines($_FILES['fileToUpload'], $logger, $scale_right);
+                  $result_for_one_file = $this->extractFileInsertLines('.csv', $_FILES['fileToUpload'], null, 0, null, $logger, $scale_right);
+
               } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
                   // We are in zip mode
                   // Work on the zip
@@ -294,32 +297,73 @@ class AdminEDTController extends AbstractController
                   if ($zip->open($_FILES["fileToUpload"]["tmp_name"]) === TRUE)
                   {
                        $logger->debug("We have opened the file ");
-                       for($i = 0; $i < $zip->numFiles; $i++)
-                       {
-                         $stat = $zip->statIndex($i);
-                         $logger->debug("Here is one file: " . basename( $stat['name']));
-                          /*
-                          $fp = $zip->getStream($zip->getNameIndex($i));
-                          $logger->debug("Here is one file: " . $fp);
+                       $logger->debug("Number of file: " . $zip->numFiles);
+                       $count_csv = 0;
 
-                          if(!$fp) exit("failed\n");
-                          while (!feof($fp)) {
-                              $contents = fread($fp, 8192);
-                              // do some stuff
-                          }
-                          fclose($fp);
-                          */
+                       for($i = 0; $i < $zip->numFiles; $i++){
+                         $stat = $zip->statIndex($i);
+                         if(!(str_starts_with(basename( $stat['name']), '.')) &&
+                                  (str_ends_with(basename( $stat['name']), '.csv'))){
+                                      $count_csv = $count_csv + 1;
+                                  }
+                       }
+
+                       if($count_csv < $_ENV['ZIP_LIMIT']){
+                           for($i = 0; $i < $zip->numFiles; $i++)
+                           {
+                             $stat = $zip->statIndex($i);
+                             //$logger->debug("Here is one file: " . basename( $stat['name']));
+                             if(!(str_starts_with(basename( $stat['name']), '.')) &&
+                                      (str_ends_with(basename( $stat['name']), '.csv'))){
+
+                                $logger->debug("Look to open: " . basename( $stat['name']));
+
+                                /********************************************************************************/
+                                /********************************************************************************/
+                                /********************************************************************************/
+                                /******************************  DO THE WORK ************************************/
+                                /********************************************************************************/
+                                /********************************************************************************/
+                                /********************************************************************************/
+                                // We iterate thru the file
+
+                                $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $logger, $scale_right);
+                                array_push($zip_results, $result_for_one_file);
+
+                                /*
+                                $fp = $zip->getStream($zip->getNameIndex($i));
+                                $logger->debug("Read fp: " . $fp);
+                                $logger->debug("******************************************************************");
+                                if(!$fp) exit("failed\n");
+                                while ((($data = fgetcsv($fp, 1000, ",")) !== FALSE)){
+
+
+
+                                    $logger->debug("See content: " . $data[0] . '/' . $data[1]);
+                                }
+                                fclose($fp);
+                                */
+
+
+                             }
+                           }
+                       }
+                       else{
+                         $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Nombre de fichier .csv maximum possible ' . $_ENV['ZIP_LIMIT'] . '/ Le fichier ' . $_FILES['fileToUpload']['name'] . ' en contient ' . $count_csv . '.</span>' . '<br>',
+                                                      "extract_queries"=>"Veuillez recharger avec un Zip qui contient moins de fichiers.", "sp_result"=>null);
+
                        }
                   }
                   else
                   {
-                       $logger->debug("Error reading zip-archive: " . $zip->open($_FILES["fileToUpload"]["tmp_name"]));
+                       $logger->debug("Erreur lecture archive zip: " . $zip->open($_FILES["fileToUpload"]["tmp_name"]));
+                       $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR789 de lecture fichier zip: ' . $_FILES['fileToUpload']['name'] . '</span>' . '<br>',
+                                                       "extract_queries"=>"<br>Nous attendons un .zip ou un .csv", "sp_result"=>null);
                   }
 
 
 
-                  $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Developpement Process: ' . $_FILES['fileToUpload']['name'] . '</span>' . '<br>',
-                                                  "extract_queries"=>"Developpement...<br>Nous attendons un .csv", "sp_result"=>null);
+
 
               } else {
                   // Error
@@ -331,8 +375,15 @@ class AdminEDTController extends AbstractController
                                                                                 'lastname' => $_SESSION["lastname"],
                                                                                 'id' => $_SESSION["id"],
                                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                                'reportcmt' => $result_for_one_file['extract_report'], 'reportqueries' => $result_for_one_file['extract_queries'],
-                                                                                'sp_result' => $result_for_one_file['sp_result']]);
+                                                                                'result_for_one_file' => $result_for_one_file,
+                                                                                /*
+                                                                                'reportcmt' => $result_for_one_file['extract_report'],
+                                                                                'reportqueries' => $result_for_one_file['extract_queries'],
+                                                                                'sp_result' => $result_for_one_file['sp_result'],
+                                                                                */
+
+                                                                                'zip_results' => $zip_results]
+                                                                              );
         }
 
 
@@ -350,7 +401,7 @@ class AdminEDTController extends AbstractController
 
 
 
-  public function extractFileInsertLines($load_file, LoggerInterface $logger, $scale_right){
+  public function extractFileInsertLines($load_type, $load_file, $load_zip, $i_zip, $zip_inside_filename, LoggerInterface $logger, $scale_right){
           /**************************** START : CHECK THE FILE CONTENT HERE ****************************/
 
           $report_comment = '';
@@ -370,7 +421,7 @@ class AdminEDTController extends AbstractController
           $insert_queries = array();
           $resultsp = array();
           // Code is valid here. We can work
-          if ( !file_exists($load_file['tmp_name']) ) {
+          if (($load_type == '.csv') && (!file_exists($load_file['tmp_name']))) {
             $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
                                               . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                               . 'Il semble que le fichier que vous avez chargé n\'existe pas.' . '<br>'
@@ -378,15 +429,28 @@ class AdminEDTController extends AbstractController
           }
           else{
             // Properly do the importation here
-            if (is_uploaded_file($load_file['tmp_name'])) {
-              $report_comment = $report_comment . '<br>' . "<div class='report-title'>" . "<span class='icon-check-square nav-icon-fa nav-text'></span>&nbsp;Fichier : ". $load_file['name'] ."<br>Traces techniques:" . "</div>";
-
+            if (($load_type == '.csv') && (is_uploaded_file($load_file['tmp_name']))) {
+              $report_comment = $report_comment . '<br>' . "<div class='report-title'>" . "<span class='icon-check-square nav-icon-fa nav-text'></span>&nbsp;Fichier .csv : ". $load_file['name'] ."<br>Traces techniques:" . "</div>";
+            }
+            else{
+              $report_comment = $report_comment . '<br>' . "<div class='report-title'>" . "<span class='icon-check-square nav-icon-fa nav-text'></span>&nbsp;Fichier intérieur au .zip : ". $zip_inside_filename ."<br>Traces techniques:" . "</div>";
             }
 
             $report_comment = $report_comment . '<br><hr>' . 'Ligne(s) lue(s)<br/>';
 
             //Import uploaded file to Database
-            $handle = fopen($load_file['tmp_name'], "r");
+            $filename_to_log_in = 'na';
+            if($load_type == '.csv'){
+                // We are in .csv mode
+                $handle = fopen($load_file['tmp_name'], "r");
+                $filename_to_log_in = $_FILES['fileToUpload']['name'];
+            }
+            else{
+                // we are in .zip mode
+                $handle = $load_zip->getStream($load_zip->getNameIndex($i_zip));
+                $filename_to_log_in = 'zip/' . $zip_inside_filename;
+            }
+
             $i = 1;
             $file_is_still_valid = true;
             $report_comment = $report_comment . '<div class="ace-sm report-val">';
@@ -515,7 +579,7 @@ class AdminEDTController extends AbstractController
                               }
 
                               $my_insert_query = 'INSERT INTO uac_load_edt (user_id, status, filename, mention, niveau, monday_ofthew, label_day, day, day_code, hour_starts_at, raw_duration, duration_hour, log_pos, raw_course_title)' .
-                                                    'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $load_file['name'] . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', UPPER(\'' .
+                                                    'VALUES ( ' . $_SESSION["id"] . ', \'NEW\', \'' . $filename_to_log_in . '\', \'' . $mention . '\', \'' . $niveau  .'\', \'' . $monday . '\', UPPER(\'' .
                                                      date('l', strtotime($days[$k])) . '\'), \'' . $days[$k] . '\', ' . date('w', strtotime($days[$k])) . ', ' . $i . ', ' . $kduration . ', ' . $hduration . ', \'' . $i . ':' . $k . ':' . $verify_duration . '\', ' . $raw_course_title . ');';
                               array_push($insert_queries, $my_insert_query);
                           }
@@ -525,12 +589,12 @@ class AdminEDTController extends AbstractController
 
 
                       $report_comment = $report_comment . '<br>Line ' . $i . ' OK: ' . $data[0] . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[1])  . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[2])  . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[3])  . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[4])  . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[5])  . ' | '
-                                                                                     . str_replace(array("\r", "\n"), 'XXXX', $data[6]);
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[1])  . ' | '
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[2])  . ' | '
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[3])  . ' | '
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[4])  . ' | '
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[5])  . ' | '
+                                                                                     . str_replace(array("\r", "\n"), '-<', $data[6]);
 
                       $i = $i + 1;
                     }
@@ -601,7 +665,7 @@ class AdminEDTController extends AbstractController
                       // Perform the importation
                       // Change the option here !
                       //`SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_monday_date DATE, IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_uaparcours VARCHAR(100), IN param_uagroupe VARCHAR(100))
-                      $import_query = "CALL SRV_CRT_EDT('" . $load_file['name'] . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
+                      $import_query = "CALL SRV_CRT_EDT('" . $filename_to_log_in . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
                       $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
 

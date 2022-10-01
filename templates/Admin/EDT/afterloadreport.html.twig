@@ -1,47 +1,25 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">aft-loa</div>
 
 
-{% include 'Admin/EDT/_rawlargescreenedt.html.twig' %}
+{% if zip_results|length > 0 %}
+  {# In that case we run for all file in zip #}
+        {% for zip_result in zip_results %}
 
+                {% set reportcmt = zip_result['extract_report'] %}
+                {% set reportqueries = zip_result['extract_queries'] %}
+                {% set sp_result = zip_result['sp_result'] %}
+                {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
-<div class="container">
-    <div class="row">
-      <div class="col-lg-2 mgs-mainblk-txt">
-      </div>
-      <div class="col-lg-8 mgs-mainblk-txt">
+        {% endfor %}
+{% else %}
 
-        <div class="report-dis">
-            {{ reportcmt | raw }}
-            {{ reportqueries | raw }}
+        {% set reportcmt = result_for_one_file['extract_report'] %}
+        {% set reportqueries = result_for_one_file['extract_queries'] %}
+        {% set sp_result = result_for_one_file['sp_result'] %}
 
-        </div>
-      </div>
-      <div class="col-lg-2 mgs-mainblk-txt">
-      </div>
-    </div>
-</div>
+        {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
-{% if sp_result|length > 0 %}
-        {% if reportqueries is defined %}
-            <div class="container button-edt-validate">
-                  <div class="row">
-                    <div class="col-lg-2">
-                    </div>
-                    <div class="col-lg-2">
-                        <a class="btn btn-outline-dark btn-md btn-print btn-block" href="/loadedt" role="button">Annuler</a>
-                    </div>
-                    <div class="col-lg-6">
-                      <div>
-                          <form action="/validateedt/{{ sp_result[0]['master_id'] }}" method="post">
-                              <button name="validate-edt" value="validate-edt" class="btn btn-default btn-lg btn-print btn-block"><span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;Valider l'emploi du temps&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span></button>
-                          </form>
-                      </div>
-                    </div>
-                    <div class="col-lg-2">
-                    </div>
-                  </div>
-            </div>
-        {% endif %}
 {% endif %}
 
 

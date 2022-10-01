@@ -776,6 +776,13 @@ $(document).ready(function() {
     initAllEDTGrid();
     loadAllEDTGrid();
   }
+  else if($('#mg-graph-identifier').text() == 'aft-loa'){
+    // Do nothing
+    $(".after-load-edt-trace").click(function() {
+        $(".report-dis").show();
+        $(".after-load-edt-trace").hide();
+    });
+  }
   else{
     //Do nothing
   }

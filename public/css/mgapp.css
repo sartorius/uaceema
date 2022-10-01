@@ -1072,7 +1072,6 @@ textarea[name=inputRef] {
 }
 
 
-
 .edt-cell-lf{
   border-width: 0px 1px 1px 1px; /* 0px top, 1px right, 1px bottom and 0px left */
 }
@@ -1213,4 +1212,11 @@ textarea[name=inputRef] {
 /****** ALL DASHBOARD ******/
 .dash-bar{
   margin-bottom: 20px;
+}
+
+/*********************************/
+/****** ALL DASHBOARD ******/
+
+.report-dis{
+  display: none;
 }
