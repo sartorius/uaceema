@@ -90,6 +90,9 @@ BEGIN
                         -- wait_b_compute ':20:00'
                         wait_b_compute), TIME) < inv_time;
 
+          -- We need to consider only involved cohort_id
+          SELECT cohort_id INTO inv_cohort_id FROM uac_edt_master WHERE id IN (SELECT master_id FROM uac_edt_line WHERE ID = inv_edt_id);
+
           -- Initialize the hour start at
           SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt_line WHERE id = inv_edt_id;
           -- Je suis sensé bosser sur les cohorts id !!!
@@ -102,6 +105,7 @@ BEGIN
           INSERT IGNORE INTO uac_assiduite (flow_id, user_id, edt_id, scan_id, status)
           SELECT inv_flow_id, mu.id, inv_edt_id, NULL, 'ABS' FROM mdl_user mu
           		 JOIN uac_showuser uas ON mu.username = uas.username
+                                     AND uas.cohort_id = inv_cohort_id
           WHERE mu.username NOT IN (
           		SELECT t_student_in.username
           		FROM(
@@ -122,6 +126,7 @@ BEGIN
           INSERT IGNORE INTO uac_assiduite (flow_id, user_id, edt_id, scan_id, status)
           SELECT inv_flow_id, mu.id, inv_edt_id, NULL, 'ABS' FROM mdl_user mu
           		 JOIN uac_showuser uas ON mu.username = uas.username
+                                     AND uas.cohort_id = inv_cohort_id
           WHERE mu.username IN (
           		SELECT t_student_in.username
           		FROM(
@@ -153,6 +158,7 @@ BEGIN
           GROUP BY mu.username, in_out
           HAVING in_out = 'I'
           ) t_student_in JOIN uac_showuser uas ON t_student_in.username = uas.username
+                                               AND uas.cohort_id = inv_cohort_id
           			   JOIN mdl_user mu on mu.username = uas.username
           			   	  JOIN uac_scan max_scan ON max_scan.user_id = mu.id
           			   	  							  AND max_scan.scan_time = scan_in
@@ -171,6 +177,7 @@ BEGIN
           GROUP BY mu.username, in_out
           HAVING in_out = 'I'
           ) t_student_in JOIN uac_showuser uas ON t_student_in.username = uas.username
+                                               AND uas.cohort_id = inv_cohort_id
           			   JOIN mdl_user mu on mu.username = uas.username
           			   	  JOIN uac_scan max_scan ON max_scan.user_id = mu.id
           			   	  							  AND max_scan.scan_time = scan_in

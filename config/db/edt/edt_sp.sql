@@ -145,7 +145,11 @@ BEGIN
     END IF;
 
 
-    SELECT COUNT(1) INTO count_result_set FROM uac_edt_master WHERE monday_ofthew = inv_monday_date AND visibility = 'V';
+    SELECT COUNT(1) INTO count_result_set
+        FROM uac_edt_master uem JOIN uac_showuser uas ON uas.cohort_id = uem.cohort_id
+                                AND uas.username = param_username
+        WHERE monday_ofthew = inv_monday_date
+        AND visibility = 'V';
 
     IF (count_result_set = 0) THEN
           SELECT
@@ -183,6 +187,8 @@ BEGIN
                             					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                             					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                      JOIN uac_showuser uas ON uas.cohort_id = uem.cohort_id
+                                                            AND uas.username = param_username
                 WHERE uem.monday_ofthew = inv_monday_date
                 AND uem.visibility = 'V'
                 ORDER BY uel.hour_starts_at, uel.day_code ASC;
@@ -215,6 +221,8 @@ BEGIN
                              					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
                              					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                      JOIN uac_showuser uas ON uas.cohort_id = uem.cohort_id
+                                                            AND uas.username = param_username
                  WHERE uem.monday_ofthew = inv_monday_date
                  AND uem.visibility = 'V'
                  ORDER BY uel.hour_starts_at, uel.day_code ASC;

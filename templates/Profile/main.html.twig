@@ -150,6 +150,8 @@
 
 
       {% if from_admin == 'N' %}
+          {# For now navigation is possible only for profile #}
+          {# This may change #}
         {% include 'Profile/_navigationbutton.html.twig' %}
       {% endif %}
 
@@ -185,7 +187,11 @@
       </div>
 {% else %}
       {% include 'Admin/EDT/missingmsgedt.html.twig' %}
-      {% include 'Profile/_navigationbutton.html.twig' %}
+      {% if from_admin == 'N' %}
+          {# For now navigation is possible only for profile #}
+          {# This may change #}
+          {% include 'Profile/_navigationbutton.html.twig' %}
+      {% endif %}
 {% endif %}
 
 {% include 'RawTemplate/_footer.w.jsgrid.html.twig' %}
