@@ -140,6 +140,18 @@ class AdminEDTController extends AbstractController
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 
+
+    $zip_list_validate = '';
+    $is_zip = 'N';
+    //Check if we are coming from POST
+    if(isset($_POST["postzip_val"]))
+    {
+        // Get data from ajax
+        $logger->debug("See postzip_val: " . $_POST["postzip_val"]);
+        $zip_list_validate = $_POST["postzip_val"];
+        $is_zip = 'Y';
+    }
+
     $scale_right = ConnectionManager::whatScaleRight();
 
 
@@ -147,8 +159,12 @@ class AdminEDTController extends AbstractController
     if(isset($scale_right) && ($scale_right > 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
-
-        $validate_query = "UPDATE uac_edt_master SET visibility = 'V' WHERE id =" . $master_id . ";";
+        if($is_zip ==  'N'){
+            $validate_query = "UPDATE uac_edt_master SET visibility = 'V' WHERE id =" . $master_id . ";";
+        }
+        else{
+            $validate_query = "UPDATE uac_edt_master SET visibility = 'V' WHERE id IN (" . $zip_list_validate . ");";
+        }
         // Be carefull if you have array of array
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result = $dbconnectioninst->query($validate_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -272,6 +288,8 @@ class AdminEDTController extends AbstractController
 
 
         $zip_results = array();
+        $zip_comments = '';
+        $zip_all_master_id_inq = '0'; // looks like 0, 12, 13, 16, 16
 
         $logger->debug("Filename: " . $_FILES['fileToUpload']['name']);
         if (strlen($_FILES['fileToUpload']['name']) == 0){
@@ -293,8 +311,10 @@ class AdminEDTController extends AbstractController
                   // We are in zip mode
                   // Work on the zip
                   $zip = new ZipArchive;
+                  $zip_rawfilename_loaded = $_FILES["fileToUpload"]["tmp_name"];
+                  $logger->debug("Number of file: " . $zip_rawfilename_loaded);
 
-                  if ($zip->open($_FILES["fileToUpload"]["tmp_name"]) === TRUE)
+                  if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE))
                   {
                        $logger->debug("We have opened the file ");
                        $logger->debug("Number of file: " . $zip->numFiles);
@@ -307,6 +327,8 @@ class AdminEDTController extends AbstractController
                                       $count_csv = $count_csv + 1;
                                   }
                        }
+
+                       $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments;
 
                        if($count_csv < $_ENV['ZIP_LIMIT']){
                            for($i = 0; $i < $zip->numFiles; $i++)
@@ -329,6 +351,8 @@ class AdminEDTController extends AbstractController
 
                                 $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $logger, $scale_right);
                                 array_push($zip_results, $result_for_one_file);
+                                $zip_comments = $zip_comments . '<br>' . $result_for_one_file['zip_one_comment'];
+                                $zip_all_master_id_inq = $zip_all_master_id_inq . ', ' . $result_for_one_file['sp_result'][0]['master_id'];
 
                                 /*
                                 $fp = $zip->getStream($zip->getNameIndex($i));
@@ -356,9 +380,9 @@ class AdminEDTController extends AbstractController
                   }
                   else
                   {
-                       $logger->debug("Erreur lecture archive zip: " . $zip->open($_FILES["fileToUpload"]["tmp_name"]));
-                       $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR789 de lecture fichier zip: ' . $_FILES['fileToUpload']['name'] . '</span>' . '<br>',
-                                                       "extract_queries"=>"<br>Nous attendons un .zip ou un .csv", "sp_result"=>null);
+                       $logger->debug("Erreur lecture archive zip: " . $zip_rawfilename_loaded);
+                       $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR789 de lecture fichier zip: ' . $zip_rawfilename_loaded . '</span>' . '<br>',
+                                                       "extract_queries"=>"<br>Nous attendons un .zip ou un .csv <br> Vérifiez que également <strong>que le fichier .zip ne contient que des fichiers .csv</strong>", "sp_result"=>null);
                   }
 
 
@@ -382,7 +406,9 @@ class AdminEDTController extends AbstractController
                                                                                 'sp_result' => $result_for_one_file['sp_result'],
                                                                                 */
 
-                                                                                'zip_results' => $zip_results]
+                                                                                'zip_results' => $zip_results,
+                                                                                'zip_comments' => '<div class="ace-sm report-val">' . $zip_comments . '</div>',
+                                                                                'zip_all_master_id_inq' => $zip_all_master_id_inq]
                                                                               );
         }
 
@@ -405,6 +431,8 @@ class AdminEDTController extends AbstractController
           /**************************** START : CHECK THE FILE CONTENT HERE ****************************/
 
           $report_comment = '';
+          $zip_one_comment = '';
+
           $report_queries = '';
           $insert_lines = '';
           $mention = '';
@@ -670,8 +698,10 @@ class AdminEDTController extends AbstractController
 
 
 
-                      $report_queries = '<br><hr><div class="ace-sm report-val"> Number of input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
-                      $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Load in DB. Return count: ' . count($resultsp)  . '<br>';
+                      $report_queries = '<br><hr><div class="ace-sm report-val"> Nombre des input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
+                      $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement en DB. Return count: ' . count($resultsp)  . '<br>';
+
+                      $zip_one_comment = 'Chargement OK pour ' . $filename_to_log_in . ' /nbr lg: ' . count($resultsp) . ' ' . $zip_one_comment;
 
                       // If we return the empty line means the course has not been found
                       if(count($resultsp) == 1){
@@ -703,7 +733,10 @@ class AdminEDTController extends AbstractController
           }
           /**************************** END : CHECK THE FILE CONTENT HERE ****************************/
 
-          return array("extract_report"=>$report_comment, "extract_queries"=>$report_queries, "sp_result"=>$resultsp);
+          return array("extract_report"=>$report_comment,
+                        "extract_queries"=>$report_queries,
+                        "sp_result"=>$resultsp,
+                        "zip_one_comment" => $zip_one_comment);
 
   }
 

@@ -1220,3 +1220,7 @@ textarea[name=inputRef] {
 .report-dis{
   display: none;
 }
+
+#read-zip-val{
+  display: none;
+}

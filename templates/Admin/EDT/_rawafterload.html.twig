@@ -18,25 +18,30 @@
     </div>
 </div>
 
-{% if sp_result|length > 0 %}
-        {% if reportqueries is defined %}
-            <div class="container button-edt-validate">
-                  <div class="row">
-                    <div class="col-lg-2">
+{% if zip_results|length > 0 %}
+    {# Do nothing #}
+{% else %}
+        {# We are in CSV case #}
+        {% if sp_result|length > 0 %}
+                {% if reportqueries is defined %}
+                    <div class="container button-edt-validate">
+                          <div class="row">
+                            <div class="col-lg-2">
+                            </div>
+                            <div class="col-lg-2">
+                                <a class="btn btn-outline-dark btn-md btn-print btn-block" href="/loadedt" role="button">Annuler</a>
+                            </div>
+                            <div class="col-lg-6">
+                              <div>
+                                  <form action="/validateedt/{{ sp_result[0]['master_id'] }}" method="post">
+                                      <button name="validate-edt" value="validate-edt" class="btn btn-default btn-lg btn-print btn-block"><span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;Valider l'emploi du temps&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span></button>
+                                  </form>
+                              </div>
+                            </div>
+                            <div class="col-lg-2">
+                            </div>
+                          </div>
                     </div>
-                    <div class="col-lg-2">
-                        <a class="btn btn-outline-dark btn-md btn-print btn-block" href="/loadedt" role="button">Annuler</a>
-                    </div>
-                    <div class="col-lg-6">
-                      <div>
-                          <form action="/validateedt/{{ sp_result[0]['master_id'] }}" method="post">
-                              <button name="validate-edt" value="validate-edt" class="btn btn-default btn-lg btn-print btn-block"><span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;Valider l'emploi du temps&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-up nav-icon-fa nav-text"></span></button>
-                          </form>
-                      </div>
-                    </div>
-                    <div class="col-lg-2">
-                    </div>
-                  </div>
-            </div>
+                {% endif %}
         {% endif %}
 {% endif %}

@@ -4,6 +4,48 @@
 
 {% if zip_results|length > 0 %}
   {# In that case we run for all file in zip #}
+
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-8">
+              <h1>Rapport d'extraction</h1>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-8">
+              Reference technique de validation: {{ zip_all_master_id_inq }}<br>
+              {{ zip_comments | raw }}
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+
+        <div class="container button-edt-validate">
+              <div class="row">
+                <div class="col-lg-2">
+                </div>
+                <div class="col-lg-2">
+                    <a class="btn btn-outline-dark btn-md btn-print btn-block" href="/loadedt" role="button">Annuler</a>
+                </div>
+                <div class="col-lg-6">
+                  <div>
+                      <form action="/validateedt" method="post">
+                          <button name="validate-edt" value="validate-edt" class="btn btn-default btn-lg btn-print btn-block"><span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp;Valider tous&nbsp;<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp;<span class="icon-arrow-down nav-icon-fa nav-text"></span></button>
+                          <textarea class="form-control step-hid" rows="1" id="read-zip-val" name="postzip_val" placeholder="code barre id" style="resize: none;">{{ zip_all_master_id_inq }}</textarea>
+                      </form>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                </div>
+              </div>
+        </div>
+
+        <hr>
         {% for zip_result in zip_results %}
 
                 {% set reportcmt = zip_result['extract_report'] %}
