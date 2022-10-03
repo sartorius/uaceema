@@ -28,7 +28,7 @@ BEGIN
                       WHERE urm.title = param_mention
                       AND uc.niveau = param_niveau
                       AND urp.title = param_uaparcours
-                      AND urg.title = param_uaparcours;
+                      AND urg.title = param_uagroupe;
 
     IF (exist_cohort_id = 0) THEN
       -- We have found no cohort so the file is probably corrupt
@@ -60,7 +60,7 @@ BEGIN
                         WHERE urm.title = param_mention
                         AND uc.niveau = param_niveau
                         AND urp.title = param_uaparcours
-                        AND urg.title = param_uaparcours;
+                        AND urg.title = param_uagroupe;
 
 
       -- Delete old lines

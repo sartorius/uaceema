@@ -783,6 +783,15 @@ $(document).ready(function() {
         $(".after-load-edt-trace").hide();
     });
   }
+  else if($('#mg-graph-identifier').text() == 'loader-edt'){
+    // Do nothing
+    $("#file-upl-loader-sub").click(function() {
+        console.log('You clicked on #file-upl-loader-sub');
+        $("#file-upl-loader-sub").hide();
+        $("#loader-img").hide();
+        $("#loader-wait").show();
+    });
+  }
   else{
     //Do nothing
   }

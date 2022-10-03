@@ -1,5 +1,5 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
-
+<div id="mg-graph-identifier">loader-edt</div>
 
 {% if validated is defined %}
     <div class="row">
@@ -31,7 +31,8 @@
     <h1>Emploi du Temps</h1>
 
     <div id="blk-selfie" class="mgs-mainblk-txt">
-          <img id="selfie" src="{{ path('main') }}img/mid_img370x850.png" style="width:490px; height:220px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
+          <img id="loader-img" src="{{ path('main') }}img/mid_img370x850.png" style="width:490px; height:220px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
+          <img id="loader-wait" src="{{ path('main') }}img/waiting.gif" style="width:500px; height:330px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
     </div>
     <hr>
 
@@ -44,7 +45,7 @@
           Choisissez un fichier en .csv &nbsp;
           <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
 
-          <input type="submit" value="Uploader le fichier" name="submit" class="btn btn-default btn-lg btn-print btn-block">
+          <input type="submit" value="Uploader le fichier" name="submit" id="file-upl-loader-sub" class="btn btn-default btn-lg btn-print btn-block">
         </form>
     </div>
     <br>

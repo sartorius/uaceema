@@ -352,7 +352,12 @@ class AdminEDTController extends AbstractController
                                 $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $logger, $scale_right);
                                 array_push($zip_results, $result_for_one_file);
                                 $zip_comments = $zip_comments . '<br>' . $result_for_one_file['zip_one_comment'];
-                                $zip_all_master_id_inq = $zip_all_master_id_inq . ', ' . $result_for_one_file['sp_result'][0]['master_id'];
+
+                                // We do quiet error here. Most of the time when the access is current week
+                                // If we have at least 1 value
+                                if(count($result_for_one_file['sp_result']) > 0){
+                                    $zip_all_master_id_inq = $zip_all_master_id_inq . ', ' . $result_for_one_file['sp_result'][0]['master_id'];
+                                }
 
                                 /*
                                 $fp = $zip->getStream($zip->getNameIndex($i));
@@ -589,18 +594,18 @@ class AdminEDTController extends AbstractController
                                       }
                                       $course_details = explode("\n", $raw_course_title);
                                       $kduration = '\'' . $course_details[count($course_details) - 1] . '\'';
-                                      $verify_duration = preg_match("/[1]?[0-9][h](30|15)?$/", $course_details[count($course_details) - 1]);
+                                      $verify_duration = preg_match("/[1]?[0-9][h](30|15)?$/", trim($course_details[count($course_details) - 1]));
                                       if($verify_duration == 0){
                                           // The duration does not match
                                           $file_is_still_valid = false;
-                                          $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR9012 Erreur de lecture de durée près de : ligne ' . $i . ' - colonne ' . $k . '</span>' . '<br>'
+                                          $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR9012 Erreur de lecture de durée près de : ligne ' . $i . ' - colonne ' . ($k + 1) . '. Vérifiez bien que vous avez un h minuscule comme par exemple 4h.</span>' . '<br>'
                                                                             . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                                                             . 'Les durées doivent être de la forme Xh ou XXh ou XXh30 - exemple 2h30 ou 1h.<br>'
                                                                             . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>';
 
                                       }
                                       // We take only the hour
-                                      $hduration = explode("h", $course_details[count($course_details) - 1])[0];
+                                      $hduration = explode("h", trim($course_details[count($course_details) - 1]))[0];
                                       $raw_course_title = '\'' . $raw_course_title . '\'';
 
                                       $logger->debug('Read course: ' . count($course_details) . '/' . $data[$k]);
@@ -658,6 +663,8 @@ class AdminEDTController extends AbstractController
                     }
                     else{
                       $file_is_still_valid = false;
+                      $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '.</span>' . '<br>';
+
                       $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée.</span>' . '<br>'
                                                         . 'Semaine chargée : ' . $monday . ' Nous sommes le: ' . $current_date . '<br><br>'
                                                         . 'Désolé ! <span class="err">Si cette opération est nécessaire, vous devez avoir les droits de priorité 11</span>. Contactez nous dans ce cas. ' . '<br>'
@@ -694,6 +701,7 @@ class AdminEDTController extends AbstractController
                       // Change the option here !
                       //`SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_monday_date DATE, IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_uaparcours VARCHAR(100), IN param_uagroupe VARCHAR(100))
                       $import_query = "CALL SRV_CRT_EDT('" . $filename_to_log_in . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
+                      $logger->debug("Here is import_query: " . $import_query);
                       $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -705,7 +713,18 @@ class AdminEDTController extends AbstractController
 
                       // If we return the empty line means the course has not been found
                       if(count($resultsp) == 1){
-                          $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR182C Erreur pour identifier la classe de l\'emploi du temps.</span>' . '<br>'
+                          $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR182C Erreur Nous ne pouvons pas identifier la classe de l\'emploi du temps. Veuillez vérifier qu\'elle existe.</span>' . '<br>'
+                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br><br>'
+                                                            . 'Vérifiez Mention: <strong>' . $mention . '</strong><br>'
+                                                            . 'Vérifiez Niveau: <strong>' . $niveau . '</strong><br>'
+                                                            . 'Vérifiez Parcours: <strong>' . $parcours . '</strong><br>'
+                                                            . 'Vérifiez Groupe: <strong>' . $groupe . '</strong><br><br>'
+                                                            . 'Nous n\'arrivons pas à identifier la classe.<br>'
+                                                            . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>'
+                                                            . $report_comment;
+                      }
+                      if(count($resultsp) == 0){
+                          $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR187G Erreur Nous n\'arrivons pas à enregistrer l\'emploi du temps, veuillez contacter le support technique.</span>' . '<br>'
                                                             . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br><br>'
                                                             . 'Vérifiez Mention: <strong>' . $mention . '</strong><br>'
                                                             . 'Vérifiez Niveau: <strong>' . $niveau . '</strong><br>'

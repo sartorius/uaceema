@@ -965,6 +965,11 @@ textarea[name=inputRef] {
   color: var(--val-ace-color);
 }
 
+#loader-wait {
+  display: none;
+  border-radius: 5px;
+}
+
 /*********  EDT Display  **********/
 .info-cartouche{
   font-size: 11px;
