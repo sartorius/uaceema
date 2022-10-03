@@ -787,7 +787,7 @@ $(document).ready(function() {
     // Do nothing
     $("#file-upl-loader-sub").click(function() {
         console.log('You clicked on #file-upl-loader-sub');
-        $("#file-upl-loader-sub").hide();
+        $("#loader-block").hide();
         $("#loader-img").hide();
         $("#loader-wait").show();
     });

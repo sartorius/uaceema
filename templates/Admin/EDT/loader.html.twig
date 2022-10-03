@@ -40,7 +40,7 @@
           <span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;{{ errtype }}</span><br>
     {% endif %}
     Chargez les emplois du temps de la semaine&nbsp;<span class="icon-upload nav-icon-fa nav-text"></span><br><br>
-    <div>
+    <div id="loader-block">
         <form action="/checkandloadedt" method="post" enctype="multipart/form-data">
           Choisissez un fichier en .csv &nbsp;
           <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
