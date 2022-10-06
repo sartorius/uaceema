@@ -8,6 +8,4 @@ OPTIMIZE TABLE uac_scan;
 OPTIMIZE TABLE uac_edt_master;
 OPTIMIZE TABLE uac_edt_line;
 
-FLUSH QUERY CACHE;
-
 SELECT NOW() AS END_TIME;
