@@ -2,6 +2,7 @@ symfony local:server:stop
 symfony server:start
 
 
+
 -- MD5
 11:14:32.186 debug	Hash password: lanatureestverte e716e0cf70d3c6dbd840945d890f074d -- benrand123
 11:14:32.186 debug	Hash password: lebleuduciel 78e740abec0d61e6dd52452e6d9c2a32 -- harrako912
