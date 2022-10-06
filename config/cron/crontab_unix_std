@@ -25,3 +25,7 @@
 
 # Purge
 0 4 * * * php /var/www/html/uaceema/config/server/prg_reset_daily.php >> /home/ratinahirana/cron.prg_reset_daily.php.log;
+
+# Maintenance
+
+###################################### ADD MAINTENANCE HERE !!!
