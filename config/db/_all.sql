@@ -231,14 +231,23 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_admin` (
 
 -- /!\ IL FAUT AVOIR CRÉE LES UTILISATEURS AVANT DE CHARGER CES REQUÊTES D'ABORD
 
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'benrand123'), 'e716e0cf70d3c6dbd840945d890f074d', 'Recteur', NULL, 7);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'harrako912'), '78e740abec0d61e6dd52452e6d9c2a32', 'SG', NULL, 7);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'lalrako381'), '9248153d95104975573f18e2852d6647', 'DAF', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako617'), '3182a20c71d20d919cb1f3b3035d5924', 'CGE', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tokrako283'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tsirako227'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mikrama654'), 'c24d593b9266e7b8d0887d0dc7259705', 'Agent', NULL);
-INSERT INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mborako321'), 'd064a894fb8645879312b10d366cd604', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'benrand123'), 'e716e0cf70d3c6dbd840945d890f074d', 'Recteur', NULL, 7);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'harrako912'), '78e740abec0d61e6dd52452e6d9c2a32', 'SG', NULL, 7);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'lalrako381'), '9248153d95104975573f18e2852d6647', 'DAF', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'ionrako617'), '3182a20c71d20d919cb1f3b3035d5924', 'CGE', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'minoraj172'), '9248153d95104975573f18e2852d6647', 'EDT', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'radoand728'), 'd064a894fb8645879312b10d366cd604', 'INF', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tokrako283'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'tsirako227'), '3182a20c71d20d919cb1f3b3035d5924', 'TST', NULL, 5);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`, `scale_right`) VALUES ((SELECT id FROM mdl_user WHERE username = 'blourat077'), 'a2d426e5a92f1bbf418a35869ffc7cc2', 'ADM', NULL, 12);
+
+
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mikrama654'), 'c24d593b9266e7b8d0887d0dc7259705', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mborako321'), 'd064a894fb8645879312b10d366cd604', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'mavrako128'), '9433c9064f0593da5727e2122a193a6e', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'menrako232'), '3165cef3bc67568c7d30f5a184f43766', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'manrako092'), '2df68a85f1932ca876926252bbaa0820', 'Agent', NULL);
+INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'paulrab367'), 'a2d426e5a92f1bbf418a35869ffc7cc2', 'Agent', NULL);
 
 
 
@@ -546,30 +555,30 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_MailWelcomeNewUser$$
 CREATE PROCEDURE `SRV_CRT_MailWelcomeNewUser` ()
 BEGIN
-    DECLARE flow_code	CHAR(7);
+    DECLARE inv_flow_code	  CHAR(7);
     DECLARE inv_flow_id	BIGINT;
     DECLARE count_mail	INTEGER;
     -- CALL SRV_PRG_Scan();
 
-    SELECT 'MLWELCO' INTO flow_code;
+    SELECT 'MLWELCO' INTO inv_flow_code;
 
     -- SHALL WE RUN this process ?
     SELECT COUNT(1) INTO count_mail FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
-    WHERE NOT EXISTS (SELECT 1 FROM uac_mail
-                    WHERE (flow_code, user_id) = (flow_code, id));
+    WHERE mu.id NOT IN (SELECT user_id FROM uac_mail
+                    WHERE (flow_code, user_id) = (inv_flow_code, user_id));
 
 
     -- We do not find any email here
     IF (count_mail > 0) THEN
 
         -- We run the full process
-        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, NOW());
         SELECT LAST_INSERT_ID() INTO inv_flow_id;
 
         -- We need to insert missing new user without any email
 
         INSERT IGNORE INTO uac_mail (flow_id, flow_code, user_id, status)
-          SELECT inv_flow_id, flow_code, mu.id, 'NEW' FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
+          SELECT inv_flow_id, inv_flow_code, mu.id, 'NEW' FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
 
 
 
@@ -694,7 +703,7 @@ BEGIN
                       WHERE urm.title = param_mention
                       AND uc.niveau = param_niveau
                       AND urp.title = param_uaparcours
-                      AND urg.title = param_uaparcours;
+                      AND urg.title = param_uagroupe;
 
     IF (exist_cohort_id = 0) THEN
       -- We have found no cohort so the file is probably corrupt
@@ -726,7 +735,7 @@ BEGIN
                         WHERE urm.title = param_mention
                         AND uc.niveau = param_niveau
                         AND urp.title = param_uaparcours
-                        AND urg.title = param_uaparcours;
+                        AND urg.title = param_uagroupe;
 
 
       -- Delete old lines

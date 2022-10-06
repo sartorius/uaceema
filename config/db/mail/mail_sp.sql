@@ -4,30 +4,30 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_MailWelcomeNewUser$$
 CREATE PROCEDURE `SRV_CRT_MailWelcomeNewUser` ()
 BEGIN
-    DECLARE flow_code	CHAR(7);
+    DECLARE inv_flow_code	  CHAR(7);
     DECLARE inv_flow_id	BIGINT;
     DECLARE count_mail	INTEGER;
     -- CALL SRV_PRG_Scan();
 
-    SELECT 'MLWELCO' INTO flow_code;
+    SELECT 'MLWELCO' INTO inv_flow_code;
 
     -- SHALL WE RUN this process ?
     SELECT COUNT(1) INTO count_mail FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
-    WHERE NOT EXISTS (SELECT 1 FROM uac_mail
-                    WHERE (flow_code, user_id) = (flow_code, id));
+    WHERE mu.id NOT IN (SELECT user_id FROM uac_mail
+                    WHERE (flow_code, user_id) = (inv_flow_code, user_id));
 
 
     -- We do not find any email here
     IF (count_mail > 0) THEN
 
         -- We run the full process
-        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, NOW());
         SELECT LAST_INSERT_ID() INTO inv_flow_id;
 
         -- We need to insert missing new user without any email
 
         INSERT IGNORE INTO uac_mail (flow_id, flow_code, user_id, status)
-          SELECT inv_flow_id, flow_code, mu.id, 'NEW' FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
+          SELECT inv_flow_id, inv_flow_code, mu.id, 'NEW' FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
 
 
 
