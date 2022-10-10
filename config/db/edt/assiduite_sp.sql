@@ -60,6 +60,7 @@ BEGIN
         -- We need to loop all courses of the day
         SELECT COUNT(1) INTO count_courses_todo
           FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
+          AND ue.course_status = 'A'
           AND ue.day = inv_date
           -- We take only not empty courses
           AND ue.duration_hour > 0
@@ -80,6 +81,7 @@ BEGIN
           -- INITIALIZATION
           SELECT MAX(id) INTO inv_edt_id
               FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
+              AND ue.course_status = 'A'
               AND ue.day = inv_date
               -- We take only not empty courses
               AND ue.duration_hour > 0

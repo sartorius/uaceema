@@ -1089,6 +1089,11 @@ textarea[name=inputRef] {
 .edt-bg-bd{
   background-color: #EAF2F9;
 }
+
+.ua-line{
+  text-decoration: line-through;
+}
+
 .edt-bg-hr{
   background-color: #F7F1FD;
 }

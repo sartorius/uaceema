@@ -73,7 +73,7 @@ class StaticController extends AbstractController
   }
   public function contact(Environment $twig)
   {
-    $content = $twig->render('Static/contact.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    $content = $twig->render('Static/contact.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }

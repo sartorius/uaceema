@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt_line` (
   `master_id` BIGINT UNSIGNED NULL,
   `compute_late_status` CHAR(3) NOT NULL DEFAULT 'NEW',
   `label_day` VARCHAR(20) NOT NULL,
+  `course_status` CHAR(1) NOT NULL DEFAULT 'A',
   `day` DATE NOT NULL,
   `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,

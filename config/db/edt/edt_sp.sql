@@ -45,6 +45,7 @@ BEGIN
         NULL AS groupe,
         DATE_FORMAT(param_monday_date, "%d/%m/%Y") AS mondayw,
         NULL AS nday,
+        'X' AS course_status,
         0 AS day_code,
         0 AS hour_starts_at,
         0 AS duration_hour,
@@ -77,8 +78,11 @@ BEGIN
       INSERT INTO uac_edt_master (flow_id, cohort_id, monday_ofthew) VALUES (inv_flow_id, inv_cohort_id, param_monday_date);
       SELECT LAST_INSERT_ID() INTO inv_master_id;
 
-      INSERT INTO uac_edt_line (master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title)
-            SELECT inv_master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title
+      INSERT INTO uac_edt_line (master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title, course_status)
+            SELECT inv_master_id, label_day, day, day_code, hour_starts_at, duration_hour,
+                    -- Remove the A: in the file
+                    CASE WHEN raw_course_title like 'A:%' THEN TRIM(SUBSTRING(raw_course_title, 3, length(raw_course_title))) ELSE TRIM(raw_course_title) END,
+                    CASE WHEN raw_course_title like 'A:%' THEN 'C' ELSE 'A' END
             FROM uac_load_edt
             WHERE status = 'INP'
             AND flow_id = inv_flow_id;
@@ -100,7 +104,8 @@ BEGIN
         uel.day_code AS day_code,
         uel.hour_starts_at AS hour_starts_at,
         uel.duration_hour AS duration_hour,
-        uel.raw_course_title AS raw_course_title
+        uel.raw_course_title AS raw_course_title,
+        uel.course_status AS course_status
       FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                             JOIN uac_cohort uc ON uc.id = uem.cohort_id
                   				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -164,6 +169,7 @@ BEGIN
               0 AS day_code,
               0 AS hour_starts_at,
               0 AS duration_hour,
+              'X' AS course_status,
               NULL AS raw_course_title;
     ELSE
       -- We have result
@@ -180,7 +186,8 @@ BEGIN
                   uel.day_code AS day_code,
                   uel.hour_starts_at AS hour_starts_at,
                   uel.duration_hour AS duration_hour,
-                  uel.raw_course_title AS raw_course_title
+                  uel.raw_course_title AS raw_course_title,
+                  uel.course_status AS course_status
                 FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                       JOIN uac_cohort uc ON uc.id = uem.cohort_id
                             				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -214,7 +221,8 @@ BEGIN
                    uel.day_code AS day_code,
                    uel.hour_starts_at AS hour_starts_at,
                    uel.duration_hour AS duration_hour,
-                   uel.raw_course_title AS raw_course_title
+                   uel.raw_course_title AS raw_course_title,
+                   uel.course_status AS course_status
                  FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                        JOIN uac_cohort uc ON uc.id = uem.cohort_id
                              				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -327,7 +335,8 @@ BEGIN
       uel.day_code AS day_code,
       uel.hour_starts_at AS hour_starts_at,
       uel.duration_hour AS duration_hour,
-      uel.raw_course_title AS raw_course_title
+      uel.raw_course_title AS raw_course_title,
+      uel.course_status AS course_status
     FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                           JOIN uac_cohort uc ON uc.id = uem.cohort_id
                           JOIN uac_ref_mention urm ON urm.par_code = uc.mention

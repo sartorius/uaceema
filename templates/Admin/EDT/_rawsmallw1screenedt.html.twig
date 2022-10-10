@@ -57,6 +57,7 @@
                     {% endif %}
 
                           {% if line['duration_hour'] != 0 %}
+
                               {% if line['duration_hour'] == 1 %}
                                   <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
                               {% else %}
@@ -64,7 +65,13 @@
                                   <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
                               {% endif %}
 
+
+                              {% if line['course_status'] == 'C' %}
+                                  <i class="err"><strong>ANNULÉ</strong>: <i class="ua-line">{{ line['raw_course_title'] }}</i></i>
+                              {% else %}
                                   {{ line['raw_course_title'] }}
+                              {% endif %}
+
 
                               {% if i == 1 %}
                                 {% set dailycountdebt1 = line['duration_hour'] %}
