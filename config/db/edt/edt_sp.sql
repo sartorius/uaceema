@@ -10,6 +10,12 @@ BEGIN
 
     DECLARE exist_cohort_id	TINYINT;
     DECLARE inv_cohort_id	INTEGER;
+
+
+    DECLARE inv_time_stamp	DATETIME;
+    DECLARE inv_date	      DATE;
+    DECLARE inv_date_m12	  DATE;
+
     -- CALL SRV_PRG_Scan();
     -- EDTLOAD
 
@@ -86,8 +92,34 @@ BEGIN
             FROM uac_load_edt
             WHERE status = 'INP'
             AND flow_id = inv_flow_id;
-      UPDATE uac_load_edt SET status = 'END' WHERE flow_id = inv_flow_id AND status = 'INP';
 
+
+
+      -- Remove duplicate
+      UPDATE uac_working_flow uwf SET uwf.status = 'DUP'
+      WHERE uwf.flow_code = 'QUEASSI'
+      AND uwf.status IN ('NEW', 'QUE')
+      AND uwf.working_date IN (
+        SELECT DISTINCT ule.day FROM uac_load_edt ule
+        WHERE ule.flow_id = inv_flow_id
+      );
+
+
+      -- Recalculate Assiduite If they have been in the past Add recalculation line here !!!
+      SELECT CURRENT_DATE INTO inv_date;
+      SELECT CURRENT_TIMESTAMP INTO inv_time_stamp;
+      SELECT DATE_ADD(inv_date, INTERVAL -12 DAY) INTO inv_date_m12;
+
+
+      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update)
+            SELECT DISTINCT 'QUEASSI', 'NEW', day, 0, filename, inv_time_stamp
+            FROM uac_load_edt
+            WHERE flow_id = inv_flow_id
+            AND status = 'INP'
+            AND day < inv_date
+            AND inv_date_m12 < day;
+
+      UPDATE uac_load_edt SET status = 'END' WHERE flow_id = inv_flow_id AND status = 'INP';
 
       -- End of the flow correctly
       UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;

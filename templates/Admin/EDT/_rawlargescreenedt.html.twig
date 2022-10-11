@@ -15,7 +15,10 @@
                     <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
                     <strong>Option:</strong> {{ sp_result[0]['parcours'] }}<br>
                     <strong>Option:</strong> {{ sp_result[0]['groupe'] }}<br>
-                    <strong>Date du Lundi:</strong> {{ sp_result[0]['mondayw'] }}<br>
+                    <strong>Semaine du Lundi:</strong> {{ sp_result[0]['mondayw'] }} <br>
+                    {% if sp_overpassday != '' %}
+                        <i class='err'><strong>Attention vous intégrez une semaine en cours ou passée</strong>, nous sommes le {{ sp_overpassday }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
+                    {% endif %}
                 </div>
 
               </div>

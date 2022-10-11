@@ -202,3 +202,52 @@ BEGIN
     END IF;
 END$$
 -- Remove $$ for OVH
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_CRT_ResetAssdFlow$$
+CREATE PROCEDURE `SRV_CRT_ResetAssdFlow` (IN param DATE)
+BEGIN
+
+    DECLARE inv_flow_code	CHAR(7);
+    DECLARE concurrent_flow INT;
+    DECLARE inv_flow_id	BIGINT;
+
+
+    SELECT 'RESASSI' INTO inv_flow_code;
+    SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE status = 'NEW' AND flow_code = inv_flow_code;
+
+    IF concurrent_flow > 0 THEN
+      -- A flow is running we input a CAN line
+      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW());
+    ELSE
+      -- Previous RUN has finished
+      -- We can work !
+
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+        SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+        -- If the parameter is null, we consider the day of today !
+        IF param IS NULL THEN
+            -- statements ;
+            -- Do not support empty
+            UPDATE uac_working_flow SET status = 'ERR', comment = 'Missing param date', last_update = NOW() WHERE id = inv_flow_id;
+
+       ELSE
+            -- statements ;
+            -- Do the work
+            DELETE FROM uac_assiduite WHERE edt_id IN (
+              SELECT id FROM uac_edt_line WHERE day = param
+            );
+
+            UPDATE uac_edt_line SET compute_late_status = 'NEW' WHERE day = param;
+
+       END IF;
+       -- Manage Date NULL
+        -- End of the flow correctly
+        UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = CONCAT('Reset Assiduite day: ', param) WHERE id = inv_flow_id;
+
+    END IF;
+END$$
+-- Remove $$ for OVH

@@ -159,16 +159,28 @@ class AdminEDTController extends AbstractController
     if(isset($scale_right) && ($scale_right > 0)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
+        $validate_queue = "UPDATE uac_working_flow uwf SET uwf.status = 'QUE' WHERE uwf.flow_code = 'QUEASSI' AND uwf.status = 'NEW' AND uwf.filename IN (SELECT p2._filename FROM (SELECT uac_working_flow.filename AS _filename, uac_edt_master.id AS _id  FROM uac_working_flow JOIN uac_edt_master ON uac_edt_master.flow_id = uac_working_flow.id) p2 WHERE p2._id ";
+
         if($is_zip ==  'N'){
             $validate_query = "UPDATE uac_edt_master SET visibility = 'V' WHERE id =" . $master_id . ";";
+            $validate_queue = $validate_queue . " IN (" . $master_id . "));";
         }
         else{
             $validate_query = "UPDATE uac_edt_master SET visibility = 'V' WHERE id IN (" . $zip_list_validate . ");";
+            $validate_queue = $validate_queue . " IN (" . $zip_list_validate . "));";
         }
+        $logger->debug("validate_queue: " . $validate_queue);
+
         // Be carefull if you have array of array
         $dbconnectioninst = DBConnectionManager::getInstance();
+
+        $result = $dbconnectioninst->query($validate_queue)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result));
+
         $result = $dbconnectioninst->query($validate_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result));
+
+
 
 
         $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -453,6 +465,7 @@ class AdminEDTController extends AbstractController
           $days = array();
           $insert_queries = array();
           $resultsp = array();
+          $overpassday = '';
           // Code is valid here. We can work
           if (($load_type == '.csv') && (!file_exists($load_file['tmp_name']))) {
             $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
@@ -553,7 +566,7 @@ class AdminEDTController extends AbstractController
                           if(!$file_is_still_valid){
                             $report_comment =  '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR112 Erreur lecture fichier : Les jours ne correspondent pas aux dates</span>' . '<br>'
                                                               . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
-                                                              . 'Vérifiez que les jours sont bons : Est-ce que ' . $data[1] . ' est bien un lundi ? <br>'
+                                                              . 'Vérifiez que les jours sont bons : <i class="err">Est-ce que ' . $data[1] . ' est bien un lundi ?</i> <br>'
                                                               . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>' . $report_comment;
                           }
                       }
@@ -660,6 +673,7 @@ class AdminEDTController extends AbstractController
                     }
                     elseif($scale_right > 10){
                       // It is still OK
+                      $overpassday = date("d/m/Y", time());
                     }
                     else{
                       $file_is_still_valid = false;
@@ -755,6 +769,7 @@ class AdminEDTController extends AbstractController
           return array("extract_report"=>$report_comment,
                         "extract_queries"=>$report_queries,
                         "sp_result"=>$resultsp,
+                        "overpassday"=>$overpassday,
                         "zip_one_comment" => $zip_one_comment);
 
   }

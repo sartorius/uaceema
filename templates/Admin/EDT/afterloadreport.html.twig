@@ -51,6 +51,7 @@
                 {% set reportcmt = zip_result['extract_report'] %}
                 {% set reportqueries = zip_result['extract_queries'] %}
                 {% set sp_result = zip_result['sp_result'] %}
+                {% set sp_overpassday = zip_result['overpassday'] %}
                 {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
         {% endfor %}
@@ -59,6 +60,7 @@
         {% set reportcmt = result_for_one_file['extract_report'] %}
         {% set reportqueries = result_for_one_file['extract_queries'] %}
         {% set sp_result = result_for_one_file['sp_result'] %}
+        {% set sp_overpassday = result_for_one_file['overpassday'] %}
 
         {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
