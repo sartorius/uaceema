@@ -232,8 +232,11 @@ function loadAssRecapGrid(){
             else if(value == 'LAT'){
               val = '<i class="recap-lat">Retard</i>';
             }
-            else{
+            else if(value == 'ABS'){
               val = '<i class="recap-mis">Absent(e)</i>';
+            }
+            else{
+              val = '<strong>Jour non-compté<strong>';
             }
             return val;
           }

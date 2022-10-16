@@ -1,11 +1,13 @@
 
--- From Connection SP
--- Launch the UACShower
-CALL SRV_UPD_UACShower();
 
 -- COHORT ID to be udpated !!!
+-- 1/ Create user
+-- 2/ Add to course !!!
 
--- update uac_showuser SET cohort_id = 15;
+-- From Connection SP
+-- 3/ Launch the UACShower
+CALL SRV_UPD_UACShower();
+-- 4/ update uac_showuser SET cohort_id = <correct cours ID> where cohort_id IS NULL;
 
 
 -- ONLY FOR Test

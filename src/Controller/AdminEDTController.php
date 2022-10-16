@@ -38,15 +38,19 @@ class AdminEDTController extends AbstractController
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'LAT' "
 											    . " GROUP BY mu.city, ass.status; ";
+        $logger->debug("Show me late_query: " . $late_query);
+
         $mis_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'ABS' "
 											    . " GROUP BY mu.city, ass.status; ";
+        $logger->debug("Show me mis_query: " . $mis_query);
+
         $mis_query_pp = " SELECT REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'ABS' "
 											    . " GROUP BY mu.firstname, mu.lastname, ass.status ORDER BY COUNT(1) DESC LIMIT 30; ";
-
+        $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_stat_late = $dbconnectioninst->query($late_query)->fetchAll(PDO::FETCH_ASSOC);

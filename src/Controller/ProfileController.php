@@ -95,16 +95,22 @@ class ProfileController extends AbstractController
 
 
 
-            $query_ass_recap = "SELECT ass.status AS STATUS, "
+            $query_ass_recap = " SELECT ass.status AS STATUS, "
                                       .  " uae.hour_starts_at AS DEBUT, DATE_FORMAT(uae.day, '%d/%m') AS JOUR, REPLACE(SUBSTRING(uae.raw_course_title, 1, 20), '\n', ' ') AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
                                       . " CASE WHEN day_code = 1 THEN 'LUNDI' WHEN day_code = 2 THEN 'MARDI' WHEN day_code = 3 THEN 'MERCREDI' "
-                                      . " WHEN day_code = 4 THEN 'JEUDI' WHEN day_code = 5 THEN 'VENDREDI' ELSE 'SAMEDI' END AS LABEL_DAY_FR "
+                                      . " WHEN day_code = 4 THEN 'JEUDI' WHEN day_code = 5 THEN 'VENDREDI' ELSE 'SAMEDI' END AS LABEL_DAY_FR, uae.day AS TECH_DAT, uae.hour_starts_at AS TECH_DEBUT "
                                       . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
                       								. " JOIN uac_showuser uas ON mu.username = uas.username "
                       									  . " JOIN uac_edt_line uae ON uae.id = ass.edt_id "
                       									  . " LEFT JOIN uac_scan sca ON sca.id = ass.scan_id "
                                           . " WHERE mu.id = " . $result[0]['ID']
-                                          . " ORDER BY ADDTIME(uae.day, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(uae.hour_starts_at) = 1) THEN CONCAT('0', uae.hour_starts_at) ELSE uae.hour_starts_at END, ':00:00'), TIME)) DESC;";
+                                          . " AND uae.day NOT IN (SELECT working_date FROM uac_assiduite_off) UNION ";
+            $query_ass_recap = "SELECT * FROM ( "
+                                . $query_ass_recap
+                                . " SELECT 'XXX' AS STATUS, '0' AS DEBUT, DATE_FORMAT(working_date, '%d/%m') AS JOUR, 'XXX' AS COURS, NULL AS SCAN_DATE, NULL AS SCAN_TIME, CASE WHEN day_code = 2 THEN "
+                                . " 'LUNDI' WHEN day_code = 3 THEN 'MARDI' WHEN day_code = 4 THEN 'MERCREDI' WHEN day_code = 5 THEN 'JEUDI' WHEN day_code = 6 THEN 'VENDREDI' ELSE 'SAMEDI' END AS "
+                                . " LABEL_DAY_FR, working_date AS TECH_DAT, 0 AS TECH_DEBUT FROM uac_assiduite_off ) a "
+                                          . " ORDER BY ADDTIME(TECH_DAT, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(TECH_DEBUT) = 1) THEN CONCAT('0', TECH_DEBUT) ELSE TECH_DEBUT END, ':00:00'), TIME)) DESC;";
 
             $logger->debug("Query query_ass_recap: " . $query_ass_recap);
 
