@@ -68,6 +68,8 @@ BEGIN
     SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'SCANPRG';
     SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
 
+    -- Delete all old dates/ uas_scan will be purged in ASSIDUITE
+
     DELETE FROM uac_load_scan WHERE scan_date < prg_date;
     DELETE FROM uac_working_flow WHERE flow_code = 'SCANXXX' AND create_date < prg_date;
 

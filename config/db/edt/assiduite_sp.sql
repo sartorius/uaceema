@@ -251,3 +251,60 @@ BEGIN
     END IF;
 END$$
 -- Remove $$ for OVH
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_RUN_PastAssiduite$$
+CREATE PROCEDURE `SRV_RUN_PastAssiduite` ()
+BEGIN
+    DECLARE inv_date	DATE;
+    DECLARE inv_uwf_id	BIGINT;
+    DECLARE count_past_todo INT;
+    DECLARE i INT default 0;
+    SET i = 0;
+
+    -- We need to loop all past days
+    SELECT COUNT(1) INTO count_past_todo
+      FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+
+    WHILE i < count_past_todo DO
+      -- INITIALIZATION
+      SELECT MAX(id) INTO inv_uwf_id
+          FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+
+      SELECT working_date INTO inv_date
+          FROM uac_working_flow uwf WHERE id = inv_uwf_id;
+
+      -- Do the reset actually and recalculation
+      CALL SRV_CRT_ResetAssdFlow(inv_date);
+      CALL SRV_CRT_ComptAssdFlow(inv_date);
+
+      UPDATE uac_working_flow SET status = 'END', comment = 'Run by Queue batch', last_update = NOW() WHERE id = inv_uwf_id;
+
+      SET i = i + 1;
+    END WHILE;
+
+
+END$$
+-- Remove $$ for OVH
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_PRG_Ass$$
+CREATE PROCEDURE `SRV_PRG_Ass` ()
+BEGIN
+    DECLARE prg_date	DATE;
+    DECLARE prg_history_delta	INT;
+    -- CALL SRV_PRG_Scan();
+
+    SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'ASSIPRG';
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
+
+    -- Delete all old dates/ uas SCAN will be purged in ASSIDUITE
+    DELETE FROM uac_scan WHERE scan_date < prg_date;
+    DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
+    DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date);
+
+    DELETE FROM uac_working_flow WHERE flow_code = 'ASSIDUI' AND create_date < prg_date;
+
+END$$
+-- Remove $$ for OVH

@@ -11,6 +11,11 @@
 */3 * * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
 */5 * * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
+# Twice day for assiduite
+* 13 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
+* 20 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
+* 20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
+* 22 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
 
 # Service
 # Unquiet the Wget if needed
@@ -19,7 +24,11 @@
 # Delete log
 0 4 * * * rm -f /home/ratinahirana/cron.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.mng_uac_showuser.php.log;
+
 0 4 * * * rm -f /home/ratinahirana/cron.mng_scan.php.log;
+0 4 * * * rm -f /home/ratinahirana/cron.mng_assiduite.php.log;
+0 4 * * * rm -f /home/ratinahirana/cron.mng_pastassiduite.php.log;
+
 0 4 * * * rm -f /home/ratinahirana/cron.mng_welcome_mail.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.prg_reset_daily.php.log;
 0 4 * * * rm -f /home/ratinahirana/cron.service.mail.log;
