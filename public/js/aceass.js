@@ -143,7 +143,7 @@ function loadScan(){
       },  // data to submit
       success: function (data, status, xhr) {
           $("#waiting-gif").hide();
-          $('#last-read-bc').html('<i style="color:green;"><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement réussi.<br>Vous pouvez continuer les scans.</i>');
+          $('#last-read-bc').html('<i class="mgs-rd-load-ok"><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement réussi.<br>Vous pouvez continuer les scans.</i>');
           $('#last-read-time').html('');
           $('#left-cloud').html(globalMaxRead);
           $('#code-lu').html('');

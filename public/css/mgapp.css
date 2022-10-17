@@ -748,6 +748,11 @@ textarea[name=inputRef] {
   font-weight: 500;
 }
 
+.mgs-rd-load-ok{
+  font-size: 25px;
+  color: green;
+}
+
 .mgs-rd-o-in{
   font-size: 1.1em;
   color: white;
