@@ -1213,6 +1213,11 @@ textarea[name=inputRef] {
   font-size: 14px;
 }
 
+.cell-recap-l-num{
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
 .recap-lat{
   color: #FF6800;
   font-weight: 800;

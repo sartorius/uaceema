@@ -30,15 +30,24 @@ INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_cod
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANXXX', 'Flow retard', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MLWELCO', 'Mail Welcome qui envoie details', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('ASSIDUI', 'Compute assiduite agains scan edt', NULL, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('RESASSI', 'Reset Assiduite for the day', NULL, NULL);
+
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('ASSLATE', 'Late maximum consideration', ':10:00', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('ASSWAIT', 'Attente script avant compute', ':20:00', NULL, NULL);
+
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANPRG', 'Flow purge scan', 5, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('ASSIPRG', 'Flow purge assiduite', 10, NULL);
+
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 90, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Compteur limit of email per day', 0, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILBA', 'Batch email per day', 9, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTLOAD', 'Integration des EDT', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTPRGL', 'Flow purge edt load', 5, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTPRGC', 'Flow purge edt core', 70, NULL);
+
+
+
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('QUEASSI', 'Queue Assiduite', NULL, NULL);
 
 
 DROP TABLE IF EXISTS uac_working_flow;
@@ -250,10 +259,11 @@ INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) V
 INSERT IGNORE INTO `ACEA`.`uac_admin` (`id`, `pwd`, `role`, `last_connection`) VALUES ((SELECT id FROM mdl_user WHERE username = 'paulrab367'), 'a2d426e5a92f1bbf418a35869ffc7cc2', 'Agent', NULL);
 
 
-
 -- SHOW USERS
+-- This drop table is to not have to review all secret
+-- We need to drop it if needed
 
-DROP TABLE IF EXISTS uac_showuser;
+-- DROP TABLE IF EXISTS uac_showuser;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
   `username` VARCHAR(30) NOT NULL,
   `roleid` TINYINT UNSIGNED NOT NULL,
@@ -317,7 +327,11 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
 
 
 
-
+-- save in same table uac_scan_arch
+/*
+INSERT IGNORE INTO uac_scan_arch (user_id, agent_id, scan_date, scan_time, status, in_out)
+SELECT user_id, agent_id, scan_date, scan_time, status, in_out FROM uac_scan;
+*/
 DROP TABLE IF EXISTS uac_scan;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -344,6 +358,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_assiduite` (
 
 
 DROP TABLE IF EXISTS uac_scan_ferie;
+/*
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan_ferie` (
   `working_date` DATE NOT NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
@@ -364,6 +379,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan_ferie` (
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-08-15', 'Assomption');
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-11-01', 'Toussaint');
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-12-25', 'Noel');
+  */
 
 -- Not compatible with the output of Workbench
 DROP TABLE IF EXISTS uac_mail;
@@ -427,6 +443,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt_line` (
   `master_id` BIGINT UNSIGNED NULL,
   `compute_late_status` CHAR(3) NOT NULL DEFAULT 'NEW',
   `label_day` VARCHAR(20) NOT NULL,
+  `course_status` CHAR(1) NOT NULL DEFAULT 'A',
   `day` DATE NOT NULL,
   `day_code` TINYINT UNSIGNED NULL,
   `hour_starts_at` TINYINT NOT NULL,
@@ -451,6 +468,22 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_assiduite` (
 -- This constraint avoid to have duplicate. We do first : Absent/Late/Present
 ALTER TABLE uac_assiduite
   ADD CONSTRAINT student_course UNIQUE (user_id, edt_id);
+
+-- Manage Day Off
+DROP TABLE IF EXISTS uac_assiduite_off;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_assiduite_off` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `working_date` DATE NOT NULL,
+  `day_code` TINYINT NOT NULL,
+  `reason` VARCHAR(100) NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+ALTER TABLE uac_assiduite_off
+  ADD CONSTRAINT uac_assiduite_off_wd UNIQUE (working_date);
+
+-- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2022-10-04', DAYOFWEEK('2022-10-04'));
 -- Control to save !
   SELECT mu.id, mu.username, uas.secret, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, mr.shortname, mu.firstname, mu.lastname, mu.email, mu.phone1, mu.phone2
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
@@ -544,7 +577,10 @@ BEGIN
     SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'SCANPRG';
     SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
 
+    -- Delete all old dates/ uas_scan will be purged in ASSIDUITE
     DELETE FROM uac_load_scan WHERE scan_date < prg_date;
+
+    -- This is deleting the migration flow only
     DELETE FROM uac_working_flow WHERE flow_code = 'SCANXXX' AND create_date < prg_date;
 
 END$$
@@ -685,6 +721,12 @@ BEGIN
 
     DECLARE exist_cohort_id	TINYINT;
     DECLARE inv_cohort_id	INTEGER;
+
+
+    DECLARE inv_time_stamp	DATETIME;
+    DECLARE inv_date	      DATE;
+    DECLARE inv_date_m12	  DATE;
+
     -- CALL SRV_PRG_Scan();
     -- EDTLOAD
 
@@ -720,6 +762,7 @@ BEGIN
         NULL AS groupe,
         DATE_FORMAT(param_monday_date, "%d/%m/%Y") AS mondayw,
         NULL AS nday,
+        'X' AS course_status,
         0 AS day_code,
         0 AS hour_starts_at,
         0 AS duration_hour,
@@ -752,13 +795,42 @@ BEGIN
       INSERT INTO uac_edt_master (flow_id, cohort_id, monday_ofthew) VALUES (inv_flow_id, inv_cohort_id, param_monday_date);
       SELECT LAST_INSERT_ID() INTO inv_master_id;
 
-      INSERT INTO uac_edt_line (master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title)
-            SELECT inv_master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title
+      INSERT INTO uac_edt_line (master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title, course_status)
+            SELECT inv_master_id, label_day, day, day_code, hour_starts_at, duration_hour,
+                    -- Remove the A: in the file
+                    CASE WHEN raw_course_title like 'A:%' THEN TRIM(SUBSTRING(raw_course_title, 3, length(raw_course_title))) ELSE TRIM(raw_course_title) END,
+                    CASE WHEN raw_course_title like 'A:%' THEN 'C' ELSE 'A' END
             FROM uac_load_edt
             WHERE status = 'INP'
             AND flow_id = inv_flow_id;
-      UPDATE uac_load_edt SET status = 'END' WHERE flow_id = inv_flow_id AND status = 'INP';
 
+
+
+      -- Remove duplicate
+      UPDATE uac_working_flow uwf SET uwf.status = 'DUP'
+      WHERE uwf.flow_code = 'QUEASSI'
+      AND uwf.status IN ('NEW', 'QUE')
+      AND uwf.working_date IN (
+        SELECT DISTINCT ule.day FROM uac_load_edt ule
+        WHERE ule.flow_id = inv_flow_id
+      );
+
+
+      -- Recalculate Assiduite If they have been in the past Add recalculation line here !!!
+      SELECT CURRENT_DATE INTO inv_date;
+      SELECT CURRENT_TIMESTAMP INTO inv_time_stamp;
+      SELECT DATE_ADD(inv_date, INTERVAL -12 DAY) INTO inv_date_m12;
+
+
+      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update)
+            SELECT DISTINCT 'QUEASSI', 'NEW', day, 0, filename, inv_time_stamp
+            FROM uac_load_edt
+            WHERE flow_id = inv_flow_id
+            AND status = 'INP'
+            AND day < inv_date
+            AND inv_date_m12 < day;
+
+      UPDATE uac_load_edt SET status = 'END' WHERE flow_id = inv_flow_id AND status = 'INP';
 
       -- End of the flow correctly
       UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
@@ -775,7 +847,8 @@ BEGIN
         uel.day_code AS day_code,
         uel.hour_starts_at AS hour_starts_at,
         uel.duration_hour AS duration_hour,
-        uel.raw_course_title AS raw_course_title
+        uel.raw_course_title AS raw_course_title,
+        uel.course_status AS course_status
       FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                             JOIN uac_cohort uc ON uc.id = uem.cohort_id
                   				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -839,6 +912,7 @@ BEGIN
               0 AS day_code,
               0 AS hour_starts_at,
               0 AS duration_hour,
+              'X' AS course_status,
               NULL AS raw_course_title;
     ELSE
       -- We have result
@@ -855,7 +929,8 @@ BEGIN
                   uel.day_code AS day_code,
                   uel.hour_starts_at AS hour_starts_at,
                   uel.duration_hour AS duration_hour,
-                  uel.raw_course_title AS raw_course_title
+                  uel.raw_course_title AS raw_course_title,
+                  uel.course_status AS course_status
                 FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                       JOIN uac_cohort uc ON uc.id = uem.cohort_id
                             				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -889,7 +964,8 @@ BEGIN
                    uel.day_code AS day_code,
                    uel.hour_starts_at AS hour_starts_at,
                    uel.duration_hour AS duration_hour,
-                   uel.raw_course_title AS raw_course_title
+                   uel.raw_course_title AS raw_course_title,
+                   uel.course_status AS course_status
                  FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                        JOIN uac_cohort uc ON uc.id = uem.cohort_id
                              				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -1002,7 +1078,8 @@ BEGIN
       uel.day_code AS day_code,
       uel.hour_starts_at AS hour_starts_at,
       uel.duration_hour AS duration_hour,
-      uel.raw_course_title AS raw_course_title
+      uel.raw_course_title AS raw_course_title,
+      uel.course_status AS course_status
     FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                           JOIN uac_cohort uc ON uc.id = uem.cohort_id
                           JOIN uac_ref_mention urm ON urm.par_code = uc.mention
@@ -1077,6 +1154,7 @@ BEGIN
         -- We need to loop all courses of the day
         SELECT COUNT(1) INTO count_courses_todo
           FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
+          AND ue.course_status = 'A'
           AND ue.day = inv_date
           -- We take only not empty courses
           AND ue.duration_hour > 0
@@ -1097,6 +1175,7 @@ BEGIN
           -- INITIALIZATION
           SELECT MAX(id) INTO inv_edt_id
               FROM uac_edt_line ue WHERE ue.compute_late_status = 'NEW'
+              AND ue.course_status = 'A'
               AND ue.day = inv_date
               -- We take only not empty courses
               AND ue.duration_hour > 0
@@ -1218,9 +1297,122 @@ BEGIN
 END$$
 -- Remove $$ for OVH
 
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_CRT_ResetAssdFlow$$
+CREATE PROCEDURE `SRV_CRT_ResetAssdFlow` (IN param DATE)
+BEGIN
+
+    DECLARE inv_flow_code	CHAR(7);
+    DECLARE concurrent_flow INT;
+    DECLARE inv_flow_id	BIGINT;
+
+
+    SELECT 'RESASSI' INTO inv_flow_code;
+    SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE status = 'NEW' AND flow_code = inv_flow_code;
+
+    IF concurrent_flow > 0 THEN
+      -- A flow is running we input a CAN line
+      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW());
+    ELSE
+      -- Previous RUN has finished
+      -- We can work !
+
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+        SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+        -- If the parameter is null, we consider the day of today !
+        IF param IS NULL THEN
+            -- statements ;
+            -- Do not support empty
+            UPDATE uac_working_flow SET status = 'ERR', comment = 'Missing param date', last_update = NOW() WHERE id = inv_flow_id;
+
+       ELSE
+            -- statements ;
+            -- Do the work
+            DELETE FROM uac_assiduite WHERE edt_id IN (
+              SELECT id FROM uac_edt_line WHERE day = param
+            );
+
+            UPDATE uac_edt_line SET compute_late_status = 'NEW' WHERE day = param;
+
+       END IF;
+       -- Manage Date NULL
+        -- End of the flow correctly
+        UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = CONCAT('Reset Assiduite day: ', param) WHERE id = inv_flow_id;
+
+    END IF;
+END$$
+-- Remove $$ for OVH
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_RUN_PastAssiduite$$
+CREATE PROCEDURE `SRV_RUN_PastAssiduite` ()
+BEGIN
+    DECLARE inv_date	DATE;
+    DECLARE inv_uwf_id	BIGINT;
+    DECLARE count_past_todo INT;
+    DECLARE i INT default 0;
+    SET i = 0;
+
+    -- We need to loop all past days
+    SELECT COUNT(1) INTO count_past_todo
+      FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+
+    WHILE i < count_past_todo DO
+      -- INITIALIZATION
+      SELECT MAX(id) INTO inv_uwf_id
+          FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+
+      SELECT working_date INTO inv_date
+          FROM uac_working_flow uwf WHERE id = inv_uwf_id;
+
+      -- Do the reset actually and recalculation
+      CALL SRV_CRT_ResetAssdFlow(inv_date);
+      CALL SRV_CRT_ComptAssdFlow(inv_date);
+
+      UPDATE uac_working_flow SET status = 'END', comment = 'Run by Queue batch', last_update = NOW() WHERE id = inv_uwf_id;
+
+      SET i = i + 1;
+    END WHILE;
+
+
+END$$
+-- Remove $$ for OVH
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_PRG_Ass$$
+CREATE PROCEDURE `SRV_PRG_Ass` ()
+BEGIN
+    DECLARE prg_date	DATE;
+    DECLARE prg_history_delta	INT;
+    -- CALL SRV_PRG_Scan();
+
+    SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'ASSIPRG';
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
+
+    -- Delete all old dates/ uas SCAN will be purged in ASSIDUITE
+    DELETE FROM uac_scan WHERE scan_date < prg_date;
+    DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
+    DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date);
+
+    DELETE FROM uac_working_flow WHERE flow_code = 'ASSIDUI' AND create_date < prg_date;
+
+END$$
+-- Remove $$ for OVH
+
+
+-- COHORT ID to be udpated !!!
+-- 1/ Create user
+-- 2/ Add to course !!!
+
 -- From Connection SP
--- Launch the UACShower
+-- 3/ Launch the UACShower
 CALL SRV_UPD_UACShower();
+-- 4/ update uac_showuser SET cohort_id = <correct cours ID> where cohort_id IS NULL;
+
 
 -- ONLY FOR Test
 /*

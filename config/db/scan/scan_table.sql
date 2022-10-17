@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_assiduite` (
 
 
 DROP TABLE IF EXISTS uac_scan_ferie;
+/*
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan_ferie` (
   `working_date` DATE NOT NULL,
   `working_part` TINYINT NOT NULL DEFAULT 0,
@@ -67,3 +68,4 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan_ferie` (
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-08-15', 'Assomption');
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-11-01', 'Toussaint');
   INSERT IGNORE INTO uac_scan_ferie (working_date, title) VALUES ('2023-12-25', 'Noel');
+  */

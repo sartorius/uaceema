@@ -33,10 +33,10 @@ class AdminSTUController extends AbstractController
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
 
-        $allstu_query = " SELECT mu.id AS ID, mu.username AS USERNAME, uas.secret AS SECRET, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, "
+        $allstu_query = " SELECT mu.id AS ID, UPPER(mu.username) AS USERNAME, uas.secret AS SECRET, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, "
                               . " mr.shortname AS ROLE_SHORTNAME, REPLACE(UPPER(mu.firstname), \"'\", \" \") AS FIRSTNAME, REPLACE(UPPER(mu.lastname), \"'\", \" \") AS LASTNAME, mu.email AS EMAIL, vaco.id AS CLASS_ID, "
                               . " vaco.mention AS CLASS_MENTION, vaco.niveau AS CLASS_NIVEAU, vaco.parcours AS CLASS_PARCOURS, vaco.groupe AS CLASS_GROUPE, "
-                              . " REPLACE(UPPER(CONCAT(mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe)), \"'\", \" \") AS raw_data "
+                              . " REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe)), \"'\", \" \") AS raw_data "
                               . " FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username "
                               . " JOIN mdl_role mr ON mr.id = uas.roleid "
                               . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id "

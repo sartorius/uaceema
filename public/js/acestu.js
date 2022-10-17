@@ -51,15 +51,15 @@ function loadAllSTUGrid(){
           title: 'Username',
           type: "text",
           align: "left",
-          width: 20,
-          css: "cell-recap-l",
+          width: 40,
+          css: "cell-recap-l-num",
           headercss: "cell-recap-hd"
         },
         //Default width is auto
         { name: "FIRSTNAME",
           title: "Prénom",
           type: "text",
-          width: 25,
+          width: 60,
           headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
@@ -74,7 +74,7 @@ function loadAllSTUGrid(){
         { name: "CLASS_MENTION",
           title: "Mention",
           type: "text",
-          width: 80,
+          width: 60,
           headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
