@@ -13,7 +13,7 @@ echo 'TU+0[' . date("Y-m-d H:i:s",$dt) . '] END config/server/mng_pastassiduite.
 // We create the DB connection here !
 $mysqli = new mysqli($hostname, $username, $password, $selecteddb);
 
-$readquery = "CALL SRV_RUN_PastAssiduite(NULL)";
+$readquery = "CALL SRV_RUN_PastAssiduite()";
 $mysqli->query( $readquery );
 
 $dt=time();

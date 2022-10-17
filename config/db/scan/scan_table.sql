@@ -16,7 +16,11 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
 
 
 
-
+-- save in same table uac_scan_arch
+/*
+INSERT IGNORE INTO uac_scan_arch (user_id, agent_id, scan_date, scan_time, status, in_out)
+SELECT user_id, agent_id, scan_date, scan_time, status, in_out FROM uac_scan;
+*/
 DROP TABLE IF EXISTS uac_scan;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_scan` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
