@@ -681,7 +681,7 @@ class AdminEDTController extends AbstractController
                     }
                     else{
                       $file_is_still_valid = false;
-                      $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '.</span>' . '<br>';
+                      $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '. Si cette opération est nécessaire, vous devez utilisez un login avec des droits de hierarchie 11.</span>' . '<br>';
 
                       $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée.</span>' . '<br>'
                                                         . 'Semaine chargée : ' . $monday . ' Nous sommes le: ' . $current_date . '<br><br>'
