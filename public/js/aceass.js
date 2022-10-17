@@ -68,8 +68,13 @@ function verityContentScan(){
   if ($('#scan-ace').val().length == 10){
 
     let readInput = $('#scan-ace').val().toUpperCase().replace(/[^a-z0-9]/gi,'');
+    let scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';
+    if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
+      scanOrderToCheck = ' <i class="mgs-rd-o-out">&nbsp;Sortie&nbsp;</i>';
+    }
+
     //console.log('We have read: ' + $('#scan-ace').val());
-    $('#last-read-bc').html(readInput);
+    $('#last-read-bc').html(readInput + scanOrderToCheck);
 
     let today = new Date();
     let date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0');
