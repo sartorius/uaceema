@@ -107,6 +107,20 @@
             {% set dailycountdebt5 = 0 %}
             {% set dailycountdebt6 = 0 %}
 
+            {% set pos_text1 = 1 %}
+            {% set pos_text2 = 1 %}
+            {% set pos_text3 = 1 %}
+            {% set pos_text4 = 1 %}
+            {% set pos_text5 = 1 %}
+            {% set pos_text6 = 1 %}
+
+            {% set center_text1 = '' %}
+            {% set center_text2 = '' %}
+            {% set center_text3 = '' %}
+            {% set center_text4 = '' %}
+            {% set center_text5 = '' %}
+            {% set center_text6 = '' %}
+
             {% for line in sp_result %}
                 {# It is a start line here #}
                 {% if (i + 5) is divisible by(6) %}
@@ -114,8 +128,8 @@
                 {% endif %}
 
                     {% if i == 1 %}
-                        <div class="col-1  edt-cell edt-bg-hr edt-cell-lf">
-                          {{ line['hour_starts_at'] }}h
+                        <div class="col-1  edt-cell edt-bg-hr edt-cell-lf edt-cell-hr-lg">
+                          {{ line['hour_starts_at'] }}h-{{ line['hour_starts_at'] + 1 }}h
                         </div>
                         {% set col = 2 %}
                     {% elseif i == 6 %}
@@ -124,6 +138,7 @@
                         {% set col = 2 %}
                     {% endif %}
 
+                          {# Duration 0 means there is no course or between course #}
                           {% if line['duration_hour'] != 0 %}
                               {% if line['duration_hour'] == 1 %}
                                   <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in">
@@ -132,11 +147,14 @@
                                   <div class="col-{{ col }}  edt-cell edt-bg-bd edt-cell-in-top-mid">
                               {% endif %}
 
+
+                              {# todo here change the if on mysql #}
                               {% if line['course_status'] == 'C' %}
                                   <i class="err"><strong>ANNULÉ</strong>: <i class="ua-line">{{ line['raw_course_title'] }}</i></i>
                               {% else %}
                                   {{ line['raw_course_title'] }}
                               {% endif %}
+
 
                               {% if i == 1 %}
                                 {% set dailycountdebt1 = line['duration_hour'] %}
@@ -151,6 +169,7 @@
                               {% else %}
                                 {% set dailycountdebt6 = line['duration_hour'] %}
                               {% endif %}
+
                           {% else %}
                               {# Empty cell#}
                               {% if i == 1 %}

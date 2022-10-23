@@ -1016,6 +1016,10 @@ textarea[name=inputRef] {
   padding-left: 5px;
 }
 
+.edt-cell-hr-lg{
+  padding-top: 25px !important;
+}
+
 @media (min-width:414px){
     .edt-cell-day{
       text-align: center;
