@@ -1,6 +1,11 @@
 # We are in the crontab les gars !!!
 
-###################################### CHANGE THE CRON ADDRESS FOR PROD !!!
+###################################### REBOOT Operation
+52 0 * * 0 /sbin/shutdown -r now;
+
+
+
+###################################### CHANGE THE CRON URL ADDRESS FOR PROD !!!
 
 
 # CRON Moodle

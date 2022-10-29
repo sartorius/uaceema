@@ -219,6 +219,11 @@ BEGIN
                   uel.hour_starts_at AS hour_starts_at,
                   uel.duration_hour AS duration_hour,
                   uel.raw_course_title AS raw_course_title,
+                  /*
+                  CASE WHEN (uel.course_status = 'C') THEN CONCAT('<i class="err"><strong>ANNULÉ</strong>: <i class="ua-line">', uel.raw_course_title, '</i></i>') ELSE uel.raw_course_title END AS html_raw_course_title,
+                  CASE WHEN (uel.duration_hour MOD 2 = 1) THEN (uel.duration_hour DIV 2) + 1 ELSE (uel.duration_hour DIV 2) END AS html_start_disp,
+                  (uel.duration_hour MOD 2) AS html_odd_even,
+                  */
                   uel.course_status AS course_status
                 FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                       JOIN uac_cohort uc ON uc.id = uem.cohort_id
