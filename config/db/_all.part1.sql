@@ -309,6 +309,29 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
              JOIN mdl_role mr ON mr.id = uas.roleid
              LEFT JOIN mdl_files mf ON mu.picture = mf.id;
 */
+
+
+DROP VIEW IF EXISTS v_showuser;
+CREATE VIEW v_showuser AS
+SELECT
+		mu.id AS ID,
+          mu.username AS USERNAME,
+           uas.secret AS SECRET,
+           CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
+           mr.shortname AS ROLE_SHORTNAME,
+           UPPER(mu.firstname) AS FIRSTNAME,
+           UPPER(mu.lastname) AS LASTNAME,
+           uas.cohort_id AS COHORT_ID,
+           mu.email AS EMAIL,
+           mu.phone1 AS PHONE,
+           mu.address AS ADDRESS,
+           mu.city AS CITY,
+           mf.contextid AS PIC_CONTEXT_ID,
+           mu.picture AS PICTURE_ID,
+           mf.contenthash AS FILENAME
+  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+           JOIN mdl_role mr ON mr.id = uas.roleid
+           LEFT JOIN mdl_files mf ON mu.picture = mf.id;
 DROP TABLE IF EXISTS uac_load_scan;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_scan` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -687,6 +710,7 @@ BEGIN
                     mu.firstname AS FIRSTNAME,
                     mu.lastname AS LASTNAME,
                     url_intranet AS ULR_INTRANET,
+                    CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_ID_STU,
                     CONCAT(url_internet, '/profile/',CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_URL
               FROM uac_mail um JOIN mdl_user mu ON mu.id = um.user_id
                                 JOIN mdl_user_info_data muid1 ON muid1.userid = mu.id
@@ -930,6 +954,11 @@ BEGIN
                   uel.hour_starts_at AS hour_starts_at,
                   uel.duration_hour AS duration_hour,
                   uel.raw_course_title AS raw_course_title,
+                  /*
+                  CASE WHEN (uel.course_status = 'C') THEN CONCAT('<i class="err"><strong>ANNULÉ</strong>: <i class="ua-line">', uel.raw_course_title, '</i></i>') ELSE uel.raw_course_title END AS html_raw_course_title,
+                  CASE WHEN (uel.duration_hour MOD 2 = 1) THEN (uel.duration_hour DIV 2) + 1 ELSE (uel.duration_hour DIV 2) END AS html_start_disp,
+                  (uel.duration_hour MOD 2) AS html_odd_even,
+                  */
                   uel.course_status AS course_status
                 FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                       JOIN uac_cohort uc ON uc.id = uem.cohort_id
