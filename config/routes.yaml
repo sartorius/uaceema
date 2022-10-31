@@ -27,9 +27,9 @@ news:
 partner:
     path:       /partner
     controller: App\Controller\StaticController::partner
-tutoinscription:
-    path:       /tutoinscription
-    controller: App\Controller\TutorialController::tutoinscription
+letsgetitstarted:
+    path:       /letsgetitstarted
+    controller: App\Controller\TutorialController::letsgetitstarted
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login

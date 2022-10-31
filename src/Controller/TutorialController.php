@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 class TutorialController extends AbstractController
 {
 
-  public function tutoinscription(Environment $twig)
+  public function letsgetitstarted(Environment $twig)
   {
 
     $debug_session = "Pass variable to check";
@@ -24,7 +24,7 @@ class TutorialController extends AbstractController
     // This email works !!
     //MailManager::sendSimpleEmail();
 
-    $content = $twig->render('Tutorial/tutoinscription.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    $content = $twig->render('Tutorial/letsgetitstarted.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
