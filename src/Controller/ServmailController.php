@@ -63,7 +63,7 @@ class ServmailController extends AbstractController
 
                     $email = new \SendGrid\Mail\Mail();
                     $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
-                    $email->setSubject("Bienvenu à l'UACEEM !");
+                    $email->setSubject("Bienvenu à l'UACEEM " . $line['FIRSTNAME'] . " !");
 
                     $email->addTo("ratinahirana@gmail.com", $line['FIRSTNAME'] . " " . $line['LASTNAME']);
                     $email->addBcc('uaceem@gmail.com');
