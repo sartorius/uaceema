@@ -66,7 +66,7 @@ class ServmailController extends AbstractController
                     $email->setSubject("Bienvenu à l'UACEEM !");
 
                     $email->addTo("ratinahirana@gmail.com", $line['FIRSTNAME'] . " " . $line['LASTNAME']);
-                    $mail->addBcc('uaceem@gmail.com');
+                    $email->addBcc('uaceem@gmail.com');
 
                     $email->addContent("text/plain", "Bienvenu à l'université UACEEM !\nNous sommes très heureux de vous avoir parmi nous. Votre username est " . $username . ". Vous ne devez le partager avec personne."
                                         . " Le lien vers votre carte d'étudiant virtuelle : " . $cartezp . " \n"
