@@ -1,0 +1,4 @@
+# We are in the crontab les gars !!!
+
+###################################### REBOOT Operation
+52 0 * * 0 /sbin/shutdown -r now;

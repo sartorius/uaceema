@@ -70,7 +70,7 @@ class ServmailController extends AbstractController
 
                     $email->addContent("text/plain", "Bienvenu à l'université UACEEM !\nNous sommes très heureux de vous avoir parmi nous. Votre username est " . $username . ". Vous ne devez le partager avec personne."
                                         . " Le lien vers votre carte d'étudiant virtuelle : " . $cartezp . " \n"
-                                        . " Le lien vers votre dashboard étudiant : " . $dashboard . " \n";
+                                        . " Le lien vers votre dashboard étudiant : " . $dashboard . " \n");
                     $email->addContent(
                         "text/html", $twig->render('ModelMail/welcome_mail.html.twig', ['username' => $username, 'cartezp' => $cartezp, 'dashboard' => $dashboard ])
                     );
