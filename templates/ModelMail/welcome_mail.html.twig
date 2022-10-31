@@ -9,7 +9,7 @@
         <strong>Cet email est important, vous devez le lire avec attention.</strong>
 
         Nous sommes très heureux de vous avoir parmi nos étudiants.<br><br>
-        Votre username est {{ username }}<br><br>
+        Votre username est {{ username|capitalize }}<br><br>
         <strong>IMPORTANT : votre username est une information confidentielle. Il vous servira durant toute votre scolarité chez nous et il ne doit être partagé avec personne.</strong>
         <br><br>
         Voici votre carte d'étudiant virtuelle : <a href="{{ cartezp }}">Voir ma carte virtuelle</a><br>
@@ -17,7 +17,8 @@
         La carte d'étudiant virtuelle vous doit être scannée en entrée et en sortie de l'université. Elle permet d'indiquer votre présence.<br><br><br>
         Voici le lien vers votre dashboard <a href="{{ dashboard }}">Voir mon dashboard</a><br>
         Sinon vous pouvez copier coller ce lien dans l'URL de votre navigateur : {{ dashboard }}<br><br>
-        Le lien dashboard vous donne votre emploi du temps et le suivi de votre assiduité ainsi que d'autres informations utiles. Vous trouvez plus d'information sur le <a href="https://127.0.0.1:8000/letsgetitstarted">tutoriel</a>.<br><br><br>
+        Le lien dashboard vous donne votre emploi du temps et le suivi de votre assiduité ainsi que d'autres informations utiles.<br>
+        Vous trouvez plus d'information sur le <a href="https://www.uaceem.com/letsgetitstarted">tutoriel</a>.<br><br><br>
 
         Bonne rentrée !
 
