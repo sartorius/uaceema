@@ -100,6 +100,7 @@ BEGIN
                     mu.firstname AS FIRSTNAME,
                     mu.lastname AS LASTNAME,
                     url_intranet AS ULR_INTRANET,
+                    CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_ID_STU,
                     CONCAT(url_internet, '/profile/',CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_URL
               FROM uac_mail um JOIN mdl_user mu ON mu.id = um.user_id
                                 JOIN mdl_user_info_data muid1 ON muid1.userid = mu.id

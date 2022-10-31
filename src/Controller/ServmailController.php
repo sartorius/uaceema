@@ -29,38 +29,8 @@ class ServmailController extends AbstractController
       // The key is OK
 
 
-      /*
-
-      // This is the raw operation to send the email
-
-      $username = 'superus777';
-      $password = 'tongasoaaceem';
-      $cartezp = 'https://127.0.0.1:8000/cartezp/3739252247ANAESTU003';
-      $dashboard = 'https://127.0.0.1:8000/profile/3739252247ANAESTU003';
-
-      $email = new \SendGrid\Mail\Mail();
-      $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
-      $email->setSubject("Bienvenu à l'UACEEM !");
-      $email->addTo("ratinahirana@gmail.com", "Example User");
-      $email->addContent("text/plain", "Bienvenu à l'université UACEEM !\nNous sommes très heureux de vous avoir parmi nous. Votre username est " . $username . " et votre mot de passe: " . $password . "\n Connectez vous sur https://intranet.uaceem.com"
-                          . " Le lien vers votre carte d'étudiant virtuelle : " . $cartezp . " \n"
-                          . " Le lien vers votre dashboard étudiant : " . $dashboard . " \n"
-                          . " \n Plus de détails sur https://www.uaceem.com/tutoinscription");
-      $email->addContent(
-          "text/html", $twig->render('ModelMail/welcome_mail.html.twig', ['username' => $username, 'password' => $password, 'cartezp' => $cartezp, 'dashboard' => $dashboard ])
-      );
-      $sendgrid = new \SendGrid($_ENV['MAIL_SEND_GRID_API']);
-      try {
-          $response = $sendgrid->send($email);
-          print $response->statusCode() . "\n";
-          print_r($response->headers());
-          print $response->body() . "\n";
-      } catch (Exception $e) {
-          echo 'Caught exception: '. $e->getMessage() ."\n";
-      }
-
-      */
-
+      // This is the raw operation to send the welcome email
+      $current_url = $_ENV['MAIN_URL'];
 
       // Be carefull if you have array of array
       // This to retrieve the data for email
@@ -72,7 +42,7 @@ class ServmailController extends AbstractController
 
       $list_of_mail = '';
       foreach ($result as $row => $line) {
-        sleep(1);
+        sleep(5);
         // We don't use Mail Manager but Sendmail
         //MailManager::sendWelcomeEmail('ratinahirana@gmail.com', $line['FIRSTNAME'], $line['USERNAME'], $line['MATRICULE']);
 
@@ -82,12 +52,39 @@ class ServmailController extends AbstractController
               $line['LASTNAME'] . ' - ' .
               $line['MATRICULE'] . ' - ' .
               $line['PAGE_URL'] . ' - ' .
+              $line['PAGE_ID_STU'] . ' - ' .
               $line['PARENT_EMAIL'] . ' to ' .
               $line['EMAIL'] . PHP_EOL;
 
-      }
 
-      
+                    $username = $line['USERNAME'];
+                    $cartezp = $current_url . '/cartezp/' . $line['PAGE_ID_STU'];
+                    $dashboard = $current_url . '/profile/' . $line['PAGE_ID_STU'];
+
+                    $email = new \SendGrid\Mail\Mail();
+                    $email->setFrom("ne-pas-repondre@uaceem.com", "Information UACEEM");
+                    $email->setSubject("Bienvenu à l'UACEEM !");
+
+                    $email->addTo($line['EMAIL'], $line['FIRSTNAME'] . " " . $line['LASTNAME']);
+                    $mail->addBcc('uaceem@gmail.com');
+
+                    $email->addContent("text/plain", "Bienvenu à l'université UACEEM !\nNous sommes très heureux de vous avoir parmi nous. Votre username est " . $username . ". Vous ne devez le partager avec personne."
+                                        . " Le lien vers votre carte d'étudiant virtuelle : " . $cartezp . " \n"
+                                        . " Le lien vers votre dashboard étudiant : " . $dashboard . " \n";
+                    $email->addContent(
+                        "text/html", $twig->render('ModelMail/welcome_mail.html.twig', ['username' => $username, 'cartezp' => $cartezp, 'dashboard' => $dashboard ])
+                    );
+
+                    $sendgrid = new \SendGrid($_ENV['MAIL_SEND_GRID_API']);
+                    try {
+                        $response = $sendgrid->send($email);
+                        print $response->statusCode() . "\n";
+                        print_r($response->headers());
+                        print $response->body() . "\n";
+                    } catch (Exception $e) {
+                        echo 'Caught exception: '. $e->getMessage() ."\n";
+                    }
+      }
       $path = __DIR__;
 
       // Not called by operational
