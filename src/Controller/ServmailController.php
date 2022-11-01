@@ -30,7 +30,7 @@ class ServmailController extends AbstractController
 
 
       // This is the raw operation to send the welcome email
-      $current_url = $_ENV['MAIN_URL'];
+      $current_url = 'https://www.uaceem.com';
 
       // Be carefull if you have array of array
       // This to retrieve the data for email
