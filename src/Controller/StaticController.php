@@ -64,10 +64,11 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
-  public function mentionslegales(Environment $twig)
+  public function cgu(Environment $twig)
   {
+    $debug_session = 0;
 
-    $content = $twig->render('Static/mentionslegales.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    $content = $twig->render('Static/cgu.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
