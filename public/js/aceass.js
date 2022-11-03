@@ -63,7 +63,7 @@ function printCarteEtudiantPDF(){
   //$("#screen-load").hide();
 }
 function convertAZERTY(letter){
-    let value = ''
+    let value = '';
     switch (letter) {
       case 'Q':
         value = 'A';
