@@ -62,12 +62,100 @@ function printCarteEtudiantPDF(){
   //$("body").removeClass("loading");
   //$("#screen-load").hide();
 }
+function convertAZERTY(letter){
+    let value = ''
+    switch (letter) {
+      case 'Q':
+        value = 'A';
+        break;
+      case ',':
+        value = 'M';
+        break;
+      case '?':
+        value = 'M';
+        break;
+      case 'A':
+        value = 'Q';
+        break;
+      case 'Z':
+        value = 'W';
+        break;
+      case 'W':
+        value = 'Z';
+        break;
+      case 'q':
+        value = 'a';
+        break;
+      case 'a':
+        value = 'q';
+        break;
+      case 'z':
+        value = 'w';
+        break;
+      case 'w':
+        value = 'z';
+        break;
+      case '&':
+        value = '1';
+        break;
+      case 'é':
+        value = '2';
+        break;
+      case '"':
+        value = '3';
+        break;
+      case '\'':
+        value = '4';
+        break;
+      case '(':
+        value = '5';
+        break;
+      case '-':
+        value = '6';
+        break;
+      case '§':
+        value = '6';
+        break;
+      case 'è':
+        value = '7';
+        break;
+      case '_':
+        value = '8';
+        break;
+      case '!':
+        value = '8';
+        break;
+      case 'ç':
+        value = '9';
+        break;
+      case 'à':
+        value = '0';
+        break;
+      default:
+        value = letter;
+    }
+  return value;
+}
+function convertWordAZERTY(inputStr){
+  let retValue = '';
+  for(let i=0; i<inputStr.length; i++){
+    //console.log(i + ' /' + inputStr.substring(i, i+1));
+    retValue = retValue + convertAZERTY(inputStr.substring(i, i+1));
+  }
+  return retValue;
+}
 function verityContentScan(){
   // Do something
 
   if ($('#scan-ace').val().length == 10){
 
+    let originalRedInput = $('#scan-ace').val();
     let readInput = $('#scan-ace').val().toUpperCase().replace(/[^a-z0-9]/gi,'');
+    if(readInput.length < 10){
+      // We are on the wrong keyboard config as it must be 10
+      readInput = convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'');
+    }
+
     let scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';
     if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
       scanOrderToCheck = ' <i class="mgs-rd-o-out">&nbsp;Sortie&nbsp;</i>';
