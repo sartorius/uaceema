@@ -1219,12 +1219,12 @@ textarea[name=inputRef] {
 }
 
 .cell-recap-l{
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .cell-recap-l-num{
   font-family: 'Roboto Mono', monospace;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .recap-lat{
