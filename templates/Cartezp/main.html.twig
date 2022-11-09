@@ -53,7 +53,7 @@
     <hr>
     <div class="carte-profile">
       <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Seul(es) vous et vos parents doivent connaître les informations suivantes, elles ne doivent pas être partagées.</span><br><br>
-      <span class="icon-user-secret nav-icon-fa nav-text"></span> Username :<br> <i class="carte-profile-sec"><span id="id-username">{{ profile['USERNAME'] }}</span></i><br>
+      <span class="icon-user-secret nav-icon-fa nav-text"></span> Username :<br> <i class="carte-profile-sec"><span id="id-username">{{ profile['USERNAME']|upper }}</span></i><br>
       <span class="icon-key nav-icon-fa nav-text"></span> Clef secrète :<br> <i class="carte-profile-sec">{{ profile['PAGE'] }}</i>
     </div>
     <hr>

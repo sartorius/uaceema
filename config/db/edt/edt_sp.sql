@@ -270,7 +270,8 @@ BEGIN
                                                             AND uas.username = param_username
                  WHERE uem.monday_ofthew = inv_monday_date
                  AND uem.visibility = 'V'
-                 ORDER BY uel.hour_starts_at, uel.day_code ASC;
+                 -- We need another order because we do not display per line here
+                 ORDER BY uel.day_code, uel.hour_starts_at ASC;
 
 
          END IF;
