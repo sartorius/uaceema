@@ -151,6 +151,8 @@ function verityContentScan(){
 
     let originalRedInput = $('#scan-ace').val();
     let readInput = $('#scan-ace').val().toUpperCase().replace(/[^a-z0-9]/gi,'');
+    console.log("Diagnostic Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
+
     if(readInput.length < 10){
       // We are on the wrong keyboard config as it must be 10
       readInput = convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'');

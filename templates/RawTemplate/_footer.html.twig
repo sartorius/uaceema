@@ -41,7 +41,8 @@
 {% if app_environment == 'dev' %}
         <script src="{{ path('main') }}js/aceass.js"></script>
 {% else %}
-        <script src="{{ path('main') }}js/aceass.min.js"></script>
+        {# Dont forget to put the min here after debug #}
+        <script src="{{ path('main') }}js/aceass.js"></script>
 {% endif %}
 
 
