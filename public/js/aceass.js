@@ -66,22 +66,22 @@ function convertAZERTY(letter){
     let value = '';
     switch (letter) {
       case 'Q':
-        value = 'A';
+        value = 'a';
         break;
       case ',':
-        value = 'M';
+        value = 'm';
         break;
       case '?':
-        value = 'M';
+        value = 'm';
         break;
       case 'A':
-        value = 'Q';
+        value = 'q';
         break;
       case 'Z':
-        value = 'W';
+        value = 'w';
         break;
       case 'W':
-        value = 'Z';
+        value = 'z';
         break;
       case 'q':
         value = 'a';
@@ -150,12 +150,12 @@ function verityContentScan(){
   if ($('#scan-ace').val().length == 10){
 
     let originalRedInput = $('#scan-ace').val();
-    let readInput = $('#scan-ace').val().toUpperCase().replace(/[^a-z0-9]/gi,'');
-    console.log("Diagnostic Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
+    let readInput = $('#scan-ace').val().replace(/[^a-z0-9]/gi,'').toUpperCase();
+    console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
 
     if(readInput.length < 10){
       // We are on the wrong keyboard config as it must be 10
-      readInput = convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'');
+      readInput = convertWordAZERTY(originalRedInput).replace(/[^a-z0-9]/gi,'').toUpperCase();
     }
 
     let scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';

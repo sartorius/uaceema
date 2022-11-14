@@ -92,8 +92,8 @@ BEGIN
                         -- wait_b_compute ':20:00'
                         wait_b_compute), TIME) < inv_time;
 
-          -- We need to consider only involved cohort_id
-          SELECT cohort_id INTO inv_cohort_id FROM uac_edt_master WHERE id IN (SELECT master_id FROM uac_edt_line WHERE ID = inv_edt_id);
+          -- We need to consider only involved cohort_id and with visibility V
+          SELECT cohort_id INTO inv_cohort_id FROM uac_edt_master WHERE id IN (SELECT master_id FROM uac_edt_line WHERE ID = inv_edt_id AND VISIBILITY = 'V');
 
           -- Initialize the hour start at
           SELECT hour_starts_at INTO inv_edt_starts FROM uac_edt_line WHERE id = inv_edt_id;

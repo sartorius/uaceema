@@ -1,5 +1,6 @@
 USE ACEA;
 
+-- This is run automatically by cron
 
 DELETE FROM uac_working_flow WHERE create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
 DELETE FROM uac_load_edt WHERE create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
