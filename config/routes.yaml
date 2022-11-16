@@ -86,3 +86,6 @@ dashboardass:
 managerstu:
     path:       /managerstu
     controller: App\Controller\AdminSTUController::managerstu
+checklastscan:
+    path:       /checklastscan
+    controller: App\Controller\AdminSTUController::checklastscan

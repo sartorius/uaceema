@@ -1,0 +1,49 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_all_stu is defined and result_all_stu is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataLastScanToJsonArray =JSON.parse('{{ result_all_stu | json_encode | raw }}');
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataLastScanToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">chk-sca</div>
+
+
+
+<div class="row">
+  <div class="col-2">
+  </div>
+  <div class="col-8">
+    <h2>Derniers scans chargés</h2>
+    <div class="mgs-ace-note">Le status des scans sont calculés toutes les 20 minutes.</div>
+    <hr>
+  </div>
+  <div class="col-2">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-2">
+  </div>
+  <div class="col-8">
+    <div id="jsGridLastScanSTU">
+    </div>
+  </div>
+  <div class="col-2">
+  </div>
+</div>
+
+
+
+
+
+
+
+{% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}
