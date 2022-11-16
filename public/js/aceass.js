@@ -184,6 +184,7 @@ function verityContentScan(){
     }
     localStorage.removeItem(storeOrder);
     localStorage.setItem(storeOrder, JSON.stringify(dataTagToJsonArray));
+    //console.log('A - Here is my save: ' + JSON.stringify(dataTagToJsonArray));
 
     if((globalMaxRead - dataTagToJsonArray.length) < 10){
         $('#left-cloud').html('<i style="color:red;">' + (globalMaxRead - dataTagToJsonArray.length) + '<i>');

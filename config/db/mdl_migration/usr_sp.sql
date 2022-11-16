@@ -35,6 +35,9 @@ BEGIN
 
 
     UPDATE mdl_load_user SET last_update = NOW(), status = 'END' WHERE flow_id = inv_flow_id;
+
+    -- cohort id must be in uac_showuser;
+
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Ready for import' WHERE id = inv_flow_id;
 END$$

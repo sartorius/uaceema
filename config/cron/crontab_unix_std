@@ -14,17 +14,17 @@
 # CRON UAC
 */30 * * * * php /var/www/html/uaceema/config/server/mng_uac_showuser.php >> /home/ratinahirana/cron.mng_uac_showuser.php.log;
 # Should change once per day
-*/20 * * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
+*/10 2-18 * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
 15 */4 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
 # Twice day for assiduite
-* 13 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
-* 20 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
-* 22 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
+0 12 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
+0 18 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
+0 20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
 
 
 # Service
-*/5 * * * * /usr/bin/wget -O - http://127.0.0.1:8000/servmail/LSQKFJSQIDFILZAEOZIALZKEJRLHSK727 >> /home/ratinahirana/cron.service.mail.log;
+*/30 2-18 * * * /usr/bin/wget -O - http://127.0.0.1:8000/servmail/LSQKFJSQIDFILZAEOZIALZKEJRLHSK727 >> /home/ratinahirana/cron.service.mail.log;
 
 # Delete log
 0 4 * * * rm -f /home/ratinahirana/cron.php.log;

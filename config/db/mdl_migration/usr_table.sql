@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_load_user` (
   `core_status_matrimonial` CHAR(1) NULL,
   PRIMARY KEY (`id`));
 
+-- cohort id must be in uac_showuser;
 DROP TABLE IF EXISTS mdl_userx;
 CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_userx` (
   `id` BIGINT UNSIGNED NOT NULL,

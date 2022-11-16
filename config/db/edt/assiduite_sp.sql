@@ -68,7 +68,7 @@ BEGIN
                 CONCAT(
                   CASE WHEN (CHAR_LENGTH(ue.hour_starts_at + ue.duration_hour) = 1)
                     THEN CONCAT('0', ue.hour_starts_at + ue.duration_hour) ELSE ue.hour_starts_at + ue.duration_hour END,
-                    -- wait_b_compute ':20:00'
+                    -- wait_b_compute ':25:00'
                     wait_b_compute), TIME) < inv_time;
 
         -- ********************************************
@@ -302,7 +302,7 @@ BEGIN
     -- Delete all old dates/ uas SCAN will be purged in ASSIDUITE
     DELETE FROM uac_scan WHERE scan_date < prg_date;
     DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
-    DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date);
+    DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date) AND status IN ('PON');
 
     DELETE FROM uac_working_flow WHERE flow_code = 'ASSIDUI' AND create_date < prg_date;
 

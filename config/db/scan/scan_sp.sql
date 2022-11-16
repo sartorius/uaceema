@@ -47,6 +47,24 @@ BEGIN
     SET status = 'MIS'
     WHERE scan_date = inv_date AND status = 'NEW';
 
+            -- *****************************************************
+            -- START: Breakfix B01 16Nov
+            -- We do not know the reason but we know how to solve it
+            -- *****************************************************
+
+            UPDATE uac_load_scan SET status = 'NEW', scan_username = REPLACE(scan_username, 'q', 'a')
+              WHERE status = 'MIS'
+              AND scan_date = CURRENT_DATE
+              AND scan_time > (CURRENT_TIME - INTERVAL 1 HOUR);
+            UPDATE uac_load_scan SET status = 'NEW', scan_username = REPLACE(scan_username, 'z', 'w')
+              WHERE status = 'MIS'
+              AND scan_date = CURRENT_DATE
+              AND scan_time > (CURRENT_TIME - INTERVAL 1 HOUR);
+              
+            -- *****************************************************
+            -- END: Breakfix B01 16Nov
+            -- *****************************************************
+
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END' WHERE id = inv_flow_id;
 
