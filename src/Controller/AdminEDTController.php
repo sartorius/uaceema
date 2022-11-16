@@ -49,7 +49,7 @@ class AdminEDTController extends AbstractController
         $mis_query_pp = " SELECT REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'ABS' "
-											    . " GROUP BY mu.firstname, mu.lastname, ass.status ORDER BY COUNT(1) DESC LIMIT 30; ";
+											    . " GROUP BY mu.firstname, mu.lastname, ass.status ORDER BY COUNT(1) DESC LIMIT 100; ";
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
         $dbconnectioninst = DBConnectionManager::getInstance();
