@@ -62,7 +62,7 @@ class AdminEDTController extends AbstractController
                           . " ELSE 'SAMEDI' "
                           . " END AS JOUR, "
                           . " DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE, CONCAT(uel.hour_starts_at, 'h00') AS DEBUT_COURS, "
-                          . " CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(REPLACE(uel.raw_course_title, '\n', ' - '), ';', '') AS COURS_DETAILS "
+                          . " CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(REPLACE(uel.raw_course_title, '\n', ' - '), ',', '') AS COURS_DETAILS "
                           . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id JOIN uac_edt_line uel ON uel.id = ass.edt_id JOIN uac_showuser uas ON mu.username = uas.username "
                           . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT') ORDER BY uel.day DESC LIMIT 2000; ";
         $logger->debug("Show me query_report: " . $query_report);

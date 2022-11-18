@@ -756,7 +756,7 @@ function removeDiacritics(u){let E=[{base:"A",letters:/[\u0041\u24B6\uFF21\u00C0
 function generateGlobalAssCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
   let csvContent = "";
-  const SEP_ = ";"
+  const SEP_ = ","
 
 	let dataString = "Étudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Débute" + SEP_ + "Classe" + SEP_ + "Détail du cours" + SEP_ + "\n";
 	csvContent += dataString;
