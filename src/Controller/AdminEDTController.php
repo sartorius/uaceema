@@ -52,8 +52,8 @@ class AdminEDTController extends AbstractController
 											    . " GROUP BY mu.firstname, mu.lastname, ass.status ORDER BY COUNT(1) DESC LIMIT 100; ";
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
-        $query_report = " SELECT REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
-									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' ELSE 'à l\'heure' END AS STATUS, "
+        $query_report = " SELECT UPPER(mu.username) AS USERNAME, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
+									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS, "
                           . " CASE WHEN uel.day_code = 1 THEN 'LUNDI' "
                           . " WHEN uel.day_code = 2 THEN 'MARDI' "
                           . " WHEN uel.day_code = 3 THEN 'MERCREDI' "
@@ -64,7 +64,7 @@ class AdminEDTController extends AbstractController
                           . " DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE, CONCAT(uel.hour_starts_at, 'h00') AS DEBUT_COURS, "
                           . " CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(REPLACE(uel.raw_course_title, '\n', ' - '), ',', '') AS COURS_DETAILS "
                           . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id JOIN uac_edt_line uel ON uel.id = ass.edt_id JOIN uac_showuser uas ON mu.username = uas.username "
-                          . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT') ORDER BY uel.day DESC LIMIT 2000; ";
+                          . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT', 'QUI') ORDER BY uel.day DESC LIMIT 2000; ";
         $logger->debug("Show me query_report: " . $query_report);
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";

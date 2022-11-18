@@ -1228,11 +1228,16 @@ textarea[name=inputRef] {
 }
 
 .recap-lat{
-  color: #FF6800;
+  color: var(--main-gray-50);
   font-weight: 800;
 }
 .recap-mis{
   color: #E90000;
+  font-weight: 800;
+}
+
+.recap-qui{
+  color: #6600B1;
   font-weight: 800;
 }
 
