@@ -67,6 +67,11 @@ class AdminEDTController extends AbstractController
                           . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT', 'QUI') ORDER BY uel.day DESC LIMIT 2000; ";
         $logger->debug("Show me query_report: " . $query_report);
 
+
+        $query_course_report = " SELECT * FROM rep_course_dash; ";
+        $logger->debug("Show me query_course_report: " . $query_course_report);
+
+
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
 
@@ -85,6 +90,9 @@ class AdminEDTController extends AbstractController
         $result_report = $dbconnectioninst->query($query_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_report));
 
+        $result_course_report = $dbconnectioninst->query($query_course_report)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_course_report));
+
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_lastupd));
 
@@ -97,6 +105,7 @@ class AdminEDTController extends AbstractController
                                                                   'stats_mis'=>$result_stat_mis,
                                                                   'stats_mis_pp'=>$result_stat_mis_pp,
                                                                   'result_report'=>$result_report,
+                                                                  'result_course_report'=>$result_course_report,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);

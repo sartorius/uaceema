@@ -55,6 +55,20 @@
     </script>
 {% endif %}
 
+{% if result_course_report is defined and result_course_report is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayCourseReport =JSON.parse('{{ result_course_report | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayCourseReport = "";
+    </script>
+{% endif %}
+
 
 
 <div id="mg-graph-identifier">dash-ass</div>
@@ -70,7 +84,7 @@
     <div id="jsGrid">
     </div>
     <br>
-    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary">Rapport assiduité CSV</button>
+    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary">Assiduité CSV</button>&nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary">Cours dispensés CSV</button>
   </div>
   <div class="col-6">
     <h2>Absence par quartier</h2>
