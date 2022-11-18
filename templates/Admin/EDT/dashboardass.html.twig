@@ -41,8 +41,46 @@
     </script>
 {% endif %}
 
+{% if result_report is defined and result_report is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayReport =JSON.parse('{{ result_report | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayReport = "";
+    </script>
+{% endif %}
+
+
+
 <div id="mg-graph-identifier">dash-ass</div>
 
+<div class="mgs-note">Date de dernière mise à jour {{ result_lastupd[0]['LASTUPDATE'] }}</div>
+<br>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-4">
+    <h2>Top 100 des absences</h2>
+    <hr>
+    <div id="jsGrid">
+    </div>
+    <br>
+    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary">Rapport assuidité CSV</button>
+  </div>
+  <div class="col-6">
+    <h2>Absence par quartier</h2>
+    <hr>
+    <canvas id="statBarMis"></canvas>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<br><br>
 <div class="row">
   <div class="col-1">
   </div>
@@ -52,32 +90,13 @@
     <canvas id="statPieLate"></canvas>
   </div>
   <div class="col-5">
-    <h2>Nombre retard</h2>
+    <h2>Retard par quartier</h2>
     <hr>
     <canvas id="statBarLate"></canvas>
   </div>
   <div class="col-1">
   </div>
 </div>
-<br><br>
-<div class="row">
-  <div class="col-1">
-  </div>
-  <div class="col-6">
-    <h2>Absence par quartier</h2>
-    <hr>
-    <canvas id="statBarMis"></canvas>
-  </div>
-  <div class="col-4">
-    <h2>Top 100 des absences</h2>
-    <hr>
-    <div id="jsGrid">
-    </div>
-  </div>
-  <div class="col-1">
-  </div>
-</div>
-
 
 
 {% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}

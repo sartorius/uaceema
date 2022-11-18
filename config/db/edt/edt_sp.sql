@@ -76,6 +76,13 @@ BEGIN
               FROM uac_edt_master
               WHERE monday_ofthew = param_monday_date
               AND cohort_id = inv_cohort_id;
+
+      -- **********************************************************
+      -- Delete the assiduite
+      -- **********************************************************
+      DELETE FROM uac_assiduite WHERE edt_id IN (
+        SELECT id FROM uac_edt_line WHERE master_id = inv_old_master_id
+      );
       DELETE FROM uac_edt_line WHERE master_id = inv_old_master_id;
       DELETE FROM uac_edt_master WHERE id = inv_old_master_id;
 

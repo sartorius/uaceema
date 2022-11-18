@@ -18,9 +18,8 @@
 15 */4 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
 # Twice day for assiduite
-0 12 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
-0 18 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
-0 20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
+0 10,12,14,18 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
+0 12,15,20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
 
 
 # Service

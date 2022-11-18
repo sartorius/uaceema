@@ -237,6 +237,10 @@ BEGIN
        ELSE
             -- statements ;
             -- Do the work
+            -- *********************************************
+            -- B01: There is an issue here !
+            -- Seems that the EDT have been deleted already !!!
+            -- *********************************************
             DELETE FROM uac_assiduite WHERE edt_id IN (
               SELECT id FROM uac_edt_line WHERE day = param
             );
