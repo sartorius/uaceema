@@ -46,10 +46,10 @@ class AdminEDTController extends AbstractController
 											    . " GROUP BY mu.city, ass.status; ";
         $logger->debug("Show me mis_query: " . $mis_query);
 
-        $mis_query_pp = " SELECT CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
+        $mis_query_pp = " SELECT vcc.short_classe AS CLASSE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id "
                           . " WHERE ass.status = 'ABS' "
-											    . " GROUP BY mu.firstname, mu.lastname, ass.status, vcc.niveau, vcc.mention, vcc.parcours, vcc.groupe ORDER BY COUNT(1) DESC LIMIT 100; ";
+											    . " GROUP BY mu.firstname, mu.lastname, ass.status, vcc.short_classe ORDER BY COUNT(1) DESC LIMIT 100; ";
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
         $query_report = " SELECT UPPER(mu.username) AS USERNAME, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
