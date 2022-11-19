@@ -1,0 +1,105 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Rappel sur l'assiduité</h1>
+    <div class="mgs-ace-note">
+          {% set arti = 0 %}
+          <br><br>
+          <h2>Concept de discipline générale</h2>
+          La présence aux activités organisées dans le cadre de l’enseignement, de quelque nature qu’elles
+          soient, y compris pour les cours magistraux, obligatoires ou optionnels (que l'étudiant s'est instrit est obligatoire. Le manque d’assiduité ou de
+          ponctualité est pris en compte dans l’évaluation. À cet égard, il appartient à chaque étudiant de prendre ses dispositions pour assister à ces différentes activités et, en cas d’absence ou retard sans motif
+          légitime, son évaluation de fin d'année pourra être impactée. Les absences répétées sont portées à la connaissance de la direction.
+          Un étudiant arrivant en retard à un enseignement pourra se voir refuser l’accès à ce dernier par l’enseignant.e.
+          Tout étudiant exclu d’un enseignement, pour retard ou comportement inapproprié (tel que sous l’influence de l’alcool, de stupéfiants et autres), est considéré comme absent et s’expose aux pénalités prévues pour la matière concernée.
+          <br><br><h2>Description des status</h2>
+          <table>
+            <tr style="border-bottom:0.5px solid">
+              <th style="min-width:100px;"><strong>Status</strong></th>
+              <th><strong>Description</strong></th>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>À l'heure</td>
+              <td>L'étudiant s'est présenté à l'heure pour le cours. C'est à dire quand le scan d'entrée indique une heure avant l'heure du cours. Si le cours commence à 12h00, tous les scans d'entrée avant 12h00 (11h59, 11h58, 9h37) seront considéré comme à l'heure.</td>
+            </tr style="border-bottom:0.5px solid">
+            <tr style="border-bottom:0.5px solid">
+              <td>Retard</td>
+              <td>Tout étudiant qui entre à l'Université entre l'heure de début et 15 minutes est considéré comme en retard.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Absent</td>
+              <td>Tout étudiant qui n'est pas entré à l'Université avant les 15 minutes de retard ou qui serait ressorti avant est considéré comme absent.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Quitté</td>
+              <td>Tout étudiant qui a quitté l'Universté avant la fin du cours est considéré comme quittant le cours.</td>
+            </tr>
+          </table><br>
+          <strong>Note importante</strong> : les absences se comptent en cours. Si l'étudiant ne se présente pas toute une journée et que la journée compte 6 cours, il aura 6 absences.
+          <hr>
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          En phase normale d'exploitation, les étudiants sont tenus de présenter leurs scans code barre 1D pour toute entrée et sortie de l'enceinte de l'Université.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Ce sont les traces de scan sur via le procédé de digitalisation qui serviront à établir l'assiduité de l'étudiant et qui serviront à son appréciation.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Si l'étudiant ne dispose pas de son code barre 1D, il est de sa responsabilité de l'imprimer ou d'obtenir une version photo sur son téléphone portable.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          En cas de manquement, voici les grandes lignes qui peuvent être appliquées. La direction se réserve le droit d'appliquer ces mesures ou d'en imposer d'autres plus exemplaires.
+          <br><br><h2>Manquement à l'assiduité</h2>
+          <table>
+            <tr style="border-bottom:0.5px solid">
+              <th style="min-width:180px;"><strong>Non-justifiées par an</strong></th>
+              <th><strong>Mesures</strong></th>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>6 Absences</td>
+              <td>Un avertissement verbal est fait à l'étudiant.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>8 Absences</td>
+              <td>Un avertissement écrit et traçable est fait à l'étudiant.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>12 Absences</td>
+              <td>Un avertissement verbal ou écrit est addressé aux parents/représentant légal de l'étudiant avec un résumé des absences et un rappel des sanctions encourues. L'assiduité aura un impact sur les lettres de recommandation pour stage et futur emploi.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>15 Absences</td>
+              <td>Les parents ou le représentant légal est convoqué à l'Université pour discuter de la situation.</td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>16 Absences</td>
+              <td>La validation de l'année scolaire ou/et le dîplome est soumis à l'appréciation de la direction.</td>
+            </tr>
+          </table>
+
+          <br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Pour justifier une absence, l'étudiant peut apporter des évidences (ordonnance médicale, faire-part, invitation ou autres), leur appréciation se fera par la direction qui pourra décider de son annulation.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Les données des usagers ne sont utilisées que pour une gestion administrative (assiduité, notes, comptabilité etc.) et ne sont pas partagées à aucun partenaire commercial.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Malgré toute l'attention que nous pourrions avoir, il peut exister des informations erronées. Il est de la responsibilité des usagers de corriger ou de faire corriger les informations qui sont erronées ou qui ne sont plus à jours les concernants.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Les données liées aux usagers ne sont conservées que pour la durée de leur scolarité hormis les informations liées aux diplômes. Tout usager qui quitte l'UACEEM aura ses données effacés.
+          <br><br>
+          <h2>#{% set arti = arti + 1 %}{{ arti }}</h2>
+          Sur demande, chaque usager peut obtenir l'intégralité de ses données sur l'assiduité.
+          <br><br>
+    </div>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

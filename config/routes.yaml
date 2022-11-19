@@ -15,6 +15,9 @@ universite:
 cgu:
     path:       /cgu
     controller: App\Controller\StaticController::cgu
+reglassiduite:
+    path:       /reglassiduite
+    controller: App\Controller\StaticController::reglassiduite
 contact:
     path:       /contact
     controller: App\Controller\StaticController::contact

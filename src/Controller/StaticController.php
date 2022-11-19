@@ -72,6 +72,16 @@ class StaticController extends AbstractController
 
     return new Response($content);
   }
+  
+  public function reglassiduite(Environment $twig)
+  {
+    $debug_session = 0;
+
+    $content = $twig->render('Static/reglassiduite.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+
   public function contact(Environment $twig)
   {
     $content = $twig->render('Static/contact.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
