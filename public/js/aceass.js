@@ -481,7 +481,7 @@ function loadAllEDTGrid(){
           title: 'S#',
           type: "text",
           align: "center",
-          width: 8,
+          width: 15,
           css: "cell-recap-l",
           headercss: "cell-recap-hd"
         },
@@ -495,9 +495,9 @@ function loadAllEDTGrid(){
         },
         //Default width is auto
         { name: "cohort_id",
-          title: "#Classe",
+          title: "Classe",
           type: "text",
-          width: 10,
+          width: 15,
           headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
