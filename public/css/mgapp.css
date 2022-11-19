@@ -1268,3 +1268,11 @@ textarea[name=inputRef] {
 #read-zip-val{
   display: none;
 }
+
+/*********************************/
+/****** Text Reglement ******/
+
+.block-reg{
+  margin-left: 15px;
+  margin-right: 15px;
+}
