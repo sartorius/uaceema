@@ -790,10 +790,10 @@ function generateCourseReportCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Status du cours" + SEP_ + "Détail du cours" + SEP_ + "Débute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nombre d'étudiant classe" + SEP_ + "\n";
+	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Détail du cours" + SEP_ + "Débute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nombre d'étudiant classe" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayCourseReport.length; i++){
-		dataString = dataTagToJsonArrayCourseReport[i].CLASSE + SEP_ + dataTagToJsonArrayCourseReport[i].JOUR + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayCourseReport[i].COURSE_STATUS + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DETAILS + SEP_ + dataTagToJsonArrayCourseReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_ABS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_QUI + SEP_ + dataTagToJsonArrayCourseReport[i].NUMBER_STUD + SEP_ ;
+		dataString = dataTagToJsonArrayCourseReport[i].CLASSE + SEP_ + dataTagToJsonArrayCourseReport[i].JOUR + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayCourseReport[i].MOIS + SEP_ +  dataTagToJsonArrayCourseReport[i].COURSE_STATUS + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DETAILS + SEP_ + dataTagToJsonArrayCourseReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_ABS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_QUI + SEP_ + dataTagToJsonArrayCourseReport[i].NUMBER_STUD + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArrayCourseReport.length ? dataString+ "\n" : dataString;
 	}
