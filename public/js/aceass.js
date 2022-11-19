@@ -709,20 +709,27 @@ function runStat(){
   });
 
   responsivefieldsPP = [
+      { name: "CLASSE",
+        title: 'Classe',
+        type: "text",
+        align: "center",
+        width: 65,
+        css: "cell-recap",
+        headercss: "cell-recap-hd"
+      },
       { name: "NAME",
         title: 'Étudiant',
         type: "text",
         align: "center",
-        width: 25,
         css: "cell-recap",
         headercss: "cell-recap-hd"
       },
       //Default width is auto
       { name: "VAL",
-        title: "Nombre absence",
+        title: "Absence",
         type: "text",
         align: "center",
-        width: 33,
+        width: 25,
         headercss: "cell-recap-hd",
         css: "cell-recap"
       }
