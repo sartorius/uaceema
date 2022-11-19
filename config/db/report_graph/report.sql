@@ -28,7 +28,8 @@ SELECT CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) 
                       END AS MOIS,
     CONCAT(uel.hour_starts_at, 'h00') AS DEBUT_COURS,
     CASE WHEN t_abs.abs_cnt IS NULL THEN 0 ELSE t_abs.abs_cnt END AS NBR_ABS,
-    CASE WHEN t_qui.qui_cnt IS NULL THEN 0 ELSE t_qui.qui_cnt END AS NBR_QUI, t_cohort_count.cohort_count AS NUMBER_STUD
+    CASE WHEN t_qui.qui_cnt IS NULL THEN 0 ELSE t_qui.qui_cnt END AS NBR_QUI, t_cohort_count.cohort_count AS NUMBER_STUD,
+    CASE WHEN uao.id IS NULL THEN 'NON' ELSE 'OUI' END AS OFF_DAY
 	FROM (
 		SELECT edt_id AS abs_edt_id, count(1) AS abs_cnt
 		FROM uac_assiduite
@@ -49,5 +50,6 @@ SELECT CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) 
 	FROM v_showuser
 	GROUP BY cohort_id
 	) t_cohort_count ON t_cohort_count.vshcohort_id = uem.cohort_id
+	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
 	WHERE uel.duration_hour > 0
 	ORDER BY uel.day, uel.hour_starts_at DESC;

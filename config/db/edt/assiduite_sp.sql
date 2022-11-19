@@ -328,7 +328,8 @@ BEGIN
 
     -- Delete all old dates/ uas SCAN will be purged in ASSIDUITE
     DELETE FROM uac_scan WHERE scan_date < prg_date;
-    DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
+    -- We need to keep the off days for traceability purpose
+    -- DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
     DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date) AND status IN ('PON');
 
     DELETE FROM uac_working_flow WHERE flow_code = 'ASSIDUI' AND create_date < prg_date;
