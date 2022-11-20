@@ -57,7 +57,7 @@ SELECT CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) 
 
 DROP VIEW IF EXISTS rep_no_exit;
 CREATE VIEW rep_no_exit AS
-SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, vcc.short_classe AS CLASSE, DATE_FORMAT(max_scan.scan_date, "%d/%m") AS INVDATE,
+SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, vcc.short_classe AS CLASSE, DATE_FORMAT(max_scan.scan_date, "%d/%m") AS INVDATE, max_scan.scan_date AS TECH_DATE,
 	CASE
                       WHEN DAYOFWEEK(max_scan.scan_date) = 1 THEN "Lundi"
                       WHEN DAYOFWEEK(max_scan.scan_date) = 2 THEN "Mardi"
@@ -65,7 +65,7 @@ SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS N
                       WHEN DAYOFWEEK(max_scan.scan_date) = 4 THEN "Jeudi"
                       WHEN DAYOFWEEK(max_scan.scan_date) = 5 THEN "Vendredi"
                       ELSE "Samedi"
-                      END AS JOUR FROM (
+                      END AS JOUR  FROM (
           -- List of people who entered but never exit
           SELECT mu.id AS mu_id, usa.scan_date AS nooutscan_date, max(usa.scan_time) AS scan_in from uac_scan usa
           JOIN mdl_user mu on usa.user_id = mu.id

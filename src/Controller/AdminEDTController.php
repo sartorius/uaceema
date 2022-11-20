@@ -74,7 +74,7 @@ class AdminEDTController extends AbstractController
         $query_noexit_report = " SELECT * FROM rep_no_exit; ";
         $logger->debug("Show me query_noexit_report: " . $query_noexit_report);
 
-        $query_noexit_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_exit GROUP BY CLASSE; ";
+        $query_noexit_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_exit WHERE TECH_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) GROUP BY CLASSE; ";
         $logger->debug("Show me query_noexit_graph: " . $query_noexit_graph);
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
