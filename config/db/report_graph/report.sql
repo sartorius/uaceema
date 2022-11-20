@@ -53,3 +53,32 @@ SELECT CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) 
 	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
 	WHERE uel.duration_hour > 0
 	ORDER BY uel.day, uel.hour_starts_at DESC;
+
+
+DROP VIEW IF EXISTS rep_no_exit;
+CREATE VIEW rep_no_exit AS
+SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, vcc.short_classe AS CLASSE, DATE_FORMAT(max_scan.scan_date, "%d/%m") AS INVDATE,
+	CASE
+                      WHEN DAYOFWEEK(max_scan.scan_date) = 1 THEN "Lundi"
+                      WHEN DAYOFWEEK(max_scan.scan_date) = 2 THEN "Mardi"
+                      WHEN DAYOFWEEK(max_scan.scan_date) = 3 THEN "Mercredi"
+                      WHEN DAYOFWEEK(max_scan.scan_date) = 4 THEN "Jeudi"
+                      WHEN DAYOFWEEK(max_scan.scan_date) = 5 THEN "Vendredi"
+                      ELSE "Samedi"
+                      END AS JOUR FROM (
+          -- List of people who entered but never exit
+          SELECT mu.id AS mu_id, usa.scan_date AS nooutscan_date, max(usa.scan_time) AS scan_in from uac_scan usa
+          JOIN mdl_user mu on usa.user_id = mu.id
+          WHERE 1=1
+          GROUP BY mu.id, usa.scan_date
+          ) t_student_noout JOIN uac_scan max_scan
+                                  ON max_scan.user_id = t_student_noout.mu_id
+                			   	  			AND max_scan.scan_time = scan_in
+                			   	  			AND max_scan.scan_date = t_student_noout.nooutscan_date
+                			   	  			AND max_scan.in_out = 'I'
+          			   	  			JOIN uac_assiduite uaa
+                                    ON uaa.user_id = max_scan.user_id
+          			   	  				     AND max_scan.id = uaa.scan_id
+          			   	  				     AND uaa.status IN ('PON', 'LAT')
+          			   	  		JOIN v_showuser vsh ON vsh.id = max_scan.user_id
+          			   	  		JOIN v_class_cohort vcc ON vcc.id = vsh.cohort_id;

@@ -71,6 +71,11 @@ class AdminEDTController extends AbstractController
         $query_course_report = " SELECT * FROM rep_course_dash; ";
         $logger->debug("Show me query_course_report: " . $query_course_report);
 
+        $query_noexit_report = " SELECT * FROM rep_no_exit; ";
+        $logger->debug("Show me query_noexit_report: " . $query_noexit_report);
+
+        $query_noexit_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_exit GROUP BY CLASSE; ";
+        $logger->debug("Show me query_noexit_graph: " . $query_noexit_graph);
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
@@ -93,6 +98,13 @@ class AdminEDTController extends AbstractController
         $result_course_report = $dbconnectioninst->query($query_course_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_course_report));
 
+
+        $result_noexit_report = $dbconnectioninst->query($query_noexit_report)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_noexit_report));
+
+        $result_noexit_graph = $dbconnectioninst->query($query_noexit_graph)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_noexit_graph));
+
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_lastupd));
 
@@ -106,6 +118,8 @@ class AdminEDTController extends AbstractController
                                                                   'stats_mis_pp'=>$result_stat_mis_pp,
                                                                   'result_report'=>$result_report,
                                                                   'result_course_report'=>$result_course_report,
+                                                                  'result_noexit_report'=>$result_noexit_report,
+                                                                  'result_noexit_graph'=>$result_noexit_graph,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);

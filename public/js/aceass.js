@@ -643,6 +643,14 @@ function runStat(){
   }
 
   // Stat of status population
+  let listOfLabelNoExit = new Array();
+  let listOfDataNoExit = new Array();
+  for(i=0; i<dataTagToJsonArrayNoExitGraph.length; i++){
+    listOfLabelNoExit.push(dataTagToJsonArrayNoExitGraph[i].CLASSE);
+    listOfDataNoExit.push(dataTagToJsonArrayNoExitGraph[i].CPT);
+  }
+
+  // Stat of status population
   let listOfLabelStatMis = new Array();
   let listOfDataStatMis = new Array();
   for(i=0; i<dataTagToJsonArrayMis.length; i++){
@@ -670,17 +678,17 @@ function runStat(){
       }
   });
 
-  var ctxClientBar = document.getElementById('statBarLate');
+  var ctxClientBar = document.getElementById('statBarNoExit');
   new Chart(ctxClientBar, {
       type: 'bar',
       data: {
-        labels: listOfLabelStat,
+        labels: listOfLabelNoExit,
         datasets: [
           {
-            label: "Retard par quartier",
+            label: "Sortie sans scan",
             backgroundColor: backgroundColorRef,
             borderColor: borderColorRef,
-            data: listOfDataStat,
+            data: listOfDataNoExit,
             borderWidth: 0.4
           }
         ]
@@ -821,6 +829,34 @@ function generateCourseReportCSV(){
 }
 
 
+
+function generateNoExitReportCSV(){
+	const csvContentType = "data:text/csv;charset=utf-8,";
+  let csvContent = "";
+  const SEP_ = ","
+
+	let dataString = "Classe" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "\n";
+	csvContent += dataString;
+	for(var i=0; i<dataTagToJsonArrayNoExitReport.length; i++){
+		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ ;
+    // easy close here
+    csvContent += i < dataTagToJsonArrayNoExitReport.length ? dataString+ "\n" : dataString;
+	}
+
+  //console.log('Click on csv');
+	let encodedUri = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
+
+	let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'RapportEtudiantSansScanSortie.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -944,6 +980,9 @@ $(document).ready(function() {
     });
     $( "#uac-course-glb-csv" ).click(function() {
       generateCourseReportCSV();
+    });
+    $( "#uac-noexit-csv" ).click(function() {
+      generateNoExitReportCSV();
     });
 
   }

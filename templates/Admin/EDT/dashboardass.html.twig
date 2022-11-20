@@ -69,6 +69,34 @@
     </script>
 {% endif %}
 
+{% if result_noexit_report is defined and result_noexit_report is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayNoExitReport =JSON.parse('{{ result_noexit_report | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayNoExitReport = "";
+    </script>
+{% endif %}
+
+{% if result_noexit_graph is defined and result_noexit_graph is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayNoExitGraph =JSON.parse('{{ result_noexit_graph | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayNoExitGraph = "";
+    </script>
+{% endif %}
+
 
 
 <div id="mg-graph-identifier">dash-ass</div>
@@ -84,7 +112,9 @@
     <div id="jsGrid">
     </div>
     <br>
-    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary">Assiduité CSV</button>&nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary">Cours dispensés CSV</button>
+    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
+    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Sans scan sortie</button>
+    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Cours dispensés</button>
   </div>
   <div class="col-6">
     <h2>Absence par quartier</h2>
@@ -104,9 +134,11 @@
     <canvas id="statPieLate"></canvas>
   </div>
   <div class="col-5">
-    <h2>Retard par quartier</h2>
+    <h2>Sortie sans scan</h2>
     <hr>
-    <canvas id="statBarLate"></canvas>
+    <canvas id="statBarNoExit"></canvas>
+    <br><div class="mgs-note"><strong>Note</strong> les sorties sans scan sont des étudiants qui sont entrés dans l'enceinte de l'université mais ne se sont pas scanné lors de leur sortie.
+    Normalement ce graphique doit être vide vu que les étudiants doivent se scanner en sortie. Si le graphe n'est pas vide, il faut investiguer. Vous pouvez voir le détails dans le rapport "Scan sans sortie."</div>
   </div>
   <div class="col-1">
   </div>
