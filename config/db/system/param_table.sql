@@ -33,6 +33,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('RESASSI', 'Reset Assiduite for the day', NULL, NULL);
 
 
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MANLODU', 'Manual load MDL user', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MANMDLU', 'Manual creation MDL user', NULL, NULL);
 
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('ASSLATE', 'Late maximum consideration', ':15:00', NULL, NULL);
@@ -213,7 +214,7 @@ select * from uac_cohort uc
 
 DROP VIEW IF EXISTS v_class_cohort;
 CREATE VIEW v_class_cohort AS
-SELECT 	uc.id AS id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 5)) AS short_classe
+SELECT 	uc.id AS id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 10)) AS short_classe
                         FROM uac_cohort uc
               				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
               					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
