@@ -97,12 +97,37 @@
     </script>
 {% endif %}
 
+{% if result_noentry_report is defined and result_noentry_report is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayNoEntryGraph =JSON.parse('{{ result_noentry_report | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayNoEntryGraph = "";
+    </script>
+{% endif %}
+
 
 
 <div id="mg-graph-identifier">dash-ass</div>
 
 <div class="mgs-note">Date de dernière mise à jour {{ result_lastupd[0]['LASTUPDATE'] }}.<br> Les assiduités sont calculés à 10h/12h/14h/18h (TU+0) pour tous les cours terminés 30min avant.</div>
 <br>
+<div class="row report-banner">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
+    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Anomalie E/S</button>
+    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Cours dispensés</button>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
 <div class="row">
   <div class="col-1">
   </div>
@@ -111,10 +136,6 @@
     <hr>
     <div id="jsGrid">
     </div>
-    <br>
-    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
-    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Sortie sans scan</button>
-    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Cours dispensés</button>
   </div>
   <div class="col-6">
     <h2>Absence par quartier</h2>
@@ -134,11 +155,10 @@
     <canvas id="statPieLate"></canvas>
   </div>
   <div class="col-5">
-    <h2>Sortie sans scan des 7 derniers jours</h2>
+    <h2>Anomalie scan des 7 derniers jours</h2>
     <hr>
     <canvas id="statBarNoExit"></canvas>
-    <br><div class="mgs-note"><strong>Note</strong> les sorties sans scan sont des étudiants qui sont entrés dans l'enceinte de l'université mais ne se sont pas scanné lors de leur sortie.
-    Normalement ce graphique doit être vide vu que les étudiants doivent se scanner en sortie. Si le graphe n'est pas vide, il faut investiguer. Vous pouvez voir le détails dans le rapport "Scan sans sortie."</div>
+    <br><div class="mgs-note"><strong>Note</strong> Ce graphique montre le nombre d'anomalie par classe ces 7 derniers jours. Une anomalie est quand un premier scan de la journée est une sortie ou un dernier scan de la journée est une entrée. Ça indique que soit l'étudiant n'est pas passé par le scan en entrant ou en sortant, soit il a été scanné dans le mauvais sens.</div>
   </div>
   <div class="col-1">
   </div>

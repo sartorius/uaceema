@@ -613,7 +613,14 @@ function runStat(){
       '#ccff99',
       '#ffffe6',
       '#ffffb3',
-      '#ffff99'
+      '#ffff99',
+      '#F4E6FF',
+      '#FFF4E6',
+      '#FFFCC5',
+      '#D2FFD2',
+      '#e6e6ff',
+      '#f2ffe6',
+      '#ccccff'
   ];
   var borderColorRef = [
       '#000099',
@@ -631,7 +638,14 @@ function runStat(){
       '#264d00',
       '#808000',
       '#4d4d00',
-      '#333300'
+      '#333300',
+      '#7F6F83',
+      '#837A6F',
+      '#797865',
+      '#4D6F4E',
+      '#000099',
+      '#4d9900',
+      '#000080'
   ];
 
   // Stat of status population
@@ -643,11 +657,20 @@ function runStat(){
   }
 
   // Stat of status population
-  let listOfLabelNoExit = new Array();
+  let listOfLabelAnomaly = new Array();
   let listOfDataNoExit = new Array();
   for(i=0; i<dataTagToJsonArrayNoExitGraph.length; i++){
-    listOfLabelNoExit.push(dataTagToJsonArrayNoExitGraph[i].CLASSE);
+    listOfLabelAnomaly.push(dataTagToJsonArrayNoExitGraph[i].CLASSE);
     listOfDataNoExit.push(dataTagToJsonArrayNoExitGraph[i].CPT);
+  }
+
+  // Stat of status population
+  let listOfDataNoEntry = new Array();
+  for(i=0; i<dataTagToJsonArrayNoEntryGraph.length; i++){
+    if(!listOfLabelAnomaly.includes(dataTagToJsonArrayNoEntryGraph[i].CLASSE)){
+      listOfLabelAnomaly.push(dataTagToJsonArrayNoEntryGraph[i].CLASSE);
+    }
+    listOfDataNoEntry.push(dataTagToJsonArrayNoEntryGraph[i].CPT);
   }
 
   // Stat of status population
@@ -659,7 +682,7 @@ function runStat(){
   }
 
 
-  var ctxClient = document.getElementById('statPieLate');
+  let ctxClient = document.getElementById('statPieLate');
   new Chart(ctxClient, {
       type: 'doughnut',
       data: {
@@ -678,26 +701,58 @@ function runStat(){
       }
   });
 
-  var ctxClientBar = document.getElementById('statBarNoExit');
-  new Chart(ctxClientBar, {
-      type: 'bar',
-      data: {
-        labels: listOfLabelNoExit,
-        datasets: [
-          {
-            label: "Sortie sans scan",
-            backgroundColor: backgroundColorRef,
-            borderColor: borderColorRef,
-            data: listOfDataNoExit,
-            borderWidth: 0.4
-          }
-        ]
+  let ctxClientBarAnomaly = document.getElementById('statBarNoExit');
+
+  const dataAnomaly = {
+    labels: listOfLabelAnomaly,
+    datasets: [
+      {
+        label: 'Sortie manquant',
+        data: listOfDataNoExit,
+        borderColor: '#9E93A4',
+        backgroundColor: '#F2DCFF',
+        order: 1,
+        borderWidth: 0.3
       },
+      {
+        label: 'Entrée manquant',
+        data: listOfDataNoEntry,
+        borderColor: '#A2A493',
+        backgroundColor: '#EFFFDC',
+        order: 2,
+        borderWidth: 0.3
+      }
+    ]
+  };
+
+  new Chart(ctxClientBarAnomaly, {
+      type: 'bar',
+      data: dataAnomaly,
       options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Anomalies'
+              }
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+                        // OR //
+                        beginAtZero: true   // minimum value will be 0.
+                    }
+                }]
+            }
       }
   });
 
-  var ctxClientBarMis = document.getElementById('statBarMis');
+  let ctxClientBarMis = document.getElementById('statBarMis');
   new Chart(ctxClientBarMis, {
       type: 'bar',
       data: {
@@ -835,10 +890,10 @@ function generateNoExitReportCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Classe" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "\n";
+	let dataString = "Classe" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "Raison" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayNoExitReport.length; i++){
-		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ ;
+		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ +  dataTagToJsonArrayNoExitReport[i].REASON + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArrayNoExitReport.length ? dataString+ "\n" : dataString;
 	}
@@ -852,7 +907,7 @@ function generateNoExitReportCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportEtudiantSansScanSortie.csv';
+  link.download = 'RapportAnomalieScanEntreeSortie.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

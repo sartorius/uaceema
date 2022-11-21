@@ -71,11 +71,14 @@ class AdminEDTController extends AbstractController
         $query_course_report = " SELECT * FROM rep_course_dash; ";
         $logger->debug("Show me query_course_report: " . $query_course_report);
 
-        $query_noexit_report = " SELECT * FROM rep_no_exit; ";
+        $query_noexit_report = " SELECT * FROM rep_no_exit UNION SELECT * FROM rep_no_entry; ";
         $logger->debug("Show me query_noexit_report: " . $query_noexit_report);
 
         $query_noexit_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_exit WHERE TECH_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) GROUP BY CLASSE; ";
         $logger->debug("Show me query_noexit_graph: " . $query_noexit_graph);
+
+        $query_noentry_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_entry WHERE TECH_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) GROUP BY CLASSE; ";
+        $logger->debug("Show me query_noentry_graph: " . $query_noentry_graph);
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
@@ -102,6 +105,9 @@ class AdminEDTController extends AbstractController
         $result_noexit_report = $dbconnectioninst->query($query_noexit_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_noexit_report));
 
+        $result_noentry_report = $dbconnectioninst->query($query_noentry_graph)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_noentry_report));
+
         $result_noexit_graph = $dbconnectioninst->query($query_noexit_graph)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_noexit_graph));
 
@@ -120,6 +126,7 @@ class AdminEDTController extends AbstractController
                                                                   'result_course_report'=>$result_course_report,
                                                                   'result_noexit_report'=>$result_noexit_report,
                                                                   'result_noexit_graph'=>$result_noexit_graph,
+                                                                  'result_noentry_report'=>$result_noentry_report,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
