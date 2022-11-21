@@ -1,3 +1,4 @@
+-- Report are here
 DROP VIEW IF EXISTS rep_course_dash;
 CREATE VIEW rep_course_dash AS
 SELECT vcc.short_classe AS CLASSE,
