@@ -783,9 +783,12 @@ function runStat(){
       { name: "NAME",
         title: 'Étudiant',
         type: "text",
-        align: "center",
+        align: "left",
         css: "cell-recap",
-        headercss: "cell-recap-hd"
+        headercss: "cell-recap-hd",
+        itemTemplate: function(value, item) {
+          return value.substring(0, 25);
+        }
       },
       //Default width is auto
       { name: "VAL",
