@@ -5,7 +5,8 @@
 */10 * * * * php /var/www/html/aceemintranet/admin/cli/cron.php >> /home/ratinahirana/cron.php.log;
 
 # CRON UAC
-*/30 * * * * php /var/www/html/uaceema/config/server/mng_uac_showuser.php >> /home/ratinahirana/cron.mng_uac_showuser.php.log;
+
+
 # Should change once per day
 */10 2-18 * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
 15 */4 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;

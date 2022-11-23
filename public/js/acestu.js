@@ -219,7 +219,7 @@ function loadLastScanGrid(){
               { name: "FIRSTNAME",
                 title: "Prénom",
                 type: "text",
-                width: 60,
+                width: 50,
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l"
               },
@@ -230,11 +230,18 @@ function loadLastScanGrid(){
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l"
               },
+              { name: "CLASSE",
+                title: "Classe",
+                type: "text",
+                width: 50,
+                headercss: "cell-recap-hd",
+                css: "cell-recap-l"
+              },
               //Default width is auto
               { name: "SCAN_DATE",
                 title: "Date",
                 type: "text",
-                width: 20,
+                width: 18,
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l"
               },
@@ -242,7 +249,7 @@ function loadLastScanGrid(){
               { name: "SCAN_TIME",
                 title: 'Heure',
                 type: "text",
-                width: 30,
+                width: 25,
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l"
               },
@@ -250,7 +257,7 @@ function loadLastScanGrid(){
               { name: "IN_OUT",
                 title: 'E/S',
                 type: "text",
-                width: 30,
+                width: 20,
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l",
                 itemTemplate: function(value, item) {
@@ -268,7 +275,7 @@ function loadLastScanGrid(){
               { name: "SCAN_STATUS",
                 title: 'Status',
                 type: "text",
-                width: 33,
+                width: 27,
                 headercss: "cell-recap-hd",
                 css: "cell-recap-l",
                 itemTemplate: function(value, item) {

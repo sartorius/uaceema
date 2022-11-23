@@ -31,7 +31,7 @@ class ConnectionManager
           $logger->debug("We found someone: " . implode("|", $result[0]) . " Here is the count: " . count($result));
           $logger->debug("Show me value: " . $result[0]['USERNAME']);
 
-          $dbconnectioninst->query('UPDATE uac_admin SET last_connection = NOW() WHERE id =' . $result[0]['ID'])->fetchAll(PDO::FETCH_ASSOC);
+          $dbconnectioninst->query("INSERT IGNORE INTO uac_connection_log (user_id) VALUES (" . $result[0]['ID'] . ");")->fetchAll(PDO::FETCH_ASSOC);
 
           //We are connected
 

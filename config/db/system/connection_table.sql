@@ -93,7 +93,6 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_showuser` (
              LEFT JOIN mdl_files mf ON mu.picture = mf.id;
 */
 
-
 DROP VIEW IF EXISTS v_showuser;
 CREATE VIEW v_showuser AS
 SELECT
@@ -115,3 +114,20 @@ SELECT
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
            JOIN mdl_role mr ON mr.id = uas.roleid
            LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+
+
+DROP TABLE IF EXISTS uac_connection_log;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_connection_log` (
+ `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+ `user_id` BIGINT NOT NULL,
+ `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`));
+
+DROP VIEW IF EXISTS v_connection_log;
+CREATE VIEW v_connection_log AS
+SELECT
+     mu.username AS USERNAME,
+     UPPER(mu.firstname) AS FIRSTNAME,
+     UPPER(mu.lastname) AS LASTNAME,
+     ucl.create_date AS CREATION_DATE
+FROM mdl_user mu JOIN  uac_connection_log ucl ON ucl.user_id = mu.id ORDER BY ucl.id DESC;

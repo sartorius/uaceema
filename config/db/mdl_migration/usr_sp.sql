@@ -26,10 +26,6 @@ BEGIN
     UPDATE mdl_load_user SET phone_par2 = NULL, last_update = NOW() WHERE phone_par2 = '' AND flow_id = inv_flow_id;
     UPDATE mdl_load_user SET profession_par2 = NULL, last_update = NOW() WHERE profession_par2 = '' AND flow_id = inv_flow_id;
     UPDATE mdl_load_user SET centres_interets = NULL, last_update = NOW() WHERE centres_interets = '' AND flow_id = inv_flow_id;
-    UPDATE mdl_load_user SET cohorte_mention = NULL, last_update = NOW() WHERE cohorte_mention = '' AND flow_id = inv_flow_id;
-    UPDATE mdl_load_user SET cohorte_niveau = NULL, last_update = NOW() WHERE cohorte_niveau = '' AND flow_id = inv_flow_id;
-    UPDATE mdl_load_user SET cohorte_parcours = NULL, last_update = NOW() WHERE cohorte_parcours = '' AND flow_id = inv_flow_id;
-    UPDATE mdl_load_user SET cohorte_groupe = NULL, last_update = NOW() WHERE cohorte_groupe = '' AND flow_id = inv_flow_id;
 
     UPDATE mdl_load_user SET core_status_matrimonial = SUBSTRING(situation_matrimoniale, 1, 1), last_update = NOW() WHERE flow_id = inv_flow_id;
 
@@ -39,10 +35,7 @@ BEGIN
     -- ************************************
     -- ************************************
     UPDATE mdl_load_user INNER JOIN v_class_cohort
-                                  ON mdl_load_user.cohorte_mention = v_class_cohort.mention
-                                  AND mdl_load_user.cohorte_niveau = v_class_cohort.niveau
-                                  AND mdl_load_user.cohorte_parcours = v_class_cohort.parcours
-                                  AND mdl_load_user.cohorte_groupe = v_class_cohort.groupe
+                                  ON mdl_load_user.cohorte_short_name = v_class_cohort.short_classe
     -- Here is the magic !
     SET mdl_load_user.core_cohort_id = v_class_cohort.id,
       mdl_load_user.last_update = NOW()
@@ -72,6 +65,8 @@ SELECT mlu.id AS load_id, mlu.gsheet_id AS mlu_gsheet_id, mu.id AS mu_id, mu.use
 -- ************************************************************************
 
 
+-- ALREADY STOPPED the script SRV_UPD_UACShower
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS MAN_CRT_MDLUser$$
 CREATE PROCEDURE `MAN_CRT_MDLUser` ()
@@ -93,15 +88,24 @@ BEGIN
     -- CHANGE MDL X ! ******************************************
     -- *********************************************************
 
-    INSERT IGNORE INTO mdl_userx
+    -- DO THE LOAD HERE TO WORK ON THE MDL USER
+
+    INSERT INTO mdl_userx
     (id, username, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets)
     SELECT
     gsheet_id, username, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, core_status_matrimonial, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets
     FROM mdl_load_user WHERE status = 'QUE' AND flow_id = inv_flow_id;
 
 
+
     -- cohort id must be in uac_showuser;
     -- We need to check first the gsheet id versus id then do the load
+    INSERT IGNORE INTO uac_showuser (roleid, username, cohort_id)
+    SELECT 5, username, core_cohort_id FROM mdl_load_user WHERE status = 'QUE' AND flow_id = inv_flow_id;
+
+    -- Add secret
+    UPDATE uac_showuser SET secret = 3000000000 + FLOOR(RAND()*1000000000), last_update = NOW() WHERE secret IS NULL;
+
 
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Done for import' WHERE id = inv_flow_id;
