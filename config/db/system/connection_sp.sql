@@ -21,3 +21,28 @@
 
  END$$
  -- Remove $$ for OVH
+
+
+ DELIMITER $$
+ DROP PROCEDURE IF EXISTS SRV_PRG_Generic$$
+ CREATE PROCEDURE `SRV_PRG_Generic` ()
+ BEGIN
+     DECLARE prg_date	DATE;
+     DECLARE prg_history_delta	INT;
+     -- CALL SRV_PRG_Scan();
+
+     SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'GENEPRG';
+     SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
+
+     -- DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
+     DELETE FROM uac_connection_log WHERE create_date < prg_date;
+
+     -- Email massive
+     DELETE FROM uac_working_flow WHERE flow_code = 'GRPMLWC' AND create_date < prg_date;
+     DELETE FROM uac_working_flow WHERE flow_code = 'MLWELCO' AND create_date < prg_date;
+     DELETE FROM uac_working_flow WHERE flow_code = 'EDTLOAD' AND create_date < prg_date;
+     DELETE FROM uac_working_flow WHERE flow_code = 'QUEASSI' AND create_date < prg_date;
+
+
+ END$$
+ -- Remove $$ for OVH

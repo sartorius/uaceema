@@ -21,6 +21,10 @@ $mysqli->query( $readquery );
 $readquery = "CALL SRV_PRG_Ass()";
 $mysqli->query( $readquery );
 
+# Assiduite are handled here
+$readquery = "CALL SRV_PRG_Generic()";
+$mysqli->query( $readquery );
+
 $readquery = 'UPDATE uac_param SET par_int = 0 WHERE key_code = \'DMAILCT\'';
 $mysqli->query( $readquery );
 
