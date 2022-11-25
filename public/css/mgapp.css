@@ -3,6 +3,8 @@
   --main-ace-color-light: #89a9dc;
   --main-ace-color-contrast: #172d4f;
   --light-ace-color: #c4d4ed;
+  --light-violet-10:#D8CFE3;
+  --light-violet-25:#B7ADC2;
   --main-gray-25:#A7A7A7;
   --main-gray-50:#5A5A5A;
   --main-gray-75:#393939;
@@ -66,6 +68,12 @@ h1 {
 
 h2 {
   font-size: 1.8em;
+  font-weight: 500;
+  color: var(--main-gray-25);
+}
+
+.lil-h2{
+  font-size: 1.3em;
   font-weight: 500;
   color: var(--main-gray-25);
 }

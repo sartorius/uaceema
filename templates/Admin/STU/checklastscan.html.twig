@@ -21,7 +21,7 @@
   <div class="col-2">
   </div>
   <div class="col-8">
-    <h2>Scans chargés : {{ result_all_stu|length }} </h2>
+    <div class="lil-h2">Scans chargés {{ result_all_stu|length }} - unique {{ result_distinct[0]['SCAN_UNIQUE'] }}</div>
     <div class="mgs-ace-note">Le status des scans sont calculés toutes les 20 minutes.</div>
     <hr>
   </div>
