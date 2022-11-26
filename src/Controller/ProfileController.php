@@ -48,27 +48,10 @@ class ProfileController extends AbstractController
       $dbconnectioninst = DBConnectionManager::getInstance();
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
       $result = $dbconnectioninst->query('
-      SELECT
-          mu.id AS ID,
-          mu.username AS USERNAME,
-           uas.secret AS SECRET,
-           CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
-           mr.shortname AS ROLE_SHORTNAME,
-           UPPER(mu.firstname) AS FIRSTNAME,
-           UPPER(mu.lastname) AS LASTNAME,
-           mu.email AS EMAIL,
-           mu.phone1 AS PHONE,
-           mu.phone2 AS PARENT_PHONE,
-           mf.contextid AS PIC_CONTEXT_ID,
-           mu.picture AS PICTURE_ID,
-           SUBSTRING(mf.contenthash, 1, 2) AS D1,
-           SUBSTRING(mf.contenthash, 3, 2) AS D2,
-           mf.contenthash AS FILENAME
-        FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
-                 JOIN mdl_role mr ON mr.id = uas.roleid
-                 LEFT JOIN mdl_files mf ON mu.picture = mf.id
-                 WHERE UPPER(mu.username) = \'' . $param_username . '\'
-                 AND CONVERT(uas.secret, CHAR) = \'' . $param_secret . '\'' )->fetchAll(PDO::FETCH_ASSOC);
+      SELECT *
+        FROM v_showuser
+                 WHERE UPPER(USERNAME) = \'' . $param_username . '\'
+                 AND CONVERT(SECRET, CHAR) = \'' . $param_secret . '\'' )->fetchAll(PDO::FETCH_ASSOC);
 
       $logger->debug("Show me: " . count($result));
 

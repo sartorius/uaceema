@@ -100,7 +100,6 @@ SELECT
           mu.username AS USERNAME,
            uas.secret AS SECRET,
            CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE,
-           mr.shortname AS ROLE_SHORTNAME,
            UPPER(mu.firstname) AS FIRSTNAME,
            UPPER(mu.lastname) AS LASTNAME,
            uas.cohort_id AS COHORT_ID,
@@ -108,12 +107,9 @@ SELECT
            mu.phone1 AS PHONE,
            mu.address AS ADDRESS,
            mu.city AS CITY,
-           mf.contextid AS PIC_CONTEXT_ID,
-           mu.picture AS PICTURE_ID,
-           mf.contenthash AS FILENAME
-  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
-           JOIN mdl_role mr ON mr.id = uas.roleid
-           LEFT JOIN mdl_files mf ON mu.picture = mf.id;
+           mu.phone_par1 AS PARENT_PHONE,
+           mu.adresse_par1 AS PARENT_ADDR
+  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
 
 
 DROP TABLE IF EXISTS uac_connection_log;

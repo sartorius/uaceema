@@ -11,9 +11,11 @@ class ConnectionManager
 
       $dbconnectioninst = DBConnectionManager::getInstance();
 
-
+      $query_connection = 'SELECT ua.id AS ID, mdl.username AS USERNAME, mdl.firstname AS FIRSTNAME, mdl.lastname AS LASTNAME, ua.scale_right AS SCALE_RIGHT, mdl.email AS EMAIL FROM mdl_user mdl JOIN uac_admin ua on ua.id = mdl.id WHERE mdl.username = \'' . $input_username . '\' AND ua.pwd = \'' . MD5($input_pwd) . '\'';
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
-      $result = $dbconnectioninst->query('SELECT ua.id AS ID, mdl.username AS USERNAME, mdl.firstname AS FIRSTNAME, mdl.lastname AS LASTNAME, ua.scale_right AS SCALE_RIGHT, mdl.email AS EMAIL FROM mdl_user mdl JOIN uac_admin ua on ua.id = mdl.id WHERE mdl.username = \'' . $input_username . '\' AND ua.pwd = \'' . MD5($input_pwd) . '\'')->fetchAll(PDO::FETCH_ASSOC);
+      $result = $dbconnectioninst->query($query_connection)->fetchAll(PDO::FETCH_ASSOC);
+
+      $logger->debug("query_connection: " . $query_connection);
 
       if(count($result) == 0){
           //We found nothing retrieve zero

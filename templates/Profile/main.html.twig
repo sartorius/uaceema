@@ -48,16 +48,8 @@
       </div>
       <div class="col-10 mgs-mainblk-txt">
 
-
-        {% if profile['PICTURE_ID'] == 0 %}
-                <div id="blk-selfie" class="mgs-mainblk-txt">
-                      <img id="selfie" src="{{ path('main') }}img/nophoto.png" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
-                </div>
-        {% else %}
-                <div id="blk-selfie" class="mgs-mainblk-txt">
-                      <img id="selfie" src="{{ path('main') }}img/mdl_data/{{ profile['D1'] }}/{{ profile['D2'] }}/{{ profile['FILENAME'] }}" style="width:150px; height:150px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
-                </div>
-        {% endif %}
+        {# ************************************ PICTURE IS LOADED HERE ************************************ #}
+        {% include 'Cartezp/_rawdisplayphoto.html.twig' %}
 
 
         <div class="user-title">

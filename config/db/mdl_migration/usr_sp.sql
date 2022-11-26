@@ -1,3 +1,24 @@
+/*
+TO BE RUN
+-- Migrate Administration
+
+INSERT INTO mdl_userx (id, username, firstname, lastname, email, phone1, address, city, matricule, genre, datedenaissance)
+SELECT mu.id, mu.username, mu.firstname, mu.lastname, mu.email, '0344950074', 'PRVO 26B', 'Manakambahiny', 'na', 'X', '1970-01-01'
+FROM mdl_user mu
+WHERE mu.id IN (SELECT ua.id FROM uac_admin ua)
+
+-- Deploy the changes and load the picutes !!!
+
+-- ATOMIC BOMB
+
+RENAME TABLE mdl_user TO mdl_user_old, mdl_userx TO mdl_user;
+
++++ Reload ALL Views !!!
+
+
+*/
+
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS MAN_LOAD_MDLUser$$
 CREATE PROCEDURE `MAN_LOAD_MDLUser` ()
@@ -12,6 +33,9 @@ BEGIN
     SELECT LAST_INSERT_ID() INTO inv_flow_id;
 
     UPDATE mdl_load_user SET flow_id = inv_flow_id WHERE status = 'NEW';
+
+    UPDATE mdl_load_user SET lastname = UPPER(lastname), last_update = NOW() WHERE flow_id = inv_flow_id;
+    UPDATE mdl_load_user SET firstname = CONCAT(UPPER(SUBSTRING(firstname,1,1)),LOWER(SUBSTRING(firstname,2))), last_update = NOW() WHERE flow_id = inv_flow_id;
 
     UPDATE mdl_load_user SET phone_mvola = NULL, last_update = NOW() WHERE phone_mvola = '' AND flow_id = inv_flow_id;
     UPDATE mdl_load_user SET autre_prenom = NULL, last_update = NOW() WHERE autre_prenom = '' AND flow_id = inv_flow_id;
