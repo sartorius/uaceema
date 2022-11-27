@@ -5,6 +5,7 @@
   --light-ace-color: #c4d4ed;
   --light-violet-10:#D8CFE3;
   --light-violet-25:#B7ADC2;
+  --main-gray-10:#EFEFEF;
   --main-gray-25:#A7A7A7;
   --main-gray-50:#5A5A5A;
   --main-gray-75:#393939;
@@ -675,7 +676,7 @@ textarea[name=inputRef] {
 }
 
 .user-title{
-    font-family: "Roboto Mono";
+    font-family: "Roboto Mono" !important;
     text-align: center;
     font-weight: lighter;
     font-size: 15px;
@@ -685,13 +686,23 @@ textarea[name=inputRef] {
 
 @media (min-width:414px){
       .user-title{
-          font-family: "Roboto Mono";
+          font-family: "Roboto Mono" !important;
           text-align: center;
           font-weight: lighter;
           font-size: 30px;
           margin-bottom: 40px;
           color: var(--light-ace-color);
       }
+}
+
+.user-subtitle{
+    font-family: "Helvetica";
+    text-align: center;
+    font-weight: lighter;
+    font-size: 0.8em;
+    margin-bottom: 20px;
+    color: var(--main-gray-75);
+    background-color: var(--main-gray-10);
 }
 
 .carte-profile{

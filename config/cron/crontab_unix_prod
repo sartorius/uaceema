@@ -9,7 +9,7 @@
 
 # Should change once per day
 */10 2-18 * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
-15 */4 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
+15 2-20 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
 # Twice day for assiduite
 0 10,12,14,18 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;

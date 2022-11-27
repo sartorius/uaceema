@@ -95,27 +95,20 @@ BEGIN
               SELECT
                     mu.username AS USERNAME,
                     mu.email AS EMAIL,
-                    muid2.data AS MATRICULE,
-                    muid1.data AS PARENT_EMAIL,
+                    mu.matricule AS MATRICULE,
+                    mu.email_par1 AS PARENT_EMAIL,
                     mu.firstname AS FIRSTNAME,
                     mu.lastname AS LASTNAME,
                     url_intranet AS ULR_INTRANET,
-                    CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_ID_STU,
+                    CONCAT(CAST(uas.secret AS CHAR),
+                    UPPER(uas.username)) AS PAGE_ID_STU,
                     CONCAT(url_internet, '/profile/',CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE_URL
               FROM uac_mail um JOIN mdl_user mu ON mu.id = um.user_id
-                                JOIN mdl_user_info_data muid1 ON muid1.userid = mu.id
-                                JOIN mdl_user_info_field muif1 ON muif1.id = muid1.fieldid
-                                                        AND muif1.shortname = 'email_par1'
-                                JOIN mdl_user_info_data muid2 ON muid2.userid = mu.id
-                                JOIN mdl_user_info_field muif2 ON muif2.id = muid2.fieldid
-                                                        AND muif2.shortname = 'matricule'
                                 JOIN uac_showuser uas ON mu.username = uas.username
-                                JOIN mdl_role mr ON mr.id = uas.roleid
-                                LEFT JOIN mdl_files mf ON mu.picture = mf.id
               WHERE um.status = 'INP' and um.flow_code = inv_flow_code;
 
               -- End of the flow correctly
-              UPDATE uac_mail SET status = 'END' WHERE status = 'INP' and flow_code = inv_flow_code;
+              UPDATE uac_mail SET status = 'END', last_update = NOW() WHERE status = 'INP' and flow_code = inv_flow_code;
               UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 
     END IF;

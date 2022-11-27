@@ -108,8 +108,10 @@ SELECT
            mu.address AS ADDRESS,
            mu.city AS CITY,
            mu.phone_par1 AS PARENT_PHONE,
-           mu.adresse_par1 AS PARENT_ADDR
-  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username;
+           mu.adresse_par1 AS PARENT_ADDR,
+           vcc.short_classe AS SHORTCLASS
+  FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
+                  JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id;
 
 
 DROP TABLE IF EXISTS uac_connection_log;

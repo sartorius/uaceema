@@ -37,6 +37,10 @@
      -- DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
      DELETE FROM uac_connection_log WHERE create_date < prg_date;
 
+     -- **********************************************************
+     -- DONT PURGE uac_mail **************************************
+     -- **********************************************************
+
      -- Email massive
      DELETE FROM uac_working_flow WHERE flow_code = 'GRPMLWC' AND create_date < prg_date;
      DELETE FROM uac_working_flow WHERE flow_code = 'MLWELCO' AND create_date < prg_date;

@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_load_user` (
   `gsheet_id` BIGINT NOT NULL,
   `flow_id` BIGINT NULL,
   `core_status_matrimonial` CHAR(1) NULL,
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`));
 
 -- cohort id must be in uac_showuser;
 DROP TABLE IF EXISTS mdl_userx;

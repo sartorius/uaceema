@@ -7,10 +7,16 @@ SELECT mu.id, mu.username, mu.firstname, mu.lastname, mu.email, '0344950074', 'P
 FROM mdl_user mu
 WHERE mu.id IN (SELECT ua.id FROM uac_admin ua)
 
--- Deploy the changes and load the picutes !!!
+-- Deploy the changes
+-- Load the picutes !!!
+https://drive.google.com/file/d/1w3e_7l-mzQiULzzcF_-UX-aWUrqryjVe/view?usp=share_link
+
+1w3e_7l-mzQiULzzcF_-UX-aWUrqryjVe
+
+-- DO the migration !!!
+
 
 -- ATOMIC BOMB
-
 RENAME TABLE mdl_user TO mdl_user_old, mdl_userx TO mdl_user;
 
 +++ Reload ALL Views !!!
@@ -75,19 +81,12 @@ BEGIN
 END$$
 -- Remove $$ for OVH
 
--- Do the following checks :
-DROP VIEW IF EXISTS mig_check_id;
-CREATE VIEW mig_check_id AS
-SELECT mlu.id AS load_id, mlu.gsheet_id AS mlu_gsheet_id, mu.id AS mu_id, mu.username AS mig_username FROM mdl_load_user mlu
-	JOIN mdl_user mu ON mu.username = mlu.username
-		WHERE NOT(mu.id = mlu.gsheet_id);
 
 -- SELECT * FROM mig_check_id;
 
 -- ************************************************************************
 -- Do the changes if necessary ! ******************************************
 -- ************************************************************************
-
 
 -- ALREADY STOPPED the script SRV_UPD_UACShower
 
@@ -114,7 +113,7 @@ BEGIN
 
     -- DO THE LOAD HERE TO WORK ON THE MDL USER
 
-    INSERT INTO mdl_userx
+    INSERT INTO mdl_user
     (id, username, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets)
     SELECT
     gsheet_id, username, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, core_status_matrimonial, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets
