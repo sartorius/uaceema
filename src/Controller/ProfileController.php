@@ -73,8 +73,14 @@ class ProfileController extends AbstractController
                                    . " ORDER BY ADDTIME(uas.scan_date, uas.scan_time) DESC;  ";
 
             $result_assiduite = $dbconnectioninst->query($query_ass_trace)->fetchAll(PDO::FETCH_ASSOC);
-
             $logger->debug("Query query_ass_trace: " . $query_ass_trace);
+
+            $query_queued_ass = " SELECT COUNT(1) AS QUEUED_ASS FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id AND uem.cohort_id = " . $result[0]['COHORT_ID']
+                                . " WHERE uel.day < CURRENT_DATE and uel.compute_late_status = 'NEW' AND uel.course_status = 'A' and uel.duration_hour > 0; ";
+            $logger->debug("Show me query_queued_ass: " . $query_queued_ass);
+
+            $result_query_queued_ass = $dbconnectioninst->query($query_queued_ass)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_query_queued_ass));
 
 
 
@@ -141,6 +147,7 @@ class ProfileController extends AbstractController
                                       'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
                                       "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
+                                      "result_query_queued_ass"=>$result_query_queued_ass,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);
       }
     }

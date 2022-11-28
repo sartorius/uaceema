@@ -83,6 +83,9 @@ class AdminEDTController extends AbstractController
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
 
+        $query_queued_ass = " SELECT COUNT(1) AS QUEUED_ASS from uac_working_flow where status = 'QUE'; ";
+        $logger->debug("Show me query_queued_ass: " . $query_queued_ass);
+
 
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_stat_late = $dbconnectioninst->query($late_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -114,6 +117,9 @@ class AdminEDTController extends AbstractController
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_lastupd));
 
+        $result_query_queued_ass = $dbconnectioninst->query($query_queued_ass)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_query_queued_ass));
+
 
         $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'firstname' => $_SESSION["firstname"],
@@ -128,6 +134,7 @@ class AdminEDTController extends AbstractController
                                                                   'result_noexit_graph'=>$result_noexit_graph,
                                                                   'result_noentry_report'=>$result_noentry_report,
                                                                   'result_lastupd'=>$result_lastupd,
+                                                                  'result_query_queued_ass'=>$result_query_queued_ass,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
 

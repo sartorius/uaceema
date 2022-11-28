@@ -5,6 +5,7 @@
   --light-ace-color: #c4d4ed;
   --light-violet-10:#D8CFE3;
   --light-violet-25:#B7ADC2;
+  --light-violet-80:#B7A7C8;
   --main-gray-10:#EFEFEF;
   --main-gray-25:#A7A7A7;
   --main-gray-50:#5A5A5A;
@@ -209,6 +210,24 @@ h2 {
   padding-left: 40px;
   padding-right: 40px;
   font-size: 0.8em;
+}
+
+.mgs-note-warn{
+  text-align: justify;
+  color: var(--main-ace-color);
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.mgs-note-warnprof{
+    text-align: justify;
+    color: var(--light-violet-80);
+    padding-right: 40px;
+    padding-bottom: 7px;
+    font-size: 0.8em;
+    font-weight: bold;
 }
 
 .mgs-mainblk-txt{

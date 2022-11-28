@@ -79,7 +79,9 @@
         <div id="pr-assid" class="carte-profile">
           <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité : lignes de présence</div>
           <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Les lignes de présence sont calculées plusieurs fois par jour. Ces fonctionnalités sont encore en phase de test pilote. <br><a href="/reglassiduite">Voir le rappel sur l'assiduité</a>.</span><br><br>
-
+          {% if result_query_queued_ass[0]['QUEUED_ASS'] > 0 %}
+              <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Des emplois du temps passés sont en attente. Les assiduités vont être recalculés cette nuit.</div>
+          {% endif %}
           <div id="jsGrid">
           </div>
 

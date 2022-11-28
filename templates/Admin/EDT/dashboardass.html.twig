@@ -116,6 +116,9 @@
 <div id="mg-graph-identifier">dash-ass</div>
 
 <div class="mgs-note">Date de dernière mise à jour {{ result_lastupd[0]['LASTUPDATE'] }}.<br> Les assiduités sont calculés à 10h/12h/14h/18h (TU+0) pour tous les cours terminés 30min avant.</div>
+{% if result_query_queued_ass[0]['QUEUED_ASS'] > 0 %}
+    <div  class="mgs-note-warn"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Il reste {{ result_query_queued_ass[0]['QUEUED_ASS'] }} EDT du passé en attente. Les assiduités vont être recalculés cette nuit.</div>
+{% endif %}
 <br>
 <div class="row report-banner">
   <div class="col-1">
