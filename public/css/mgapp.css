@@ -230,6 +230,14 @@ h2 {
     font-weight: bold;
 }
 
+.mgs-note-banner{
+  text-align: justify;
+  color: #b3b3b3;
+  padding-right: 40px;
+  padding-bottom: 15px;
+  font-size: 0.8em;
+}
+
 .mgs-mainblk-txt{
   margin-top: 30px;
   text-align: justify;

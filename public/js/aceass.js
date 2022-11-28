@@ -620,7 +620,12 @@ function runStat(){
       '#D2FFD2',
       '#e6e6ff',
       '#f2ffe6',
-      '#ccccff'
+      '#ccccff',
+      '#e6e6ff',
+      '#f2ffe6',
+      '#ccccff',
+      '#b3b3ff',
+      '#ffffcc'
   ];
   var borderColorRef = [
       '#000099',
@@ -645,7 +650,12 @@ function runStat(){
       '#4D6F4E',
       '#000099',
       '#4d9900',
-      '#000080'
+      '#000080',
+      '#000099',
+      '#4d9900',
+      '#000080',
+      '#000066',
+      '#666600'
   ];
 
   // Stat of status population
