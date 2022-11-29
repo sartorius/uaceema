@@ -11,9 +11,9 @@
 */10 2-18 * * * php /var/www/html/uaceema/config/server/mng_scan.php >> /home/ratinahirana/cron.mng_scan.php.log;
 15 2-20 * * * php /var/www/html/uaceema/config/server/mng_welcome_mail.php >> /home/ratinahirana/cron.mng_welcome_mail.php.log;
 
-# Twice day for assiduite
+# Twice day for assiduite mng assiduite and past assiduite must not run together!!!
 0 10,12,14,18 * * * php /var/www/html/uaceema/config/server/mng_assiduite.php >> /home/ratinahirana/cron.mng_assiduite.php.log;
-0 12,15,20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
+0 13,15,20 * * * php /var/www/html/uaceema/config/server/mng_pastassiduite.php >> /home/ratinahirana/cron.mng_pastassiduite.php.log;
 
 ###################################### CHANGE THE CRON URL ADDRESS FOR PROD !!!
 # Service

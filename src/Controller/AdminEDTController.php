@@ -431,7 +431,11 @@ class AdminEDTController extends AbstractController
 
                                 $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $logger, $scale_right);
                                 array_push($zip_results, $result_for_one_file);
-                                $zip_comments = $zip_comments . '<br>' . $result_for_one_file['zip_one_comment'];
+                                $status_msg = '<strong><span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp; Attente de validation</strong>';
+                                if($result_for_one_file['short_err'] != ''){
+                                   $status_msg = '<i class="err"><strong><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;' . $result_for_one_file['short_err'] . '.&nbsp;Ce fichier ne sera pas chargé.</strong></i>';
+                                }
+                                $zip_comments = $zip_comments . '<br>' . $result_for_one_file['zip_one_comment'] . '&nbsp;' . $status_msg . '' ;
 
                                 // We do quiet error here. Most of the time when the access is current week
                                 // If we have at least 1 value
@@ -534,6 +538,7 @@ class AdminEDTController extends AbstractController
           $insert_queries = array();
           $resultsp = array();
           $overpassday = '';
+          $short_err = '';
           // Code is valid here. We can work
           if (($load_type == '.csv') && (!file_exists($load_file['tmp_name']))) {
             $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
@@ -679,6 +684,7 @@ class AdminEDTController extends AbstractController
                                       if($verify_duration == 0){
                                           // The duration does not match
                                           $file_is_still_valid = false;
+                                          $short_err = 'ERR9012 Durée incorrecte';
                                           $report_comment = $report_comment . '<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR9012 Erreur de lecture de durée près de : ligne ' . $i . ' - colonne ' . ($k + 1) . '. Vérifiez bien que vous avez un h minuscule comme par exemple 4h.</span>' . '<br>'
                                                                             . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                                                             . 'Les durées doivent être de la forme Xh ou XXh ou XXh30 - exemple 2h30 ou 1h.<br>'
@@ -745,6 +751,7 @@ class AdminEDTController extends AbstractController
                     }
                     else{
                       $file_is_still_valid = false;
+                      $short_err = 'ERRB192 Erreur EDT date passée';
                       $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '. Si cette opération est nécessaire, vous devez utilisez un login avec des droits de hierarchie 11. Vos droits actuels sont de ' . $scale_right . '.</span>' . '<br>';
 
                       $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée.</span>' . '<br>'
@@ -791,12 +798,13 @@ class AdminEDTController extends AbstractController
                       $report_queries = '<br><hr><div class="ace-sm report-val"> Nombre des input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
                       $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement en DB. Return count: ' . count($resultsp)  . '<br>';
 
-                      $zip_one_comment = 'Chargement OK pour ' . $filename_to_log_in . ' /nbr lg: ' . count($resultsp) . ' ' . $zip_one_comment;
+                      $zip_one_comment = 'Prévisualisation: ' . $filename_to_log_in . ' /nbr lg: ' . count($resultsp) . ' ' . $zip_one_comment;
 
                       // If we return the empty line means the course has not been found
                       if(count($resultsp) == 1){
+                          $short_err =  'ERR182C Erreur classe introuvable';
                           $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR182C Erreur Nous ne pouvons pas identifier la classe de l\'emploi du temps. Veuillez vérifier qu\'elle existe.</span>' . '<br>'
-                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br><br>'
+                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier : ' . $filename_to_log_in . '<br><br>'
                                                             . 'Vérifiez Mention: <strong>' . $mention . '</strong><br>'
                                                             . 'Vérifiez Niveau: <strong>' . $niveau . '</strong><br>'
                                                             . 'Vérifiez Parcours: <strong>' . $parcours . '</strong><br>'
@@ -806,8 +814,9 @@ class AdminEDTController extends AbstractController
                                                             . $report_comment;
                       }
                       if(count($resultsp) == 0){
+                          $short_err =  'ERR187G Erreur technique';
                           $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR187G Erreur Nous n\'arrivons pas à enregistrer l\'emploi du temps, veuillez contacter le support technique.</span>' . '<br>'
-                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br><br>'
+                                                            . 'Désolé ! Nous avons rencontré un problème de lecture du fichier : ' . $filename_to_log_in . '<br><br>'
                                                             . 'Vérifiez Mention: <strong>' . $mention . '</strong><br>'
                                                             . 'Vérifiez Niveau: <strong>' . $niveau . '</strong><br>'
                                                             . 'Vérifiez Parcours: <strong>' . $parcours . '</strong><br>'
@@ -819,6 +828,7 @@ class AdminEDTController extends AbstractController
                     }
                     else{
                       // Display the error here
+                      $short_err = 'Error8927 Erreur connexion DB';
                       $report_comment = '<br>Error8927 when load in DB.' . $report_comment;
                     }
 
@@ -838,6 +848,7 @@ class AdminEDTController extends AbstractController
                         "extract_queries"=>$report_queries,
                         "sp_result"=>$resultsp,
                         "overpassday"=>$overpassday,
+                        "short_err"=>$short_err,
                         "zip_one_comment" => $zip_one_comment);
 
   }
