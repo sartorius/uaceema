@@ -63,8 +63,19 @@ class ProfileController extends AbstractController
             // We found the student
             $logger->debug("We found: " . $result[0]['FIRSTNAME'] . ' ' . $result[0]['LASTNAME']);
 
-            // Retrieve the result for assiduité
+            // log the connection :
+            $dashorigin = 'S';
 
+            //Check if we are coming from POST
+            if($from_admin == 'Y')
+            {
+                // It is from Admin
+                $dashorigin = 'A';
+            };
+            $query_add_log = " INSERT INTO uac_studashboard_log(user_id, origin) VALUE ( " . $result[0]['ID'] . ", '" . $dashorigin . "');";
+            $dbconnectioninst->query($query_add_log)->fetchAll(PDO::FETCH_ASSOC);
+
+            // Retrieve the result for assiduité
             $query_ass_trace = " SELECT uas.in_out AS IN_OUT,  DATE_FORMAT(uas.scan_date, '%d/%m') AS SCANDATE, "
                             . " uas.scan_time AS SCANTIME "
                             . " FROM uac_scan uas "
