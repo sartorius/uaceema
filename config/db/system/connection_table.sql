@@ -128,13 +128,14 @@ SELECT
      UPPER(mu.firstname) AS FIRSTNAME,
      UPPER(mu.lastname) AS LASTNAME,
      ucl.create_date AS CREATION_DATE
-FROM mdl_user mu JOIN  uac_connection_log ucl ON ucl.user_id = mu.id ORDER BY ucl.id DESC;
+FROM mdl_user mu JOIN  uac_connection_log ucl ON ucl.user_id = mu.id ORDER BY ucl.create_date DESC;
 
 DROP TABLE IF EXISTS uac_studashboard_log;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_studashboard_log` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
   `origin` CHAR(1) NOT NULL,
+  `admin_id` BIGINT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
@@ -145,5 +146,8 @@ SELECT
      UPPER(mu.firstname) AS FIRSTNAME,
      UPPER(mu.lastname) AS LASTNAME,
      CASE WHEN usl.origin = 'A' THEN 'Admin' ELSE 'Student' END AS ORIGIN,
+     UPPER(muadmin.firstname) AS ADMINFIRSTNAME,
      usl.create_date AS CREATION_DATE
-FROM mdl_user mu JOIN  uac_studashboard_log usl ON usl.user_id = mu.id ORDER BY usl.id DESC;
+FROM mdl_user mu JOIN uac_studashboard_log usl ON usl.user_id = mu.id
+                 LEFT JOIN mdl_user muadmin ON usl.admin_id = muadmin.id
+ORDER BY usl.create_date DESC;

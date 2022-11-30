@@ -27,6 +27,8 @@ class ProfileController extends AbstractController
     {
         // Get data from ajax
         $logger->debug("See poststu_page: " . $_POST["poststu_page"]);
+        $logger->debug("See Session ID: " . $_SESSION["id"]);
+
         $page = $_POST["poststu_page"];
         $from_admin = 'Y';
     }
@@ -64,15 +66,15 @@ class ProfileController extends AbstractController
             $logger->debug("We found: " . $result[0]['FIRSTNAME'] . ' ' . $result[0]['LASTNAME']);
 
             // log the connection :
-            $dashorigin = 'S';
+            $dashorigin = "'S', NULL";
 
             //Check if we are coming from POST
             if($from_admin == 'Y')
             {
                 // It is from Admin
-                $dashorigin = 'A';
+                $dashorigin = "'A', " . $_SESSION["id"];
             };
-            $query_add_log = " INSERT INTO uac_studashboard_log(user_id, origin) VALUE ( " . $result[0]['ID'] . ", '" . $dashorigin . "');";
+            $query_add_log = " INSERT INTO uac_studashboard_log(user_id, origin, admin_id) VALUE ( " . $result[0]['ID'] . ", " . $dashorigin . ");";
             $dbconnectioninst->query($query_add_log)->fetchAll(PDO::FETCH_ASSOC);
 
             // Retrieve the result for assiduité
