@@ -36,6 +36,8 @@
 
      -- DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
      DELETE FROM uac_connection_log WHERE create_date < prg_date;
+     DELETE FROM uac_studashboard_log WHERE create_date < prg_date;
+
 
      -- **********************************************************
      -- DONT PURGE uac_mail **************************************
