@@ -29,7 +29,7 @@
     <h2>Manager étudiant</h2>
 
     <hr>
-    <div class="mgs-note-banner">Nombre total d'étudiants : {{ result_all_stu|length }}</div>
+    <div class="mgs-note-banner">Nombre d'étudiants : <i id='mst-filcnt'>{{ result_all_stu|length }}</i> sur {{ result_all_stu|length }}</div>
   </div>
   <div class="col-1">
   </div>
@@ -46,8 +46,12 @@
       <i class="icon-refresh"></i>
     </button>
   </div>
+  <div class="col-1 fil-el">
+    <button type="button" id="uac-mst-all-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+  </div>
 
-  <div class="col-7">
+
+  <div class="col-6">
   </div>
 
   <div class="col-1">

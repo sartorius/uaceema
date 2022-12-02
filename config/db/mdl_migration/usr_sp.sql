@@ -40,8 +40,8 @@ BEGIN
 
     UPDATE mdl_load_user SET flow_id = inv_flow_id WHERE status = 'NEW';
 
-    UPDATE mdl_load_user SET lastname = UPPER(lastname), last_update = NOW() WHERE flow_id = inv_flow_id;
-    UPDATE mdl_load_user SET firstname = CONCAT(UPPER(SUBSTRING(firstname,1,1)),LOWER(SUBSTRING(firstname,2))), last_update = NOW() WHERE flow_id = inv_flow_id;
+    UPDATE mdl_load_user SET lastname = TRIM(UPPER(lastname)), last_update = NOW() WHERE flow_id = inv_flow_id;
+    UPDATE mdl_load_user SET firstname = TRIM(CONCAT(UPPER(SUBSTRING(firstname,1,1)),LOWER(SUBSTRING(firstname,2)))), last_update = NOW() WHERE flow_id = inv_flow_id;
 
     UPDATE mdl_load_user SET phone_mvola = NULL, last_update = NOW() WHERE phone_mvola = '' AND flow_id = inv_flow_id;
     UPDATE mdl_load_user SET autre_prenom = NULL, last_update = NOW() WHERE autre_prenom = '' AND flow_id = inv_flow_id;

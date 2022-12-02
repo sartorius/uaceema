@@ -34,15 +34,18 @@ class AdminSTUController extends AbstractController
 
 
         $allstu_query = " SELECT mu.id AS ID, UPPER(mu.username) AS USERNAME, uas.secret AS SECRET, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, "
-                              . " mr.shortname AS ROLE_SHORTNAME, REPLACE(UPPER(mu.firstname), \"'\", \" \") AS FIRSTNAME, REPLACE(UPPER(mu.lastname), \"'\", \" \") AS LASTNAME, mu.email AS EMAIL, vaco.id AS CLASS_ID, "
+                              . " REPLACE(UPPER(mu.firstname), \"'\", \" \") AS FIRSTNAME, REPLACE(UPPER(mu.lastname), \"'\", \" \") AS LASTNAME, mu.email AS EMAIL, vaco.id AS CLASS_ID, "
                               . " vaco.mention AS CLASS_MENTION, vaco.niveau AS CLASS_NIVEAU, vaco.parcours AS CLASS_PARCOURS, vaco.groupe AS CLASS_GROUPE, "
+                              . " mu.phone1 AS PHONE, mu.address AS ADRESSE, mu.city AS QUARTIER, mu.datedenaissance AS DATEDENAISSANCE, ifnull(mu.compte_fb, 'na') AS FB, fEscapeStr(mu.etablissement_origine) AS ORIGINE, "
+                              . " mu.serie_bac AS SERIE_BAC, mu.annee_bac AS ANNEE_BAC, ifnull(mu.numero_cin, 'na') AS NUMCIN, ifnull(mu.date_cin, 'na') AS DATECIN, fEscapeStr(ifnull(mu.lieu_cin, 'na')) AS LIEU_CIN, fEscapeStr(ifnull(mu.nom_pnom_par1, 'na')) AS NOMPNOMP1, "
+                              . " ifnull(mu.phone_par1, 'na') AS PHONEPAR1, fEscapeStr(ifnull(mu.profession_par1, 'na')) AS PROFPAR1, fEscapeStr(ifnull(mu.adresse_par1, 'na')) AS ADDRPAR1, fEscapeStr(ifnull(mu.city_par1, 'na')) AS CITYPAR1, fEscapeStr(ifnull(mu.nom_pnom_par2, 'na')) AS NOMPNOMP2, fEscapeStr(ifnull(mu.profession_par2, 'na')) AS PROFPAR2, "
+                              . " ifnull(mu.phone_par2, 'na') AS PHONEPAR2, fEscapeStr(ifnull(mu.centres_interets, 'na')) AS CENTINT, "
                               . " REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe)), \"'\", \" \") AS raw_data "
                               . " FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username "
-                              . " JOIN mdl_role mr ON mr.id = uas.roleid "
                               . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id "
-                              . " WHERE mr.shortname = 'student' ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC; ";
+                              . " ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC; ";
 
-
+        $logger->debug("Show me allstu_query: " . $allstu_query);
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_stu = $dbconnectioninst->query($allstu_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_stu));

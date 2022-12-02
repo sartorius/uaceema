@@ -45,6 +45,8 @@ function initAllSTUGrid(){
 
 function loadAllSTUGrid(){
 
+      // Centralize here the count of filter
+      $('#mst-filcnt').html(filteredDataAllSTUToJsonArray.length);
 
       allSTUfields = [
         { name: "USERNAME",
@@ -317,6 +319,69 @@ function loadLastScanGrid(){
 
 /***********************************************************************************************************/
 
+
+function generateAllMngStudentReportCSV(){
+	const csvContentType = "data:text/csv;charset=utf-8,";
+
+  let csvContent = "";
+  const SEP_ = ","
+
+	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "\n";
+	csvContent += dataString;
+	for(var i=0; i<filteredDataAllSTUToJsonArray.length; i++){
+		dataString = filteredDataAllSTUToJsonArray[i].USERNAME + SEP_
+    + filteredDataAllSTUToJsonArray[i].LASTNAME + SEP_
+    + filteredDataAllSTUToJsonArray[i].FIRSTNAME + SEP_
+    +  filteredDataAllSTUToJsonArray[i].EMAIL + SEP_
+    +  filteredDataAllSTUToJsonArray[i].DATEDENAISSANCE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].PHONE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CLASS_ID + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CLASS_MENTION + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CLASS_NIVEAU + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CLASS_PARCOURS + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CLASS_GROUPE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].ADRESSE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].QUARTIER + SEP_
+    +  filteredDataAllSTUToJsonArray[i].FB + SEP_
+    +  filteredDataAllSTUToJsonArray[i].ORIGINE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].SERIE_BAC + SEP_
+    +  filteredDataAllSTUToJsonArray[i].ANNEE_BAC + SEP_
+    +  filteredDataAllSTUToJsonArray[i].NUMCIN + SEP_
+    +  filteredDataAllSTUToJsonArray[i].DATECIN + SEP_
+    +  filteredDataAllSTUToJsonArray[i].LIEU_CIN + SEP_
+    +  filteredDataAllSTUToJsonArray[i].NOMPNOMP1 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].PHONEPAR1 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].PROFPAR1 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].ADDRPAR1 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CITYPAR1 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].NOMPNOMP2 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].PROFPAR2 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].PHONEPAR2 + SEP_
+    +  filteredDataAllSTUToJsonArray[i].CENTINT + SEP_
+    ;
+    // easy close here
+    csvContent += i < filteredDataAllSTUToJsonArray.length ? dataString+ "\n" : dataString;
+
+	}
+
+  //console.log('Click on csv');
+	let encodedUri = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
+
+	let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'ListeDesEtudiants.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+}
+
+/***********************************************************************************************************/
+
 $(document).ready(function() {
   console.log('We are in ACE-STU');
 
@@ -325,6 +390,9 @@ $(document).ready(function() {
     // Do nothing
     initAllSTUGrid();
     loadAllSTUGrid();
+    $( "#uac-mst-all-csv" ).click(function() {
+      generateAllMngStudentReportCSV();
+    });
   }
   if($('#mg-graph-identifier').text() == 'chk-sca'){
     // Do something on chk-sca

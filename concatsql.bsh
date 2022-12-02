@@ -3,6 +3,7 @@
 # part1 is the first version of the app plus assiduite
 rm -f ./config/db/_all.part1.sql
 
+cat ./config/db/system/basic_function.sql >> ./config/db/_all.part1.sql
 cat ./config/db/system/param_table.sql >> ./config/db/_all.part1.sql
 # must user view must come after cohort
 cat ./config/db/system/connection_table.sql >> ./config/db/_all.part1.sql
