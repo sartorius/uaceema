@@ -59,23 +59,25 @@
             {{ profile['SHORTCLASS'] }}
         </div>
         <hr>
-        <div class="card-parent">
-              <div class="carte-profile blc-inline">
-                <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
-                <span class="icon-phone-square nav-icon-fa-sm nav-text"></span> {{ profile['PHONE'] }} <br>
-              </div>
-              <div class="carte-profile blc-inline">
-                <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
-                <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }}
-              </div>
-              <div class="carte-profile blc-inline">
+        {% if from_admin == 'Y' %}
+              <div class="card-parent">
+                    <div class="carte-profile blc-inline">
+                      <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
+                      <span class="icon-phone-square nav-icon-fa-sm nav-text"></span> {{ profile['PHONE'] }} <br>
+                    </div>
+                    <div class="carte-profile blc-inline">
+                      <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
+                      <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }}
+                    </div>
+                    <div class="carte-profile blc-inline">
 
-                <span class="icon-building-o nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }} <br>
-                <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }}
+                      <span class="icon-building-o nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }} <br>
+                      <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }}
 
+                    </div>
               </div>
-        </div>
-        <hr>
+              <hr>
+        {% endif %}
         <div id="pr-assid" class="carte-profile">
           <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité : lignes de présence</div>
           <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Les lignes de présence sont calculées plusieurs fois par jour. Ces fonctionnalités sont encore en phase de test pilote. <br><a href="/reglassiduite">Voir le rappel sur l'assiduité</a>.</span><br><br>
