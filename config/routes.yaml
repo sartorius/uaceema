@@ -92,3 +92,9 @@ managerstu:
 checklastscan:
     path:       /checklastscan
     controller: App\Controller\AdminSTUController::checklastscan
+didiapply:
+    path:       /didiapply
+    controller: App\Controller\ProfileController::didiapply
+verify_application:
+    path:       /verify-application
+    controller: App\Controller\ProfileController::verifyapplication

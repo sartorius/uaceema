@@ -174,4 +174,53 @@ class ProfileController extends AbstractController
 
     return new Response($content);
   }
+
+
+  public function didiapply(Environment $twig, LoggerInterface $logger)
+  {
+
+    $content = $twig->render('Profile/didiapply.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    return new Response($content);
+  }
+
+  public function verifyapplication(Environment $twig, LoggerInterface $logger)
+  {
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+      if ( (!empty($_POST["inputLastName"]))
+            and (!empty($_POST["inputBirthday"]))
+          ) {
+
+          $logger->debug("READ Lastname: " . $_POST["inputLastName"] . " READ Birthday: " . $_POST["inputBirthday"]);
+
+
+          // Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $query_didapp = " SELECT mu.email AS EMAIL, mu.lastname AS LASTNAME, mu.firstname AS FIRSTNAME, vs.SHORTCLASS AS CLASS, DATE_FORMAT(mu.datedenaissance,'%d-%m-%Y') AS DATEDENAISSANCE , CASE WHEN um.status = 'NEW' THEN 'Email carte étudiant en cours - env. 72h' ELSE CONCAT('Email carte étudiant envoyé le ', DATE_FORMAT(um.last_update, '%d/%m/%Y vers %H:%i UTC')) END AS EMAIL_STATUS "
+                          . " FROM v_showuser vs JOIN mdl_user mu ON mu.id = vs.ID "
+                          . " JOIN uac_mail um ON um.user_id = mu.id AND um.flow_code = 'MLWELCO' "
+                          . " WHERE fEscapeStr(vs.LASTNAME) = fEscapeStr(UPPER('" . $_POST["inputLastName"] . "')) AND mu.datedenaissance = STR_TO_DATE('" . $_POST["inputBirthday"] . "','%d-%m-%Y'); ";
+          $logger->debug("Query query_didapp: " . $query_didapp);
+          $result_query_didapp = $dbconnectioninst->query($query_didapp)->fetchAll(PDO::FETCH_ASSOC);
+
+
+          $content = $twig->render('Profile/resultapplication.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                            'result_query_didapp' => $result_query_didapp,
+                                                                            'inputLN' => $_POST["inputLastName"],
+                                                                            'inputBirthD' => $_POST["inputBirthday"]]);
+
+      }
+      else{
+          // Error Code 404
+          $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+      }
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+
+    return new Response($content);
+  }
 }

@@ -72,7 +72,7 @@ class StaticController extends AbstractController
 
     return new Response($content);
   }
-  
+
   public function reglassiduite(Environment $twig)
   {
     $debug_session = 0;
@@ -88,4 +88,5 @@ class StaticController extends AbstractController
 
     return new Response($content);
   }
+
 }

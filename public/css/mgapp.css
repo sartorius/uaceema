@@ -187,6 +187,17 @@ h2 {
 }
 
 
+.mg-verify-logo-250{
+  padding-top: 5em;
+  padding-bottom: 3em;
+}
+
+.middle-txt{
+  color: var(--main-ace-color);
+  padding-bottom: 2em;
+  font-size: 1.2em;
+}
+
 .progress-bar{
   display: none;
 }
@@ -210,6 +221,15 @@ h2 {
   padding-left: 40px;
   padding-right: 40px;
   font-size: 0.8em;
+}
+
+.mgs-note-warn-md{
+  text-align: justify;
+  color: var(--main-ace-color);
+  padding-right: 40px;
+  padding-bottom: 10px;
+  font-size: 1.0em;
+  font-weight: bold;
 }
 
 .mgs-note-warn{

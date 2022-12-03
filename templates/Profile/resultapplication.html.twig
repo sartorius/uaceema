@@ -1,0 +1,39 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+
+
+    <div class='mgs-note-warn-md'>Nous avons trouvé {{ result_query_didapp|length }} inscription(s).</div>
+    {% if result_query_didapp|length > 0 %}
+        {% for result in result_query_didapp %}
+              <h1>Oui ! Vous êtes bien inscrit</h1>
+              <span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp;Félicitations. Vous êtes bien inscrit parmi nous avec les informations suivantes :<br>
+              <br>
+              Nom de famille : <strong>{{ result['LASTNAME'] }}</strong> <br>
+              Prénom : <strong>{{ result['FIRSTNAME'] }}</strong> <br>
+              Date de naissance : <strong>{{ result['DATEDENAISSANCE'] }}</strong> <br>
+              Classe : <strong>{{ result['CLASS'] }}</strong> <br>
+              Email : <strong>{{ result['EMAIL'] }}</strong> <br>
+              Carte d'étudiant virtuelle : <strong>{{ result['EMAIL_STATUS'] }}</strong> <br>
+        {% endfor %}
+    {% else %}
+        <h1>Votre inscription est introuvable</h1><br>
+        Veuillez vérifier vos critères : <br>
+        Nom de famille : <strong>{{ inputLN|upper }}</strong>  <br>
+        Date de naissance : <strong>{{ inputBirthD }}</strong> <br><br>
+        <div class='mgs-note'>
+        Si vous venez juste de remplir le Google form, il faut attendre 72h. Si non, veuillez nous envoyer un email à admin@uaceem.com pour que nous regardions.
+        </div>
+    {% endif %}
+    <br><br><br>
+    <a class="btn btn-outline-dark btn-md btn-block" href="/" role="button"><span class="icon-home nav-text"></span>&nbsp;Home</a>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}
