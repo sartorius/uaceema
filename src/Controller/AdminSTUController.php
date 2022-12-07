@@ -88,7 +88,13 @@ class AdminSTUController extends AbstractController
                         . " FROM uac_load_scan uls LEFT JOIN mdl_user mu ON UPPER(mu.username) = UPPER(uls.scan_username) JOIN v_showuser vsw ON mu.id = vsw.ID JOIN v_class_cohort vcc ON vsw.COHORT_ID = vcc.id "
                         . " WHERE uls.scan_date = CURRENT_DATE  ORDER BY uls.id desc;";
 
+        $logger->debug("Show me allstu_query: " . $allstu_query);
+
         $distinct_query = "SELECT count(distinct uls.scan_username) AS SCAN_UNIQUE FROM uac_load_scan uls WHERE uls.scan_date = CURRENT_DATE; ";
+        $logger->debug("Show me distinct_query: " . $distinct_query);
+
+        $miss_query = "SELECT count(uls.scan_username) AS SCAN_MISS FROM uac_load_scan uls WHERE uls.status = 'MIS' AND uls.scan_date = CURRENT_DATE; ";
+        $logger->debug("Show me distinct_query: " . $miss_query);
 
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_stu = $dbconnectioninst->query($allstu_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -98,12 +104,16 @@ class AdminSTUController extends AbstractController
         $result_distinct = $dbconnectioninst->query($distinct_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_distinct));
 
+        $result_miss = $dbconnectioninst->query($miss_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_miss));
+
         $content = $twig->render('Admin/STU/checklastscan.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'firstname' => $_SESSION["firstname"],
                                                                   'lastname' => $_SESSION["lastname"],
                                                                   'id' => $_SESSION["id"],
                                                                   'result_all_stu'=>$result_all_stu,
                                                                   'result_distinct'=>$result_distinct,
+                                                                  'result_miss'=>$result_miss,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
 

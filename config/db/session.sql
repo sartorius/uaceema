@@ -67,3 +67,178 @@ select * from uac_working_flow  where flow_code = 'GRPMLWC' order by 1 desc;
 
 
 select distinct flow_code from uac_working_flow order by 1 desc;
+
+
+-- Session PRO
+
+-- 39 to 56
+
+
+
+
+
+
+
+
+SELECT * FROM uac_assiduite_off;
+
+-- INSERT INTO uac_assiduite_off (working_date, day_code, reason) VALUE ('2022-11-28', 1, 'Début activité');
+
+-- INSERT INTO uac_assiduite_off (working_date, day_code, reason) VALUE ('2022-11-29', 2, 'Début activité');
+
+
+
+select * from v_connection_log order by CREATION_DATE desc;
+
+
+-- UPDATE uac_mail SET last_update = create_date, status = 'NEW'
+where last_update > '2022-12-02 11:20:49'
+and status = 'END';
+
+
+select * from uac_mail
+where 1=1
+-- and last_update < '2022-11-28 01:42:49'
+and last_update > '2022-12-02 11:20:49'
+and status = 'END';
+
+-- UPDATE uac_mail SET last_update = create_date, status = 'NEW'
+where last_update < '2022-11-28 01:42:49'
+and last_update > '2022-11-27 11:30:49'
+and status = 'END';
+
+
+
+select * from mdl_user;
+
+select * from uac_admin  ua JOIN mdl_user mu on mu.id = ua.id;
+
+SELECT * from uac_param;
+-- Unlock 14h42
+
+SELECT count(1) from uac_mail where status = 'NEW'
+
+
+SELECT * from uac_mail where status = 'NEW'
+
+
+select * from mdl_user mu where mu.lastname = 'IHARIMANANA';
+
+
+select * from mdl_user mu where mu.firstname = 'Sarah';
+
+
+SELECT * from uac_mail where user_id = 123
+
+
+SELECT * from uac_mail where user_id = 227
+
+
+
+
+
+
+select * from mdl_user mu where mu.email = 'eodiadeviro@gmail.com'
+
+
+select * from uac_mail
+where last_update < '2022-11-26 18:50:49'
+and status = 'END';
+
+
+select * from uac_mail where create_date > '2022-11-26 01:01:59'
+and id > 56 and status = 'END'
+order by 1 desc;
+
+
+SELECT *
+        FROM v_showuser where USERNAME = 'megurab387' order by id;
+
+
+
+
+SELECT vcc.short_classe AS CLASSE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS NAME, COUNT(1) AS VAL from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id JOIN uac_showuser uas ON mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status = 'ABS' GROUP BY mu.firstname, mu.lastname, ass.status, vcc.short_classe ORDER BY COUNT(1) DESC LIMIT 100;
+
+
+
+
+select * from uac_edt_master;
+
+
+select COUNT(1) AS QUEUED_ASS from uac_working_flow where status = 'QUE';
+
+
+select * from uac_working_flow where status = 'QUE';
+
+
+
+select * from uac_working_flow uwf where flow_code = 'QUEASSI' ORDER BY 1 DESC;
+
+
+
+select * from uac_working_flow uwf where flow_code = 'RESASSI' ORDER BY 1 DESC;
+
+
+select * from uac_working_flow uwf where flow_code = 'ASSIDUI' ORDER BY 1 DESC;
+
+
+-- CALL SRV_CRT_ComptAssdFlow ('2022-11-25')
+
+
+-- CALL SRV_CRT_ComptAssdFlow ('2022-11-24')
+
+SELECT COUNT(1) AS QUEUED_ASS FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id AND uem.cohort_id = 15
+WHERE uel.day < CURRENT_DATE and uel.compute_late_status = 'NEW' AND uel.course_status = 'A' and uel.duration_hour > 0;
+
+
+
+SELECT * FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id
+WHERE uel.day < CURRENT_DATE and uel.compute_late_status = 'NEW' AND uel.course_status = 'A' and uel.duration_hour > 0;
+
+
+select * from uac_assiduite;
+
+
+select * from v_class_cohort;
+
+
+
+
+
+select * from mdl_user mu where mu.email = 'sarahiharimanana@gmail.com'
+
+select distinct(username) from v_studashboard_log;
+
+
+select * from v_studashboard_log;
+
+
+select * from v_showuser where cohort_id = 1
+and ID IN (
+
+SELECT user_id from uac_mail where status = 'NEW'
+);
+
+select * from v_showuser where EMAIL = 'mirimarajoelina@gmail.com'
+
+SELECT STR_TO_DATE('21-05-2013','%d-%m-%Y');
+
+SELECT mu.email AS EMAIL, mu.lastname AS LASTNAME, mu.firstname AS FIRSTNAME, vs.SHORTCLASS AS CLASS, mu.datedenaissance AS DATEDENAISSANCE , CASE WHEN um.status = 'NEW' THEN 'Email carte étudiant en cours' ELSE CONCAT('Email carte étudiant envoyé le ', DATE_FORMAT(um.last_update, '%d/%m/%Y vers %H:%i UTC')) END AS EMAIL_STATUS
+FROM v_showuser vs JOIN mdl_user mu ON mu.id = vs.ID
+JOIN uac_mail um ON um.user_id = mu.id AND um.flow_code = 'MLWELCO'
+where vs.LASTNAME = 'ANAMAHEFA' AND mu.datedenaissance = '2005-11-08'
+
+08-11-2005
+
+
+
+
+-- INSERT INTO uac_assiduite_archive (flow_id, user_id, edt_id, scan_id, status, create_date)
+select flow_id, user_id, edt_id, scan_id, status, create_date from uac_assiduite;
+
+select flow_id, user_id, edt_id, scan_id, status, create_date from uac_assiduite_archive;
+
+-- DELETE FROM uac_assiduite;
+
+
+select * from mdl_user;
