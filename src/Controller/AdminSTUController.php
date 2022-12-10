@@ -27,7 +27,8 @@ class AdminSTUController extends AbstractController
 
     $scale_right = ConnectionManager::whatScaleRight();
 
-
+    $logger->debug("Username: " . $_SESSION["username"]);
+    $logger->debug("my scale rights: " . $scale_right);
 
     if(isset($scale_right) && ($scale_right > 4)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
