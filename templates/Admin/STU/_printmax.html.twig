@@ -1,0 +1,41 @@
+<div id="table-print">
+    <table>
+      {% for i in 0..20 %}
+          <tr>
+            {% for j in 0..2 %}
+              {% set cl = (3 * i) + j %}
+              <td>
+                  <div>
+                      {#
+                      <img class="prt-bg" id="bg-{{cl}}" src='/img/CarteEtudiantBG.png' style="width:325px; height:500px; opacity: 1;">
+                       #}
+                      <img class="prt-bg" id="bg-{{cl}}" src='/img/CarteEtudiantBGLandscape.png' style="width:500px; height:325px; opacity: 1;">
+
+                  </div>
+                  <div>
+
+                    <img class="img-profile prt-photo" id="pf-{{cl}}" src='/img/NoPhotoLine.png' style="width:220px; height:220px; opacity: 1;">
+
+                    <img class="prt-logo" id="logo-{{cl}}" src="/img/logotext620x200.png" style="width:108px; height: 35px; opacity: 1;">
+
+                    <canvas id="can-{{cl}}"></canvas>
+
+                  </div>
+                  <div>
+                    <img class="prt-bc" id="item-bc-{{cl}}">
+
+                  </div>
+                  <div>
+                    <div class="prt-txt">
+                      <span id="prt-nom-{{cl}}" class="prt-txt-name"></span><br>
+                      <span id="prt-pnom-{{cl}}" class="prt-txt-fname"></span><br>
+                    </div>
+                  </div>
+
+              </td>
+            {% endfor %}
+          </tr>
+      {% endfor %}
+    </table>
+    <img id="logo-carte" src="/img/logotext620x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte">
+</div>

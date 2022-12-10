@@ -1,4 +1,8 @@
 {% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% include 'Dirty/dirtyjsbarcode.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
+
+
 {% if result_all_stu is defined and result_all_stu is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
@@ -34,7 +38,7 @@
   <div class="col-1">
   </div>
 </div>
-<div class="row dash-bar">
+<div class="row dash-bar" id="grid-crit-blc">
   <div class="col-1">
   </div>
 
@@ -50,14 +54,22 @@
     <button type="button" id="uac-mst-all-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
   </div>
 
-
-  <div class="col-6">
+  <div class="col-5">
   </div>
+
+  <div class="col-1 fil-el">
+    <button type="button" id="uac-mst-print" class="btn btn-secondary"><i class="icon-print"></i>&nbsp;Cartes</button>
+  </div>
+
+
+
 
   <div class="col-1">
   </div>
 </div>
-<div class="row">
+
+
+<div class="row" id="grid-all-blc">
   <div class="col-1">
   </div>
   <div class="col-10">
@@ -67,6 +79,14 @@
   <div class="col-1">
   </div>
 </div>
+
+{# waiting Block #}
+{% include 'RawTemplate/_waitinggif.html.twig' %}
+
+
+
+{# Display here the hidden block of print #}
+{% include 'Admin/STU/_printmax.html.twig' %}
 
 <div class="ace-hidden-goto">
     <div class="row">
