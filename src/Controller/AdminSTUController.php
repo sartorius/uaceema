@@ -51,7 +51,7 @@ class AdminSTUController extends AbstractController
                               . " mu.serie_bac AS SERIE_BAC, mu.annee_bac AS ANNEE_BAC, ifnull(mu.numero_cin, 'na') AS NUMCIN, ifnull(DATE_FORMAT(mu.date_cin, '%d/%m/%Y'), 'na') AS DATECIN, fEscapeStr(ifnull(mu.lieu_cin, 'na')) AS LIEU_CIN, fEscapeStr(ifnull(mu.nom_pnom_par1, 'na')) AS NOMPNOMP1, "
                               . " ifnull(mu.phone_par1, 'na') AS PHONEPAR1, fEscapeStr(ifnull(mu.profession_par1, 'na')) AS PROFPAR1, fEscapeStr(ifnull(mu.adresse_par1, 'na')) AS ADDRPAR1, fEscapeStr(ifnull(mu.city_par1, 'na')) AS CITYPAR1, fEscapeStr(ifnull(mu.nom_pnom_par2, 'na')) AS NOMPNOMP2, fEscapeStr(ifnull(mu.profession_par2, 'na')) AS PROFPAR2, "
                               . " ifnull(mu.phone_par2, 'na') AS PHONEPAR2, fEscapeStr(ifnull(mu.centres_interets, 'na')) AS CENTINT, "
-                              . " REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe)), \"'\", \" \") AS raw_data "
+                              . " REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe, vaco.short_classe)), \"'\", \" \") AS raw_data "
                               . " FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username "
                               . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id "
                               . " ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC; ";
