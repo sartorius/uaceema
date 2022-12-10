@@ -20,13 +20,22 @@ class AdminSTUController extends AbstractController
   public function managerstu(Environment $twig, LoggerInterface $logger)
   {
 
+    $logger->debug("1: session_status() " . session_status());
+
+    if (!isset($_SESSION)) {
+      $logger->debug("_SESSION NO");
+    }
+    else{
+      $logger->debug("_SESSION YES");
+    }
+
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 
     $scale_right = ConnectionManager::whatScaleRight();
-    $logger->debug("session_status() " . session_status());
+    $logger->debug("2: session_status() " . session_status());
 
     $logger->debug("Username: " . $_SESSION["username"]);
     $logger->debug("my scale rights: " . $scale_right);
