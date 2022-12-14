@@ -851,6 +851,13 @@ textarea[name=inputRef] {
   border-radius: 4px;
 }
 
+.mgs-rd-o-err{
+  font-size: 1.1em;
+  color: white;
+  background-color: #9D0000;
+  border-radius: 4px;
+}
+
 .ass-in-time{
     font-size: 0.8em;
     color: #007804;

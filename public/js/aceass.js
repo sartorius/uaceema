@@ -158,9 +158,15 @@ function verityContentScan(){
       readInput = convertWordAZERTY(originalRedInput).replace(/[^a-z0-9]/gi,'').toUpperCase();
     }
 
-    let scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';
-    if(($('#mg-graph-identifier').text() == 'ua-scan-out')){
-      scanOrderToCheck = ' <i class="mgs-rd-o-out">&nbsp;Sortie&nbsp;</i>';
+    let scanOrderToCheck = ' <i class="mgs-rd-o-err">&nbsp;ERR90&nbsp;</i>';
+    if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
+      // Only if the read is clean
+      if(($('#mg-graph-identifier').text() == 'ua-scan-in')){
+        scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';
+      }
+      else{
+        scanOrderToCheck = ' <i class="mgs-rd-o-out">&nbsp;Sortie&nbsp;</i>';
+      }
     }
 
     //console.log('We have read: ' + $('#scan-ace').val());

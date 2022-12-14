@@ -18,6 +18,9 @@ cgu:
 reglassiduite:
     path:       /reglassiduite
     controller: App\Controller\StaticController::reglassiduite
+reglementinterieur:
+    path:       /reglementinterieur
+    controller: App\Controller\StaticController::reglementinterieur
 contact:
     path:       /contact
     controller: App\Controller\StaticController::contact

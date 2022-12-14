@@ -82,6 +82,16 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+  public function reglementinterieur(Environment $twig)
+  {
+    
+    $content = $twig->render('Static/reglementinterieur.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+
+
+
   public function contact(Environment $twig)
   {
     $content = $twig->render('Static/contact.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
