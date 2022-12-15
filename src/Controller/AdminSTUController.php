@@ -94,9 +94,9 @@ class AdminSTUController extends AbstractController
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
         $allstu_query = " SELECT UPPER(uls.scan_username) AS USERNAME, DATE_FORMAT(uls.scan_date, '%d/%m') AS SCAN_DATE, uls.scan_time AS SCAN_TIME, uls.status AS SCAN_STATUS, uls.in_out AS IN_OUT, "
-                        . " CASE WHEN uls.status = 'END' THEN REPLACE(UPPER(mu.firstname), \"'\", \" \") ELSE 'na' END AS FIRSTNAME, "
-                        . " CASE WHEN uls.status = 'END' THEN REPLACE(UPPER(mu.lastname), \"'\", \" \") ELSE 'na' END AS LASTNAME,  CASE WHEN uls.status = 'END' THEN vcc.short_classe ELSE 'na' END AS CLASSE"
-                        . " FROM uac_load_scan uls LEFT JOIN mdl_user mu ON UPPER(mu.username) = UPPER(uls.scan_username) JOIN v_showuser vsw ON mu.id = vsw.ID JOIN v_class_cohort vcc ON vsw.COHORT_ID = vcc.id "
+                        . " CASE WHEN uls.status = 'END' THEN REPLACE(UPPER(mu.firstname), \"'\", \" \") WHEN uls.status = 'MIS' THEN 'Echec Lecture' ELSE 'En cours' END AS FIRSTNAME, "
+                        . " CASE WHEN uls.status = 'END' THEN REPLACE(UPPER(mu.lastname), \"'\", \" \") WHEN uls.status = 'MIS' THEN 'Echec Lecture' ELSE 'En cours' END AS LASTNAME,  CASE WHEN uls.status = 'END' THEN vcc.short_classe WHEN uls.status = 'MIS' THEN 'Echec Lecture' ELSE 'En cours' END AS CLASSE"
+                        . " FROM uac_load_scan uls LEFT JOIN mdl_user mu ON UPPER(mu.username) = UPPER(uls.scan_username) LEFT JOIN v_showuser vsw ON mu.id = vsw.ID LEFT JOIN v_class_cohort vcc ON vsw.COHORT_ID = vcc.id "
                         . " WHERE uls.scan_date = CURRENT_DATE  ORDER BY uls.id desc;";
 
         $logger->debug("Show me allstu_query: " . $allstu_query);
