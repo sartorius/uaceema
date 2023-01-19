@@ -67,7 +67,7 @@
             {{ profile['SHORTCLASS'] }}
         </div>
         <hr>
-        {% if from_admin == 'Y' %}
+        {% if from_admin != 'N' %}
               <div class="card-parent">
                     <div class="carte-profile blc-inline">
                       <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
