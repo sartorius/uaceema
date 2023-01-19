@@ -1055,6 +1055,14 @@ $(document).ready(function() {
         $("#blc-trace-in-out").show();
       }
     });
+
+    $("#scmenu-edt").click(function() {
+      console.log('You click on scmenu-edt');
+
+      document.getElementById('anchor-edt').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
   }
   else if($('#mg-graph-identifier').text() == 'dash-ass'){
     // Do nothing dash-ass

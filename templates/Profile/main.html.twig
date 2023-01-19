@@ -44,9 +44,18 @@
           {% endif %}
 
         </div>
-        <div class="col-9">
+        {% include 'Profile/_profilemenubutton.html.twig' %}
+        <div class="col-8">
         </div>
       </div>
+{% else %}
+<div class="row">
+  <div class="col-sm-1">
+  </div>
+  {% include 'Profile/_profilemenubutton.html.twig' %}
+  <div class="col-sm-10">
+  </div>
+</div>
 {% endif %}
 
 
@@ -117,6 +126,7 @@
     </div>
 </div>
 <hr>
+<i id='anchor-edt'></i><br>
 {% if sp_result|length > 1 %}
 
 
