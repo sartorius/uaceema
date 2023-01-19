@@ -838,7 +838,7 @@ function runStat(){
         // args are item - itemIndex - event
         rowClick: function(args){
               //goToSTU(args.item.PAGE);
-              console.log('You click on jsGrid: ' + args.item.PAGE);
+              //console.log('You click on jsGrid: ' + args.item.PAGE);
               goToSTUFromDashAssiduite(args.item.PAGE);
           }
     });
