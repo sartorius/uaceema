@@ -20,6 +20,7 @@ class ProfileController extends AbstractController
 
 
     $logger->debug("This page: " . $page);
+    // Usually this means N for No
     $from_admin = 'N';
 
     //Check if we are coming from POST
@@ -30,7 +31,14 @@ class ProfileController extends AbstractController
         $logger->debug("See Session ID: " . $_SESSION["id"]);
 
         $page = $_POST["poststu_page"];
-        $from_admin = 'Y';
+        // Student
+        $from_admin = 'S';
+    }
+    else if(isset($_POST["postfromdashass_page"])){
+          // Coming from dash ass
+          $page = $_POST["postfromdashass_page"];
+          // Dashboard Assiduite
+          $from_admin = 'A';
     }
 
 

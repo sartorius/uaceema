@@ -834,7 +834,13 @@ function runStat(){
         sorting: true,
         paging: true,
         data: dataTagToJsonArrayMisPP,
-        fields: responsivefieldsPP
+        fields: responsivefieldsPP,
+        // args are item - itemIndex - event
+        rowClick: function(args){
+              //goToSTU(args.item.PAGE);
+              console.log('You click on jsGrid: ' + args.item.PAGE);
+              goToSTUFromDashAssiduite(args.item.PAGE);
+          }
     });
     // After the grid
     //refreshListener();
@@ -844,6 +850,10 @@ function runStat(){
   }
 }
 
+function goToSTUFromDashAssiduite(page){
+  $("#read-stu-page").val(page);
+  $("#mg-stu-page-form").submit();
+}
 
 function generateGlobalAssCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
