@@ -568,7 +568,7 @@ function generateAllMngStudentReportCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Genre" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "\n";
+	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Genre" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Lieu de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Inscrit(e) depuis" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "Situation Matrimoniale" + SEP_  + "\n";
 	csvContent += dataString;
 	for(let i=0; i<filteredDataAllSTUToJsonArray.length; i++){
 		dataString = filteredDataAllSTUToJsonArray[i].USERNAME + SEP_
@@ -577,12 +577,14 @@ function generateAllMngStudentReportCSV(){
     + filteredDataAllSTUToJsonArray[i].GENRE + SEP_
     +  filteredDataAllSTUToJsonArray[i].EMAIL + SEP_
     +  filteredDataAllSTUToJsonArray[i].DATEDENAISSANCE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].LIEUDN + SEP_
     +  filteredDataAllSTUToJsonArray[i].PHONE + SEP_
     +  filteredDataAllSTUToJsonArray[i].CLASS_ID + SEP_
     +  filteredDataAllSTUToJsonArray[i].CLASS_MENTION + SEP_
     +  filteredDataAllSTUToJsonArray[i].CLASS_NIVEAU + SEP_
     +  filteredDataAllSTUToJsonArray[i].CLASS_PARCOURS + SEP_
     +  filteredDataAllSTUToJsonArray[i].CLASS_GROUPE + SEP_
+    +  filteredDataAllSTUToJsonArray[i].INSCDATE + SEP_
     +  filteredDataAllSTUToJsonArray[i].ADRESSE + SEP_
     +  filteredDataAllSTUToJsonArray[i].QUARTIER + SEP_
     +  filteredDataAllSTUToJsonArray[i].FB + SEP_
@@ -601,6 +603,7 @@ function generateAllMngStudentReportCSV(){
     +  filteredDataAllSTUToJsonArray[i].PROFPAR2 + SEP_
     +  filteredDataAllSTUToJsonArray[i].PHONEPAR2 + SEP_
     +  filteredDataAllSTUToJsonArray[i].CENTINT + SEP_
+    + filteredDataAllSTUToJsonArray[i].SITM + SEP_
     ;
     // easy close here
     csvContent += i < filteredDataAllSTUToJsonArray.length ? dataString+ "\n" : dataString;
