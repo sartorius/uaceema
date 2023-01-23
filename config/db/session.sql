@@ -242,3 +242,7 @@ select flow_id, user_id, edt_id, scan_id, status, create_date from uac_assiduite
 
 
 select * from mdl_user;
+
+DELETE FROM mdl_load_user;
+CALL MAN_LOAD_MDLUser();
+CALL MAN_CRT_MDLUser();
