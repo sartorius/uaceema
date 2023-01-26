@@ -511,7 +511,7 @@ function loadAllEDTGrid(){
         { name: "mention",
           title: "Mention",
           type: "text",
-          width: 100,
+          width: 75,
           headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
@@ -534,7 +534,15 @@ function loadAllEDTGrid(){
         { name: "groupe",
           title: 'Groupe',
           type: "text",
-          width: 33,
+          width: 28,
+          headercss: "cell-recap-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
+        { name: "last_update",
+          title: "Maj",
+          type: "text",
+          width: 20,
           headercss: "cell-recap-hd",
           css: "cell-recap-l"
         },
