@@ -269,7 +269,7 @@ h2 {
     .mgs-mainblk-txt{
       text-align: justify;
       color: #3C3C3C;
-      padding: 40px;
+      padding: 20px;
       font-size: 1.2em;
     }
 }
@@ -1100,6 +1100,19 @@ textarea[name=inputRef] {
   margin-bottom: 5px;
 }
 
+.ace-blk-contact{
+  background-color: var(--main-gray-10);
+  border-radius: 5px;
+}
+.ace-contact{
+  font-size: 18px;
+  color: var(--main-gray-75);
+  margin-top: 20px;
+  margin-left: 80px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 @media (min-width:414px){
   .info-cartouche{
     font-size: 14px;
@@ -1446,4 +1459,15 @@ textarea[name=inputRef] {
   font-family: Helvetica;
   font-size: 18px;
   font-weight: 400;
+}
+
+img.part-img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.part-img:hover{
+  -webkit-filter: grayscale(100%) !important; /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%) !important;
 }

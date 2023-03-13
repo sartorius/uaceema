@@ -1,0 +1,80 @@
+
+{% set raw_limit = 3 %}
+{% set part_i = result_all_partner|length // raw_limit %}
+
+<div class="row">
+      {% for part_raw in 1..part_i %}
+
+          <div class="col-lg-3 mgs-mainblk-txt">
+          </div>
+
+          <div class="col-lg-2 mgs-mainblk-txt">
+            {% set part_case = ((part_raw - 1) * raw_limit) + 0 %}
+            <a href="{{ result_all_partner[part_case]['website'] }}" target="_blank">
+              <img src="{{ path('main') }}img/partner/{{ result_all_partner[part_case]['path'] }}" style="width:200px; height:200px; opacity: 1;" title="{{ result_all_partner[part_case]['title'] }}" alt="{{ result_all_partner[part_case]['title'] }}" class="part-img">
+            </a>
+            {# part_case {{ part_case }}; #}
+          </div>
+
+          <div class="col-lg-2 mgs-mainblk-txt">
+            {% set part_case = ((part_raw - 1) * raw_limit) + 1 %}
+            <a href="{{ result_all_partner[part_case]['website'] }}" target="_blank">
+              <img src="{{ path('main') }}img/partner/{{ result_all_partner[part_case]['path'] }}" style="width:200px; height:200px; opacity: 1;" title="{{ result_all_partner[part_case]['title'] }}" alt="{{ result_all_partner[part_case]['title'] }}" class="part-img">
+            </a>
+            {# part_case {{ part_case }}; #}
+          </div>
+
+          <div class="col-lg-2 mgs-mainblk-txt">
+            {% set part_case = ((part_raw - 1) * raw_limit) + 2 %}
+            <a href="{{ result_all_partner[part_case]['website'] }}" target="_blank">
+              <img src="{{ path('main') }}img/partner/{{ result_all_partner[part_case]['path'] }}" style="width:200px; height:200px; opacity: 1;" title="{{ result_all_partner[part_case]['title'] }}" alt="{{ result_all_partner[part_case]['title'] }}" class="part-img">
+            </a>
+            {# part_case {{ part_case }}; #}
+          </div>
+
+          <div class="col-lg-3 mgs-mainblk-txt">
+          </div>
+
+          {# Show part_raw {{ part_raw }};<br> #}
+      {% endfor %}
+
+
+      {% set last_line = (result_all_partner|length % raw_limit ) %}
+      {% if last_line > 0 %}
+        {#___is not zero: {{ last_line }} #}
+        <div class="col-lg-3 mgs-mainblk-txt">
+        </div>
+
+            <div class="col-lg-2 mgs-mainblk-txt">
+              {% set part_case = (part_i * raw_limit) + 0 %}
+              <a href="{{ result_all_partner[part_case]['website'] }}" target="_blank">
+                <img src="{{ path('main') }}img/partner/{{ result_all_partner[part_case]['path'] }}" style="width:200px; height:200px; opacity: 1;" title="{{ result_all_partner[part_case]['title'] }}" alt="{{ result_all_partner[part_case]['title'] }}" class="part-img">
+              </a>
+              {# part_case {{ part_case }}; #}
+            </div>
+
+        {% if last_line > 1 %}
+            <div class="col-lg-2 mgs-mainblk-txt">
+              {% set part_case = (part_i * raw_limit) + 1 %}
+              <a href="{{ result_all_partner[part_case]['website'] }}" target="_blank">
+                <img src="{{ path('main') }}img/partner/{{ result_all_partner[part_case]['path'] }}" style="width:200px; height:200px; opacity: 1;" title="{{ result_all_partner[part_case]['title'] }}" alt="{{ result_all_partner[part_case]['title'] }}" class="part-img">
+              </a>
+              {# part_case {{ part_case }}; #}
+            </div>
+        {% else %}
+            <div class="col-lg-2 mgs-mainblk-txt">
+            </div>
+        {% endif %}
+
+
+        <div class="col-lg-2 mgs-mainblk-txt">
+        </div>
+
+        <div class="col-lg-3 mgs-mainblk-txt">
+        </div>
+      {% else %}
+        {# We have nothing to do as it is a multiple of raw LIMIT #}
+        {# ___is zero: {{ last_line }} #}
+      {% endif %}
+
+</div>

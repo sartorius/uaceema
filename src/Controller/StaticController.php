@@ -7,15 +7,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\DBUtils\ConnectionManager;
 use App\DBUtils\MailManager;
 use Twig\Environment;
+use App\DBUtils\DBConnectionManager;
+use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
+use \PDO;
 
 
 class StaticController extends AbstractController
 {
-  public function mention(Environment $twig)
+  public function mention(Environment $twig, LoggerInterface $logger)
   {
 
     $debug_session = "Pass variable to check";
@@ -35,15 +37,24 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
-  public function partner(Environment $twig)
+  public function partner(Environment $twig, LoggerInterface $logger)
   {
 
-    $debug_session = "Pass variable to check";
+    $debug_session = "prod.21.a";
 
     // This email works !!
-    //MailManager::sendSimpleEmail();
+    $liste_partner_query = "SELECT urp.title AS title, urp.img_path AS path, urp.website AS website FROM uac_ref_partner urp ORDER BY urp.title; ";
+    $logger->debug("Show me liste_partner_query: " . $liste_partner_query);
 
-    $content = $twig->render('Static/partner.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    $dbconnectioninst = DBConnectionManager::getInstance();
+    $result_all_partner = $dbconnectioninst->query($liste_partner_query)->fetchAll(PDO::FETCH_ASSOC);
+
+
+    $content = $twig->render('Static/partner.html.twig', ['debug' => $debug_session,
+                                                          'amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                          'result_all_partner'=>$result_all_partner,
+                                                          'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
@@ -84,7 +95,7 @@ class StaticController extends AbstractController
 
   public function reglementinterieur(Environment $twig)
   {
-    
+
     $content = $twig->render('Static/reglementinterieur.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);

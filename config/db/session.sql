@@ -246,3 +246,97 @@ select * from mdl_user;
 DELETE FROM mdl_load_user;
 CALL MAN_LOAD_MDLUser();
 CALL MAN_CRT_MDLUser();
+
+
+-- SESSION PROD
+
+
+select * from v_showuser vsc join mdl_user mu on mu.username = vsc.username
+where mu.create_date < '2023-02-02'
+order by 1 asc;
+
+
+select * from uac_showuser us where us.create_date < '2023-01-02' order by us.create_date;
+
+select * from uac_showuser us where us.create_date < '2023-01-02' order by us.create_date;
+
+select * from uac_load_scan uls
+where NOT(uls.status = 'END');
+
+
+select * from uac_load_scan uls
+where NOT(uls.status = 'END');
+
+
+select * from uac_load_scan uls
+where uls.scan_username like '%dyla%'
+and NOT(uls.status = 'END');
+
+
+
+select * from uac_load_scan uls
+where uls.status = 'MIS';
+
+select uls.scan_username, count(1)
+from uac_load_scan uls
+where uls.status = 'MIS'
+group by uls.scan_username
+order by count(1) desc;
+
+
+-- ABIEMAM179
+-- DYLAREA047
+-- AINARAH382
+
+
+
+select * from uac_load_scan uls where uls.scan_username = 'ranitoa38';
+
+
+select * from v_showuser order by 1 desc;
+
+
+select * from mdl_user order by 1 asc;
+
+
+
+DELETE FROM mdl_load_user;
+CALL MAN_LOAD_MDLUser();
+CALL MAN_CRT_MDLUser();
+
+
+select * from v_studashboard_log order by creation_date desc;
+
+
+-- select * from mdl_user mu where mu.email_par1 is not null;
+
+select * from mdl_user mu where mu.username = 'JEANRAS329'
+
+select * from mdl_user mu where mu.lastname = 'RASOLOFOMANANA'
+
+
+select * from mdl_user mu where mu.email = 'tommysixx22@gmail.com';
+
+
+
+select * from uac_showuser us where us.username = 'sixxtom123';
+
+
+select * from v_showuser where username = 'antsrav051';
+
+select * from v_class_cohort
+
+
+
+select * from uac_edt_line;
+
+select distinct(course_status) from uac_edt_line;
+
+
+select uel.day, uem.last_update, vcc.short_classe, uel.raw_course_title, uem.monday_ofthew from uac_edt_line uel join uac_edt_master uem on uel.master_id = uem.id
+								join v_class_cohort vcc on vcc.id = uem.cohort_id
+where uel.course_status = 'C' ORDER BY uel.day desc;
+
+
+
+select * from v_studashboard_log;
