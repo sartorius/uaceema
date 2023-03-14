@@ -868,11 +868,11 @@ function generateGlobalAssCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Username" + SEP_ + "Étudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Débute" + SEP_ + "Classe" + SEP_ + "Détail du cours" + SEP_ + "\n";
+	let dataString = "Username" + SEP_ + "Matricule" + SEP_ + "Étudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Débute" + SEP_ + "Classe" + SEP_ + "Détail du cours" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayReport.length; i++){
 		// dataString = removeDiacritics(dataTagToJsonArrayReport[i].NAME) + SEP_ + removeDiacritics(dataTagToJsonArrayReport[i].STATUS) + SEP_ + removeDiacritics(dataTagToJsonArrayReport[i].JOUR) + SEP_ +  removeDiacritics(dataTagToJsonArrayReport[i].COURS_DATE) + SEP_ +  removeDiacritics(dataTagToJsonArray[i].DEBUT_COURS) + SEP_ + removeDiacritics(dataTagToJsonArray[i].CLASSE) + SEP_ + removeDiacritics(dataTagToJsonArray[i].COURS_DETAILS) + SEP_ ;
-    dataString = dataTagToJsonArrayReport[i].USERNAME + SEP_ + dataTagToJsonArrayReport[i].NAME + SEP_ + dataTagToJsonArrayReport[i].STATUS + SEP_ + dataTagToJsonArrayReport[i].JOUR + SEP_ +  dataTagToJsonArrayReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayReport[i].CLASSE + SEP_ + dataTagToJsonArrayReport[i].COURS_DETAILS + SEP_ ;
+    dataString = dataTagToJsonArrayReport[i].USERNAME + SEP_ + dataTagToJsonArrayReport[i].MATRICULE + SEP_ + dataTagToJsonArrayReport[i].NAME + SEP_ + dataTagToJsonArrayReport[i].STATUS + SEP_ + dataTagToJsonArrayReport[i].JOUR + SEP_ +  dataTagToJsonArrayReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayReport[i].CLASSE + SEP_ + dataTagToJsonArrayReport[i].COURS_DETAILS + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArrayReport.length ? dataString+ "\n" : dataString;
 	}

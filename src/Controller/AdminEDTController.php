@@ -29,7 +29,7 @@ class AdminEDTController extends AbstractController
     $scale_right = ConnectionManager::whatScaleRight();
 
 
-    // Level ONE is necessary to load EDT
+    // Level 4 is necessary to load EDT
     if(isset($scale_right) && ($scale_right > 4)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
@@ -53,7 +53,7 @@ class AdminEDTController extends AbstractController
 											    . " GROUP BY mu.firstname, mu.lastname, ass.status, vcc.short_classe, vsu.PAGE ORDER BY COUNT(1) DESC LIMIT 100; ";
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
-        $query_report = " SELECT UPPER(mu.username) AS USERNAME, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
+        $query_report = " SELECT UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
 									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS, "
                           . " CASE WHEN uel.day_code = 1 THEN 'Lundi' "
                           . " WHEN uel.day_code = 2 THEN 'Mardi' "
@@ -331,7 +331,8 @@ class AdminEDTController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
-    if(isset($scale_right) && ($scale_right > 0)){
+    // Must be exactly 8 or more than 99
+    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
 
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
@@ -364,7 +365,8 @@ class AdminEDTController extends AbstractController
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
-    if(isset($scale_right) && ($scale_right > 0)){
+    // Must be exactly 8 or more than 99
+    if(isset($scale_right) && (($scale_right == 11) || ($scale_right > 99))){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
 
@@ -746,14 +748,14 @@ class AdminEDTController extends AbstractController
                     if ($monday > $current_date){
                       // Everything is fine as we look to upload in future
                     }
-                    elseif($scale_right > 10){
+                    elseif(($scale_right == 11) || ($scale_right > 99)){
                       // It is still OK
                       $overpassday = date("d/m/Y", time());
                     }
                     else{
                       $file_is_still_valid = false;
                       $short_err = 'ERRB192 Erreur EDT date passée';
-                      $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '. Si cette opération est nécessaire, vous devez utilisez un login avec des droits de hierarchie 11. Vos droits actuels sont de ' . $scale_right . '.</span>' . '<br>';
+                      $zip_one_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée ' . $monday . '. Si cette opération est nécessaire, vous devez utilisez un login avec des droits de hierarchie 11* ou Administrateur. Vos droits actuels sont de ' . $scale_right . '.</span>' . '<br>';
 
                       $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée.</span>' . '<br>'
                                                         . 'Semaine chargée : ' . $monday . ' Nous sommes le: ' . $current_date . '<br><br>'

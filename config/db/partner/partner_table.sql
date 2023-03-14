@@ -33,6 +33,4 @@ INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Gro
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Madajeune', NULL, 'madajeune.png', 'https://www.facebook.com/profile.php?id=100072319024922');
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Telma', NULL, 'telma.png', 'https://www.telma.mg/');
 
-
-INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('ZFakeGuanomad1', NULL, 'guanomad.png', 'https://www.guanomad.com/');
-INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('ZFakeGuanomad2', NULL, 'guanomad.png', 'https://www.guanomad.com/');
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Ambassade de France à Madagascar', NULL, 'ambassadefrancemadagascar.png', 'https://mg.ambafrance.org/');

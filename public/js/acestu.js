@@ -315,6 +315,14 @@ function loadAllSTUGrid(){
           css: "cell-recap-l"
         },
         //Default width is auto
+        { name: "MATRICULE",
+          title: "Matricule",
+          type: "text",
+          width: 30,
+          headercss: "cell-recap-hd",
+          css: "cell-recap-l"
+        },
+        //Default width is auto
         { name: "CLASS_MENTION",
           title: "Mention",
           type: "text",

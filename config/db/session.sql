@@ -18,8 +18,11 @@ symfony server:start
 11:14:32.186 debug	Hash password: unesardinedanslamer 9433c9064f0593da5727e2122a193a6e -- mavrako128
 11:14:32.186 debug	Hash password: unrequindanslocean 3165cef3bc67568c7d30f5a184f43766 -- menrako232
 11:14:32.186 debug	Hash password: leratdesvilles a2d426e5a92f1bbf418a35869ffc7cc2 -- blourat077
-11:14:32.186 debug	Hash password: leratdesvilles a2d426e5a92f1bbf418a35869ffc7cc2 -- paulrab367
-11:14:32.186 debug	Hash password: unetortuegasy 2df68a85f1932ca876926252bbaa0820 -- manrako092
+
+11:14:32.186 debug	Hash password: lesoleildumatin fcdb5f9e7ac599b87b31eee2833b18a2 -- ravorab367 -- id 15
+11:14:32.186 debug	Hash password: lamangueverteavecpiment bb292e40979127642d72c0018c490965 -- harvelr092 -- id 14
+
+
 
 http://localhost:8888/aceemintranet/pluginfile.php/43/user/icon/boost/f1?rev=119
 
