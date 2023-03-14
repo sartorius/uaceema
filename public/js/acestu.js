@@ -576,12 +576,13 @@ function generateAllMngStudentReportCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Genre" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Lieu de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Inscrit(e) depuis" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "Situation Matrimoniale" + SEP_  + "\n";
+	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Matricule" + SEP_  + "Genre" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Lieu de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Inscrit(e) depuis" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "Situation Matrimoniale" + SEP_  + "\n";
 	csvContent += dataString;
 	for(let i=0; i<filteredDataAllSTUToJsonArray.length; i++){
 		dataString = filteredDataAllSTUToJsonArray[i].USERNAME + SEP_
     + filteredDataAllSTUToJsonArray[i].LASTNAME + SEP_
     + filteredDataAllSTUToJsonArray[i].FIRSTNAME + SEP_
+    + filteredDataAllSTUToJsonArray[i].MATRICULE + SEP_
     + filteredDataAllSTUToJsonArray[i].GENRE + SEP_
     +  filteredDataAllSTUToJsonArray[i].EMAIL + SEP_
     +  filteredDataAllSTUToJsonArray[i].DATEDENAISSANCE + SEP_
