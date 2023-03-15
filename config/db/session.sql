@@ -15,7 +15,7 @@ symfony server:start
 -- Agent
 11:14:32.186 debug	Hash password: lelemurientoutnoir c24d593b9266e7b8d0887d0dc7259705 -- mikrama654
 11:14:32.186 debug	Hash password: unnuagedansleciel d064a894fb8645879312b10d366cd604 -- mborako321
-11:14:32.186 debug	Hash password: unesardinedanslamer 9433c9064f0593da5727e2122a193a6e -- mavrako128
+11:14:32.186 debug	Hash password: unesardinedanslamer 9433c9064f0593da5727e2122a193a6e -- scolari023
 11:14:32.186 debug	Hash password: unrequindanslocean 3165cef3bc67568c7d30f5a184f43766 -- menrako232
 11:14:32.186 debug	Hash password: leratdesvilles a2d426e5a92f1bbf418a35869ffc7cc2 -- blourat077
 
@@ -340,6 +340,8 @@ select uel.day, uem.last_update, vcc.short_classe, uel.raw_course_title, uem.mon
 								join v_class_cohort vcc on vcc.id = uem.cohort_id
 where uel.course_status = 'C' ORDER BY uel.day desc;
 
+
+select CONCAT(niveau, ' - ', mention, '/', parcours, '/', groupe, ' (', short_classe, ')') from v_class_cohort vcc where vcc.niveau IN ('M1', 'M2') ORDER BY niveau, id;
 
 
 select * from v_studashboard_log;

@@ -1468,6 +1468,80 @@ img.part-img{
 }
 
 .part-img:hover{
+  transform: scale(1.1);
+}
+
+/* Override col-1 */
+.univ-col-1 {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+.univ-img{
+  margin-right: 35px;
+  margin-left: 35px;
+  margin-top: 2.7em;
+}
+
+.gray-img:hover{
   -webkit-filter: grayscale(100%) !important; /* Safari 6.0 - 9.0 */
   filter: grayscale(100%) !important;
+}
+
+.ace-sub {
+  text-align: center;
+  /*margin-left: 35px;*/
+  margin-top: 20px;
+}
+
+.ace-sub-fmt{
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--main-ace-color);
+}
+.ace-sub2 {
+  text-align: center;
+  /*margin-left: 25px;*/
+  margin-top: 10px;
+}
+
+.ace-sub-fmt2{
+  font-size: 0.7em;
+  font-weight: 400;
+  color: var(--main-ace-color);
+}
+
+#spc-blk{
+  padding-bottom: 70px;
+}
+
+#univ-entry {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+  min-height: 360px;
+}
+
+#univ-entry:after {
+    position: absolute;
+    content:"";
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    background: linear-gradient(to bottom, rgba(255,0,0,0) 0%, #242A4D 100%);
+}
+
+.univ-sm-txt{
+  font-size: 12px;
+}
+
+.part-img-fmt:hover {
+  transform: scale(1.1);
+}
+
+.fmt-adj{
+  margin-right: 5em;
 }
