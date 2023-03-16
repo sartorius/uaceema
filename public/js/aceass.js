@@ -1107,6 +1107,64 @@ $(document).ready(function() {
         $("#loader-wait").show();
     });
   }
+  else if($('#mg-graph-identifier').text() == 'stt-men'){
+    // Do nothing
+
+    $(".men-up").click(function() {
+      document.getElementById('anchor-menup').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+
+    console.log('You are in stt-men');
+    $("#men-drt").click(function() {
+      console.log('You click on scmenu-edt');
+
+      document.getElementById('anchor-drt').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-ges").click(function() {
+      document.getElementById('anchor-ges').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-eco").click(function() {
+      document.getElementById('anchor-eco').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-inf").click(function() {
+      document.getElementById('anchor-inf').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-com").click(function() {
+      document.getElementById('anchor-com').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-ssa").click(function() {
+      document.getElementById('anchor-ssa').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    $("#men-rid").click(function() {
+      document.getElementById('anchor-rid').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+
+
+  }
   else{
     //Do nothing
   }

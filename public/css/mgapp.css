@@ -64,6 +64,7 @@ html, body {
 }
 
 h1 {
+  text-align: left;
   font-size: 3.2em;
   font-weight: lighter;
 }
@@ -124,6 +125,7 @@ h2 {
   min-height: 450px;
 }
 
+/* Big screen come after ! */
 @media (min-width:414px){
     #home-entry {
       min-height: 650px;
@@ -263,14 +265,19 @@ h2 {
   text-align: justify;
   color: #3C3C3C;
   font-size: 1.0em;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
+/* BIG SCREEN */
 @media (min-width:414px){
     .mgs-mainblk-txt{
       text-align: justify;
       color: #3C3C3C;
       padding: 20px;
       font-size: 1.2em;
+      margin-left: 0px;
+      margin-right: 0px;
     }
 }
 
@@ -1483,6 +1490,10 @@ img.part-img{
   margin-top: 2.7em;
 }
 
+.img-mention{
+  border-radius: 3px;
+}
+
 .gray-img:hover{
   -webkit-filter: grayscale(100%) !important; /* Safari 6.0 - 9.0 */
   filter: grayscale(100%) !important;
@@ -1499,6 +1510,37 @@ img.part-img{
   font-weight: 600;
   color: var(--main-ace-color);
 }
+
+
+.mention-txt-over{
+  text-align: left;
+  position: absolute;
+  margin-top: -100px;
+  margin-left: 23%;
+  max-width: 54%;
+  font-size: 1em;
+  color: white;
+  font-family: "Montserrat", "Helvetica Neue", helvetica, arial, sans-serif;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+/* Big screen come after ! */
+@media (min-width:414px){
+  .mention-txt-over{
+    text-align: left;
+    position: absolute;
+    margin-top: -100px;
+    margin-left: 10%;
+    max-width: 80%;
+    font-size: 1em;
+    color: white;
+    font-family: "Montserrat", "Helvetica Neue", helvetica, arial, sans-serif;
+    font-weight: 800;
+    pointer-events: none;
+  }
+}
+
 .ace-sub2 {
   text-align: center;
   /*margin-left: 25px;*/
@@ -1539,7 +1581,7 @@ img.part-img{
 }
 
 .part-img-fmt:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .fmt-adj{

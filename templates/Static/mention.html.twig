@@ -1,11 +1,14 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
+<i id="anchor-menup"></i>
+<div id="mg-graph-identifier">stt-men</div>
 
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
   <div class="col-lg-6 mgs-mainblk-txt">
+
     <h1>Formation</h1>
-    Vous souhaitez devenir étudiant ? L'université offre une grande variété de formation, il y en a sûrement une faite pour vous :
+    <small>Vous voulez vous assurer un enseignement de qualité et donner les meilleures chances à votre avenir ?</small><br>Venez étudier chez nous ! L'université offre une grande variété de formations :
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
@@ -17,26 +20,26 @@
   </div>
 
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/droit.png" style="width:150px; height:150px; opacity: 1;" title="Droit" alt="Droit" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-drt" src="{{ path('main') }}img/formation/droit.png" style="width:200px; height:200px; opacity: 1;" title="Droit" alt="Droit" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             DROIT & SCIENCES POLITIQUES<br>
           </div>
         </div>
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/gestion.png" style="width:150px; height:150px; opacity: 1;" title="Gestion" alt="Gestion" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-ges" src="{{ path('main') }}img/formation/gestion.png" style="width:200px; height:200px; opacity: 1;" title="Gestion" alt="Gestion" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             GESTION<br>
           </div>
         </div>
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/economie.png" style="width:150px; height:150px; opacity: 1;" title="Économie" alt="Économie" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-eco" src="{{ path('main') }}img/formation/economie.png" style=" width:200px; height:200px; opacity: 1;" title="Économie" alt="Économie" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             ÉCONOMIE<br>
           </div>
         </div>
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/informatiqueelectronique.png" style="width:150px; height:150px; opacity: 1;" title="Informatique et Électronique" alt="Informatique et Électronique" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-inf" src="{{ path('main') }}img/formation/informatiqueelectronique.png" style=" width:200px; height:200px; opacity: 1;" title="Informatique et Électronique" alt="Informatique et Électronique" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             INFORMATIQUE & ÉLECTRONIQUE<br>
           </div>
         </div>
@@ -45,24 +48,31 @@
 </div>
 
 <div class="row">
-  <div class="col-lg-3 mgs-mainblk-txt fmt-adj">
+  <div class="col-lg-3 mgs-mainblk-txt">
   </div>
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/communication.png" style="width:150px; height:150px; opacity: 1;" title="Communication" alt="Communication" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-com" src="{{ path('main') }}img/formation/communication.png" style=" width:200px; height:200px; opacity: 1;" title="Communication" alt="Communication" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             COMMUNICATION<br>
           </div>
         </div>
         <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/scdelasante.png" style="width:150px; height:150px; opacity: 1;" title="Sciences de la Santé" alt="Sciences de la Santé" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+          <img id="men-ssa" src="{{ path('main') }}img/formation/scdelasante.png" style=" width:200px; height:200px; opacity: 1;" title="Sciences de la Santé" alt="Sciences de la Santé" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             SCIENCES DE LA SANTÉ<br>
           </div>
         </div>
-        <div class="col-lg-1 univ-col-1 univ-img">
-          <img src="{{ path('main') }}img/formation/diplomatie.png" style="width:150px; height:150px; opacity: 1;" title="Relation Internationales & Diplomatie" alt="Relation Internationales & Diplomatie" class="uac-img-center img-profile part-img-fmt">
-          <div class="ace-sub ace-sub-fmt">
+        <div id="men-rid" class="col-lg-1 univ-col-1 univ-img">
+          <img src="{{ path('main') }}img/formation/diplomatie.png" style=" width:200px; height:200px; opacity: 1;" title="Relation Internationales & Diplomatie" alt="Relation Internationales & Diplomatie" class="uac-img-center img-mention part-img-fmt">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
             RELATIONS INTERNATIONALES ET DIPLOMATIE<br>
+          </div>
+        </div>
+
+        <div class="col-lg-1 univ-col-1 univ-img">
+          <img src="{{ path('main') }}img/formation/endline.png" style=" width:200px; height:200px; opacity: 1;" title="Mention Fin" alt="Mention Fin" class="uac-img-center img-mention">
+          <div class="ace-sub ace-sub-fmt mention-txt-over">
+            IL Y EN A SÛREMENT UNE FAITE POUR VOUS !<br>
           </div>
         </div>
   <div class="col-lg-3 mgs-mainblk-txt">
@@ -73,9 +83,13 @@
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 univ-col-1">
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+
+
+    <i id="anchor-drt"></i><br><br><br><br>
     <hr>
     <h1>Droit & Sciences Politiques</h1>
+
     <br>
     <strong>Parcours</strong><br>
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Droit public<br>
@@ -99,7 +113,8 @@
     Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
     {% include 'Static/_mentionpieceadm.html.twig' %}
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (DROIT rouge)<br>
-    <hr>
+
+    {% include 'Static/_mentionupfoot.html.twig' %}
 
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">
@@ -110,7 +125,9 @@
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 univ-col-1">
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-ges"></i><br><br><br><br>
+    <hr>
     <h1>Gestion</h1>
     <br>
     <strong>Parcours Licence</strong><br>
@@ -129,8 +146,8 @@
     Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
     {% include 'Static/_mentionpieceadm.html.twig' %}
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (GESTION rose)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
 
-    <hr>
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
@@ -140,7 +157,9 @@
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 univ-col-1">
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-eco"></i><br><br><br><br>
+    <hr>
     <h1>Économie</h1>
     <br>
     <strong>Parcours Licence</strong><br>
@@ -155,8 +174,9 @@
     Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
     {% include 'Static/_mentionpieceadm.html.twig' %}
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (ÉCONOMIE orange)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
 
-    <hr>
+
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
@@ -166,7 +186,9 @@
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 univ-col-1">
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-inf"></i><br><br><br><br>
+    <hr>
     <h1>Informatique & Électronique</h1>
     <br>
     <strong>Parcours Licence</strong><br>
@@ -194,8 +216,9 @@
     Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
     {% include 'Static/_mentionpieceadm.html.twig' %}
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (INFO jaune)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
 
-    <hr>
+
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
@@ -206,7 +229,9 @@
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
-  <div class="col-lg-6 univ-col-1">
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-com"></i><br><br><br><br>
+    <hr>
     <h1>Communication</h1>
     <br>
     <strong>Parcours Licence</strong><br>
@@ -221,6 +246,76 @@
     Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
     {% include 'Static/_mentionpieceadm.html.twig' %}
     &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (COMMUNICATION bleu)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
+
+
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-ssa"></i><br><br><br><br>
+    <hr>
+    <h1>Sciences de la Santé</h1>
+    <br>
+    <strong>Parcours Licence</strong><br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Techniques biomédicales<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Administration et Gestion du Système de santé<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Imagerie Médicale<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Opticien, Lunetier, Optométriste<br><br>
+
+    Niveau requis : BACC. A2, C, D et S.<br>
+    Diplôme préparés : Licence et Master.<br><br>
+
+    <strong>Débouchés</strong><br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Magasin d’optique privé<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Services hospitaliers publics ou privés<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Industrie de fabrication de verres de lunettes<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Clinique ou cabinet privé<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Clinique ou cabinet de radiologie privé<br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;Organisations nationale (ONG) et internationale (UNICEF, OMS, FNUAP etc..)<br><br>
+
+    <strong>Admission</strong><br>
+    Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
+    {% include 'Static/_mentionpieceadm.html.twig' %}
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (SANTÉ vert)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
+
+
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt univ-col-1">
+    <i id="anchor-rid"></i><br><br><br><br>
+    <hr>
+    <h1>Relations Internationales et Diplomatie</h1>
+    <br>
+    <strong>Parcours xxx</strong><br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;xxx<br><br>
+
+    Niveau requis : BACC.xxx.<br>
+    Diplôme préparés : Master.<br><br>
+
+    <strong>Débouchés</strong><br>
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;xxx<br><br>
+
+    <strong>Admission</strong><br>
+    Ci-dessous la liste des dossiers en version papier à fournir pour l’inscription en les remettant à la scolarité de l'Université ACEEM Manakambahiny :<br>
+    {% include 'Static/_mentionpieceadm.html.twig' %}
+    &nbsp;<span class="icon-caret-right nav-icon-fa-sm nav-text"></span>&nbsp;1x Chemise cartonnée (RID orange)<br>
+    {% include 'Static/_mentionupfoot.html.twig' %}
 
     <hr>
   </div>

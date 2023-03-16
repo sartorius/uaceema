@@ -25,7 +25,7 @@ INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Van
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Agence Universitère de la Francophonie', NULL, 'auf.png', 'https://www.auf.org/');
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Ethiopian Airlines', NULL, 'ethiopianairlines.png', 'https://www.ethiopianairlines.com/fr/fr');
 
-INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Homeopharma', NULL, 'homeopharma.png', 'https://www.facebook.com/homeopharma.mg/?locale=fr_FR');
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Homeopharma', NULL, 'homeopharma.png', 'https://www.homeopharma.mg/');
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Société Générale Madagasikara', NULL, 'societegeneralemadagasikara.png', 'https://societegenerale.mg/');
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Bank of Africa', NULL, 'bankofafrica.png', 'https://boamadagascar.com/');
 
