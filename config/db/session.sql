@@ -78,19 +78,6 @@ select distinct flow_code from uac_working_flow order by 1 desc;
 
 
 
-curl -X POST "https://api.twilio.com/2010-04-01/Accounts/ACf522cde5567747294ef477981e7bf1b7/Messages.json" \
---data-urlencode "Body=Bloux: This is the ship that made the Kessel Run in fourteen parsecs?" \
---data-urlencode "From=+14302492679" \
---data-urlencode "To=+33619753737" \
--u ACf522cde5567747294ef477981e7bf1b7:f059f52c71d6a59df115efdc16b2fd68
-
-
-curl -X POST "https://api.twilio.com/2010-04-01/Accounts/ACf522cde5567747294ef477981e7bf1b7/Messages.json" \
---data-urlencode "Body=UACEEM test: votre login parent: TSIKYZU128 mot de passe: 3278778688 dispo sur https://www.uaceem.com/parent" \
---data-urlencode "From=+14302492679" \
---data-urlencode "To=+261320777826" \
--u ACf522cde5567747294ef477981e7bf1b7:f059f52c71d6a59df115efdc16b2fd68
-
 
 
 
