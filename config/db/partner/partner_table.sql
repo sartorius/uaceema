@@ -34,3 +34,4 @@ INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Mad
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Telma', NULL, 'telma.png', 'https://www.telma.mg/');
 
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Ambassade de France à Madagascar', NULL, 'ambassadefrancemadagascar.png', 'https://mg.ambafrance.org/');
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('SBM Banque à Madagascar', NULL, 'sbmbank.png', 'https://globalpresence.sbmgroup.mu/fr/madagascar/');
