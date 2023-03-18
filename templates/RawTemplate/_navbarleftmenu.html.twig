@@ -1,7 +1,17 @@
 <ul class="navbar-nav mr-auto">
   <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <img src="{{ path('main') }}img/logotext620x200.png" style="width:150px;"
+        {# Manage celebration #}
+        {% set celeb_i = "now"|date("m") %}
+        {% if celeb_i == "12" %}
+           {% set celeb_suffix = "_dec" %}
+        {% elseif celeb_i == "06" %}
+           {% set celeb_suffix = "_26j" %}
+        {% else %}
+           {% set celeb_suffix = "" %}
+        {% endif %}
+
+        <img src="{{ path('main') }}img/logotext620x200{{ celeb_suffix }}.png" style="width:150px;"
               title="MGScore" alt="MGScore Logo">
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
