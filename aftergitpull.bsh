@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+# to be launched after git pull !
+
+# clear php cache
+php bin/console cache:clear
+
+# launch minification
+./minForPROD.bsh

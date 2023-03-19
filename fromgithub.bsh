@@ -1,5 +1,0 @@
-#!/bin/bash -e
-
-git pull;
-# Set up the local value now
-mv .env.MMN .env.local;

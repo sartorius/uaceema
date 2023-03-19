@@ -1576,6 +1576,8 @@ img.part-img{
 
 .part-img-fmt:hover {
   transform: scale(1.02);
+  /* h-offset v-offset blur spread color */
+  box-shadow: 5px 5px 12px 1px rgba(48, 91, 159, .3);
 }
 
 .fmt-adj{
