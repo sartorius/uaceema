@@ -3,7 +3,10 @@
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         {# Manage celebration #}
         {% set celeb_i = "now"|date("m") %}
-        {% if celeb_i == "12" %}
+        {% set celeb_di = "now"|date("m-d") %}
+        {% if celeb_di == "03-08" %}
+           {% set celeb_suffix = "_8ma" %}
+        {% elseif celeb_i == "12" %}
            {% set celeb_suffix = "_dec" %}
         {% elseif celeb_i == "06" %}
            {% set celeb_suffix = "_26j" %}
