@@ -1,17 +1,25 @@
 <ul class="navbar-nav mr-auto">
   <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {# Manage celebration #}
-        {% set celeb_i = "now"|date("m") %}
-        {% set celeb_di = "now"|date("m-d") %}
-        {% if celeb_di == "03-08" %}
+        {# Manage celebration CALENDAR #}
+        {% set celeb_suffix = "" %}
+        {% set celeb_mi = "now"|date("m") %}
+        {% set celeb_di = "now"|date("d") %}
+
+        {# Woman's right 7 and 8 march #}
+        {% if (celeb_mi == "03") and (6 < celeb_di) and (celeb_di < 9) %}
            {% set celeb_suffix = "_8ma" %}
-        {% elseif celeb_i == "12" %}
-           {% set celeb_suffix = "_dec" %}
-        {% elseif celeb_i == "06" %}
+        {% elseif (celeb_mi == "03") and (27 < celeb_di) and (celeb_di < 30) %}
+           {% set celeb_suffix = "_29m" %}
+        {# To be changed every year Easter #}
+        {% elseif (celeb_mi == "04") and (3 < celeb_di) and (celeb_di < 11) %}
+           {% set celeb_suffix = "_eas" %}
+        {% elseif (celeb_mi == "06") and (10 < celeb_di) and (celeb_di < 27) %}
            {% set celeb_suffix = "_26j" %}
+        {% elseif celeb_mi == "12" %}
+           {% set celeb_suffix = "_dec" %}
         {% else %}
-           {% set celeb_suffix = "" %}
+            {# Do nothing #}
         {% endif %}
 
         <img src="{{ path('main') }}img/logotext620x200{{ celeb_suffix }}.png" style="width:150px;"
