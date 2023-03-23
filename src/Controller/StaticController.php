@@ -37,6 +37,16 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+  public function provinceint(Environment $twig, LoggerInterface $logger)
+  {
+
+    $debug_session = "Pass variable to check";
+
+    $content = $twig->render('Static/provinceint.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+
 
   public function news(Environment $twig)
   {

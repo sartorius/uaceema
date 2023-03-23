@@ -16,8 +16,10 @@
            {% set celeb_suffix = "_eas" %}
         {% elseif (celeb_mi == "06") and (10 < celeb_di) and (celeb_di < 27) %}
            {% set celeb_suffix = "_26j" %}
-        {% elseif celeb_mi == "12" %}
+        {% elseif (celeb_mi == "12") and (14 < celeb_di) %}
            {% set celeb_suffix = "_dec" %}
+        {% elseif (celeb_mi == "01") and (0 < celeb_di) and (celeb_di < 20) %}
+           {% set celeb_suffix = "_hap" %}
         {% else %}
             {# Do nothing #}
         {% endif %}

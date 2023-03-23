@@ -70,7 +70,7 @@
 
 
         <div class="user-title">
-            {{ profile['FIRSTNAME'] }} {{ profile['LASTNAME'] }}
+            {{ profile['FIRSTNAME']|capitalize }} {{ profile['LASTNAME'] }}
         </div>
         <div class="user-subtitle">
             {{ profile['SHORTCLASS'] }}
@@ -87,12 +87,12 @@
                     <div class="carte-profile blc-inline">
                       <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
                       <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }} <br>
-                      &nbsp;
+                      <span class="icon-thumb-tack nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }}
                     </div>
 
                     <div class="carte-profile blc-inline">
-                      <span class="icon-building-o nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }} <br>
                       <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }} <br>
+                      &nbsp; <br>
                       &nbsp;
                     </div>
               </div>

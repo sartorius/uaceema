@@ -107,3 +107,6 @@ alumni:
 vieetudiante:
     path:       /vieetudiante
     controller: App\Controller\StaticController::vieetudiante
+provinceint:
+    path:       /provinceint
+    controller: App\Controller\StaticController::provinceint

@@ -116,6 +116,10 @@ h2 {
   background: url("../img/backgroundhome7.jpg") no-repeat center center fixed;
 }
 
+.img-static-prov{
+  background: url("../img/backgroundsttprov.jpg") no-repeat center center fixed;
+}
+
 #home-entry {
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -304,6 +308,14 @@ h2 {
 
 .mgs-footer a:hover{
   color: var(--main-ace-color);
+  text-decoration: none;
+}
+
+.ace-nolink a{
+  color: var(--main-ace-color);
+}
+.ace-nolink a:hover{
+  color: var(--main-ace-color-contrast);
   text-decoration: none;
 }
 
@@ -1588,7 +1600,7 @@ img.part-img{
 .news-exb{
   text-align: left;
   position: absolute;
-  margin-top: -100px;
+  margin-top: -135px;
   margin-left: 10%;
   max-width: 54%;
   font-size: 1.2em;
