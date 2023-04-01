@@ -302,6 +302,7 @@ BEGIN
           FROM uac_working_flow uwf WHERE id = inv_uwf_id;
 
       -- Do the reset actually and recalculation
+      -- But be carefull we do it for the full new all day !
       CALL SRV_CRT_ResetAssdFlow(inv_date);
       CALL SRV_CRT_ComptAssdFlow(inv_date);
 

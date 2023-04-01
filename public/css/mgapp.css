@@ -63,6 +63,7 @@ html, body {
   font-size: 18px;
 }
 
+
 h1 {
   text-align: left;
   font-size: 3.2em;
@@ -516,12 +517,13 @@ textarea[name=inputRef] {
   position: relative;
   padding-left: 35px;
   margin-bottom: 12px;
-  cursor: pointer;
+  /* cursor: pointer; */
   font-size: 15px;
+  /*
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+  user-select: none; */
 }
 
 /* Hide the browser's default checkbox */
@@ -698,6 +700,7 @@ textarea[name=inputRef] {
 }
 .nav-icon-fa{
   font-size: 24px;
+  padding-right: 5px;
 }
 
 .nav-icon-fa-sm{
@@ -706,6 +709,10 @@ textarea[name=inputRef] {
 
 .footer-icon-fa{
   font-size: 20px;
+}
+
+.ace-nav-adj{
+  vertical-align: 7%;
 }
 
 @media (min-width:414px){
@@ -1609,4 +1616,27 @@ img.part-img{
   font-weight: 700;
   /* Do nothing on hover */
   pointer-events: none;
+}
+
+
+/***************************  ADD Pay  ****************************/
+
+#btn-addpay{
+  display: none;
+}
+
+#btn-addpay-clear{
+  margin-top: 15px;
+}
+
+.btn-ace-right{
+  display: flex;
+  justify-content: flex-end;
+}
+
+
+.mgs-addpay-lg{
+  font-size: 1.8em;
+  color: var(--main-ace-color);
+  font-weight: 500;
 }

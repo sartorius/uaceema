@@ -7,18 +7,12 @@
 
 
 </body>
-
 {% include 'RawTemplate/_footerpostraw.html.twig' %}
-
-{% if app_environment == 'dev' %}
-        <script src="{{ path('main') }}js/acestu.js"></script>
-{% else %}
-        <script src="{{ path('main') }}js/acestu.min.js"></script>
-{% endif %}
 
 
 {% if app_environment == 'dev' %}
         <script src="{{ path('main') }}js/aceass.js"></script>
+        <script src="{{ path('main') }}js/acepay.js"></script>
 {% else %}
         {# ################################################### #}
         {# ################################################### #}
@@ -29,6 +23,7 @@
         {# ################################################### #}
         {# ################################################### #}
         <script src="{{ path('main') }}js/aceass.min.js"></script>
+        <script src="{{ path('main') }}js/acepay.min.js"></script>
 {% endif %}
 
 

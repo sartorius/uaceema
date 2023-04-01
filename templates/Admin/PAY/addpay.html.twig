@@ -1,0 +1,68 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+{# Handle here the files relatives to JS #}
+
+{% if result_all_usrn is defined and result_all_usrn is not null %}
+  <script>
+
+    let dataAllUSRNToJsonArray =JSON.parse('{{ result_all_usrn | json_encode | raw }}');
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllUSRNToJsonArray = "";
+    </script>
+{% endif %}
+
+<div id="mg-graph-identifier">add-pay</div>
+
+
+
+
+<div class="row">
+  <div class="col-lg-4 mgs-mainblk-txt">
+
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt ua-scan-mn">
+
+
+    <div class="carte-profile ace-xs">
+      {{ firstname }}&nbsp;{{ lastname }}/<i id="load-username">{{ amiconnected }}</i>/<i id="load-userid">{{ id }}</i> <br>
+    </div>
+    <div class="carte-profile ace-sm">
+      <span class="icon-person nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-bc" class="mgs-addpay-lg"></i><br>
+      <i id="last-read-time"></i>
+
+    </div>
+    <img id="waiting-gif" src="{{ path('main') }}img/waiting.gif" style="width:175px; height:175px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
+    <hr>
+
+    <div>
+        <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
+    </div>
+    <div class="btn-profil mid-blc">
+      <button id="btn-addpay" class="btn btn-default btn-lg btn-print btn-block">Ajouter un paiement &nbsp;<i class="icon-plus-square nav-text"></i></button>
+      <div class="btn-ace-right">
+        <button id="btn-addpay-clear" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+      </div>
+    </div>
+
+    <div id="valid-code-read">
+    </div>
+    <div id="exist-code-read">
+      N
+    </div>
+
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt">
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% include 'RawTemplate/SPE/_footerpay.html.twig' %}

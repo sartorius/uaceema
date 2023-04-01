@@ -43,8 +43,8 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('ASSIPRG', 'Flow purge assiduite', 10, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GENEPRG', 'Flow purge generic', 10, NULL);
 
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of email per day', 50, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Compteur limit of email per day', 0, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILLI', 'Limit of max email per day', 50, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILCT', 'Counter limit of email per day', 0, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('DMAILBA', 'Batch email per day', 10, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTLOAD', 'Integration des EDT', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('EDTPRGL', 'Flow purge edt load', 5, NULL);
@@ -53,6 +53,11 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('QUEASSI', 'Queue Assiduite', NULL, NULL);
+
+-- Payment
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite visible 1 oui 0 non', 0, NULL);
+
+
 
 
 DROP TABLE IF EXISTS uac_working_flow;
@@ -160,8 +165,11 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (7, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L1', (SELECT id FROM uac_ref_parcours WHERE title = 'D1'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1'));
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (8, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L1', (SELECT id FROM uac_ref_parcours WHERE title = 'D2'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1'));
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (9, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L1', (SELECT id FROM uac_ref_parcours WHERE title = 'D3'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2'));
+  -- This to be changed in april 2022-23
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (10, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L1', (SELECT id FROM uac_ref_parcours WHERE title = 'D4'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2'));
+  -- This to be changed in april 2022-23
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (11, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L2', (SELECT id FROM uac_ref_parcours WHERE title = 'D1'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
+  -- This to be changed in april 2022-23
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (12, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L2', (SELECT id FROM uac_ref_parcours WHERE title = 'D2'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (13, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L3', (SELECT id FROM uac_ref_parcours WHERE title = 'PRIVE'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (14, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L3', (SELECT id FROM uac_ref_parcours WHERE title = 'PUBLIC'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
@@ -200,6 +208,21 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (47, (SELECT par_code FROM uac_ref_mention WHERE title = 'SCIENCES DE LA SANTE'), 'L3', (SELECT id FROM uac_ref_parcours WHERE title = 'IMAGERIE'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (48, (SELECT par_code FROM uac_ref_mention WHERE title = 'SCIENCES DE LA SANTE'), 'L3', (SELECT id FROM uac_ref_parcours WHERE title = 'TECH BIO'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
 
+
+
+  DELETE FROM uac_cohort WHERE id = 10;
+  INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (10, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L2', (SELECT id FROM uac_ref_parcours WHERE title = 'D3'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
+
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 11;
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 12;
+
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 22;
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 23;
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 24;
+
+
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 25;
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 26;
 
 /*************
 SELECTION COHORT !

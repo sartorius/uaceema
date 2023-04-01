@@ -5,21 +5,21 @@
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownUsr">
             {% if (scale_right is defined) and (scale_right is not null) and (scale_right > 4) %}
-                <a class="dropdown-item" href="/managerstu"><span class="icon-group-full nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Manager étudiant</span></a>
+                <a class="dropdown-item" href="/managerstu"><span class="icon-group-full nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager étudiant</span></a>
                 <hr>
-                <a class="dropdown-item" href="/dashboardass"><span class="icon-clock-o nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Dashboard retard</span></a>
-                <a class="dropdown-item" href="/manageredt"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Manager EDT</span></a>
+                <a class="dropdown-item" href="/dashboardass"><span class="icon-clock-o nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Dashboard retard</span></a>
+                <a class="dropdown-item" href="/manageredt"><span class="icon-calendar nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager EDT</span></a>
             {% endif %}
             {% if (scale_right is defined) and (scale_right is not null) and ((scale_right == 11) or (scale_right > 99)) %}
-                <a class="dropdown-item" href="/loadedt"><span class="icon-file-text nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Charger EDT</span></a>
+                <a class="dropdown-item" href="/loadedt"><span class="icon-file-text nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Charger EDT</span></a>
             {% endif %}
             <hr>
-            <a class="dropdown-item" href="/scan/in"><span class="icon-sign-in nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Scan entrée</span></a>
+            <a class="dropdown-item" href="/scan/in"><span class="icon-sign-in nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan entrée</span></a>
 
-            <a class="dropdown-item" href="/scan/out"><span class="icon-sign-out nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Scan sortie</span></a>
-            <a class="dropdown-item" href="/checklastscan"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Vérifier scan</span></a>
+            <a class="dropdown-item" href="/scan/out"><span class="icon-sign-out nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan sortie</span></a>
+            <a class="dropdown-item" href="/checklastscan"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Vérifier scan</span></a>
             <hr>
-            <a class="dropdown-item" href="/logout"><span class="icon-arrow-circle-right nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Déconnecter</span> </a>
+            <a class="dropdown-item" href="/logout"><span class="icon-sign-out-1 nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Déconnecter</span> </a>
           </div>
         </li>
 {% endif %}

@@ -15,14 +15,14 @@ use Psr\Log\LoggerInterface;
 use \PDO;
 
 
-class AlumniController extends AbstractController
+class AdminAlumniController extends AbstractController
 {
   public function main(Environment $twig, LoggerInterface $logger)
   {
 
     $debug_session = "Pass variable to check";
 
-    $content = $twig->render('Alumni/alumnimain.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    $content = $twig->render('Admin/ALU/alumnimain.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }

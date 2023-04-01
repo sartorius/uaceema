@@ -58,7 +58,7 @@
 </div>
 {% endif %}
 
-
+{# ************************************ used to be class="container" ************************************ #}
 <div class="container">
     <div class="row">
       <div class="col-1 mgs-mainblk-txt">
@@ -75,32 +75,41 @@
         <div class="user-subtitle">
             {{ profile['SHORTCLASS'] }}
         </div>
-        <hr>
-        {% if from_admin != 'N' %}
-              <div class="card-parent">
-                    <div class="carte-profile blc-inline">
-                      <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
-                      <span class="icon-phone-square nav-icon-fa-sm nav-text"></span> {{ profile['PHONE'] }} <br>
-                      <span class="icon-ticket nav-icon-fa-sm nav-text"></span> {{ profile['MATRICULE'] }}
-                    </div>
 
-                    <div class="carte-profile blc-inline">
-                      <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
-                      <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }} <br>
-                      <span class="icon-thumb-tack nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }}
-                    </div>
 
-                    <div class="carte-profile blc-inline">
-                      <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }} <br>
-                      &nbsp; <br>
-                      &nbsp;
-                    </div>
-              </div>
-              <hr>
+        {% if from_admin == 'N' %}
+              {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
+              {# Do something message #}
+              <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Vérifiez que ces informations suivantes sont correctes.</div>
         {% endif %}
+        <hr>
+        <div class="card-parent">
+              <div class="carte-profile blc-inline">
+                <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
+                <span class="icon-phone-square nav-icon-fa-sm nav-text"></span> {{ profile['PHONE'] }} <br>
+                <span class="icon-ticket nav-icon-fa-sm nav-text"></span> {{ profile['MATRICULE'] }}
+              </div>
+
+              <div class="carte-profile blc-inline">
+                <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
+                <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }} <br>
+                <span class="icon-thumb-tack nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }}
+              </div>
+
+              <div class="carte-profile blc-inline">
+
+                <span class="icon-birthday-cake nav-icon-fa-sm nav-text"></span> {{ profile['AGE'] }} ans, né(e) le{{ profile['BIRTHDAY'] }}<br>
+                <span class="icon-certificate nav-icon-fa-sm nav-text"></span> {{ profile['BAC'] }} <br>
+                <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }}
+              </div>
+        </div>
+        <hr>
+
+
+
         <div id="pr-assid" class="carte-profile">
           <div class="pr-title"><span class="icon-calendar-plus-o nav-icon-fa nav-text"></span>&nbsp;Assiduité : lignes de présence</div>
-          <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Les lignes de présence sont calculées plusieurs fois par jour. Ces fonctionnalités sont encore en phase de test pilote. <br><a href="/reglassiduite">Voir le rappel sur l'assiduité</a>.</span><br><br>
+          <span class="icon-info-circle mgs-ace-note nav-text"></span>&nbsp<span class="mgs-ace-note">Les lignes de présence sont calculées plusieurs fois par jour. <br><a href="/reglassiduite">Voir le rappel sur l'assiduité</a>.</span><br><br>
           {% if result_query_queued_ass[0]['QUEUED_ASS'] > 0 %}
               <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Des emplois du temps passés sont en attente. Les assiduités vont être recalculés cette nuit.</div>
           {% endif %}
@@ -108,15 +117,12 @@
           </div>
 
 
-          <button type="button" id="edt-switch-in-out" class="btn btn-default btn-sm btn-block"><span class="icon-arrow-circle-left nav-icon-fa-sm nav-text"></span>&nbsp;Voir/cacher les entrées/sorties&nbsp;<span class="icon-arrow-circle-right nav-icon-fa-sm nav-text"></span></button>
+          <button type="button" id="edt-switch-in-out" class="btn btn-default btn-sm btn-block"><span class="icon-arrow-circle-down nav-icon-fa-sm nav-text"></span>&nbsp;Voir/cacher les entrées/sorties&nbsp;<span class="icon-arrow-circle-up nav-icon-fa-sm nav-text"></span></button>
 
           <div id="blc-trace-in-out">
             <br>
               <div id="jsGridTrace">
               </div>
-            {% if assiduites|length == 0 %}
-                Aucune trace d'entrée ou sortie disponible
-            {% endif %}
 
 
           </div>
@@ -211,6 +217,9 @@
                 <div class="col-10">
                     {% for line in resultsp_sm_bkp %}
                         {% if line['duration_hour'] > 0 %}
+                            {% if line['course_status'] == 'C' %}
+                                [Attention] Cours annulé :&nbsp;
+                            {% endif %}
                             {{ line['label_day_fr'] }}-{{ line['nday'] }}: début : {{ line['hour_starts_at'] }}h00<br>
                             {{ line['raw_course_title'] }}<br>
                             <hr>

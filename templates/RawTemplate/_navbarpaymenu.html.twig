@@ -1,0 +1,17 @@
+{% if (amiconnected is defined) and (amiconnected is not null) and (amiconnected != "") and ((scale_right > 49)) %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownPay" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Paiement
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownPay">
+
+                <a class="dropdown-item" href="#"><span class="icon-table nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager paiement</span></a>
+                <a class="dropdown-item" href="#"><span class="icon-pie-chart nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Dashboard paiement</span></a>
+
+            {% if (scale_right is defined) and (scale_right is not null) and ((scale_right == 51) or (scale_right > 99)) %}
+                <hr>
+                <a class="dropdown-item" href="/addpay"><span class="icon-plus-square nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Enregistrer paiement</span></a>
+            {% endif %}
+          </div>
+        </li>
+{% endif %}

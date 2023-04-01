@@ -110,6 +110,11 @@ SELECT
            mu.phone_par1 AS PARENT_PHONE,
            mu.adresse_par1 AS PARENT_ADDR,
            mu.matricule AS MATRICULE,
+           TIMESTAMPDIFF(YEAR, mu.datedenaissance, CURDATE()) AS AGE,
+           mu.lieu_de_naissance AS PL_BIRTH,
+           mu.serie_bac AS BAC,
+           mu.annee_bac AS YEAR_BAC,
+           DATE_FORMAT(mu.datedenaissance, "%d/%m/%Y") AS BIRTHDAY,
            vcc.short_classe AS SHORTCLASS
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
                   JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id;

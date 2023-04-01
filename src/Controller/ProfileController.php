@@ -41,6 +41,8 @@ class ProfileController extends AbstractController
           $from_admin = 'A';
     }
 
+    $logger->debug("See from_admin: " . $from_admin);
+    // N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard
 
 
     if(strlen($page) < 11){
@@ -57,11 +59,11 @@ class ProfileController extends AbstractController
       // Be carefull if you have array of array
       $dbconnectioninst = DBConnectionManager::getInstance();
       //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
-      $result = $dbconnectioninst->query('
-      SELECT *
-        FROM v_showuser
-                 WHERE UPPER(USERNAME) = \'' . $param_username . '\'
-                 AND CONVERT(SECRET, CHAR) = \'' . $param_secret . '\'' )->fetchAll(PDO::FETCH_ASSOC);
+      $query_get_profile = ' SELECT * FROM v_showuser WHERE UPPER(USERNAME) = \'' . $param_username . '\' AND CONVERT(SECRET, CHAR) = \'' . $param_secret . '\'';
+      $logger->debug("Query query_get_profile: " . $query_get_profile);
+
+      $result = $dbconnectioninst->query($query_get_profile)->fetchAll(PDO::FETCH_ASSOC);
+
 
       $logger->debug("Show me: " . count($result));
 

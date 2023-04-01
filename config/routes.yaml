@@ -101,12 +101,17 @@ didiapply:
 verify_application:
     path:       /verify-application
     controller: App\Controller\ProfileController::verifyapplication
-alumni:
-    path:       /alumni
-    controller: App\Controller\AlumniController::main
 vieetudiante:
     path:       /vieetudiante
     controller: App\Controller\StaticController::vieetudiante
 provinceint:
     path:       /provinceint
     controller: App\Controller\StaticController::provinceint
+alumni:
+    path:       /alumni
+    controller: App\Controller\AdminAlumniController::main
+
+
+addpay:
+    path:       /addpay
+    controller: App\Controller\AdminPayController::addpay

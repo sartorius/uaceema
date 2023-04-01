@@ -418,7 +418,7 @@ function loadAssRecapGrid(){
   $("#jsGridTrace").jsGrid({
       height: "auto",
       width: "100%",
-      noDataContent: "Pas encore d'activité",
+      noDataContent: "Aucun scan d'entrée/sortie enregistré",
       pageIndex: 1,
       pageSize: 5,
       pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} sur {pageCount}",
