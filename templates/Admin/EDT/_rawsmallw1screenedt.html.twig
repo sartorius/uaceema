@@ -68,6 +68,10 @@
 
                               {% if line['course_status'] == 'C' %}
                                   <i class="err"><strong>ANNULÉ</strong>: <i class="ua-line">{{ line['raw_course_title'] }}</i></i>
+                              {% elseif line['course_status'] == 'H' %}
+                                  <i class="hss"><strong>Hors site</strong>: {{ line['raw_course_title'] }}</i>
+                              {% elseif line['course_status'] == 'O' %}
+                                  <i class="opp"><strong>Option</strong>: {{ line['raw_course_title'] }}</i>
                               {% else %}
                                   {{ line['raw_course_title'] }}
                               {% endif %}

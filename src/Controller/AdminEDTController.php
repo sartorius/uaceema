@@ -284,6 +284,7 @@ class AdminEDTController extends AbstractController
 
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        $logger->debug("query_all_edt: CALL CLI_GET_MngEDTp3()");
 
         $query_all_edt = "CALL CLI_GET_MngEDTp3()";
 

@@ -218,7 +218,13 @@
                     {% for line in resultsp_sm_bkp %}
                         {% if line['duration_hour'] > 0 %}
                             {% if line['course_status'] == 'C' %}
-                                [Attention] Cours annulé :&nbsp;
+                                [Attention] Annulé :&nbsp;
+                            {% elseif line['course_status'] == 'H' %}
+                                [Attention] Hors site Manakambahiny :&nbsp;
+                            {% elseif line['course_status'] == 'O' %}
+                                [Attention] Option :&nbsp;
+                            {% else %}
+                              {# Do nothing #}
                             {% endif %}
                             {{ line['label_day_fr'] }}-{{ line['nday'] }}: début : {{ line['hour_starts_at'] }}h00<br>
                             {{ line['raw_course_title'] }}<br>

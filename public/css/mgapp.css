@@ -12,6 +12,8 @@
   --main-gray-75:#393939;
   --err-ace-color: #90000F;
   --val-ace-color: #00561A;
+  --deep-ace-blue: #002C8A;
+  --deep-ace-brown: #5B3600;
 }
 
 
@@ -1092,6 +1094,12 @@ textarea[name=inputRef] {
 
 .err{
   color : var(--err-ace-color);
+}
+.hss{
+  color : var(--deep-ace-blue);
+}
+.opp{
+  color : var(--deep-ace-brown);
 }
 .report-dis{
   padding-top: 50px;
