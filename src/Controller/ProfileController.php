@@ -129,7 +129,7 @@ class ProfileController extends AbstractController
             $result_assiduite_recap = $dbconnectioninst->query($query_ass_recap)->fetchAll(PDO::FETCH_ASSOC);
 
 
-            $query_list_bdaymonth = "SELECT fCapitalizeStr(FIRSTNAME) AS FNAMEBDAY FROM v_showuser WHERE COHORT_ID = " . $result[0]['COHORT_ID']
+            $query_list_bdaymonth = "SELECT fCapitalizeStr(TRIM(FIRSTNAME)) AS FNAMEBDAY FROM v_showuser WHERE COHORT_ID = " . $result[0]['COHORT_ID']
                                     . " AND MONTHBDAY = DATE_FORMAT(CURRENT_DATE, '%m')";
 
             $logger->debug("Query query_list_bdaymonth: " . $query_list_bdaymonth);

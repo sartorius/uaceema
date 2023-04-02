@@ -216,9 +216,16 @@
               <hr>
               {% if result_list_bdaymonth|length > 1 %}
 
-                      Ce mois-ci, la classe <strong>{{ profile['SHORTCLASS'] }}</strong> célèbre l'anniversaire de :
+                      {% set mbday_cpt = 0 %}
+                      Ce mois-ci, la classe <strong>{{ profile['SHORTCLASS'] }}</strong> célèbre l'anniversaire de
                       {% for bdaymonth_line in result_list_bdaymonth %}
-                          {{ bdaymonth_line['FNAMEBDAY'] }}&nbsp;
+                          {% if mbday_cpt == 0 %}
+                            :
+                          {% else %}
+                            /
+                          {% endif %}
+                          {{ bdaymonth_line['FNAMEBDAY'] }}
+                          {% set mbday_cpt = mbday_cpt + 1 %}
                       {% endfor %}&nbsp;<span class="icon-birthday-cake nav-icon-fa-sm nav-text"></span>
 
               {% else %}
