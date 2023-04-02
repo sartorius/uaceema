@@ -109,6 +109,7 @@ SELECT
            mu.city AS CITY,
            mu.phone_par1 AS PARENT_PHONE,
            mu.adresse_par1 AS PARENT_ADDR,
+           mu.genre AS GENRE,
            mu.matricule AS MATRICULE,
            TIMESTAMPDIFF(YEAR, mu.datedenaissance, CURDATE()) AS AGE,
            mu.lieu_de_naissance AS PL_BIRTH,
