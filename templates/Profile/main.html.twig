@@ -191,7 +191,7 @@
       </div>
 
 
-
+      {# N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
       {% if from_admin == 'N' %}
           {# For now navigation is possible only for profile #}
           {# This may change #}
@@ -206,6 +206,31 @@
           </div>
         </div>
       </div>
+
+
+      <div class="container">
+        <div class="row">
+          <div class="col-1">
+          </div>
+          <div class="col-10">
+              <hr>
+              {% if result_list_bdaymonth|length > 1 %}
+
+                      Ce mois-ci, la classe <strong>{{ profile['SHORTCLASS'] }}</strong> célèbre l'anniversaire de :
+                      {% for bdaymonth_line in result_list_bdaymonth %}
+                          {{ bdaymonth_line['FNAMEBDAY'] }}&nbsp;
+                      {% endfor %}&nbsp;<span class="icon-birthday-cake nav-icon-fa-sm nav-text"></span>
+
+              {% else %}
+                      <span class="icon-birthday-cake nav-icon-fa-sm nav-text"></span>&nbsp;Ce mois-ci, malheureusement, il n'y a pas d'anniversaire dans la classe <strong>{{ profile['SHORTCLASS'] }}</strong>.
+              {% endif %}
+          </div>
+          <div class="col-1">
+          </div>
+        </div>
+      </div>
+
+
 
 
       <div class='uac-bkp-version'>

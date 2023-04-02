@@ -128,8 +128,15 @@ class ProfileController extends AbstractController
 
             $result_assiduite_recap = $dbconnectioninst->query($query_ass_recap)->fetchAll(PDO::FETCH_ASSOC);
 
-            // End of assiduité
 
+            $query_list_bdaymonth = "SELECT fCapitalizeStr(FIRSTNAME) AS FNAMEBDAY FROM v_showuser WHERE COHORT_ID = " . $result[0]['COHORT_ID']
+                                    . " AND MONTHBDAY = DATE_FORMAT(CURRENT_DATE, '%m')";
+
+            $logger->debug("Query query_list_bdaymonth: " . $query_list_bdaymonth);
+            $result_list_bdaymonth = $dbconnectioninst->query($query_list_bdaymonth)->fetchAll(PDO::FETCH_ASSOC);
+
+
+            // End of assiduité
             $prec_maxweek = $_ENV['PRECMAXWEEK'];
             $next_maxweek = $_ENV['NEXTMAXWEEK'];
             // We force week to keep in -1 + 2
@@ -171,6 +178,7 @@ class ProfileController extends AbstractController
                                       "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
+                                      "result_list_bdaymonth"=>$result_list_bdaymonth,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);
       }
     }
