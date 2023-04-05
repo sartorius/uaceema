@@ -209,7 +209,7 @@ class AdminEDTController extends AbstractController
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 
-
+    $maxziplimit = $_ENV['ZIP_LIMIT'];
     $zip_list_validate = '';
     $is_zip = 'N';
     //Check if we are coming from POST
@@ -256,6 +256,7 @@ class AdminEDTController extends AbstractController
                                                                   'firstname' => $_SESSION["firstname"],
                                                                   'lastname' => $_SESSION["lastname"],
                                                                   'id' => $_SESSION["id"],
+                                                                  'maxziplimit' => $maxziplimit,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '', 'validated' => $master_id]);
 
@@ -331,7 +332,7 @@ class AdminEDTController extends AbstractController
     $scale_right = ConnectionManager::whatScaleRight();
 
     $logger->debug("scale_right: " . $scale_right);
-
+    $maxziplimit = $_ENV['ZIP_LIMIT'];
     // Must be exactly 8 or more than 99
     if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
 
@@ -344,6 +345,7 @@ class AdminEDTController extends AbstractController
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
+                                                                'maxziplimit' => $maxziplimit,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -370,7 +372,7 @@ class AdminEDTController extends AbstractController
     if(isset($scale_right) && (($scale_right == 11) || ($scale_right > 99))){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
-
+        $maxziplimit = $_ENV['ZIP_LIMIT'];
         $zip_results = array();
         $zip_comments = '';
         $zip_all_master_id_inq = '0'; // looks like 0, 12, 13, 16, 16
@@ -383,13 +385,14 @@ class AdminEDTController extends AbstractController
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
+                                                                    'maxziplimit' => $maxziplimit,
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
                                                                     'errtype' => '', 'nofile' => 'nofile']);
 
         } else {
               if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
                   // We are in one file mode
-                  $result_for_one_file = $this->extractFileInsertLines('.csv', $_FILES['fileToUpload'], null, 0, null, $logger, $scale_right);
+                  $result_for_one_file = $this->extractFileInsertLines('.csv', $_FILES['fileToUpload'], null, 0, null, 1, $logger, $scale_right);
 
               } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
                   // We are in zip mode
@@ -397,6 +400,7 @@ class AdminEDTController extends AbstractController
                   $zip = new ZipArchive;
                   $zip_rawfilename_loaded = $_FILES["fileToUpload"]["tmp_name"];
                   $logger->debug("Number of file: " . $zip_rawfilename_loaded);
+                  $previsualisation_line_counter = 1;
 
                   if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE))
                   {
@@ -433,7 +437,11 @@ class AdminEDTController extends AbstractController
                                 /********************************************************************************/
                                 // We iterate thru the file
 
-                                $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $logger, $scale_right);
+
+                                $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $previsualisation_line_counter, $logger, $scale_right);
+                                // we use previsualization counter only for the client
+                                $previsualisation_line_counter = $previsualisation_line_counter + 1;
+
                                 array_push($zip_results, $result_for_one_file);
                                 $status_msg = '<strong><span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp; Attente de validation</strong>';
                                 if($result_for_one_file['short_err'] != ''){
@@ -466,8 +474,9 @@ class AdminEDTController extends AbstractController
                            }
                        }
                        else{
-                         $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Nombre de fichier .csv maximum possible ' . $_ENV['ZIP_LIMIT'] . '/ Le fichier ' . $_FILES['fileToUpload']['name'] . ' en contient ' . $count_csv . '.</span>' . '<br>',
-                                                      "extract_queries"=>"Veuillez recharger avec un Zip qui contient moins de fichiers.", "sp_result"=>null);
+
+                         $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR671 Nombre de fichier .csv maximum possible ' . ($_ENV['ZIP_LIMIT'] - 1) . '/ Le fichier ' . $_FILES['fileToUpload']['name'] . ' en contient ' . $count_csv . '.</span>' . '<br>',
+                                                      "extract_queries"=>"Veuillez recharger avec un Zip qui contient moins de fichiers.", "sp_result"=>null, "overpassday"=>null);
 
                        }
                   }
@@ -475,7 +484,7 @@ class AdminEDTController extends AbstractController
                   {
                        $logger->debug("Erreur lecture archive zip: " . $zip_rawfilename_loaded);
                        $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR789 de lecture fichier zip: ' . $zip_rawfilename_loaded . '</span>' . '<br>',
-                                                       "extract_queries"=>"<br>Nous attendons un .zip ou un .csv <br> Vérifiez que également <strong>que le fichier .zip ne contient que des fichiers .csv</strong>", "sp_result"=>null);
+                                                       "extract_queries"=>"<br>Nous attendons un .zip ou un .csv <br> Vérifiez que également <strong>que le fichier .zip ne contient que des fichiers .csv</strong>", "sp_result"=>null, "overpassday"=>null);
                   }
 
 
@@ -485,7 +494,7 @@ class AdminEDTController extends AbstractController
               } else {
                   // Error
                   $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
-                                                  "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv", "sp_result"=>null);
+                                                  "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv", "sp_result"=>null, "overpassday"=>null);
               }
               $content = $twig->render('Admin/EDT/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                 'firstname' => $_SESSION["firstname"],
@@ -520,7 +529,7 @@ class AdminEDTController extends AbstractController
 
 
 
-  public function extractFileInsertLines($load_type, $load_file, $load_zip, $i_zip, $zip_inside_filename, LoggerInterface $logger, $scale_right){
+  public function extractFileInsertLines($load_type, $load_file, $load_zip, $i_zip, $zip_inside_filename, $previsualisation_line_counter, LoggerInterface $logger, $scale_right){
           /**************************** START : CHECK THE FILE CONTENT HERE ****************************/
 
           $report_comment = '';
@@ -543,6 +552,8 @@ class AdminEDTController extends AbstractController
           $resultsp = array();
           $overpassday = '';
           $short_err = '';
+
+
           // Code is valid here. We can work
           if (($load_type == '.csv') && (!file_exists($load_file['tmp_name']))) {
             $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1728 Erreur lecture fichier.</span>' . '<br>'
@@ -802,11 +813,11 @@ class AdminEDTController extends AbstractController
                       $report_queries = '<br><hr><div class="ace-sm report-val"> Nombre des input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
                       $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement en DB. Return count: ' . count($resultsp)  . '<br>';
 
-                      $zip_one_comment = 'Prévisualisation: ' . $filename_to_log_in . ' /nbr lg: ' . count($resultsp) . ' ' . $zip_one_comment;
+                      $zip_one_comment = '#'. $previsualisation_line_counter . ' Prévisualisation: ' . $filename_to_log_in . ' /nbr lg: ' . count($resultsp) . ' ' . $zip_one_comment;
 
                       // If we return the empty line means the course has not been found
                       if(count($resultsp) == 1){
-                          $short_err =  'ERR182C Erreur classe introuvable';
+                          $short_err =  'ERR182C Classe introuvable';
                           $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR182C Erreur Nous ne pouvons pas identifier la classe de l\'emploi du temps. Veuillez vérifier qu\'elle existe.</span>' . '<br>'
                                                             . 'Désolé ! Nous avons rencontré un problème de lecture du fichier : ' . $filename_to_log_in . '<br><br>'
                                                             . 'Vérifiez Mention: <strong>' . $mention . '</strong><br>'

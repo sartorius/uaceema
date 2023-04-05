@@ -1097,6 +1097,19 @@ $(document).ready(function() {
         $(".report-dis").show();
         $(".after-load-edt-trace").hide();
     });
+
+    $("#aftload-edt-nav-up").click(function() {
+      console.log('You click on aftload-edt-nav-up');
+
+      document.getElementById('anchor-up-edt').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+
+    // We must warn the user that there are warning on duration
+    if($(".err-219").length > 0){
+      $("#warn-219").html("<i class='err'>"+ $(".err-219").length + " warning(s). Scrollez vers le bas, cherchez l'erreur ERR219 et vérifiez la durée des cours.</i>");
+    }
   }
   else if($('#mg-graph-identifier').text() == 'loader-edt'){
     // Do nothing

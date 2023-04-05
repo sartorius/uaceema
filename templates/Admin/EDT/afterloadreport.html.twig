@@ -1,6 +1,6 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 <div id="mg-graph-identifier">aft-loa</div>
-
+<i id="anchor-up-edt"></i>
 
 {% if zip_results|length > 0 %}
   {# In that case we run for all file in zip #}
@@ -20,6 +20,8 @@
             <div class="col-8">
               Reference technique de validation: {{ zip_all_master_id_inq }}<br>
               {{ zip_comments | raw }}
+              <br>
+              Warning de vérification de durée de cours ERR219 : <strong><i id="warn-219">0 pas de warning détecté.</i></strong>
             </div>
             <div class="col-1">
             </div>
@@ -46,25 +48,41 @@
         </div>
 
         <hr>
+        {% set previsualization_counter = 1 %}
         {% for zip_result in zip_results %}
 
                 {% set reportcmt = zip_result['extract_report'] %}
                 {% set reportqueries = zip_result['extract_queries'] %}
                 {% set sp_result = zip_result['sp_result'] %}
+                {# We are in zip here ! #}
                 {% set sp_overpassday = zip_result['overpassday'] %}
                 {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
+                {% set previsualization_counter = previsualization_counter + 1 %}
         {% endfor %}
 {% else %}
 
         {% set reportcmt = result_for_one_file['extract_report'] %}
         {% set reportqueries = result_for_one_file['extract_queries'] %}
         {% set sp_result = result_for_one_file['sp_result'] %}
+        {# We are NOT in zip here ! #}
         {% set sp_overpassday = result_for_one_file['overpassday'] %}
 
         {% include 'Admin/EDT/_rawafterload.html.twig' %}
 
 {% endif %}
 
+<div class="row button-bottom">
+  <div class="col-lg-5">
+  </div>
+  <div class="col-lg-3">
+    <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="/loadedt" role="button"><span class="icon-file-text nav-icon-fa nav-text"></span>&nbsp;Annuler & retour au chargement EDT</a>
+  </div>
+  <div class="col-lg-2">
+    <button type="button" id="aftload-edt-nav-up" class="btn btn-default btn-md  btn-block"><span class="icon-arrow-up nav-text"></span>&nbsp;Remonter&nbsp;<span class="icon-arrow-up nav-text"></span></button>
+  </div>
+  <div class="col-lg-2">
+  </div>
+</div>
 
 {% include 'RawTemplate/_footer.html.twig' %}

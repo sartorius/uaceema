@@ -1463,6 +1463,9 @@ textarea[name=inputRef] {
   color: var(--main-ace-color);
 }
 
+.button-bottom{
+  margin-top: 6em;
+}
 
 /*******************/
 /*********  ASSIDUITE  **********/

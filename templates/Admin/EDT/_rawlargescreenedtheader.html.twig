@@ -2,17 +2,18 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12 mgs-mainblk-txt">
-              <h1>Rapport d'intégration EDT</h1>
+              <h1>Rapport d'intégration EDT&nbsp;{% if previsualization_counter|default(null) %}#{{ previsualization_counter }}{% endif %}</h1>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-12 info-cartouche">
               <strong>Mention:</strong> {{ sp_result[0]['mention'] }}<br>
               <strong>Niveau:</strong> {{ sp_result[0]['niveau'] }}<br>
-              <strong>Option:</strong> {{ sp_result[0]['parcours'] }}<br>
-              <strong>Option:</strong> {{ sp_result[0]['groupe'] }}<br>
+              <strong>Parcours:</strong> {{ sp_result[0]['parcours'] }}<br>
+              <strong>Groupe:</strong> {{ sp_result[0]['groupe'] }}<br>
               <strong>Semaine du Lundi:</strong> {{ sp_result[0]['mondayw'] }} <br>
               <i class="mgs-note">visible depuis le {{ sp_result[0]['last_update'] }}</i><br>
+
               {% if sp_overpassday != '' %}
                   <i class='err'><strong>Attention vous intégrez une semaine en cours ou passée</strong>, nous sommes le {{ sp_overpassday }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
               {% endif %}
