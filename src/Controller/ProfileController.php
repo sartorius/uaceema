@@ -154,8 +154,11 @@ class ProfileController extends AbstractController
             // Perform the importation
             // Change the option here !
             $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'N')";
+            $logger->debug("Get EDT to fill display EDT: " . $import_query);
             $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
+            /*
+            // We do not use split EDT anymore as we use plain and full one
             $week_p_one = array();
             $week_p_two = array();
 
@@ -167,6 +170,7 @@ class ProfileController extends AbstractController
                   array_push($week_p_two, $resultsp[$k]);
                 }
             }
+            */
 
             $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'Y')";
             $logger->debug("Get EDT with backup: " . $import_query);
@@ -175,11 +179,12 @@ class ProfileController extends AbstractController
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
                                       'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
-                                      "sp_result"=>$resultsp, "resultsp_sm"=>$week_p_one, "resultsp_sm_bkp"=>$resultspbackup,
+                                      "sp_result"=>$resultsp, /*"resultsp_sm"=>$week_p_one,*/ "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
-                                      "result_list_bdaymonth"=>$result_list_bdaymonth,
-                                      "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two]);
+                                      "result_list_bdaymonth"=>$result_list_bdaymonth/*,
+                                      "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two */
+                                    ]);
       }
     }
 

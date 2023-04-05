@@ -1,0 +1,1126 @@
+{# A lot of code duplication and duplication on the small screen #}
+{% if sp_result|length > 1 %}
+
+
+        {% set free_i = random(['1', '2', '3', '4']) %}
+        {% set hour_col1 = ['7h-8h', '8h-9h', '9h-10h', '10h-11h', '11h-12h', '12h-13h', '13h-14h', '14h-15h', '15h-16h', '16h-17h', '17h-18h'] %}
+        {# Handle the header of loading and check all here ORIGINAL #}
+        {% include 'Admin/EDT/_rawlargescreenedtheader.html.twig' %}
+
+        {# CALL CLI_GET_FWEDT('ainaraj359', 0, 'Y') in sp_result #}
+        {# STYLE Variable : START #}
+
+
+
+        {% set style_border_header_day = "height: 35px" %}
+        {% set style_border_header_date = "height: 25px" %}
+        {% set row_height = "100px" %}
+
+        {# STYLE Variable : END #}
+        {# Daily count debt is a counter to count the course duration #}
+        {% set dailycountdebt0 = 0 %}
+        {% set dailycountdebt1 = 0 %}
+        {% set dailycountdebt2 = 0 %}
+        {% set dailycountdebt3 = 0 %}
+        {% set dailycountdebt4 = 0 %}
+        {% set dailycountdebt5 = 0 %}
+
+
+        {% set day_line = [0, 1, 2, 3, 4, 5] %}
+
+
+        <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <table style="width: 100%" class="edt-bg-free-{{ free_i }}">
+                   <tr style="{{ style_border_header_day }}">
+                      <th class="myedt-empty-hd">&nbsp;</th>
+                      <th class="myedt-day">Lundi</th>
+                      <th class="myedt-day">Mardi</th>
+                      <th class="myedt-day">Mercredi</th>
+                      <th class="myedt-day">Jeudi</th>
+                      <th class="myedt-day">Vendredi</th>
+                      <th class="myedt-day">Samedi</th>
+                   </tr>
+                   <tr style="{{ style_border_header_date }}">
+                      <td class="myedt-hour-hd">Heure</td>
+                      <td class="myedt-date">{{ sp_result[0]['nday'] }}</td>
+                      <td class="myedt-date">{{ sp_result[1]['nday'] }}</td>
+                      <td class="myedt-date">{{ sp_result[2]['nday'] }}</td>
+                      <td class="myedt-date">{{ sp_result[3]['nday'] }}</td>
+                      <td class="myedt-date">{{ sp_result[4]['nday'] }}</td>
+                      <td class="myedt-date">{{ sp_result[5]['nday'] }}</td>
+                   </tr>
+
+
+
+                   {# Start the loop here ! #}
+
+
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[0] }}</td>
+
+                      {% set iline = 0 %}
+
+                                {# To know which day we are #}
+                                {% set inv_day_rp = 0 %}
+
+                                {% for day in day_line %}
+                                    {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                    {% set current_day_debt = 0 %}
+                                    {% if inv_day_rp == 0 %}
+                                        {% set current_day_debt = dailycountdebt0 %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set current_day_debt = dailycountdebt1 %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set current_day_debt = dailycountdebt2 %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set current_day_debt = dailycountdebt3 %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set current_day_debt = dailycountdebt4 %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set current_day_debt = dailycountdebt5 %}
+                                    {% endif %}
+
+
+                                    {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                        <td class="myedt-course-empty"></td>
+                                    {% elseif (current_day_debt > 0) %}
+
+                                        {# We display emptyness but we need to DECREASE ! #}
+
+                                        {% if inv_day_rp == 0 %}
+                                            {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                        {% elseif inv_day_rp == 1 %}
+                                            {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                        {% elseif inv_day_rp == 2 %}
+                                            {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                        {% elseif inv_day_rp == 3 %}
+                                            {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                        {% elseif inv_day_rp == 4 %}
+                                            {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                        {% else %}
+                                            {# We assume it is 5 #}
+                                            {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                        {% endif %}
+
+                                        {# Manage exceed duration #}
+                                        {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                            <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                            <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                        {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                            <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                        {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                            <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                        {% else %}
+                                            {# Optionnal #}
+                                            <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                        {% endif %}
+
+
+
+
+                                        {% if inv_day_rp == 0 %}
+                                            {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% elseif inv_day_rp == 1 %}
+                                            {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% elseif inv_day_rp == 2 %}
+                                            {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% elseif inv_day_rp == 3 %}
+                                            {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% elseif inv_day_rp == 4 %}
+                                            {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% else %}
+                                            {# We assume it is 5 #}
+                                            {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                        {% endif %}
+
+
+                                    {% endif %}
+
+                                    {% set inv_day_rp = inv_day_rp + 1 %}
+                                {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[0]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[1]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[2]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[3]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[4]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[5]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[1] }}</td>
+
+                      {% set iline = 6 %}
+
+                                  {# To know which day we are #}
+                                  {% set inv_day_rp = 0 %}
+
+                                  {% for day in day_line %}
+                                      {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                      {% set current_day_debt = 0 %}
+                                      {% if inv_day_rp == 0 %}
+                                          {% set current_day_debt = dailycountdebt0 %}
+                                      {% elseif inv_day_rp == 1 %}
+                                          {% set current_day_debt = dailycountdebt1 %}
+                                      {% elseif inv_day_rp == 2 %}
+                                          {% set current_day_debt = dailycountdebt2 %}
+                                      {% elseif inv_day_rp == 3 %}
+                                          {% set current_day_debt = dailycountdebt3 %}
+                                      {% elseif inv_day_rp == 4 %}
+                                          {% set current_day_debt = dailycountdebt4 %}
+                                      {% else %}
+                                          {# We assume it is 5 #}
+                                          {% set current_day_debt = dailycountdebt5 %}
+                                      {% endif %}
+
+
+                                      {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                          <td class="myedt-course-empty"></td>
+                                      {% elseif (current_day_debt > 0) %}
+
+                                          {# We display emptyness but we need to DECREASE ! #}
+
+                                          {% if inv_day_rp == 0 %}
+                                              {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                          {% elseif inv_day_rp == 1 %}
+                                              {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                          {% elseif inv_day_rp == 2 %}
+                                              {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                          {% elseif inv_day_rp == 3 %}
+                                              {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                          {% elseif inv_day_rp == 4 %}
+                                              {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                          {% else %}
+                                              {# We assume it is 5 #}
+                                              {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                          {% endif %}
+
+                                          {# Manage exceed duration #}
+                                          {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                              <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                          {% endif %}
+
+                                      {% else %}
+
+
+                                          {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                              <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                          {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                              <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                          {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                              <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                          {% else %}
+                                              {# Optionnal #}
+                                              <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                          {% endif %}
+
+                                          {% if inv_day_rp == 0 %}
+                                              {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% elseif inv_day_rp == 1 %}
+                                              {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% elseif inv_day_rp == 2 %}
+                                              {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% elseif inv_day_rp == 3 %}
+                                              {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% elseif inv_day_rp == 4 %}
+                                              {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% else %}
+                                              {# We assume it is 5 #}
+                                              {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                          {% endif %}
+
+
+                                      {% endif %}
+
+                                      {% set inv_day_rp = inv_day_rp + 1 %}
+                                  {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[6]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[7]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[8]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[9]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[10]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[11]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[2] }}</td>
+
+                      {% set iline = 12 %}
+
+                            {# To know which day we are #}
+                            {% set inv_day_rp = 0 %}
+
+                            {% for day in day_line %}
+                                {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                {% set current_day_debt = 0 %}
+                                {% if inv_day_rp == 0 %}
+                                    {% set current_day_debt = dailycountdebt0 %}
+                                {% elseif inv_day_rp == 1 %}
+                                    {% set current_day_debt = dailycountdebt1 %}
+                                {% elseif inv_day_rp == 2 %}
+                                    {% set current_day_debt = dailycountdebt2 %}
+                                {% elseif inv_day_rp == 3 %}
+                                    {% set current_day_debt = dailycountdebt3 %}
+                                {% elseif inv_day_rp == 4 %}
+                                    {% set current_day_debt = dailycountdebt4 %}
+                                {% else %}
+                                    {# We assume it is 5 #}
+                                    {% set current_day_debt = dailycountdebt5 %}
+                                {% endif %}
+
+
+                                {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                    <td class="myedt-course-empty"></td>
+                                {% elseif (current_day_debt > 0) %}
+
+                                    {# We display emptyness but we need to DECREASE ! #}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                    {% endif %}
+                                    {# Manage exceed duration #}
+                                    {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                        <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                    {% endif %}
+
+                                {% else %}
+
+
+                                    {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% else %}
+                                        {# Optionnal #}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% endif %}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% endif %}
+
+
+                                {% endif %}
+
+                                {% set inv_day_rp = inv_day_rp + 1 %}
+                            {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[12]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[13]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[14]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[15]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[16]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[17]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[3] }}</td>
+
+                      {% set iline = 18 %}
+
+                            {# To know which day we are #}
+                            {% set inv_day_rp = 0 %}
+
+                            {% for day in day_line %}
+                                {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                {% set current_day_debt = 0 %}
+                                {% if inv_day_rp == 0 %}
+                                    {% set current_day_debt = dailycountdebt0 %}
+                                {% elseif inv_day_rp == 1 %}
+                                    {% set current_day_debt = dailycountdebt1 %}
+                                {% elseif inv_day_rp == 2 %}
+                                    {% set current_day_debt = dailycountdebt2 %}
+                                {% elseif inv_day_rp == 3 %}
+                                    {% set current_day_debt = dailycountdebt3 %}
+                                {% elseif inv_day_rp == 4 %}
+                                    {% set current_day_debt = dailycountdebt4 %}
+                                {% else %}
+                                    {# We assume it is 5 #}
+                                    {% set current_day_debt = dailycountdebt5 %}
+                                {% endif %}
+
+
+                                {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                    <td class="myedt-course-empty"></td>
+                                {% elseif (current_day_debt > 0) %}
+
+                                    {# We display emptyness but we need to DECREASE ! #}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                    {% endif %}
+                                    {# Manage exceed duration #}
+                                    {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                        <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                    {% endif %}
+
+                                {% else %}
+
+                                    {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% else %}
+                                        {# Optionnal #}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% endif %}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% endif %}
+
+
+                                {% endif %}
+
+                                {% set inv_day_rp = inv_day_rp + 1 %}
+                            {% endfor %}
+                      {#
+                          <td class="myedt-course">{{ sp_result[18]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[19]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[20]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[21]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[22]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[23]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[4] }}</td>
+
+                      {% set iline = 24 %}
+
+                            {# To know which day we are #}
+                            {% set inv_day_rp = 0 %}
+
+                            {% for day in day_line %}
+                                {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                {% set current_day_debt = 0 %}
+                                {% if inv_day_rp == 0 %}
+                                    {% set current_day_debt = dailycountdebt0 %}
+                                {% elseif inv_day_rp == 1 %}
+                                    {% set current_day_debt = dailycountdebt1 %}
+                                {% elseif inv_day_rp == 2 %}
+                                    {% set current_day_debt = dailycountdebt2 %}
+                                {% elseif inv_day_rp == 3 %}
+                                    {% set current_day_debt = dailycountdebt3 %}
+                                {% elseif inv_day_rp == 4 %}
+                                    {% set current_day_debt = dailycountdebt4 %}
+                                {% else %}
+                                    {# We assume it is 5 #}
+                                    {% set current_day_debt = dailycountdebt5 %}
+                                {% endif %}
+
+
+                                {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                    <td class="myedt-course-empty"></td>
+                                {% elseif (current_day_debt > 0) %}
+
+                                    {# We display emptyness but we need to DECREASE ! #}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                    {% endif %}
+                                    {# Manage exceed duration #}
+                                    {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                        <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                    {% endif %}
+
+                                {% else %}
+
+                                    {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                    {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% else %}
+                                        {# Optionnal #}
+                                        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                    {% endif %}
+
+                                    {% if inv_day_rp == 0 %}
+                                        {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 1 %}
+                                        {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 2 %}
+                                        {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 3 %}
+                                        {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% elseif inv_day_rp == 4 %}
+                                        {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% else %}
+                                        {# We assume it is 5 #}
+                                        {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                    {% endif %}
+
+
+                                {% endif %}
+
+                                {% set inv_day_rp = inv_day_rp + 1 %}
+                            {% endfor %}
+                      {#
+                          <td class="myedt-course">{{ sp_result[24]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[25]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[26]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[27]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[28]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[29]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[5] }}</td>
+
+                      {% set iline = 30 %}
+
+                              {# To know which day we are #}
+                              {% set inv_day_rp = 0 %}
+
+                              {% for day in day_line %}
+                                  {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                  {% set current_day_debt = 0 %}
+                                  {% if inv_day_rp == 0 %}
+                                      {% set current_day_debt = dailycountdebt0 %}
+                                  {% elseif inv_day_rp == 1 %}
+                                      {% set current_day_debt = dailycountdebt1 %}
+                                  {% elseif inv_day_rp == 2 %}
+                                      {% set current_day_debt = dailycountdebt2 %}
+                                  {% elseif inv_day_rp == 3 %}
+                                      {% set current_day_debt = dailycountdebt3 %}
+                                  {% elseif inv_day_rp == 4 %}
+                                      {% set current_day_debt = dailycountdebt4 %}
+                                  {% else %}
+                                      {# We assume it is 5 #}
+                                      {% set current_day_debt = dailycountdebt5 %}
+                                  {% endif %}
+
+
+                                  {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                      <td class="myedt-course-empty"></td>
+                                  {% elseif (current_day_debt > 0) %}
+
+                                      {# We display emptyness but we need to DECREASE ! #}
+
+                                      {% if inv_day_rp == 0 %}
+                                          {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                      {% elseif inv_day_rp == 1 %}
+                                          {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                      {% elseif inv_day_rp == 2 %}
+                                          {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                      {% elseif inv_day_rp == 3 %}
+                                          {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                      {% elseif inv_day_rp == 4 %}
+                                          {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                      {% else %}
+                                          {# We assume it is 5 #}
+                                          {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                      {% endif %}
+                                      {# Manage exceed duration #}
+                                      {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                          <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                      {% endif %}
+
+                                  {% else %}
+
+                                      {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                          <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                      {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                          <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                      {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                          <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                      {% else %}
+                                          {# Optionnal #}
+                                          <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                      {% endif %}
+
+                                      {% if inv_day_rp == 0 %}
+                                          {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% elseif inv_day_rp == 1 %}
+                                          {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% elseif inv_day_rp == 2 %}
+                                          {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% elseif inv_day_rp == 3 %}
+                                          {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% elseif inv_day_rp == 4 %}
+                                          {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% else %}
+                                          {# We assume it is 5 #}
+                                          {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                      {% endif %}
+
+
+                                  {% endif %}
+
+                                  {% set inv_day_rp = inv_day_rp + 1 %}
+                              {% endfor %}
+                      {#
+                          <td class="myedt-course">{{ sp_result[30]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[31]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[32]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[33]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[34]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[35]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[6] }}</td>
+
+                      {% set iline = 36 %}
+
+                                        {# To know which day we are #}
+                                        {% set inv_day_rp = 0 %}
+
+                                        {% for day in day_line %}
+                                            {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                            {% set current_day_debt = 0 %}
+                                            {% if inv_day_rp == 0 %}
+                                                {% set current_day_debt = dailycountdebt0 %}
+                                            {% elseif inv_day_rp == 1 %}
+                                                {% set current_day_debt = dailycountdebt1 %}
+                                            {% elseif inv_day_rp == 2 %}
+                                                {% set current_day_debt = dailycountdebt2 %}
+                                            {% elseif inv_day_rp == 3 %}
+                                                {% set current_day_debt = dailycountdebt3 %}
+                                            {% elseif inv_day_rp == 4 %}
+                                                {% set current_day_debt = dailycountdebt4 %}
+                                            {% else %}
+                                                {# We assume it is 5 #}
+                                                {% set current_day_debt = dailycountdebt5 %}
+                                            {% endif %}
+
+
+                                            {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                                <td class="myedt-course-empty"></td>
+                                            {% elseif (current_day_debt > 0) %}
+
+                                                {# We display emptyness but we need to DECREASE ! #}
+
+                                                {% if inv_day_rp == 0 %}
+                                                    {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 1 %}
+                                                    {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 2 %}
+                                                    {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 3 %}
+                                                    {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 4 %}
+                                                    {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                                {% else %}
+                                                    {# We assume it is 5 #}
+                                                    {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                                {% endif %}
+                                                {# Manage exceed duration #}
+                                                {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                                    <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                                {% endif %}
+
+                                            {% else %}
+
+                                                {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                                {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% else %}
+                                                    {# Optionnal #}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% endif %}
+
+                                                {% if inv_day_rp == 0 %}
+                                                    {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 1 %}
+                                                    {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 2 %}
+                                                    {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 3 %}
+                                                    {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 4 %}
+                                                    {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% else %}
+                                                    {# We assume it is 5 #}
+                                                    {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% endif %}
+
+
+                                            {% endif %}
+
+                                            {% set inv_day_rp = inv_day_rp + 1 %}
+                                        {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[36]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[37]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[38]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[39]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[40]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[41]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[7] }}</td>
+
+                      {% set iline = 42 %}
+
+                                          {# To know which day we are #}
+                                          {% set inv_day_rp = 0 %}
+
+                                          {% for day in day_line %}
+                                              {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                              {% set current_day_debt = 0 %}
+                                              {% if inv_day_rp == 0 %}
+                                                  {% set current_day_debt = dailycountdebt0 %}
+                                              {% elseif inv_day_rp == 1 %}
+                                                  {% set current_day_debt = dailycountdebt1 %}
+                                              {% elseif inv_day_rp == 2 %}
+                                                  {% set current_day_debt = dailycountdebt2 %}
+                                              {% elseif inv_day_rp == 3 %}
+                                                  {% set current_day_debt = dailycountdebt3 %}
+                                              {% elseif inv_day_rp == 4 %}
+                                                  {% set current_day_debt = dailycountdebt4 %}
+                                              {% else %}
+                                                  {# We assume it is 5 #}
+                                                  {% set current_day_debt = dailycountdebt5 %}
+                                              {% endif %}
+
+
+                                              {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                                  <td class="myedt-course-empty"></td>
+                                              {% elseif (current_day_debt > 0) %}
+
+                                                  {# We display emptyness but we need to DECREASE ! #}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                                  {% endif %}
+                                                  {# Manage exceed duration #}
+                                                  {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                                      <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                                  {% endif %}
+
+                                              {% else %}
+
+                                                  {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% else %}
+                                                      {# Optionnal #}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% endif %}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% endif %}
+
+
+                                              {% endif %}
+
+                                              {% set inv_day_rp = inv_day_rp + 1 %}
+                                          {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[42]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[43]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[44]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[45]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[46]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[47]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[8] }}</td>
+
+                      {% set iline = 48 %}
+
+                                        {# To know which day we are #}
+                                        {% set inv_day_rp = 0 %}
+
+                                        {% for day in day_line %}
+                                            {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                            {% set current_day_debt = 0 %}
+                                            {% if inv_day_rp == 0 %}
+                                                {% set current_day_debt = dailycountdebt0 %}
+                                            {% elseif inv_day_rp == 1 %}
+                                                {% set current_day_debt = dailycountdebt1 %}
+                                            {% elseif inv_day_rp == 2 %}
+                                                {% set current_day_debt = dailycountdebt2 %}
+                                            {% elseif inv_day_rp == 3 %}
+                                                {% set current_day_debt = dailycountdebt3 %}
+                                            {% elseif inv_day_rp == 4 %}
+                                                {% set current_day_debt = dailycountdebt4 %}
+                                            {% else %}
+                                                {# We assume it is 5 #}
+                                                {% set current_day_debt = dailycountdebt5 %}
+                                            {% endif %}
+
+
+                                            {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                                <td class="myedt-course-empty"></td>
+                                            {% elseif (current_day_debt > 0) %}
+
+                                                {# We display emptyness but we need to DECREASE ! #}
+
+                                                {% if inv_day_rp == 0 %}
+                                                    {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 1 %}
+                                                    {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 2 %}
+                                                    {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 3 %}
+                                                    {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                                {% elseif inv_day_rp == 4 %}
+                                                    {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                                {% else %}
+                                                    {# We assume it is 5 #}
+                                                    {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                                {% endif %}
+                                                {# Manage exceed duration #}
+                                                {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                                    <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                                {% endif %}
+
+                                            {% else %}
+
+                                                {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                                {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% else %}
+                                                    {# Optionnal #}
+                                                    <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                {% endif %}
+
+                                                {% if inv_day_rp == 0 %}
+                                                    {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 1 %}
+                                                    {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 2 %}
+                                                    {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 3 %}
+                                                    {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% elseif inv_day_rp == 4 %}
+                                                    {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% else %}
+                                                    {# We assume it is 5 #}
+                                                    {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                {% endif %}
+
+
+                                            {% endif %}
+
+                                            {% set inv_day_rp = inv_day_rp + 1 %}
+                                        {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[48]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[49]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[50]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[51]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[52]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[53]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[9] }}</td>
+
+                      {% set iline = 54 %}
+
+                                          {# To know which day we are #}
+                                          {% set inv_day_rp = 0 %}
+
+                                          {% for day in day_line %}
+                                              {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                              {% set current_day_debt = 0 %}
+                                              {% if inv_day_rp == 0 %}
+                                                  {% set current_day_debt = dailycountdebt0 %}
+                                              {% elseif inv_day_rp == 1 %}
+                                                  {% set current_day_debt = dailycountdebt1 %}
+                                              {% elseif inv_day_rp == 2 %}
+                                                  {% set current_day_debt = dailycountdebt2 %}
+                                              {% elseif inv_day_rp == 3 %}
+                                                  {% set current_day_debt = dailycountdebt3 %}
+                                              {% elseif inv_day_rp == 4 %}
+                                                  {% set current_day_debt = dailycountdebt4 %}
+                                              {% else %}
+                                                  {# We assume it is 5 #}
+                                                  {% set current_day_debt = dailycountdebt5 %}
+                                              {% endif %}
+
+
+                                              {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                                  <td class="myedt-course-empty"></td>
+                                              {% elseif (current_day_debt > 0) %}
+
+                                                  {# We display emptyness but we need to DECREASE ! #}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                                  {% endif %}
+                                                  {# Manage exceed duration #}
+                                                  {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                                      <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                                  {% endif %}
+
+                                              {% else %}
+                                                  {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% else %}
+                                                      {# Optionnal #}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% endif %}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% endif %}
+
+
+                                              {% endif %}
+
+                                              {% set inv_day_rp = inv_day_rp + 1 %}
+                                          {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[54]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[55]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[56]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[57]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[58]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[59]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+                   <tr style="border:1px solid black; height : {{ row_height }}">
+                      <td class="myedt-hour">{{ hour_col1[10] }}</td>
+
+                      {% set iline = 60 %}
+
+                                          {# To know which day we are #}
+                                          {% set inv_day_rp = 0 %}
+
+                                          {% for day in day_line %}
+                                              {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+                                              {% set current_day_debt = 0 %}
+                                              {% if inv_day_rp == 0 %}
+                                                  {% set current_day_debt = dailycountdebt0 %}
+                                              {% elseif inv_day_rp == 1 %}
+                                                  {% set current_day_debt = dailycountdebt1 %}
+                                              {% elseif inv_day_rp == 2 %}
+                                                  {% set current_day_debt = dailycountdebt2 %}
+                                              {% elseif inv_day_rp == 3 %}
+                                                  {% set current_day_debt = dailycountdebt3 %}
+                                              {% elseif inv_day_rp == 4 %}
+                                                  {% set current_day_debt = dailycountdebt4 %}
+                                              {% else %}
+                                                  {# We assume it is 5 #}
+                                                  {% set current_day_debt = dailycountdebt5 %}
+                                              {% endif %}
+
+
+                                              {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+                                                  <td class="myedt-course-empty"></td>
+                                              {% elseif (current_day_debt > 0) %}
+
+                                                  {# We display emptyness but we need to DECREASE ! #}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (current_day_debt - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (current_day_debt - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (current_day_debt - 1) %}
+                                                  {% endif %}
+                                                  {# Manage exceed duration #}
+                                                  {% if (sp_result[day + iline]['duration_hour'] > 0) %}
+                                                      <td class="myedt-course-err"><strong>ERR192 Vérifier la durée des cours ou contacter la scolarité</strong></td>
+                                                  {% endif %}
+
+                                              {% else %}
+
+                                                  {% if sp_result[day + iline]['course_status'] == 'A' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}"  class="myedt-course">{{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'C' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-can">ANNULÉ : <i class="ua-line">{{ sp_result[day + iline]['raw_course_title'] }}</i></td>
+                                                  {% elseif sp_result[day + iline]['course_status'] == 'H' %}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-hos">HORS SITE : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% else %}
+                                                      {# Optionnal #}
+                                                      <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course-opt">OPTION : {{ sp_result[day + iline]['raw_course_title'] }}</td>
+                                                  {% endif %}
+
+                                                  {% if inv_day_rp == 0 %}
+                                                      {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 1 %}
+                                                      {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 2 %}
+                                                      {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 3 %}
+                                                      {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% elseif inv_day_rp == 4 %}
+                                                      {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% else %}
+                                                      {# We assume it is 5 #}
+                                                      {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+                                                  {% endif %}
+
+
+                                              {% endif %}
+
+                                              {% set inv_day_rp = inv_day_rp + 1 %}
+                                          {% endfor %}
+
+                      {#
+                          <td class="myedt-course">{{ sp_result[60]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[61]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[62]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[63]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[64]['raw_course_title'] }}</td>
+                          <td class="myedt-course">{{ sp_result[65]['raw_course_title'] }}</td>
+                      #}
+                   </tr>
+
+
+                </table>
+              </div>
+            </div>
+        </div>
+
+{% endif %}

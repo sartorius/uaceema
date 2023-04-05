@@ -1,0 +1,43 @@
+
+
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-8">
+          <button type="button" class="btn btn-default btn-sm btn-block edt-switch-wp"><span class="icon-refresh nav-text"></span>&nbsp;Switch demi-semaine</button>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <br>
+
+
+
+    {% set resultsp_sm = week_p_one %}
+    {% set day_1 = 'LUNDI' %}
+    {% set day_2 = 'MARDI' %}
+    {% set day_3 = 'MERCREDI' %}
+    <div class='uac-sm-p1-version'>
+        {% include 'Admin/EDT/_rawsmallw1screenedt.html.twig' %}
+    </div>
+
+    {% set resultsp_sm = week_p_two %}
+    {% set day_1 = 'JEUDI' %}
+    {% set day_2 = 'VENDREDI' %}
+    {% set day_3 = 'SAMEDI' %}
+
+    <div class='uac-sm-p2-version'>
+        {% include 'Admin/EDT/_rawsmallw1screenedt.html.twig' %}
+    </div>
+
+
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-8">
+          <button type="button" class="btn btn-default btn-sm btn-block edt-switch-wp"><span class="icon-refresh nav-text"></span>&nbsp;Switch demi-semaine</button>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+    <br>

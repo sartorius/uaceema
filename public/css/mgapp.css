@@ -14,6 +14,10 @@
   --val-ace-color: #00561A;
   --deep-ace-blue: #002C8A;
   --deep-ace-brown: #5B3600;
+  --course-txt-lg: 12px;
+  --course-txt-sm: 10px;
+  --course-width-sm: 14%;
+  --course-width-lg: 15.5%;
 }
 
 
@@ -1083,12 +1087,134 @@ textarea[name=inputRef] {
   display: none;
 }
 
+
+/********************************** EDT ROWSPAN *************************************/
+
+.myedt-empty-hd{
+  background-color: BLACK;
+}
+
+.myedt-day{
+  color : white;
+  background-color: black;
+  text-align: center;
+  border:1px solid #868897;
+  font-size: 13px;
+  font-weight: 600;
+}
+.myedt-date{
+  color : #515151;
+  background-color: #F9F5FA;
+  text-align: center;
+  border:1px solid black;
+  font-size: 12px;
+}
+.myedt-hour-hd{
+  color : #515151;
+  background-color: WHITE;
+  text-align: center;
+  border:1px solid black;
+  font-size: 12px;
+}
+
+.myedt-hour{
+  color : #736483;
+  background-color: #F9F5FA;
+  text-align: center;
+  vertical-align: top;
+  border:1px solid black;
+  font-size: 13px;
+}
+
+.myedt-course{
+  color : BLACK;
+  background-color: #F2F5FF;
+  text-align: center;
+  border:1px solid black;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+.myedt-course-can{
+  color : WHITE;
+  background-color: #870000;
+  text-align: center;
+  border:1px solid black;
+  font-weight: 600;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+.myedt-course-opt{
+  color : #3D341A;
+  background-color: #F9EFD2;
+  text-align: center;
+  border:1px solid black;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+.myedt-course-hos{
+  color : BLACK;
+  background-color: #ECECEC;
+  text-align: center;
+  border:1px solid black;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+.myedt-course-err{
+  color : WHITE;
+  background-color: RED;
+  text-align: center;
+  border:1px solid black;
+  font-size: 12px;
+  width: var(--course-width-lg);
+}
+
+.myedt-course-empty{
+  border:1px solid black;
+  width: 15.5%;
+}
+
+/********************************** EDT ROWSPAN *************************************/
+
 @media (min-width:414px){
   .uac-sm-version{
     display: none;
   }
+
   .uac-lg-version{
     display: block;
+  }
+  .myedt-course{
+    font-size: var(--course-txt-lg);
+    width: var(--course-width-lg);
+  }
+
+  .myedt-course-can{
+    color : RED;
+    background-color: WHITE;
+    text-align: center;
+    border:1px solid black;
+    font-weight: 600;
+    font-size: var(--course-txt-lg);
+    width: var(--course-width-lg);
+  }
+
+  .myedt-course-opt{
+    font-size: var(--course-txt-lg);
+    width: var(--course-width-lg);
+  }
+  .myedt-hour{
+    text-align: center;
+    vertical-align: middle;
+    font-size: 17px;
+  }
+
+  .myedt-course-hos{
+    font-size: var(--course-txt-lg);
+    width: var(--course-width-lg);
   }
 }
 

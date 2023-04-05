@@ -1,0 +1,67 @@
+{% set inv_day_rp = 0 %}
+{# Get an array of debt per day : day_debt #}
+
+{% for day in day_line %}
+    {# Treat the case of rowspan first because when there is a rowspan we must not have a cell at bottom #}
+    {% set current_day_debt = 0 %}
+    {% if inv_day_rp == 0 %}
+        {% set current_day_debt = dailycountdebt0 %}
+    {% elseif inv_day_rp == 1 %}
+        {% set current_day_debt = dailycountdebt1 %}
+    {% elseif inv_day_rp == 2 %}
+        {% set current_day_debt = dailycountdebt2 %}
+    {% elseif inv_day_rp == 3 %}
+        {% set current_day_debt = dailycountdebt3 %}
+    {% elseif inv_day_rp == 4 %}
+        {% set current_day_debt = dailycountdebt4 %}
+    {% else %}
+        {# We assume it is 5 #}
+        {% set current_day_debt = dailycountdebt5 %}
+    {% endif %}
+
+
+    {% if (sp_result[day + iline]['duration_hour'] == 0) and (current_day_debt == 0) %}
+
+        <td class="myedt-course-empty">{{ day + iline }}/{{ current_day_debt }} [{{ dailycountdebt0 }} - {{ dailycountdebt1 }} - {{ dailycountdebt2 }} - {{ dailycountdebt3 }} - {{ dailycountdebt4 }} - {{ dailycountdebt5 }}]</td>
+    {% elseif (current_day_debt > 0) %}
+
+        {# We display emptyness but we need to DECREASE ! #}
+
+        {% if inv_day_rp == 0 %}
+            {% set dailycountdebt0 = (current_day_debt - 1) %}
+        {% elseif inv_day_rp == 1 %}
+            {% set dailycountdebt1 = (current_day_debt - 1) %}
+        {% elseif inv_day_rp == 2 %}
+            {% set dailycountdebt2 = (current_day_debt - 1) %}
+        {% elseif inv_day_rp == 3 %}
+            {% set dailycountdebt3 = (current_day_debt - 1) %}
+        {% elseif inv_day_rp == 4 %}
+            {% set dailycountdebt4 = (current_day_debt - 1) %}
+        {% else %}
+            {# We assume it is 5 #}
+            {% set dailycountdebt5 = (current_day_debt - 1) %}
+        {% endif %}
+
+    {% else %}
+        <td rowspan="{{ sp_result[day + iline]['duration_hour'] }}" class="myedt-course">{{ day + iline }}-{{ sp_result[day + iline]['duration_hour'] }}/{{ sp_result[day + iline]['raw_course_title'] }}</td>
+
+        {% if inv_day_rp == 0 %}
+            {% set dailycountdebt0 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% elseif inv_day_rp == 1 %}
+            {% set dailycountdebt1 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% elseif inv_day_rp == 2 %}
+            {% set dailycountdebt2 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% elseif inv_day_rp == 3 %}
+            {% set dailycountdebt3 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% elseif inv_day_rp == 4 %}
+            {% set dailycountdebt4 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% else %}
+            {# We assume it is 5 #}
+            {% set dailycountdebt5 = (sp_result[day + iline]['duration_hour'] - 1) %}
+        {% endif %}
+
+
+    {% endif %}
+
+    {% set inv_day_rp = inv_day_rp + 1 %}
+{% endfor %}
