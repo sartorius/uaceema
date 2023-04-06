@@ -141,12 +141,24 @@
 
 
       {% include 'Admin/EDT/edtheader.html.twig' %}
+
+      {% if from_admin == 'N' %}
+          <div class="container">
+              <div class="row">
+                  <div class="col-12">
+                      <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Si votre emploi du temps ne s'affiche pas bien, pensez à bien vider votre cache navigateur (Chrome, Safari, Firefox etc.). Nous vous invitons à aller sur Google pour trouver comment faire.</div>
+                      <br>
+                  </div>
+              </div>
+          </div>
+      {% endif %}
+
       {# ROWSPAN Here !#}
       {# Responsivity is managed in the @media css when screen is big we do not display sm-version #}
       <div style="overflow-x: scroll; width: 100%;" class='uac-sm-version'>
           {% include 'Admin/EDT/_rawsmallscreenedtwrowspan.html.twig' %}
       </div>
-      
+
       <div class='uac-lg-version'>
           {% include 'Admin/EDT/_rawlargescreenedtwrowspan.html.twig' %}
       </div>
