@@ -1,3 +1,6 @@
+{% include 'Dirty/dirtyjsbarcode.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
+
 {% include 'RawTemplate/_hearder.html.twig' %}
 {# Handle here the files relatives to JS #}
 
@@ -40,10 +43,34 @@
         <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
     </div>
     <div class="btn-profil mid-blc">
-      <button id="btn-addpay" class="btn btn-default btn-lg btn-print btn-block">Ajouter un paiement &nbsp;<i class="icon-plus-square nav-text"></i></button>
-      <div class="btn-ace-right">
-        <button id="btn-addpay-clear" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+      <div id="addp-mainop" class="pay-big-blk">
+            <div id="btn-addcut" class="pay-big-btn pay-big-btn-txt red-opt-btn-1">
+              <br>Générer une<br>réduction &nbsp;<i class="icon-scissors nav-text"></i><br>
+            </div>
+            <div id="btn-addpay" class="pay-big-btn pay-big-btn-txt pay-big-btn-1">
+              <br>Ajouter un<br>paiement &nbsp;<i class="icon-plus-square nav-text"></i><br>
+            </div>
       </div>
+
+      <div class="btn-ace-right">
+        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+
+      </div>
+      <hr>
+      <div id="addp-red-option" class="pay-big-blk">
+            <div id="btn-addcut-1" class="pay-big-btn pay-opt-btn-txt red-opt-btn-2">
+              <br>Réduction<br>50%<br>
+            </div>
+            <div id="btn-addcut-2" class="pay-big-btn pay-opt-btn-txt red-opt-btn-1">
+              <br>Réduction<br>100%<br>
+            </div>
+      </div>
+
+
+      <div id="addp-print" class="pay-big-blk">
+            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Imprimer &nbsp;<i class="icon-print nav-text"></i></button>
+      </div>
+
     </div>
 
     <div id="valid-code-read">
@@ -58,8 +85,10 @@
 </div>
 
 
-
-
+<img id="logo-carte" src="{{ path('main') }}img/logotext_black600x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >
+<div class="barcode-not-seen">
+  <img id="barcode"/>
+</div>
 
 
 

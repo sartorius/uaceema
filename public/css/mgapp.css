@@ -1758,11 +1758,20 @@ img.part-img{
 
 /***************************  ADD Pay  ****************************/
 
-#btn-addpay{
+#addp-mainop,
+#addp-red-option,
+#addp-print{
   display: none;
 }
+.barcode-not-seen{
+  visibility: hidden;
+}
 
-#btn-addpay-clear{
+#addp-print{
+  margin-top: 45px;
+}
+
+#btn-clear-addpay{
   margin-top: 15px;
 }
 
@@ -1776,4 +1785,54 @@ img.part-img{
   font-size: 1.8em;
   color: var(--main-ace-color);
   font-weight: 500;
+}
+
+.pay-big-blk{
+  position: relative;
+  text-align: center;
+  margin-top: 15px;
+}
+.pay-big-btn{
+  width: 46%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 3.5em;
+  padding-bottom: 4em;
+  color: WHITE;
+  font-weight: 400;
+}
+.pay-big-btn-txt{
+  font-size: 1em;
+}
+
+.pay-opt-btn-txt{
+  font-size: 1.5em;
+}
+
+.pay-big-btn:hover{
+  transform: scale(1.05);
+  color: var(--main-gray-75);
+  cursor: pointer;
+}
+.pay-big-btn-1{
+  background-color: var(--main-ace-color);
+}
+
+.pay-big-btn-1:hover{
+  background-color: var(--main-ace-color-light);
+}
+.red-opt-btn-2{
+  background-color: #66496E;
+}
+.red-opt-btn-1{
+  background-color: #60067B;
+}
+
+.red-opt-btn-2:hover{
+  background-color: #DECCE3;
+}
+.red-opt-btn-1:hover{
+  background-color: #DCDCDC;
 }

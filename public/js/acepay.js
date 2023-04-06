@@ -1,3 +1,55 @@
+function printReceiptPDF(){
+
+  console.log('Click on printReceiptPDF');
+
+  // Let say we are in a cut
+  JsBarcode("#barcode", "000010423R", {
+    width: 1.5,
+    height: 85,
+    displayValue: false
+  });
+
+
+  // Document of 210mm wide and 297mm high > A4
+  // new jsPDF('p', 'mm', [297, 210]);
+  // Here format A7
+  let doc = new jsPDF('p', 'mm', [120, 75]);
+
+  doc.setFont("Courier");
+  doc.setFontType("bold");
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  doc.text(18, 35, "BON DE REDUCTION 50%");
+
+
+  doc.addImage(document.getElementById('logo-carte'), //img src
+                'PNG', //format
+                11, //x oddOffsetX is to define if position 1 or 2
+                0, //y
+                50, //Width
+                16, null, 'FAST'); //Height // Fast is to get less big files
+
+
+  doc.addImage(document.getElementById('barcode').src, //img src
+                'PNG', //format
+                12, //x oddOffsetX is to define if position 1 or 2
+                60, //y
+                50, //Width
+                30, null, 'FAST'); //Height // Fast is to get less big files
+
+  doc.setFontSize(14);
+  doc.text(23, 53, '000010423R');
+
+  doc.save('ReceiptUACEEM_Print');
+
+
+  //$("body").removeClass("loading");
+  //$("#screen-load").hide();
+}
+
+/**********************************************************/
+
+
 function addPayUserExists(val){
   for (var i = 0; i < dataAllUSRNToJsonArray.length; i++) {
     if (dataAllUSRNToJsonArray[i].USERNAME === val) return true;
@@ -12,14 +64,18 @@ function addPayClear(){
   $('#last-read-time').html('');
   $("#exist-code-read").html('N');
   $('#addpay-ace').show(100);
-  $("#btn-addpay").hide(100);
+
+  $("#addp-mainop").hide(100);
+  $("#addp-red-option").hide(100);
+  $("#addPayClear").hide(100);
+
 }
 
 function verityAddPayContentScan(){
   // Do something
   let foundCode = $("#exist-code-read").html();
   if(foundCode == 'N'){
-    $("#btn-addpay").hide(200);
+    $("#addp-mainop").hide(200);
   }
 
 
@@ -46,7 +102,8 @@ function verityAddPayContentScan(){
         scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
         $("#exist-code-read").html('Y');
         $('#addpay-ace').hide(100);
-        $("#btn-addpay").show(200);
+
+        $("#addp-mainop").show(100);
       }
       else{
         /******************************************************** NOT FOUND ********************************************************/
@@ -101,9 +158,45 @@ $(document).ready(function() {
       verityAddPayContentScan();
     });
 
-    $( "#btn-addpay-clear" ).click(function() {
+    $( "#btn-clear-addpay" ).click(function() {
       addPayClear();
     });
+
+    // Generate a cut
+    $( "#btn-addcut" ).click(function() {
+      console.log("You click on #btn-addcut");
+      $("#addp-mainop").hide(100);
+      $("#addp-red-option").show(300);
+
+    });
+    // Add a payment
+    $( "#btn-addpay" ).click(function() {
+      console.log("You click on #btn-addpay");
+    });
+
+    // Create the cut
+    $( "#btn-addcut-1" ).click(function() {
+      console.log("You click on #btn-addcut-1");
+
+      $("#addp-print").show(300);
+
+    });
+    $( "#btn-addcut-2" ).click(function() {
+      console.log("You click on #btn-addcut-2");
+
+      $("#addp-print").show(300);
+    });
+
+
+    // PRINT BUTTON !!!
+    $( "#addp-print" ).click(function() {
+      console.log("You click on #addp-print");
+      printReceiptPDF();
+
+
+      // Then reclean all againt !!!
+    });
+
   }
   else if($('#mg-graph-identifier').text() == 'xxx'){
     // Do something
