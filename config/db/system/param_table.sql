@@ -55,7 +55,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('QUEASSI', 'Queue Assiduite', NULL, NULL);
 
 -- Payment
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite visible 1 oui 0 non', 0, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite dashboard visible Y oui N non', NULL, 'Y');
 
 
 

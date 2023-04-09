@@ -291,7 +291,21 @@ h2 {
       margin-right: 0px;
     }
 }
-
+.home-txt{
+  padding-left: 3em;
+  padding-right: 3em;
+}
+.lit-txt{
+  font-family: "Old Standard TT", "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
+}
+p:first-of-type:first-letter {
+  float: left;
+  text-shadow:3px 3px 3px silver;
+  font-size: 8em;
+  line-height: 90%;
+  margin:-.1em 0px;
+  padding-right: .1em
+}
 
 .mgs-questiondefinition{
   text-align: justify;
@@ -1798,8 +1812,8 @@ img.part-img{
   border-radius: 5px;
   margin-left: 3px;
   margin-right: 3px;
-  padding-top: 3.5em;
-  padding-bottom: 4em;
+  padding-top: 2.5em;
+  padding-bottom: 3em;
   color: WHITE;
   font-weight: 400;
 }
@@ -1835,4 +1849,15 @@ img.part-img{
 }
 .red-opt-btn-1:hover{
   background-color: #DCDCDC;
+}
+
+.blk-log-pay{
+  padding-top: 5em;
+  font-size: 1.2em;
+  color: var(--main-gray-25);
+  text-align: right;
+}
+.pay-sc-log-tra-txt{
+  font-family: Courier;
+  font-size: 0.7em;
 }

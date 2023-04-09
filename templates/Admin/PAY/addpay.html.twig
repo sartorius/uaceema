@@ -8,6 +8,26 @@
   <script>
 
     let dataAllUSRNToJsonArray =JSON.parse('{{ result_all_usrn | json_encode | raw }}');
+    let myTicket = new Array();
+
+    let foundMatricule = '';
+    let foundName = '';
+    let foundClasse = '';
+
+    const paddChar = '.';
+    const maxLgTicket = 45;
+    const sizeTime = 12;
+    const sepTime = ' '
+
+    let ticketRef = '';
+    let ticketRefFile = '';
+    let ticketType = 'X';
+    const msgFooterRed = 'DATE, SIGNATURE ET CACHET PDT';
+
+    const maxPrintTicket = sizeTime - 3;
+    const maxPadLeft = 6;
+
+
   </script>
 {% else %}
     // Error
@@ -23,6 +43,11 @@
 
 <div class="row">
   <div class="col-lg-4 mgs-mainblk-txt">
+    <div id="pay-sc-log" class="blk-log-pay">
+      Ticket&nbsp;<i id="sh-ticketref"></i>&nbsp;<i class="icon-arrow-down nav-text"></i>
+      <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
+      </div>
+    </div>
 
   </div>
   <div class="col-lg-4 mgs-mainblk-txt ua-scan-mn">
@@ -76,7 +101,6 @@
     <div id="valid-code-read">
     </div>
     <div id="exist-code-read">
-      N
     </div>
 
   </div>

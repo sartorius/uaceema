@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_load_user` (
   UNIQUE KEY `email_UNIQUE` (`email`));
 
 -- cohort id must be in uac_showuser;
-DROP TABLE IF EXISTS mdl_userx;
-CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_userx` (
+DROP TABLE IF EXISTS mdl_user;
+CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_user` (
   `id` BIGINT UNSIGNED NOT NULL,
   `username` CHAR(10) NOT NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

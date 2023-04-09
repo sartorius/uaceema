@@ -12,6 +12,7 @@ cat ./config/db/mail/mail_table.sql >> ./config/db/_all.part1.sql
 cat ./config/db/edt/edt_table.sql >> ./config/db/_all.part1.sql
 cat ./config/db/edt/assiduite_table.sql >> ./config/db/_all.part1.sql
 cat ./config/db/report_graph/report.sql >> ./config/db/_all.part1.sql
+cat ./config/db/pay/pay_table.sql >> ./config/db/_all.part1.sql
 
 # partner
 cat ./config/db/partner/partner_table.sql >> ./config/db/_all.part1.sql
@@ -24,6 +25,7 @@ cat ./config/db/scan/scan_sp.sql >> ./config/db/_all.part1.sql
 cat ./config/db/mail/mail_sp.sql >> ./config/db/_all.part1.sql
 cat ./config/db/edt/edt_sp.sql >> ./config/db/_all.part1.sql
 cat ./config/db/edt/assiduite_sp.sql >> ./config/db/_all.part1.sql
+cat ./config/db/pay/pay_sp.sql >> ./config/db/_all.part1.sql
 
 # handle the migration from moodle
 cat ./config/db/mdl_migration/usr_sp.sql >> ./config/db/_all.part1.sql
