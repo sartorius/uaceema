@@ -111,7 +111,12 @@ alumni:
     path:       /alumni
     controller: App\Controller\AdminAlumniController::main
 
-
+refpay:
+    path:       /refpay
+    controller: App\Controller\AdminPayController::refpay
 addpay:
     path:       /addpay
     controller: App\Controller\AdminPayController::addpay
+generateFaciliteDB:
+    path:       /generateFaciliteDB
+    controller: App\Controller\AdminPayController::generateFaciliteDB

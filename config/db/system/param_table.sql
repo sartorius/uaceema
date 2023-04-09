@@ -224,6 +224,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 25;
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 26;
 
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 10;
+
 /*************
 SELECTION COHORT !
 

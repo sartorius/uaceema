@@ -18,6 +18,7 @@
   --course-txt-sm: 10px;
   --course-width-sm: 14%;
   --course-width-lg: 15.5%;
+  --jsgrid-txt-sm: 17px;
 }
 
 
@@ -507,6 +508,10 @@ p:first-of-type:first-letter {
 .mg-ref-sesssubtitle{
   font-size: 0.9em;
   margin-bottom: 0px;
+}
+
+#ace-alert-msg{
+  display: none;
 }
 
 /******************* MG QRCode Exampls *******************/
@@ -1512,6 +1517,23 @@ textarea[name=inputRef] {
   font-size: 12px;
 }
 
+.cell-ref-sm{
+  font-size: var(--jsgrid-txt-sm);
+}
+
+.cell-ref-sm-hd{
+  font-size: var(--jsgrid-txt-sm);
+  color: white;
+  font-weight: 800;
+  background-color: var(--main-ace-color) !important;
+}
+
+.cell-ref-sm-mono{
+  font-family: 'Roboto Mono', monospace;
+  font-size: var(--jsgrid-txt-sm);
+}
+
+
 .recap-lat{
   color: var(--main-gray-50);
   font-weight: 800;
@@ -1816,6 +1838,7 @@ img.part-img{
   padding-bottom: 3em;
   color: WHITE;
   font-weight: 400;
+  margin-top: 15px;
 }
 .pay-big-btn-txt{
   font-size: 1em;
@@ -1843,9 +1866,15 @@ img.part-img{
 .red-opt-btn-1{
   background-color: #60067B;
 }
+.fac-opt-btn-1{
+  background-color: #3B003A;
+}
 
 .red-opt-btn-2:hover{
   background-color: #DECCE3;
+}
+.fac-opt-btn-1:hover{
+  background-color: #ECE5EC;
 }
 .red-opt-btn-1:hover{
   background-color: #DCDCDC;

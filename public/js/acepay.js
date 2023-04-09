@@ -1,8 +1,124 @@
-function printReceiptPDF(){
+/***********************************************************************************************************/
+
+function loadRefPayGrid(){
+
+    refPayField = [
+        { name: "id",
+          title: '#',
+          type: "number",
+          align: "right",
+          width: 15,
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm"
+        },
+        //Default width is auto
+        { name: "title",
+          title: "Titre",
+          type: "text",
+          width: 120,
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm"
+        },
+        //Default width is auto
+        { name: "amount",
+          title: "Montant",
+          type: "number",
+          align: "right",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm",
+          itemTemplate: function(value, item) {
+            return formatterCurrency.format(value).replace("MGA", "AR");
+          }
+        },
+        { name: "type",
+          title: "Paiement",
+          type: "text",
+          width: 45,
+          align: "right",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm",
+          itemTemplate: function(value, item) {
+            if(value == 'U'){
+              return "Unique";
+            }
+            else{
+              return "Tranche";
+            }
+          }
+        },
+        { name: "deadline",
+          title: "Limite",
+          type: "text",
+          width: 50,
+          align: "right",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm",
+          itemTemplate: function(value, item) {
+            let refDate = new Date(Date.parse(value));
+            return formatterDateFR.format(refDate);
+          }
+        },
+        //Default width is auto
+        { name: "code",
+          title: "Code",
+          type: "text",
+          width: 50,
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm-mono"
+        }
+    ];
+
+    $("#jsGridRefPay").jsGrid({
+        height: "auto",
+        width: "100%",
+        noDataContent: "Aucune référence disponible",
+        pageIndex: 1,
+        pageSize: 50,
+        pagePrevText: "Prec",
+        pageNextText: "Suiv",
+        pageFirstText: "Prem",
+        pageLastText: "Dern",
+
+        sorting: true,
+        paging: true,
+        data: dataREFPAYToJsonArray,
+        fields: refPayField
+    });
+}
+
+/***********************************************************************************************************/
+
+function generateFaciliteDBAndPrint(){
+  let tempTicketRef = ticketRef + ticketType;
+
+
+  $.ajax('/generateFaciliteDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUserId: foundUserId,
+        ticketRef: tempTicketRef,
+        redPc: redPc,
+        ticketType: ticketType
+      },  // data to submit
+      success: function (data, status, xhr) {
+          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(tempTicketRef);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support.");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
+
+function printReceiptPDF(tempTicketRef){
 
   console.log('Click on printReceiptPDF');
 
-  let tempTicketRef = ticketRef + ticketType;
+
   // Let say we are in a cut
   JsBarcode("#barcode", tempTicketRef, {
     width: 1.5,
@@ -68,17 +184,36 @@ function printReceiptPDF(){
   //$("#screen-load").hide();
   // 0123456789
   // 0304125678R
+  addPayClear();
+  // Display file
+  $('#msg-alert').html(filename + '.pdf a bien été généré');
+  $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+  $('#ace-alert-msg').show(100);
 }
 
 /**********************************************************/
 
+function clearFoundUser(){
+  foundiInJson = 0;
+  foundUserName = '';
+  foundMatricule = '';
+  foundName = '';
+  foundClasse = '';
+  foundUserId = 0;
+  foundExisting_Facilite = '';
+}
 
 function addPayUserExists(val){
   for (var i = 0; i < dataAllUSRNToJsonArray.length; i++) {
     if (dataAllUSRNToJsonArray[i].USERNAME === val){
+      foundiInJson = i;
+      foundUserName = dataAllUSRNToJsonArray[i].USERNAME;
       foundMatricule = dataAllUSRNToJsonArray[i].MATRICULE;
       foundName = dataAllUSRNToJsonArray[i].NAME;
       foundClasse = dataAllUSRNToJsonArray[i].CLASSE;
+      foundUserId = dataAllUSRNToJsonArray[i].ID;
+      foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
+
       return true;
     }
   }
@@ -96,7 +231,8 @@ function addPayClear(){
   $("#addp-red-option").hide(100);
   $("#addp-print").hide(100);
 
-  ticketType =  'X';
+  updateTicketType('X');
+  clearFoundUser();
   // Clear the log;
   logInAddPay('');
   myTicket = new Array();
@@ -104,6 +240,9 @@ function addPayClear(){
 }
 
 function verityAddPayContentScan(){
+
+  $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+  $('#ace-alert-msg').hide(100);
   // Do something
   let foundCode = $("#exist-code-read").html();
   if(foundCode == 'N'){
@@ -142,6 +281,7 @@ function verityAddPayContentScan(){
         logInAddPay(foundMatricule);
         logInAddPay(foundName);
         logInAddPay(foundClasse);
+        logInAddPay('A DÉJÀ DEMANDÉ: ' + ((foundExisting_Facilite == null) ? 'NÉANT' : foundExisting_Facilite));
 
       }
       else{
@@ -198,6 +338,8 @@ function logInAddPay(someMsg){
   else{
     appendLog = ('GÉNÉRÉ LE ' + date + sepTime + time).toString().padStart(maxLgTicket, paddChar);
     $('#pay-sc-log-tra').html('');
+    redPc = 0;
+    clearFoundUser();
 
     myBreak = '';
 
@@ -208,13 +350,18 @@ function logInAddPay(someMsg){
     let ttime = myNow.getHours().toString().padStart(2, '0') + "h" + myNow.getMinutes().toString().padStart(2, '0') + "m" + myNow.getSeconds().toString().padStart(2, '0');
 
     ticketRefFile = tdate + "_" + ttime;
-    $('#sh-ticketref').html(ticketRef + ticketType);
+    updateTicketType('X');
   }
   let myLog = $('#pay-sc-log-tra').html();
   myTicket.push(appendLog);
   $('#pay-sc-log-tra').html(myLog + myBreak + appendLog);
 
 };
+
+function updateTicketType(type){
+  ticketType =  type;
+  $('#sh-ticketref').html(ticketRef + type);
+}
 
 /***********************************************************************************************************/
 
@@ -228,6 +375,9 @@ $(document).ready(function() {
     });
 
     $( "#btn-clear-addpay" ).click(function() {
+
+      $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+      $('#ace-alert-msg').hide(100);
       addPayClear();
     });
 
@@ -235,11 +385,10 @@ $(document).ready(function() {
     $( "#btn-addcut" ).click(function() {
       console.log("You click on #btn-addcut");
 
-      ticketType =  'R';
       $('#sh-ticketref').html(ticketRef + ticketType);
 
 
-      logInAddPay('Opé. RÉDUCTION');
+      logInAddPay('Opération Facilité de paiement');
       $("#addp-mainop").hide(100);
       $("#addp-red-option").show(300);
 
@@ -247,10 +396,9 @@ $(document).ready(function() {
     // Add a payment
     $( "#btn-addpay" ).click(function() {
       console.log("You click on #btn-addpay");
-      logInAddPay('Opé. PAIEMENT');
+      logInAddPay('Opération PAIEMENT');
 
-      ticketType =  'P';
-      $('#sh-ticketref').html(ticketRef + ticketType);
+      updateTicketType('P');
 
 
     });
@@ -260,9 +408,11 @@ $(document).ready(function() {
     // Create the cut
     $( "#btn-addcut-1" ).click(function() {
       console.log("You click on #btn-addcut-1");
+      updateTicketType('R');
       logInAddPay('>>>>>>>>>>>>>>>> RÉDUCTION DE 50%');
       logInAddPay('CINQUANTE POUR CENT');
-      logInAddPay(msgFooterRed);
+      logInAddPay(msgFooterRedPdt);
+      redPc = 50;
 
 
       $("#addp-red-option").hide(100);
@@ -271,9 +421,22 @@ $(document).ready(function() {
     });
     $( "#btn-addcut-2" ).click(function() {
       console.log("You click on #btn-addcut-2");
+      updateTicketType('R');
       logInAddPay('>>>>>>>>>>>>>>> RÉDUCTION DE 100%');
       logInAddPay('CENT POUR CENT');
-      logInAddPay(msgFooterRed);
+      logInAddPay(msgFooterRedPdt);
+      redPc = 100;
+
+      $("#addp-red-option").hide(100);
+      $("#addp-print").show(300);
+    });
+
+    //btn-addfac-1
+    $( "#btn-addfac-1" ).click(function() {
+      console.log("You click on #btn-addfac-1");
+      updateTicketType('M');
+      logInAddPay('MENSUALISATION');
+      logInAddPay(msgFooterRedDaf);
 
       $("#addp-red-option").hide(100);
       $("#addp-print").show(300);
@@ -283,11 +446,15 @@ $(document).ready(function() {
     // PRINT BUTTON !!!
     $( "#addp-print" ).click(function() {
       console.log("You click on #addp-print");
-      printReceiptPDF();
+      generateFaciliteDBAndPrint();
       // Then reclean all againt !!!
     });
     logInAddPay('');
 
+  }
+  else if($('#mg-graph-identifier').text() == 'ref-pay'){
+    // Do something
+    loadRefPayGrid();
   }
   else if($('#mg-graph-identifier').text() == 'xxx'){
     // Do something

@@ -10,9 +10,13 @@
     let dataAllUSRNToJsonArray =JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let myTicket = new Array();
 
+    let foundiInJson = 0;
+    let foundUserName = '';
     let foundMatricule = '';
     let foundName = '';
     let foundClasse = '';
+    let foundUserId = 0;
+    let foundExisting_Facilite = '';
 
     const paddChar = '.';
     const maxLgTicket = 45;
@@ -22,7 +26,9 @@
     let ticketRef = '';
     let ticketRefFile = '';
     let ticketType = 'X';
-    const msgFooterRed = 'DATE, SIGNATURE ET CACHET PDT';
+    let redPc = 0;
+    const msgFooterRedPdt = 'DATE, SIGNATURE ET CACHET PDT';
+    const msgFooterRedDaf = 'DATE, SIGNATURE ET CACHET DAF';
 
     const maxPrintTicket = sizeTime - 3;
     const maxPadLeft = 6;
@@ -38,7 +44,7 @@
 
 <div id="mg-graph-identifier">add-pay</div>
 
-
+{# Message up #}
 
 
 <div class="row">
@@ -70,7 +76,7 @@
     <div class="btn-profil mid-blc">
       <div id="addp-mainop" class="pay-big-blk">
             <div id="btn-addcut" class="pay-big-btn pay-big-btn-txt red-opt-btn-1">
-              <br>Générer une<br>réduction &nbsp;<i class="icon-scissors nav-text"></i><br>
+              <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
             </div>
             <div id="btn-addpay" class="pay-big-btn pay-big-btn-txt pay-big-btn-1">
               <br>Ajouter un<br>paiement &nbsp;<i class="icon-plus-square nav-text"></i><br>
@@ -88,6 +94,9 @@
             </div>
             <div id="btn-addcut-2" class="pay-big-btn pay-opt-btn-txt red-opt-btn-1">
               <br>Réduction<br>100%<br>
+            </div>
+            <div id="btn-addfac-1" class="pay-big-btn pay-opt-btn-txt fac-opt-btn-1">
+              <br>Autorisation<br>mensualisation<br>
             </div>
       </div>
 

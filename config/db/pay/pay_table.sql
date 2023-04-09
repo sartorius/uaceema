@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_frais_scolarite` (
   -- Manual add of the constraint
   UNIQUE KEY `code_UNIQUE` (`code`));
 
+
+-- DELETE FROM uac_ref_frais_scolarite;
+
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (1, 'DTSTENT', 'Droit test ou entretien', 'Droit test ou entretien', 1, 50000, 'A', '2022-12-05', 'U');
@@ -39,39 +42,39 @@ INSERT INTO uac_ref_frais_scolarite
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(4, 'L1T1XXX', 'L1 Tranche 1/3', 'L1 Tranche 1/3', 4, 800000, 'A', '2023-02-06', 'T');
+(4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 4, 800000, 'A', '2023-02-06', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(5, 'L1T2XXX', 'L1 Tranche 2/3', 'L1 Tranche 2/3', 5, 850000, 'A', '2023-04-10', 'T');
+(5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 5, 850000, 'A', '2023-04-10', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(6, 'L1T3XXX', 'L1 Tranche 3/3', 'L1 Tranche 3/3', 6, 850000, 'A', '2023-04-10', 'T');
+(6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 6, 850000, 'A', '2023-06-10', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(7, 'L2L3T1X', 'L2/L3 Tranche 1/3', 'L2/L3 Tranche 1/3', 7, 850000, 'A', '2023-02-06', 'T');
+(7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 7, 850000, 'A', '2023-02-06', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(8, 'L2L3T2X', 'L2/L3 Tranche 2/3', 'L2/L3 Tranche 2/3', 8, 850000, 'A', '2023-04-10', 'T');
+(8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 8, 850000, 'A', '2023-04-10', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(9, 'L2L3T3X', 'L2/L3 Tranche 3/3', 'L2/L3 Tranche 3/3', 9, 850000, 'A', '2023-04-10', 'T');
+(9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 9, 850000, 'A', '2023-06-10', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(10, 'M1M2T1X', 'M1/M2 Tranche 1/3', 'M1/M2 Tranche 1/3', 10, 950000, 'A', '2023-02-06', 'T');
+(10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 10, 950000, 'A', '2023-02-06', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(11, 'M1M2T2X', 'M1/M2 Tranche 2/3', 'M1/M2 Tranche 2/3', 11, 950000, 'A', '2023-04-10', 'T');
+(11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 11, 950000, 'A', '2023-04-10', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(12, 'M1M2T3X', 'M1/M2 Tranche 3/3', 'M1/M2 Tranche 3/3', 12, 950000, 'A', '2023-04-10', 'T');
+(12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 12, 950000, 'A', '2023-06-10', 'T');
 
 
 -- Cross ref table
@@ -81,6 +84,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_cohort_fsc` (
   `fsc_id` INT UNSIGNED NOT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`cohort_id`, `fsc_id`));
+
+-- DELETE FROM uac_xref_cohort_fsc;
 
 -- Insert data for each level
 INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
@@ -123,6 +128,23 @@ INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 12, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 
 
+-- REDUCTION FACILITE PAYMENT
+DROP TABLE IF EXISTS uac_facilite_payment;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
+  `category` CHAR(1) NOT NULL COMMENT 'R for payment M for mensualité',
+  `ticket_ref` CHAR(10) NULL,
+  `red_pc` TINYINT UNSIGNED NULL COMMENT 'Percentage of reduction',
+  `status` CHAR(1) NOT NULL DEFAULT 'A' COMMENT 'By default A is active and I for inactive',
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  -- Manual add of the constraint
+  UNIQUE KEY `user_id_category_UNIQUE` (`user_id`, `category`),
+  UNIQUE KEY `ticket_ref_UNIQUE` (`ticket_ref`));
+
+
 -- VIEW
 DROP VIEW IF EXISTS v_fsc_xref_cc;
 CREATE VIEW v_fsc_xref_cc AS
@@ -147,12 +169,15 @@ SELECT
                           JOIN uac_ref_frais_scolarite urfs
                           ON urfs.id = xref.fsc_id;
 
-DROP VIEW IF EXISTS v_payfoundusrn;
-CREATE VIEW v_payfoundusrn AS
-SELECT
-      vsh.ID AS ID,
-      UPPER(vsh.USERNAME) AS USERNAME,
-      vsh.MATRICULE AS MATRICULE,
-      REPLACE(CONCAT(fCapitalizeStr(vsh.FIRSTNAME), ' ', vsh.LASTNAME), "'", " ") AS NAME,
-      vsh.SHORTCLASS AS CLASSE
-      FROM v_showuser vsh;
+
+  DROP VIEW IF EXISTS v_payfoundusrn;
+  CREATE VIEW v_payfoundusrn AS
+  SELECT
+        vsh.ID AS ID,
+        UPPER(vsh.USERNAME) AS USERNAME,
+        vsh.MATRICULE AS MATRICULE,
+        REPLACE(CONCAT(fCapitalizeStr(vsh.FIRSTNAME), ' ', vsh.LASTNAME), "'", " ") AS NAME,
+        vsh.SHORTCLASS AS CLASSE,
+        GROUP_CONCAT(category, red_pc) AS EXISTING_FACILITE
+        FROM v_showuser vsh LEFT JOIN uac_facilite_payment ufp ON vsh.ID = ufp.user_id
+        GROUP BY ID, USERNAME, NAME, CLASSE ORDER BY EXISTING_FACILITE DESC;

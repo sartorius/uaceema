@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\DBUtils\MailManager;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
@@ -17,6 +18,49 @@ use \PDO;
 
 class AdminPayController extends AbstractController
 {
+  public function refpay(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("scale_right: " . $scale_right);
+
+    // Must be connected backoffice
+    if(isset($scale_right)){
+
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        // Get All USERNAME
+        $refpay_query = " SELECT * FROM uac_ref_frais_scolarite ORDER BY fs_order ASC; ";
+
+        $logger->debug("Show me allusrn_query: " . $refpay_query);
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_ref_pay = $dbconnectioninst->query($refpay_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_ref_pay: " . count($result_ref_pay));
+
+
+
+        $content = $twig->render('Admin/PAY/refpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'result_ref_pay'=>$result_ref_pay,
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+
 
   public function addpay(Environment $twig, LoggerInterface $logger)
   {
@@ -58,6 +102,57 @@ class AdminPayController extends AbstractController
         $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
+  }
+
+  public function generateFaciliteDB(Request $request, LoggerInterface $logger, )
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Get data from ajax
+          $param_user_id = $request->request->get('foundUserId');
+          $param_ticket_ref = $request->request->get('ticketRef');
+          $param_ticket_type = $request->request->get('ticketType');
+          $param_red_pc = $request->request->get('redPc');
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES "
+                        . "( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", 'I' )";
+
+          $logger->debug("Show me query_value: " . $query_value);
+          
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
   }
 
 }
