@@ -1834,8 +1834,8 @@ img.part-img{
   border-radius: 5px;
   margin-left: 3px;
   margin-right: 3px;
-  padding-top: 2.5em;
-  padding-bottom: 3em;
+  padding-top: 1em;
+  padding-bottom: 1.9em;
   color: WHITE;
   font-weight: 400;
   margin-top: 15px;
@@ -1845,7 +1845,7 @@ img.part-img{
 }
 
 .pay-opt-btn-txt{
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 
 .pay-big-btn:hover{
@@ -1880,13 +1880,30 @@ img.part-img{
   background-color: #DCDCDC;
 }
 
+.blk-ticket-left{
+  max-width: 32%;
+}
+
 .blk-log-pay{
-  padding-top: 5em;
+  padding-top: 0.5em;
   font-size: 1.2em;
   color: var(--main-gray-25);
   text-align: right;
 }
+
+.blk-recap-pay{
+  padding-top: 1.9em;
+  font-size: 1.2em;
+  color: var(--light-violet-25);
+  text-align: left;
+}
+
 .pay-sc-log-tra-txt{
   font-family: Courier;
   font-size: 0.7em;
+}
+
+.deactive-btn{
+    pointer-events: none;
+    background-color: #7F7F7F;
 }

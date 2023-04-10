@@ -117,6 +117,9 @@ refpay:
 addpay:
     path:       /addpay
     controller: App\Controller\AdminPayController::addpay
-generateFaciliteDB:
-    path:       /generateFaciliteDB
-    controller: App\Controller\AdminPayController::generateFaciliteDB
+getpaymentforuserDB:
+    path:       /getpaymentforuserDB
+    controller: App\Controller\AdminPayController::getpaymentforuserDB
+generatefaciliteDB:
+    path:       /generatefaciliteDB
+    controller: App\Controller\AdminPayController::generatefaciliteDB

@@ -104,7 +104,7 @@ class AdminPayController extends AbstractController
     return new Response($content);
   }
 
-  public function generateFaciliteDB(Request $request, LoggerInterface $logger, )
+  public function generatefaciliteDB(Request $request, LoggerInterface $logger, )
   {
 
 
@@ -131,7 +131,7 @@ class AdminPayController extends AbstractController
                         . "( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", 'I' )";
 
           $logger->debug("Show me query_value: " . $query_value);
-          
+
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
@@ -152,6 +152,53 @@ class AdminPayController extends AbstractController
       return new JsonResponse(array(
           'status' => 'Error',
           'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
+
+
+  public function getpaymentforuserDB(Request $request, LoggerInterface $logger, )
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Get data from ajax
+          $param_user_id = $request->request->get('foundUserId');
+          //echo $param_jsondata[0]['username'];
+          $query_getpay = " SELECT * FROM v_payment_for_user WHERE UP_USER_ID = " . $param_user_id . " ORDER BY UP_USER_ID, REF_FS_ORDER ASC; ";
+
+          $logger->debug("Show me query_getpay: " . $query_getpay);
+
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'result' => $result,
+              'message' => 'Tout est OK: '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Err134P récupération payments'),
       400);
   }
 

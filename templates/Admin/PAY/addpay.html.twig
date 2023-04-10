@@ -7,7 +7,7 @@
 {% if result_all_usrn is defined and result_all_usrn is not null %}
   <script>
 
-    let dataAllUSRNToJsonArray =JSON.parse('{{ result_all_usrn | json_encode | raw }}');
+    let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let myTicket = new Array();
 
     let foundiInJson = 0;
@@ -34,6 +34,21 @@
     const maxPadLeft = 6;
 
 
+    let dataPaymentForUserJsonArray = new Array();
+
+
+    // Create our number formatter.
+    const formatterCurrency = new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'MGA',
+
+      // These options are needed to round to whole numbers if that's what you want.
+      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
+    const formatterDateFR = new Intl.DateTimeFormat('fr-FR');
+
+
   </script>
 {% else %}
     // Error
@@ -46,9 +61,10 @@
 
 {# Message up #}
 
-
 <div class="row">
-  <div class="col-lg-4 mgs-mainblk-txt">
+  <div class="col-lg-4 mgs-mainblk-txt blk-ticket-left">
+    <img id="waiting-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:120px; height:90px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
+    <br>
     <div id="pay-sc-log" class="blk-log-pay">
       Ticket&nbsp;<i id="sh-ticketref"></i>&nbsp;<i class="icon-arrow-down nav-text"></i>
       <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
@@ -67,7 +83,6 @@
       <i id="last-read-time"></i>
 
     </div>
-    <img id="waiting-gif" src="{{ path('main') }}img/waiting.gif" style="width:175px; height:175px; opacity: 1;" title="no Photo" alt="No Photo" class="uac-img-center img-profile">
     <hr>
 
     <div>
@@ -114,6 +129,12 @@
 
   </div>
   <div class="col-lg-4 mgs-mainblk-txt">
+    <div id="pay-recap" class="blk-recap-pay">
+      <i id="sh-ticketref"></i>&nbsp;<i class="icon-arrow-down nav-text"></i>&nbsp;Paiements
+      <div id="pay-recap-tra" class="pay-sc-log-tra-txt">
+
+      </div>
+    </div>
   </div>
 </div>
 

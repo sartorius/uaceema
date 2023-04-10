@@ -87,12 +87,46 @@ function loadRefPayGrid(){
 }
 
 /***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/*********************************************** AJAX ******************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+
+function getAllPaymentForFoundUser(){
+  $("#waiting-gif").show(100);
+  $.ajax('/getpaymentforuserDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUserId: foundUserId
+      },  // data to submit
+      success: function (data, status, xhr) {
+          $("#waiting-gif").hide(100);
+          //console.log('End of the Ajax correctly');
+          //console.log(data['result']);
+          dataPaymentForUserJsonArray = data['result'].slice();
+          // Display paiements
+          displayRecapPayment();
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $("#waiting-gif").hide(100);
+        $('#msg-alert').html("Err134P:" + foundUserName + " impossible de récupérer ses paiements, contactez le support.");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
 
 function generateFaciliteDBAndPrint(){
   let tempTicketRef = ticketRef + ticketType;
 
 
-  $.ajax('/generateFaciliteDB', {
+  $.ajax('/generatefaciliteDB', {
       type: 'POST',  // http method
       data: {
         foundUserId: foundUserId,
@@ -201,6 +235,10 @@ function clearFoundUser(){
   foundClasse = '';
   foundUserId = 0;
   foundExisting_Facilite = '';
+  $("#btn-addcut").removeClass('deactive-btn');
+  $("#btn-addcut-1").removeClass('deactive-btn');
+  $("#btn-addcut-2").removeClass('deactive-btn');
+  $("#btn-addfac-1").removeClass('deactive-btn');
 }
 
 function addPayUserExists(val){
@@ -213,6 +251,25 @@ function addPayUserExists(val){
       foundClasse = dataAllUSRNToJsonArray[i].CLASSE;
       foundUserId = dataAllUSRNToJsonArray[i].ID;
       foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
+
+      // Check if we already have a Reduction
+      if((foundExisting_Facilite != undefined) && (foundExisting_Facilite != null)){
+          if ((foundExisting_Facilite.includes('M')) && (foundExisting_Facilite.includes('R'))){
+            $("#btn-addcut").addClass('deactive-btn');
+          }
+          else if(foundExisting_Facilite.includes('R')){
+            $("#btn-addcut-1").addClass('deactive-btn');
+            $("#btn-addcut-2").addClass('deactive-btn');
+          }
+          else if(foundExisting_Facilite.includes('M')){
+            $("#btn-addfac-1").addClass('deactive-btn');
+          }
+          else {
+            // Do nothing
+          }
+      }
+
+      getAllPaymentForFoundUser();
 
       return true;
     }
@@ -236,7 +293,8 @@ function addPayClear(){
   // Clear the log;
   logInAddPay('');
   myTicket = new Array();
-
+  dataPaymentForUserJsonArray = new Array();
+  $("#waiting-gif").hide(100);
 }
 
 function verityAddPayContentScan(){
@@ -357,6 +415,32 @@ function logInAddPay(someMsg){
   $('#pay-sc-log-tra').html(myLog + myBreak + appendLog);
 
 };
+
+function displayRecapPayment(){
+  let recapTxt = '';
+  let statusPay = 'Non payé';
+  let refDate;
+
+  for(var i=0; i<dataPaymentForUserJsonArray.length; i++){
+    recapTxt = recapTxt + dataPaymentForUserJsonArray[i].REF_TITLE.toString().padStart(maxLgTicket, paddChar) + '<br>';
+    refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].REF_DEADLINE.toString()));
+    recapTxt = recapTxt + ('À payer avant le :' + formatterDateFR.format(refDate)).padStart(maxLgTicket, paddChar) + '<br>';
+    recapTxt = recapTxt + ('Montant AR :' + formatterCurrency.format(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()).replace(" MGA", "")).padStart(maxLgTicket, paddChar) + '<br>';
+    if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'N'){
+      statusPay = 'Non payé';
+    }
+    else if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P'){
+      statusPay = 'Payé';
+    }
+    else{
+      statusPay = 'Complété';
+    }
+    recapTxt = recapTxt + ('Statut :' + statusPay).padStart(maxLgTicket, paddChar) + '<br>';
+    recapTxt = recapTxt + ('----x---x---x---x---x---x---x---x---x---x----') + '<br>';
+  }
+  $('#pay-recap-tra').html(recapTxt);
+}
+
 
 function updateTicketType(type){
   ticketType =  type;

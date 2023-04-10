@@ -132,8 +132,8 @@ SELECT 12, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 DROP TABLE IF EXISTS uac_facilite_payment;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
-  `category` CHAR(1) NOT NULL COMMENT 'R for payment M for mensualité',
+  `user_id` BIGINT NOT NULL,
+  `category` CHAR(1) NOT NULL COMMENT 'R for Reduction, M for Mensualite',
   `ticket_ref` CHAR(10) NULL,
   `red_pc` TINYINT UNSIGNED NULL COMMENT 'Percentage of reduction',
   `status` CHAR(1) NOT NULL DEFAULT 'A' COMMENT 'By default A is active and I for inactive',
@@ -145,7 +145,29 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
   UNIQUE KEY `ticket_ref_UNIQUE` (`ticket_ref`));
 
 
+
+-- WORKING TABLE FOR THE PAYMENTS
+-- REDUCTION ARE CREATING FULL PAYMENT AS REDUCTION
+-- NEED TO BE IN REORG !
+DROP TABLE IF EXISTS uac_payment;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
+  `ref_fsc_id` INT NULL COMMENT 'When not null then related to ref frais de scolarite else it is a manual payment',
+  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'By default N as Not Paid or P as Paid or F as Filled (by manual payment) ',
+  `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
+  `facilite_id` BIGINT NULL,
+  `manual_amount` INT NULL,
+  `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction',
+  `comment` VARCHAR(45) NULL,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+
 -- VIEW
+-- Get the referential per class
 DROP VIEW IF EXISTS v_fsc_xref_cc;
 CREATE VIEW v_fsc_xref_cc AS
 SELECT
@@ -169,7 +191,7 @@ SELECT
                           JOIN uac_ref_frais_scolarite urfs
                           ON urfs.id = xref.fsc_id;
 
-
+-- Get the list of user and reduction they get
   DROP VIEW IF EXISTS v_payfoundusrn;
   CREATE VIEW v_payfoundusrn AS
   SELECT
@@ -180,4 +202,27 @@ SELECT
         vsh.SHORTCLASS AS CLASSE,
         GROUP_CONCAT(category, red_pc) AS EXISTING_FACILITE
         FROM v_showuser vsh LEFT JOIN uac_facilite_payment ufp ON vsh.ID = ufp.user_id
-        GROUP BY ID, USERNAME, NAME, CLASSE ORDER BY EXISTING_FACILITE DESC;
+        GROUP BY ID, USERNAME, NAME, CLASSE;
+
+-- Payment view
+DROP VIEW IF EXISTS v_payment_for_user;
+CREATE VIEW v_payment_for_user AS
+  SELECT
+    up.id AS UP_ID,
+    up.user_id AS UP_USER_ID,
+    ref.id AS REF_ID,
+    up.status AS UP_STATUS,
+    up.payment_ref AS UP_PAYMENT_REF,
+    up.facilite_id AS UP_FACILITE_ID,
+    up.manual_amount AS UP_MANUAL_AMOUNT,
+    up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+    up.comment AS UP_COMMENT,
+    up.create_date AS UP_CREATE_DATE,
+    up.last_update AS UP_LAST_UPDATE,
+		ref.code AS REF_CODE,
+    ref.title AS REF_TITLE,
+    ref.amount AS REF_AMOUNT,
+    ref.deadline AS REF_DEADLINE,
+    ref.type AS REF_TYPE,
+    ref.fs_order AS REF_FS_ORDER
+FROM uac_payment up LEFT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id;
