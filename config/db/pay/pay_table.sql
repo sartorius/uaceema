@@ -223,6 +223,7 @@ CREATE VIEW v_payment_for_user AS
     ref.title AS REF_TITLE,
     ref.amount AS REF_AMOUNT,
     ref.deadline AS REF_DEADLINE,
+    DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
     ref.type AS REF_TYPE,
     ref.fs_order AS REF_FS_ORDER
 FROM uac_payment up LEFT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id;

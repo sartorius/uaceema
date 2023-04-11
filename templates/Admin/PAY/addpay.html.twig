@@ -9,6 +9,7 @@
 
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let myTicket = new Array();
+    let myRecap = new Array();
 
     let foundiInJson = 0;
     let foundUserName = '';
@@ -20,6 +21,7 @@
 
     const paddChar = '.';
     const maxLgTicket = 45;
+    const maxLgRecap = 38;
     const sizeTime = 12;
     const sepTime = ' '
 
@@ -65,9 +67,11 @@
   <div class="col-lg-4 mgs-mainblk-txt blk-ticket-left">
     <img id="waiting-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:120px; height:90px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
     <br>
-    <div id="pay-sc-log" class="blk-log-pay">
-      Ticket&nbsp;<i id="sh-ticketref"></i>&nbsp;<i class="icon-arrow-down nav-text"></i>
-      <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
+
+    <div id="pay-recap" class="blk-recap-pay">
+      Historique&nbsp;<i class="icon-arrow-down nav-text"></i>
+      <div id="pay-recap-tra" class="pay-sc-log-tra-txt">
+
       </div>
     </div>
 
@@ -99,6 +103,7 @@
       </div>
 
       <div class="btn-ace-right">
+        <button id="btn-print-recap" class="btn btn-outline-secondary btn-md histo-btn-print">Imprimer historique &nbsp;<i class="icon-print nav-text"></i></button>
         <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
 
       </div>
@@ -129,10 +134,10 @@
 
   </div>
   <div class="col-lg-4 mgs-mainblk-txt">
-    <div id="pay-recap" class="blk-recap-pay">
-      <i id="sh-ticketref"></i>&nbsp;<i class="icon-arrow-down nav-text"></i>&nbsp;Paiements
-      <div id="pay-recap-tra" class="pay-sc-log-tra-txt">
 
+    <div id="pay-sc-log" class="blk-log-pay">
+      <i class="icon-arrow-down nav-text"></i>&nbsp;Ticket&nbsp;<i id="sh-ticketref"></i>
+      <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
       </div>
     </div>
   </div>

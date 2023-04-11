@@ -1,3 +1,18 @@
+function renderAmount(param){
+	var len = param.toString().length;
+	var result = '';
+	var k = 0;
+	for(var i=0;i<len+1;i++){
+		result = param.toString().substr(len-i,1) + result;
+		if(k == 3){
+			result = ' ' + result;
+			k = 0;
+		}
+		k++;
+	}
+	return result + ' AR';
+}
+
 /***********************************************************************************************************/
 
 function loadRefPayGrid(){
@@ -108,6 +123,9 @@ function getAllPaymentForFoundUser(){
           //console.log('End of the Ajax correctly');
           //console.log(data['result']);
           dataPaymentForUserJsonArray = data['result'].slice();
+          // Only here we allow to progress
+          $("#addp-mainop").show(100);
+          $("#btn-print-recap").show(100);
           // Display paiements
           displayRecapPayment();
       },
@@ -147,6 +165,54 @@ function generateFaciliteDBAndPrint(){
   });
 }
 
+
+function generateHistoryPrint(){
+    /**************** HISTORY *****************/
+    let doc = new jsPDF('p', 'mm', [200, 75]);
+    doc.setFont("Courier");
+    doc.setFontType("bold");
+
+    doc.setTextColor(0, 0, 0);
+    doc.addImage(document.getElementById('logo-carte'), //img src
+                  'PNG', //format
+                  11, //x oddOffsetX is to define if position 1 or 2
+                  0, //y
+                  50, //Width
+                  16, null, 'FAST'); //Height // Fast is to get less big files
+
+
+    doc.setFontSize(7);
+    doc.setFontType("normal");
+    //doc.text(18, 25, "REDUCTION 50%");
+    let margTop = 22;
+    let contentHeight = 0;
+    doc.setFontSize(8);
+    // Print Ticket Identification Information
+    for(var i=0; i< 6; i++){
+      contentHeight = margTop + (i*5);
+      if(i>0){
+        doc.text(maxPadLeft, contentHeight, myTicket[i].substring(0, (maxLgTicket - maxPrintTicket)));
+      }
+      else{
+        doc.text(maxPadLeft, contentHeight, myTicket[i].substring(maxPrintTicket));
+      }
+    }
+
+    doc.setFontSize(8);
+    margTop = margTop + (7*5);
+    for(var i=0; i<myRecap.length; i++){
+      contentHeight = margTop + (i*5);
+      doc.text(maxPadLeft, contentHeight, myRecap[i]);
+    }
+
+    contentHeight = contentHeight + 20;
+    doc.setFontSize(5);
+    let filename = 'HIS' + foundUserName + ticketRefFile;
+    doc.text(5, contentHeight, "HIS_Fich_" + filename + "_HISTORIQUE");
+
+    doc.save(filename);
+
+}
 
 function printReceiptPDF(tempTicketRef){
 
@@ -196,7 +262,7 @@ function printReceiptPDF(tempTicketRef){
   let margTop = 59;
   let contentHeight = 0;
   doc.setFontSize(8);
-  for(i=0; i<myTicket.length; i++){
+  for(var i=0; i<myTicket.length; i++){
     contentHeight = margTop + (i*5);
     if(i>0){
       doc.text(maxPadLeft, contentHeight, myTicket[i].substring(0, (maxLgTicket - maxPrintTicket)));
@@ -292,7 +358,10 @@ function addPayClear(){
   clearFoundUser();
   // Clear the log;
   logInAddPay('');
+  $('#pay-recap-tra').html('');
+  $("#btn-print-recap").hide(100);
   myTicket = new Array();
+  myRecap = new Array();
   dataPaymentForUserJsonArray = new Array();
   $("#waiting-gif").hide(100);
 }
@@ -331,7 +400,7 @@ function verityAddPayContentScan(){
         $("#exist-code-read").html('Y');
         $('#addpay-ace').hide(100);
 
-        $("#addp-mainop").show(100);
+
 
         logInAddPay('username:' + readInput);
 
@@ -418,16 +487,37 @@ function logInAddPay(someMsg){
 
 function displayRecapPayment(){
   let recapTxt = '';
+  let recapLine = '';
   let statusPay = 'Non payé';
   let refDate;
+  let recAmount = '';
+  let notifRetard = '';
+  const separatorRecap = '----x---x---x---x---x---x---x---x---x---x----';
 
   for(var i=0; i<dataPaymentForUserJsonArray.length; i++){
-    recapTxt = recapTxt + dataPaymentForUserJsonArray[i].REF_TITLE.toString().padStart(maxLgTicket, paddChar) + '<br>';
+    recapLine = dataPaymentForUserJsonArray[i].REF_TITLE.toString().padStart(maxLgRecap, paddChar);
+    myRecap.push(recapLine);
+    recapTxt = recapTxt + recapLine + '<br>';
+
+
     refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].REF_DEADLINE.toString()));
-    recapTxt = recapTxt + ('À payer avant le :' + formatterDateFR.format(refDate)).padStart(maxLgTicket, paddChar) + '<br>';
-    recapTxt = recapTxt + ('Montant AR :' + formatterCurrency.format(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()).replace(" MGA", "")).padStart(maxLgTicket, paddChar) + '<br>';
+    recapLine = ('À payer avant le :' + formatterDateFR.format(refDate)).padStart(maxLgRecap, paddChar);
+    myRecap.push(recapLine);
+    recapTxt = recapTxt + recapLine + '<br>';
+
+    recAmount = (('Montant :' + renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString())) + '/' + (statusPay)).padStart(maxLgRecap, paddChar);
+    myRecap.push(recAmount);
+
+
+    recapLine = '';
+    notifRetard = '';
     if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'N'){
       statusPay = 'Non payé';
+      if(dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0){
+          notifRetard = 'PAIEMENT EN RETARD !!!';
+          recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+          myRecap.push(recapLine);
+      }
     }
     else if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P'){
       statusPay = 'Payé';
@@ -435,8 +525,9 @@ function displayRecapPayment(){
     else{
       statusPay = 'Complété';
     }
-    recapTxt = recapTxt + ('Statut :' + statusPay).padStart(maxLgTicket, paddChar) + '<br>';
-    recapTxt = recapTxt + ('----x---x---x---x---x---x---x---x---x---x----') + '<br>';
+
+    recapTxt = recapTxt + recAmount + '<br>' + '<i class="late-notif">' + notifRetard + '</i><br>';
+    recapTxt = recapTxt + separatorRecap + '<br>';
   }
   $('#pay-recap-tra').html(recapTxt);
 }
@@ -533,6 +624,15 @@ $(document).ready(function() {
       generateFaciliteDBAndPrint();
       // Then reclean all againt !!!
     });
+
+    $( "#btn-print-recap" ).click(function() {
+      console.log("You click on #btn-print-recap");
+      generateHistoryPrint();
+      // Then reclean all againt !!!
+    });
+
+
+
     logInAddPay('');
 
   }

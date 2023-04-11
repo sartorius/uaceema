@@ -1811,6 +1811,11 @@ img.part-img{
   margin-top: 15px;
 }
 
+#btn-print-recap{
+  margin-top: 15px;
+  display: none;
+}
+
 .btn-ace-right{
   display: flex;
   justify-content: flex-end;
@@ -1885,17 +1890,26 @@ img.part-img{
 }
 
 .blk-log-pay{
-  padding-top: 0.5em;
+  padding-top: 1.9em;
   font-size: 1.2em;
   color: var(--main-gray-25);
-  text-align: right;
+  text-align: left;
 }
 
 .blk-recap-pay{
-  padding-top: 1.9em;
+  padding-top: 0.5em;
   font-size: 1.2em;
   color: var(--light-violet-25);
-  text-align: left;
+  text-align: right;
+}
+
+.late-notif{
+  color: #CA0000;
+  font-weight: 400;
+}
+
+.histo-btn-print{
+  margin-right: 10px;
 }
 
 .pay-sc-log-tra-txt{
