@@ -105,7 +105,9 @@ class ProfileController extends AbstractController
             $result_query_queued_ass = $dbconnectioninst->query($query_queued_ass)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me: " . count($result_query_queued_ass));
 
-
+            $query_msg_ass = " SELECT key_code AS KEY_CODE, IFNULL(par_value, 'na') AS PAR_VALUE FROM uac_param WHERE key_code = 'MSGASSI'; ";
+            $logger->debug("Show me query_msg_ass: " . $query_msg_ass);
+            $result_query_msg_ass = $dbconnectioninst->query($query_msg_ass)->fetchAll(PDO::FETCH_ASSOC);
 
             $query_ass_recap = " SELECT ass.status AS STATUS, "
                                       .  " uae.hour_starts_at AS DEBUT, DATE_FORMAT(uae.day, '%d/%m') AS JOUR, REPLACE(SUBSTRING(uae.raw_course_title, 1, 20), '\n', ' ') AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
@@ -182,6 +184,7 @@ class ProfileController extends AbstractController
                                       "sp_result"=>$resultsp, /*"resultsp_sm"=>$week_p_one,*/ "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
+                                      "result_query_msg_ass"=>$result_query_msg_ass,
                                       "result_list_bdaymonth"=>$result_list_bdaymonth/*,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two */
                                     ]);

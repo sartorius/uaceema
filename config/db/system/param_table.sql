@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_param` (
   PRIMARY KEY (`key_code`));
 
 
+
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('MSGASSI', 'Message to display for dash assiduite', 'Les Absences et Quittés des L2, L3, M1 et M2 ont été remises à zéro pour la rentrée de Jeudi 13 Avril 2023.');
+
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('SYURLIA', 'URL Intranet', 'https://intranet.uaceem.com', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('SYURLIE', 'URL Internet', 'https://www.uaceem.com', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('SCANXXX', 'Flow retard', NULL, NULL);
@@ -56,6 +59,8 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 -- Payment
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite dashboard visible Y oui N non', NULL, 'Y');
+
+
 
 
 
