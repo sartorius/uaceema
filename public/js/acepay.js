@@ -116,7 +116,8 @@ function getAllPaymentForFoundUser(){
   $.ajax('/getpaymentforuserDB', {
       type: 'POST',  // http method
       data: {
-        foundUserId: foundUserId
+        foundUserId: foundUserId,
+        token : getToken
       },  // data to submit
       success: function (data, status, xhr) {
           $("#waiting-gif").hide(100);
@@ -150,14 +151,15 @@ function generateFaciliteDBAndPrint(){
         foundUserId: foundUserId,
         ticketRef: tempTicketRef,
         redPc: redPc,
-        ticketType: ticketType
+        ticketType: ticketType,
+        token : getToken
       },  // data to submit
       success: function (data, status, xhr) {
           dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
           printReceiptPDF(tempTicketRef);
       },
       error: function (jqXhr, textStatus, errorMessage) {
-        $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support.");
+        $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support. ");
         $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
         $('#ace-alert-msg').show(100);
         addPayClear();
@@ -516,8 +518,13 @@ function displayRecapPayment(){
       if(dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0){
           notifRetard = 'PAIEMENT EN RETARD !!!';
           recapLine = notifRetard.padStart(maxLgRecap, paddChar);
-          myRecap.push(recapLine);
+          notifRetard = '<i class="late-notif">' + notifRetard + '</i>';
       }
+      else{
+          notifRetard = 'EN ATTENTE DE PAIEMENT';
+          recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+      }
+      myRecap.push(recapLine);
     }
     else if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P'){
       statusPay = 'Payé';
@@ -526,7 +533,7 @@ function displayRecapPayment(){
       statusPay = 'Complété';
     }
 
-    recapTxt = recapTxt + recAmount + '<br>' + '<i class="late-notif">' + notifRetard + '</i><br>';
+    recapTxt = recapTxt + recAmount + '<br>' + notifRetard + '<br>';
     recapTxt = recapTxt + separatorRecap + '<br>';
   }
   $('#pay-recap-tra').html(recapTxt);

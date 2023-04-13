@@ -1487,6 +1487,23 @@ textarea[name=inputRef] {
 }
 
 /*******************/
+/***************************  HALF EDT  ****************************/
+
+#modal-crs-dur-blk{
+  margin-top: 15px;
+}
+
+.modal-subtit{
+  margin-bottom: 10px;
+}
+.disp-dur-cls{
+  color: var(--main-ace-color);
+}
+
+.crs-imp{
+  color: #2045DA;
+}
+
 /*********  ASSIDUITE  **********/
 #blc-trace-in-out{
   text-align: center;
@@ -1920,4 +1937,12 @@ img.part-img{
 .deactive-btn{
     pointer-events: none;
     background-color: #7F7F7F;
+}
+
+/***************************  ADD Pay  ****************************/
+.jqedt-crs:hover{
+  background-color: var(--main-ace-color);
+}
+.focusClassBackground{
+  background-color: var(--light-violet-10);
 }

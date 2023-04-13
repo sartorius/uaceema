@@ -83,7 +83,10 @@ showedt:
     controller: App\Controller\AdminEDTController::showedt
     defaults:
         master_id:   0
-manageredt:
+jqcreateedt:
+    path:       /jqcreateedt
+    controller: App\Controller\AdminEDTController::jqcreateedt
+createedt:
     path:       /manageredt
     controller: App\Controller\AdminEDTController::manageredt
 dashboardass:

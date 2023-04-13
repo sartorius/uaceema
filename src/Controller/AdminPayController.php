@@ -18,6 +18,9 @@ use \PDO;
 
 class AdminPayController extends AbstractController
 {
+
+
+
   public function refpay(Environment $twig, LoggerInterface $logger)
   {
 
@@ -77,6 +80,9 @@ class AdminPayController extends AbstractController
     if(isset($scale_right) &&  (($scale_right == 51) || ($scale_right > 99))){
 
 
+        $result_get_token = $this->getDailyTokenPayStr($logger);
+
+
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
         // Get All USERNAME
         $allusrn_query = " SELECT *  from v_payfoundusrn; ";
@@ -93,6 +99,7 @@ class AdminPayController extends AbstractController
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'result_all_usrn'=>$result_all_usrn,
+                                                                'result_get_token'=>$result_get_token,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -120,11 +127,26 @@ class AdminPayController extends AbstractController
       if(isset($request->request))
       {
 
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
           // Get data from ajax
           $param_user_id = $request->request->get('foundUserId');
           $param_ticket_ref = $request->request->get('ticketRef');
           $param_ticket_type = $request->request->get('ticketType');
           $param_red_pc = $request->request->get('redPc');
+
+
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
           $query_value = " INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES "
@@ -172,6 +194,19 @@ class AdminPayController extends AbstractController
       if(isset($request->request))
       {
 
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
           // Get data from ajax
           $param_user_id = $request->request->get('foundUserId');
           //echo $param_jsondata[0]['username'];
@@ -200,6 +235,17 @@ class AdminPayController extends AbstractController
           'status' => 'Error',
           'message' => 'Err134P récupération payments'),
       400);
+  }
+
+  private function getDailyTokenPayStr(LoggerInterface $logger){
+    // Get me the token !
+    $get_token_query = "SELECT fGetDailyTokenPayment() AS TOKEN;";
+    $logger->debug("Show me get_token_query: " . $get_token_query);
+    $dbconnectioninst = DBConnectionManager::getInstance();
+    $result_get_token = $dbconnectioninst->query($get_token_query)->fetchAll(PDO::FETCH_ASSOC);
+    $logger->debug("result_get_token: " . $result_get_token[0]["TOKEN"]);
+
+    return $result_get_token[0]["TOKEN"];
   }
 
 }

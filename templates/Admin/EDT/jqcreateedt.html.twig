@@ -1,0 +1,78 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+{% set free_i = random(['1', '2', '3', '4']) %}
+<script>
+  const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
+  const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
+  const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+  const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
+  const classBackground = "edt-bg-free-{{ free_i }}";
+  const maxRawCourseTitleLength = 800;
+
+  let invMondayStr = '2023-04-10';
+  let dateArray = new Array();
+  let techDateArray = new Array();
+
+
+  let tempHourDuration = 0;
+  let tempMinDuration = 0;
+  let tempHalfHourShiftDuration = 0;
+  let tempHalfHourTotalShiftDuration = 0;
+  let tempCourseId = '';
+  let tempStartTime = '';
+  let tempEndTime = '';
+
+  let myEDTArray = new Array();
+  let myEDTRowSpanDebtArray = new Array();
+
+</script>
+
+<div id="mg-graph-identifier">jqc-edt</div>
+
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div id="main-edt">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Enregistrer un cours</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id='modal-crs-infos'>
+        </div>
+        <div id='modal-crs-dur-blk'>
+          <div class="modal-subtit">Durée: <strong><i class="disp-dur-cls"><i id="disp-h-duration">00</i>h<i id="disp-m-duration">00</i>&nbsp;</i></strong><i id="disp-t-end"></i></div>
+          <div id="hour-duration" class="btn-group" role="group" aria-label="Basic example">
+          </div>
+          +
+          <div id="min-duration" class="btn-group" role="group" aria-label="Basic example">
+          </div>
+        </div>
+      <hr>
+      <div>
+        Nombre de caractère(s) restant(s) : <i id="crs-desc-length"></i><br>
+        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, salle, professeur..." name="w3review" rows="4" cols="88" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button id="save-edt-line" type="button" class="btn btn-default" onclick="saveCourse()" disabled>Sauvegarder le cours</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footerjqedt.html.twig' %}

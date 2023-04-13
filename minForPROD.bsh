@@ -7,6 +7,7 @@
 yui-compressor public/js/acestu.js > public/js/acestu.min.js;
 yui-compressor public/js/aceass.js > public/js/aceass.min.js;
 yui-compressor public/js/acepay.js > public/js/acepay.min.js;
+yui-compressor public/js/aceedt.js > public/js/aceedt.min.js;
 
 yui-compressor public/css/mgapp.css > public/css/mgapp.min.css;
 yui-compressor public/css/manja.css > public/css/manja.min.css;

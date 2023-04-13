@@ -17,7 +17,38 @@ use \ZipArchive;
 
 class AdminEDTController extends AbstractController
 {
+  public function jqcreateedt(Environment $twig, LoggerInterface $logger)
+  {
 
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+    // Must be exactly 8 or more than 99
+    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+
+
+
+        $content = $twig->render('Admin/EDT/jqcreateedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+  /*                         UP IS MANUAL CREATION OF EDT FOR HALF TIME                        */
   public function dashboardass(Environment $twig, LoggerInterface $logger)
   {
 

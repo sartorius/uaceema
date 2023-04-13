@@ -10,6 +10,7 @@
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let myTicket = new Array();
     let myRecap = new Array();
+    let getToken = '{{ result_get_token }}';
 
     let foundiInJson = 0;
     let foundUserName = '';
