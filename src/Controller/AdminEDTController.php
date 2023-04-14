@@ -31,12 +31,38 @@ class AdminEDTController extends AbstractController
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
+        $mention_query = " SELECT * FROM uac_ref_mention; ";
+        $logger->debug("Show me mention_query: " . $mention_query);
+
+        $allclass_query = " SELECT * FROM v_class_cohort; ";
+        $logger->debug("Show me allclass_query: " . $allclass_query);
+
+        $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
+        $logger->debug("Show me count_stu_query: " . $count_stu_query);
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+
+        $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_mention_query));
+
+        $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_allclass_query));
+
+        $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_count_stu_query));
+
+
+
 
 
         $content = $twig->render('Admin/EDT/jqcreateedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
+                                                                'result_mention_query'=>$result_mention_query,
+                                                                'result_allclass_query'=>$result_allclass_query,
+                                                                'result_count_stu_query'=>$result_count_stu_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 

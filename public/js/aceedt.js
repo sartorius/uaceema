@@ -3,6 +3,14 @@ Date.prototype.addDays = function(days) {
     date.setDate(date.getDate() + days);
     return date;
 };
+/**************** CARTOUCHE ****************/
+function fillCartouche(){
+  let listMention = '';
+  for(let i=0; i<dataMentionToJsonArray.length; i++){
+      listMention = listMention + '<a class="dropdown-item" href="#">' + dataMentionToJsonArray[i].title + '</a>';
+  }
+  $('#dpmention-opt').html(listMention);
+}
 
 /**************** MODAL ****************/
 function verifyTextAreaSaveBtn(){
@@ -16,12 +24,33 @@ function verifyTextAreaSaveBtn(){
     $("#crs-desc").val(readInputText.substring(0, maxRawCourseTitleLength));
   }
 
-  if((textInputLength > 0) && (tempHalfHourTotalShiftDuration > 0)){
-    $('#save-edt-line').prop("disabled", false);
+  let checkOverlap = verifyOverlap();
+  if(checkOverlap == 'na'){
+    // We are good, there is no overlap
+    $('#modal-crs-err').html('');
+    if((textInputLength > 0) && (tempHalfHourTotalShiftDuration > 0)){
+      $('#save-edt-line').prop("disabled", false);
+    }
+    else{
+      $('#save-edt-line').prop("disabled", true);
+    }
   }
   else{
-    $('#save-edt-line').prop("disabled", true);
+    //There is overlap
+    $('#modal-crs-err').html('<i class="err"><strong>Conflit avec : [' + checkOverlap + '...]. Réduisez sa durée ou supprimez le cours suivant.</strong></i>');
+
   }
+}
+
+function verifyOverlap(){
+  let cell = tempCourseId.toString().split("-");
+  for(let i=0; i<myEDTArray.length; i++){
+      //We look for overlaping here for conflict hour and day
+      if((cell[1] == myEDTArray[i].techDay) && (parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration) > myEDTArray[i].techHour)){
+        return myEDTArray[i].startTime + '/' + myEDTArray[i].rawCourseTitle.substring(0, 10);
+      }
+  }
+  return 'na';
 }
 
 function calculateEndDate(){
@@ -53,9 +82,10 @@ function selectHourDur(i, shiftStart){
 
   // I overpass the available time for the day
   if(i == 0){
+    // We block the minute choice because we have taken zero hour so automatically 30min
     fillModalMinDuration(shiftStart, false, false);
   }
-  else if(((i*2) + shiftStart) < ((refHoursStart.length*2) - 1)){
+  else if(((i*2) + shiftStart) < (refHoursStart.length*2)){
     fillModalMinDuration(shiftStart, true, false);
   }
   else{
@@ -127,6 +157,13 @@ function fillModalMinDuration(shiftStart, displayZero, closeBoth){
     modalMinDuration = modalMinDuration + '<button type="button" class="btn btn-outline-secondary" disabled>30min</button>';
   }
   $('#min-duration').html(modalMinDuration);
+}
+
+function updateCrsStatus(activeId){
+  tempCourseStatus = $('#' + activeId).val();
+  $('.stt-group').removeClass('active');  // Remove any existing active classes
+  $('#' + activeId).addClass('active'); // Add the class to the nth element
+  //console.log('updateCrsStatus: ' + $('#' + activeId).val());
 }
 
 /**************** FUNCTION ****************/
@@ -224,6 +261,9 @@ function drawMainEDT(){
   let labelHour = 0;
   let cellId = '';
   let shortCellId = '';
+  let crsStatus = '';
+  let courseTitleTemp = '';
+
   for(let i=0; i<(refHours.length*2); i++){
     tableText = tableText + '<tr style="border:1px solid black; height : 60px">';
     if(halfHourLine == 1){
@@ -239,14 +279,35 @@ function drawMainEDT(){
       let cellIndex = findCourse(cellId);
       //console.log('cellId: ' + cellId + ' cellIndex: ' + cellIndex);
       if(cellIndex>-1){
-        tableText = tableText + '<td id="' + cellId + '" rowspan="' + myEDTArray[cellIndex].shiftDuration + '" class="myedt-course jqedt-crs">' + myEDTArray[cellIndex].rawCourseTitle + '</td>';
+        // Get the course status here
+        courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle;
+        switch (myEDTArray[cellIndex].courseStatus) {
+          case 'A':
+            crsStatus = '';
+            break;
+          case 'C':
+            crsStatus = '-can';
+            courseTitleTemp = 'ANNULÉ : <i class="ua-line">' + myEDTArray[cellIndex].rawCourseTitle + '</i>';
+            break;
+          case 'H':
+            crsStatus = '-hos';
+            courseTitleTemp = '<strong>Hors site</strong> : ' + myEDTArray[cellIndex].rawCourseTitle;
+            break;
+          default:
+            // Last case
+            crsStatus = '-opt';
+            courseTitleTemp = '<strong>Option</strong> : ' + myEDTArray[cellIndex].rawCourseTitle;
+        }
+
+        tableText = tableText + '<td id="' + cellId + '" rowspan="' + myEDTArray[cellIndex].shiftDuration + '" class="myedt-course' + crsStatus + ' jqedt-crs">' + courseTitleTemp + '</td>';
       }
       else{
         if(myEDTRowSpanDebtArrayContains(shortCellId)){
           //We do nothing;
         }
         else{
-          tableText = tableText + '<td id="' + cellId + '" class="myedt-course-empty jqedt-crs">' + cellId + '</td>';
+          //tableText = tableText + '<td id="' + cellId + '" class="myedt-course-empty jqedt-crs">' + cellId + '</td>';
+          tableText = tableText + '<td id="' + cellId + '" class="myedt-course-empty jqedt-crs"><i class="start-h-emp">' + refHalfHoursStart[i] + '</i></td>';
         }
       }
     }
@@ -281,6 +342,7 @@ function saveCourse(){
                     techDate: getInvTechDate(tempCourseId),
                     rawCourseTitle: $("#crs-desc").val(),
                     refDayCode: getRefDayCode(tempCourseId),
+                    courseStatus: tempCourseStatus,
                     refEnglishDay: getRefEnglishDay(tempCourseId)
                     };
    myEDTArray.push(myEDTLine);
@@ -307,6 +369,7 @@ function refreshCellClick(){
     tempCourseId = this.id;
     tempStartTime = '';
     tempEndTime = '';
+    tempCourseStatus = 'A';
     $("#crs-desc").val('');
 
     $("#crs-desc-length").html(maxRawCourseTitleLength);
@@ -326,6 +389,13 @@ function refreshCellClick(){
     $('#exampleModal').modal('show');
   });
 
+  // Refresh status
+  updateCrsStatus('stt-a');
+  $( ".stt-group" ).click(function() {
+    updateCrsStatus(this.id);
+  });
+
+
 }
 
 /***********************************************************************************************************/
@@ -334,8 +404,8 @@ $(document).ready(function() {
   console.log('We are in ACE-EDT');
 
   if($('#mg-graph-identifier').text() == 'jqc-edt'){
+    fillCartouche();
     drawMainEDT();
-
   }
   else if($('#mg-graph-identifier').text() == 'xxx'){
     // Do something

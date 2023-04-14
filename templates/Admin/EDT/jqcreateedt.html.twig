@@ -1,39 +1,109 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
-{% set free_i = random(['1', '2', '3', '4']) %}
-<script>
-  const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
-  const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
-  const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-  const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-  const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
-  const classBackground = "edt-bg-free-{{ free_i }}";
-  const maxRawCourseTitleLength = 800;
+{% set free_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
 
-  let invMondayStr = '2023-04-10';
-  let dateArray = new Array();
-  let techDateArray = new Array();
+{% if result_allclass_query is defined and result_allclass_query is not null %}
+    <script>
+
+      let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
+      let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
+      let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
+
+      let tempMention = '';
+      let tempClasse = '';
+      let tempCountStu = 0;
+
+      const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
+      const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
+      const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
+      const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+      const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+      const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
+      const classBackground = "edt-bg-free-{{ free_i }}";
+      const maxRawCourseTitleLength = 800;
+
+      let invMondayStr = '2023-04-10';
+      let dateArray = new Array();
+      let techDateArray = new Array();
 
 
-  let tempHourDuration = 0;
-  let tempMinDuration = 0;
-  let tempHalfHourShiftDuration = 0;
-  let tempHalfHourTotalShiftDuration = 0;
-  let tempCourseId = '';
-  let tempStartTime = '';
-  let tempEndTime = '';
+      let tempHourDuration = 0;
+      let tempMinDuration = 0;
+      let tempHalfHourShiftDuration = 0;
+      let tempHalfHourTotalShiftDuration = 0;
+      let tempCourseId = '';
+      let tempStartTime = '';
+      let tempEndTime = '';
+      let tempCourseStatus = 'A';
 
-  let myEDTArray = new Array();
-  let myEDTRowSpanDebtArray = new Array();
+      let myEDTArray = new Array();
+      let myEDTRowSpanDebtArray = new Array();
 
-</script>
+    </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllClassToJsonArray = "";
+    </script>
+{% endif %}
 
 <div id="mg-graph-identifier">jqc-edt</div>
 
 
+<div class="container">
+  <div class="row">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg-8  info-cartouche">
+      <div id="cartouche-edt">
+
+        <div class="menu-dropdown">
+
+            <div class="dropdown btn-ace-menu">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Mention
+                </button>
+                <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  
+                </div>
+            </div>
+
+            <div class="dropdown btn-ace-menu">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Classe
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </div>
+
+            <div class="disp-class-name">
+              L1/DROIT/D1/Groupe 1
+            </div>
+        </div>
+
+        <strong>Nombre d'étudiants:</strong><br>
+        <strong>Semaine du Lundi:</strong><br>
+        <i class="mgs-note">visible depuis le </i><br>
+
+        <div id="past-msg-edt">
+            <i class='err'><strong><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Attention vous intégrez une semaine en cours ou passée</strong>, nous sommes le {{ "now"|date("d/m/Y") }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
+        </div>
+
+
+
+      </div>
+    </div>
+    <div class="col-lg-2">
+    </div>
+  </div>
+</div>
 
 <div class="container">
   <div class="row">
     <div class="col-lg-12">
+      <hr>
       <div id="main-edt">
       </div>
     </div>
@@ -51,6 +121,8 @@
         </button>
       </div>
       <div class="modal-body">
+        <div id='modal-crs-err'>
+        </div>
         <div id='modal-crs-infos'>
         </div>
         <div id='modal-crs-dur-blk'>
@@ -61,6 +133,14 @@
           <div id="min-duration" class="btn-group" role="group" aria-label="Basic example">
           </div>
         </div>
+        <div id='modal-crs-status'>
+          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+            <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group active">Actif</button>
+            <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Optionnel</button>
+            <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group">Hors site</button>
+            <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">Annulé</button>
+          </div>
+        </div>
       <hr>
       <div>
         Nombre de caractère(s) restant(s) : <i id="crs-desc-length"></i><br>
@@ -68,7 +148,7 @@
       </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-secondary" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
         <button id="save-edt-line" type="button" class="btn btn-default" onclick="saveCourse()" disabled>Sauvegarder le cours</button>
       </div>
     </div>

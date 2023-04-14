@@ -1194,6 +1194,7 @@ textarea[name=inputRef] {
 .myedt-course-empty{
   border:1px solid black;
   width: 15.5%;
+  vertical-align: top;
 }
 
 /********************************** EDT ROWSPAN *************************************/
@@ -1447,14 +1448,9 @@ textarea[name=inputRef] {
 }
 
 .edt-bg-free-2{
-  background: #E0E0E0;
-  background:
-  linear-gradient(115deg, transparent 75%, rgba(255,255,255,.8) 75%) 0 0,
-  linear-gradient(245deg, transparent 75%, rgba(255,255,255,.8) 75%) 0 0,
-  linear-gradient(115deg, transparent 75%, rgba(255,255,255,.8) 75%) 7px -15px,
-  linear-gradient(245deg, transparent 75%, rgba(255,255,255,.8) 75%) 7px -15px,
-  #E0E0E0;
-  background-size: 15px 30px;
+  background-color: #ffffff;
+  opacity: 1;
+  background-image:  repeating-radial-gradient( circle at 0 0, transparent 0, #ffffff 15px ), repeating-linear-gradient( #f7e6f455, #f7e6f4 );
 }
 
 .edt-bg-free-3{
@@ -1465,11 +1461,35 @@ textarea[name=inputRef] {
 }
 
 .edt-bg-free-4{
-  background-color: hsl(2, 57%, 70%);
-  background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
-  repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
-  repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
+  background-color: #ffffff;
+  opacity: 1;
+  background-size: 30px 30px;
+  background-image:  repeating-linear-gradient(to right, #f1f7ff, #f1f7ff 1.5px, #ffffff 1.5px, #ffffff);
 }
+
+.edt-bg-free-5{
+  background-color: #ffffff;
+  opacity: 1;
+  background: linear-gradient(135deg, #f7e6f455 25%, transparent 25%) -15px 0/ 30px 30px, linear-gradient(225deg, #f7e6f4 25%, transparent 25%) -15px 0/ 30px 30px, linear-gradient(315deg, #f7e6f455 25%, transparent 25%) 0px 0/ 30px 30px, linear-gradient(45deg, #f7e6f4 25%, #ffffff 25%) 0px 0/ 30px 30px;
+}
+
+.edt-bg-free-6{
+  background-color: #ffffff;
+  opacity: 1;
+  background-image:  linear-gradient(30deg, #ebf1d7 12%, transparent 12.5%, transparent 87%, #ebf1d7 87.5%, #ebf1d7), linear-gradient(150deg, #ebf1d7 12%, transparent 12.5%, transparent 87%, #ebf1d7 87.5%, #ebf1d7), linear-gradient(30deg, #ebf1d7 12%, transparent 12.5%, transparent 87%, #ebf1d7 87.5%, #ebf1d7), linear-gradient(150deg, #ebf1d7 12%, transparent 12.5%, transparent 87%, #ebf1d7 87.5%, #ebf1d7), linear-gradient(60deg, #ebf1d777 25%, transparent 25.5%, transparent 75%, #ebf1d777 75%, #ebf1d777), linear-gradient(60deg, #ebf1d777 25%, transparent 25.5%, transparent 75%, #ebf1d777 75%, #ebf1d777);
+  background-size: 30px 53px;
+  background-position: 0 0, 0 0, 15px 26px, 15px 26px, 0 0, 15px 26px;
+}
+
+.edt-bg-free-7{
+  background-color: #ffffff;
+  opacity: 1;
+  background-image: radial-gradient(circle at center center, #e7edf8, #ffffff), repeating-radial-gradient(circle at center center, #e7edf8, #e7edf8, 15px, transparent 30px, transparent 15px);
+  background-blend-mode: multiply;
+}
+
+
+
 
 .button-edt-validate{
   margin-top: 60px;
@@ -1489,7 +1509,28 @@ textarea[name=inputRef] {
 /*******************/
 /***************************  HALF EDT  ****************************/
 
-#modal-crs-dur-blk{
+
+.menu-dropdown{
+  display: flex;
+  justify-content: start;
+}
+
+.btn-ace-menu{
+  margin-right: 20px;
+  margin-bottom: 15px;
+}
+
+.disp-class-name{
+  color: var(--main-ace-color);
+  font-size: 2em;
+}
+
+#past-msg-edt{
+  display: none;
+}
+
+#modal-crs-dur-blk,
+#modal-crs-status{
   margin-top: 15px;
 }
 
@@ -1502,6 +1543,12 @@ textarea[name=inputRef] {
 
 .crs-imp{
   color: #2045DA;
+}
+
+.start-h-emp{
+  color: BLACK;
+  opacity: 0.15;
+  font-weight: 600;
 }
 
 /*********  ASSIDUITE  **********/
@@ -1838,7 +1885,6 @@ img.part-img{
   justify-content: flex-end;
 }
 
-
 .mgs-addpay-lg{
   font-size: 1.8em;
   color: var(--main-ace-color);
@@ -1941,7 +1987,7 @@ img.part-img{
 
 /***************************  ADD Pay  ****************************/
 .jqedt-crs:hover{
-  background-color: var(--main-ace-color);
+  background-color: #B8C2FF;
 }
 .focusClassBackground{
   background-color: var(--light-violet-10);
