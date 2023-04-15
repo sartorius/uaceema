@@ -3,15 +3,149 @@ Date.prototype.addDays = function(days) {
     date.setDate(date.getDate() + days);
     return date;
 };
+
+/**************** Export Function ****************/
+function exportFile(){
+  $(".start-h-emp").html('');
+  launchExportFile();
+
+}
+
+
+function launchExportFile(){
+  $('#title-edt-export').html(tempClasse);
+
+  var wb = XLSX.utils.table_to_book(document.getElementById('my-main-table'));
+  XLSX.writeFile(wb, 'EDT' + invMondayStr.replaceAll('-', '_') + tempClasse.replaceAll(' ', '_').replaceAll('/', '_') + '.xlsx');
+  drawMainEDT();
+}
+
+
+function publishEDT(order){
+  $(".white-ajax-wait").show(100);
+  for(let i=0; i<myEDTArray.length; i++){
+      myEDTArray[i].techDate = getInvTechDate(myEDTArray[i].courseId); // To be filled for publish
+      myEDTArray[i].techDateMonday = invMondayStr;
+  }
+  // Then you go in AJAX !!!
+  $.ajax('/jqPostEDTDB', {
+      type: 'POST',  // http method
+      data: {
+        // Control
+        currentUserId: currentUserId,
+        token : getToken,
+        // Real data
+        invCohortId: tempClasseID,
+        invTechMonday: invMondayStr,
+        orderEDT: order,
+        myEDTArray: JSON.stringify(myEDTArray)
+
+      },  // data to submit
+      success: function (data, status, xhr) {
+          $(".white-ajax-wait").hide(100);
+          // Do something as success
+          let msg = "<i class='aj-succ'>publié le&nbsp;" + data['last_update'] + "</i>";
+          let modalmsg = "<i class='aj-succ'><strong>publié avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>";
+          $("#last-update").html(msg);
+
+          $("#ajax-feedback").html("Votre EDT vient d'être " + modalmsg);
+          $('#aj-fback-modal').modal('show');
+
+
+          console.log('Everything is fine: ' + data['status'] + ' ' + data['message']);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $(".white-ajax-wait").hide(100);
+        let msg = "<i class='err'><strong>erreur serveur: " + jqXhr['status'] + "&nbsp;<i class='icon-exclamation-triangle nav-text'></i></strong></i>";
+        $("#last-update").html(msg);
+
+        $("#ajax-feedback").html('Attention: ' + msg + '. Veuillez contacter le support.');
+        $('#aj-fback-modal').modal('show');
+        // Do something as error here
+        console.log('Something went wrong: ' + jqXhr['status'] + ' ' + textStatus);
+      }
+  });
+}
 /**************** CARTOUCHE ****************/
-function fillCartouche(){
+function displayDatePicker(){
+  let listDate = '';
+  for(let i=0; i<dispMondaysToJsonArray.length; i++){
+      listDate = listDate + '<button id="wmon-' + i + '" type="button" value="' + techMondaysToJsonArray[i] + '" onclick="selectDatePicker(' + i + ')" class="btn btn-outline-' + ((i == 1) ? 'primary' : 'secondary') + ' wmon-group ' + ((i == 2) ? 'active' : '') + '">' + dispMondaysToJsonArray[i] + '</button>';
+  }
+  $('#crs-wmonday').html(listDate);
+}
+
+function selectDatePicker(i){
+  $(".wmon-group").removeClass('active');
+  $('#wmon-' + i).addClass('active');
+  invMondayStr = techMondaysToJsonArray[i];
+  dispMonday = dispMondaysToJsonArray[i];
+  if(i < 2){
+    // For current and past week
+    $('#past-msg-edt').show(100);
+  }
+  else{
+    $('#past-msg-edt').hide(100);
+  }
+  // Now you draw the full EDT
+  drawMainEDT();
+}
+
+function fillCartoucheMention(){
   let listMention = '';
   for(let i=0; i<dataMentionToJsonArray.length; i++){
-      listMention = listMention + '<a class="dropdown-item" href="#">' + dataMentionToJsonArray[i].title + '</a>';
+      listMention = listMention + '<a class="dropdown-item" onclick="selectMention(\'' + dataMentionToJsonArray[i].par_code + '\', \'' + dataMentionToJsonArray[i].title + '\')"  href="#">' + dataMentionToJsonArray[i].title + '</a>';
   }
   $('#dpmention-opt').html(listMention);
 }
 
+function selectMention(str, strTitle){
+  tempMentionCode = str;
+  tempMention = strTitle;
+  $('#drp-select').html(strTitle);
+  console.log('You have just click on: ' + str);
+  // We reset the dropdown
+  selectClasse(0, 'Classe')
+  fillCartoucheClasse();
+}
+
+function fillCartoucheClasse(){
+  let listClasse = '';
+  for(let i=0; i<dataAllClassToJsonArray.length; i++){
+    if(dataAllClassToJsonArray[i].mention_code == tempMentionCode){
+      listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasse(' + dataAllClassToJsonArray[i].id + ', \'' + dataAllClassToJsonArray[i].short_classe + '\')"  href="#">' + dataAllClassToJsonArray[i].short_classe + '</a>';
+    }
+  }
+  $('#dpclasse-opt').html(listClasse);
+}
+
+function selectClasse(classeId, str){
+  tempClasseID = classeId;
+  tempClasse = str;
+  $("#selected-class").html(str);
+  tempCountStu = getQtyStu(classeId);
+  $("#sel-stu-qty").html(tempCountStu);
+
+  // We display the save block only when class is selected.
+  if(classeId > 0){
+      $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + str + ']');
+      $("#edt-save-blk").show(100);
+  }
+  else{
+      $("#publish-cls").html('');
+      $("#edt-save-blk").hide(100);
+  }
+  //console.log('You have just classeId: ' + classeId);
+}
+
+function getQtyStu(classeId){
+  for(let i=0; i<dataCountStuToJsonArray.length; i++){
+    if(dataCountStuToJsonArray[i].COHORT_ID == classeId){
+      return dataCountStuToJsonArray[i].CPT_STU;
+    }
+  }
+  return 0;
+}
 /**************** MODAL ****************/
 function verifyTextAreaSaveBtn(){
 
@@ -46,7 +180,12 @@ function verifyOverlap(){
   let cell = tempCourseId.toString().split("-");
   for(let i=0; i<myEDTArray.length; i++){
       //We look for overlaping here for conflict hour and day
-      if((cell[1] == myEDTArray[i].techDay) && (parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration) > myEDTArray[i].techHour)){
+      if((cell[1] == myEDTArray[i].techDay) &&
+            // End time is > than Start over Time which is not good
+            (parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration) > myEDTArray[i].techHour) &&
+            // Additionnally if our Start Time is also before then we are not good definitively
+            (parseInt(cell[0]) < myEDTArray[i].techHour)
+          ){
         return myEDTArray[i].startTime + '/' + myEDTArray[i].rawCourseTitle.substring(0, 10);
       }
   }
@@ -63,6 +202,9 @@ function calculateEndDate(){
   //console.log('myNow: '+ myNow + ' - newNow: ' + newNow + ' - newTime:' + newTime);
   tempEndTime = newTime;
   $("#disp-t-end").html('<i class="icon-android-alarm-clock nav-text"></i>&nbsp;Shift(s): ' + tempHalfHourTotalShiftDuration + '<i class="icon-hourglass-half nav-text"></i>&nbsp;Fin du cours:&nbsp;<strong><i class="crs-imp">'+ newTime +'</i></strong>');
+  // Allow the room selection
+  fillModalRoom();
+
   // Allow Button Save or not
   verifyTextAreaSaveBtn();
 }
@@ -111,6 +253,36 @@ function selectMinDur(i){
 
   //console.log('Valeur sel min: ' + '#sel-min-' + i);
   $('#sel-min-' + i).addClass('active');
+}
+
+function selectRoom(i){
+  tempCourseRoomId = dataAllRoomToJsonArray[i].id;
+  tempCourseRoom = dataAllRoomToJsonArray[i].name;
+  verifyTextAreaSaveBtn();
+}
+
+function fillModalRoom(){
+  let listRoom = '';
+  let optionDisplay = '';
+  if((tempClasseID == 0) || (tempHalfHourTotalShiftDuration == 0)){
+    listRoom = listRoom + '<option value="' + dataAllRoomToJsonArray[0].id + '">' + dataAllRoomToJsonArray[0].name + '</option>';
+    tempCourseRoomId = 0;
+  }
+  else{
+    for(let i=0; i<dataAllRoomToJsonArray.length; i++){
+      if(dataAllRoomToJsonArray[i].capacity >= tempCountStu){
+        optionDisplay = dataAllRoomToJsonArray[i].category + ': ' + dataAllRoomToJsonArray[i].name + '&nbsp;[' + dataAllRoomToJsonArray[i].capacity + ']' + (dataAllRoomToJsonArray[i].is_video == 'Y' ? ' avec vidéo' : '');
+        if(i == 0){
+          optionDisplay = dataAllRoomToJsonArray[i].name;
+        }
+        listRoom = listRoom + '<option value="' + i + '">' + optionDisplay + '</option>';
+      }
+      else{
+        //do nothing we do not display
+      }
+    }
+  }
+  $("#my-room-select").html(listRoom);
 }
 
 function fillModalHourDuration(shiftStart){
@@ -184,7 +356,7 @@ function getRefDayCode(str){
 
 function getRefEnglishDay(str){
   let cell = str.toString().split("-");
-  return refEnglishDay[cell[1] - 1];
+  return refEnglishDay[cell[1]];
 }
 
 function getInvDay(str){
@@ -225,21 +397,36 @@ function myEDTRowSpanDebtArrayContains(str){
   return false;
 }
 
-function drawMainEDT(){
-  let tableText = '<table style="width: 100%" class="' + classBackground + '"><tbody>';
-  let refInvMonday = new Date(Date.parse(invMondayStr));
+function clearEDT(){
+  myEDTArray = new Array();
+  drawMainEDT();
+}
 
+function reinitDateArrays(){
+  let refInvMonday = new Date(Date.parse(invMondayStr));
   dateArray = new Array();
+  techDateArray = new Array();
+
+  for(let i=0; i<refDays.length; i++){
+    dateArray.push(refInvMonday.addDays(i).getDate().toString().padStart(2, '0')+'/'+(refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0'));
+    techDateArray.push(refInvMonday.addDays(i).getFullYear() + '-' + (refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0') + '-' + refInvMonday.addDays(i).getDate().toString().padStart(2, '0'));
+  };
+}
+
+function drawMainEDT(){
+  let tableText = '<table id="my-main-table" style="width: 100%" class="' + classBackground + '"><tbody>';
+
+  reinitDateArrays();
+
+  // This will not be visible and will be necessary only for export EXCEL
+  tableText =  tableText + '<tr id="table-header-export" style="height: 0px"><td colspan="7">' + '<i id="title-edt-export"></i>' + '</td></tr>';
 
   // Manage DAYS TR Line 0
   tableText = tableText + '<tr style="height: 35px">'
   for(let i=0; i<refDays.length; i++){
-    tableText = tableText + '<th class="myedt-day">'
+    tableText = tableText + '<th class="myedt-day">';
     tableText = tableText + refDays[i];
-    tableText = tableText + '</th>'
-
-    dateArray.push(refInvMonday.addDays(i).getDate().toString().padStart(2, '0')+'/'+(refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0'));
-    techDateArray.push(refInvMonday.addDays(i).getFullYear() + '-' + (refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0') + '-' + refInvMonday.addDays(i).getDate().toString().padStart(2, '0'));
+    tableText = tableText + '</th>';
   };
   tableText = tableText + '</tr>'
 
@@ -263,9 +450,10 @@ function drawMainEDT(){
   let shortCellId = '';
   let crsStatus = '';
   let courseTitleTemp = '';
+  let myCourseRoom = '';
 
   for(let i=0; i<(refHours.length*2); i++){
-    tableText = tableText + '<tr style="border:1px solid black; height : 60px">';
+    tableText = tableText + '<tr style="border:1px solid black; height : ' + constRowHalfSize + 'px">';
     if(halfHourLine == 1){
       tableText = tableText + '<td rowspan="2" class="myedt-hour">' + refHours[labelHour] + '</td>';
       labelHour++;
@@ -279,24 +467,30 @@ function drawMainEDT(){
       let cellIndex = findCourse(cellId);
       //console.log('cellId: ' + cellId + ' cellIndex: ' + cellIndex);
       if(cellIndex>-1){
+        // Reinitialise the room
+        myCourseRoom = '';
+        if(myEDTArray[cellIndex].courseRoomId > 0){
+            myCourseRoom = '<br>Salle:&nbsp;' + myEDTArray[cellIndex].courseRoom;
+        }
+        courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
+
         // Get the course status here
-        courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle;
         switch (myEDTArray[cellIndex].courseStatus) {
           case 'A':
             crsStatus = '';
             break;
           case 'C':
             crsStatus = '-can';
-            courseTitleTemp = 'ANNULÉ : <i class="ua-line">' + myEDTArray[cellIndex].rawCourseTitle + '</i>';
+            courseTitleTemp = 'ANNULÉ : <i class="ua-line">' + courseTitleTemp + '</i>';
             break;
           case 'H':
             crsStatus = '-hos';
-            courseTitleTemp = '<strong>Hors site</strong> : ' + myEDTArray[cellIndex].rawCourseTitle;
+            courseTitleTemp = '<strong>Hors site</strong> : ' + courseTitleTemp;
             break;
           default:
             // Last case
             crsStatus = '-opt';
-            courseTitleTemp = '<strong>Option</strong> : ' + myEDTArray[cellIndex].rawCourseTitle;
+            courseTitleTemp = '<strong>Option</strong> : ' + courseTitleTemp;
         }
 
         tableText = tableText + '<td id="' + cellId + '" rowspan="' + myEDTArray[cellIndex].shiftDuration + '" class="myedt-course' + crsStatus + ' jqedt-crs">' + courseTitleTemp + '</td>';
@@ -324,13 +518,39 @@ function drawMainEDT(){
   tableText = tableText  + '</tbody></table>';
   $('#main-edt').html(tableText);
 
+
   refreshCellClick();
 }
 
 function saveCourse(){
   //let myEDTLine = [tempCourseId, tempStartTime, tempEndTime, tempHourDuration, tempMinDuration, tempHalfHourTotalShiftDuration];
   let cell = tempCourseId.toString().split("-");
-  let myEDTLine = {courseId: tempCourseId,
+  let myEDTLine = {
+                    courseId: tempCourseId,
+                    startTime: tempStartTime,
+                    endTime: tempEndTime,
+                    // Need the int only for DB
+                    startTimeHour: parseInt(tempStartTime.split(":")[0]),
+                    startTimeMin: parseInt(tempStartTime.split(":")[1]),
+                    // Need the int only for DB
+                    endTimeHour: parseInt(tempEndTime.split(":")[0]),
+                    endTimeMin: parseInt(tempEndTime.split(":")[1]),
+                    techHour: cell[0],
+                    techDay: cell[1],
+                    hourDuration: tempHourDuration,
+                    minuteDuration: tempMinDuration,
+                    shiftDuration: tempHalfHourTotalShiftDuration,
+                    displayDate: getInvDay(tempCourseId),
+                    techDate: null,  // To be filled for publish
+                    techDateMonday: null,
+                    rawCourseTitle: $("#crs-desc").val(),
+                    refDayCode: getRefDayCode(tempCourseId),
+                    courseStatus: tempCourseStatus,
+                    courseRoomId: tempCourseRoomId,
+                    courseRoom: tempCourseRoom,
+                    refEnglishDay: getRefEnglishDay(tempCourseId)
+                    /*
+                    courseId: tempCourseId,
                     startTime: tempStartTime,
                     endTime: tempEndTime,
                     techHour: cell[0],
@@ -339,12 +559,23 @@ function saveCourse(){
                     minuteDuration: tempMinDuration,
                     shiftDuration: tempHalfHourTotalShiftDuration,
                     displayDate: getInvDay(tempCourseId),
-                    techDate: getInvTechDate(tempCourseId),
+                    techDate: getInvTechDate(tempCourseId), // To be filled for publish
                     rawCourseTitle: $("#crs-desc").val(),
                     refDayCode: getRefDayCode(tempCourseId),
                     courseStatus: tempCourseStatus,
+                    courseRoomId: tempCourseRoomId,
+                    courseRoom: tempCourseRoom,
                     refEnglishDay: getRefEnglishDay(tempCourseId)
+
+                    */
                     };
+
+   // We need to remove the previous item and save the new one
+   let index = findCourse(tempCourseId);
+   if(index > -1){
+     myEDTArray.splice(index, 1);
+   }
+
    myEDTArray.push(myEDTLine);
    //input debt here now
    for(let i = 1; i<tempHalfHourTotalShiftDuration; i++){
@@ -353,6 +584,50 @@ function saveCourse(){
 
    $('#exampleModal').modal('toggle');
    drawMainEDT();
+}
+
+function loadExistingIfExist(courseId){
+  let index = findCourse(courseId);
+  console.log('loadExistingIfExist: ' + index);
+
+  if(index > -1){
+    console.log('loadExistingIfExist > 0 ' + index);
+    tempHourDuration = myEDTArray[index].hourDuration;
+
+    let shift = (courseId).toString().split("-");
+    selectHourDur(tempHourDuration, shift[0]);
+
+    /*
+    $('#sel-hour-' + tempHourDuration).addClass('active');
+    tempHalfHourShiftDuration = parseInt(myEDTArray[index].hourDuration)*2;
+    */
+
+    tempMinDuration =  myEDTArray[index].minuteDuration;
+    selectMinDur(tempMinDuration);
+    /*
+    tempHalfHourTotalShiftDuration = tempHalfHourShiftDuration;
+    if(tempMinDuration == 30){
+      tempHalfHourTotalShiftDuration = tempHalfHourShiftDuration + 1;
+      $('#sel-min-30').addClass('active');
+    }
+    */
+
+    tempStartTime = myEDTArray[index].startTime;
+    tempEndTime = myEDTArray[index].endTime;
+    tempCourseStatus = myEDTArray[index].courseStatus;
+    $('.stt-group').removeClass('active');
+    $('#stt-' + tempCourseStatus.toLowerCase()).addClass('active');
+
+
+    tempCourseRoom = myEDTArray[index].courseRoom;
+    tempCourseRoomId = myEDTArray[index].courseRoomId;
+    $("#my-room-select").val(tempCourseRoomId);
+    $('#crs-desc').val(myEDTArray[index].rawCourseTitle);
+
+  }
+  else{
+    // Do nothing
+  }
 }
 
 function refreshCellClick(){
@@ -370,6 +645,8 @@ function refreshCellClick(){
     tempStartTime = '';
     tempEndTime = '';
     tempCourseStatus = 'A';
+    tempCourseRoom = '';
+    tempCourseRoomId = 0;
     $("#crs-desc").val('');
 
     $("#crs-desc-length").html(maxRawCourseTitleLength);
@@ -377,7 +654,7 @@ function refreshCellClick(){
     let infosCours = '';
     infosCours = infosCours + '<i class="icon-calendar nav-text"></i>&nbsp;<strong>' + getInvDay(this.id) + '</strong>&nbsp;';
     infosCours = infosCours + getInvDate(this.id) + '&nbsp;';
-    infosCours = infosCours + '<i class="icon-flag-1 nav-text"></i>&nbsp;' + 'Début du cours: <strong><i class="crs-imp">' + getStartHour(this.id) + '</i></strong><br>';
+    infosCours = infosCours + '<i class="icon-flag-1 nav-text"></i>&nbsp;' + 'Début du cours: <strong><i class="crs-imp">' + getStartHour(this.id) + '</i></strong>&nbsp;<i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">' + tempCountStu + '</i><br>';
     $('#modal-crs-infos').html(infosCours);
     $('#' + this.id).removeClass(classBackground).addClass('focusClassBackground');
 
@@ -385,6 +662,10 @@ function refreshCellClick(){
     fillModalHourDuration(shift[0]);
     fillModalMinDuration(shift[0], true, true);
     $('#save-edt-line').prop("disabled", true);
+    $('#modal-crs-err').html('');
+    fillModalRoom();
+
+    loadExistingIfExist(tempCourseId);
 
     $('#exampleModal').modal('show');
   });
@@ -395,6 +676,10 @@ function refreshCellClick(){
     updateCrsStatus(this.id);
   });
 
+  $('#exampleModal').on('hidden.bs.modal', function () {
+    // When close redo the full Main EDT
+    drawMainEDT();
+  })
 
 }
 
@@ -404,7 +689,14 @@ $(document).ready(function() {
   console.log('We are in ACE-EDT');
 
   if($('#mg-graph-identifier').text() == 'jqc-edt'){
-    fillCartouche();
+    // We need to wait for the ready we hide them else mismatch in design
+    $("#edt-save-blk").hide(100);
+    displayDatePicker();
+    fillCartoucheMention();
+
+
+
+    /***** WORK ON EDT *****/
     drawMainEDT();
   }
   else if($('#mg-graph-identifier').text() == 'xxx'){

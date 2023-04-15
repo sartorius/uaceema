@@ -63,6 +63,9 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 -- Daily Token for the Payment Date
 INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKPAYD', 'Token daily for payement TOKDAND Current Date');
 
+-- Daily Token for EDT
+INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKEDTD', 'Token daily for EDT TOKEDTD Current Date');
+
 
 
 
@@ -220,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (10, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L2', (SELECT id FROM uac_ref_parcours WHERE title = 'D3'), (SELECT id FROM uac_ref_groupe WHERE title = 'na'));
 
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 11;
-  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 12;
+  UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 12;
 
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 22;
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 23;
@@ -231,6 +234,55 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 26;
 
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2') WHERE id = 10;
+
+
+DROP TABLE IF EXISTS uac_ref_room;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_room` (
+  `id` SMALLINT UNSIGNED NOT NULL,
+  `name` VARCHAR(50) NULL,
+  `capacity` INT UNSIGNED NOT NULL,
+  `category` VARCHAR(45) NULL,
+  `size` CHAR(1) NOT NULL DEFAULT 'S',
+  `is_video` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N is for Not Video and Y is for Video',
+  `rm_order` SMALLINT UNSIGNED NOT NULL,
+  `available` CHAR(1) NULL DEFAULT 'Y',
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (0,'Non spécifiée',10000,'NA','L','N',1);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (1,'001',40,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (2,'002',40,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (3,'101',42,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (4,'102',41,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (5,'103',40,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (6,'104',46,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (7,'105',50,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (8,'203',35,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (9,'302',46,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (10,'303',54,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (11,'304',54,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (12,'305',58,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (13,'306',40,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (14,'307',44,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (15,'405',36,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (16,'406',48,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (17,'504',41,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (18,'201-202',100,'GRANDE','L','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (19,'205-205',150,'GRANDE','L','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (20,'502-503',100,'GRANDE','L','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (21,'301',30,'LABO','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (22,'401',40,'LABO','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (23,'402',20,'LABO','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (24,'403',40,'LABO','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (25,'101',12,'ANNEXE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (26,'102',24,'ANNEXE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (27,'103',15,'ANNEXE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (28,'201',8,'ANNEXE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (29,'202',42,'ANNEXE','S','N',2);
+
+
 
 /*************
 SELECTION COHORT !
@@ -246,7 +298,7 @@ select * from uac_cohort uc
 
 DROP VIEW IF EXISTS v_class_cohort;
 CREATE VIEW v_class_cohort AS
-SELECT 	uc.id AS id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 10)) AS short_classe
+SELECT 	uc.id AS id, urm.title AS mention, urm.par_code AS mention_code, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 10)) AS short_classe
                         FROM uac_cohort uc
               				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
               					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau

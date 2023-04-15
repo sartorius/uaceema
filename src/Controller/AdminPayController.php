@@ -111,7 +111,7 @@ class AdminPayController extends AbstractController
     return new Response($content);
   }
 
-  public function generatefaciliteDB(Request $request, LoggerInterface $logger, )
+  public function generatefaciliteDB(Request $request, LoggerInterface $logger)
   {
 
 
@@ -178,7 +178,7 @@ class AdminPayController extends AbstractController
   }
 
 
-  public function getpaymentforuserDB(Request $request, LoggerInterface $logger, )
+  public function getpaymentforuserDB(Request $request, LoggerInterface $logger)
   {
 
 

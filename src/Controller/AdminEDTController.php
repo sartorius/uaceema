@@ -40,6 +40,9 @@ class AdminEDTController extends AbstractController
         $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
         $logger->debug("Show me count_stu_query: " . $count_stu_query);
 
+        $allroom_query = " SELECT id, name, capacity, category, size, is_video FROM uac_ref_room WHERE available = 'Y' ORDER BY rm_order, capacity ASC; ";
+        $logger->debug("Show me allroom_query: " . $allroom_query);
+
 
         $dbconnectioninst = DBConnectionManager::getInstance();
 
@@ -52,16 +55,44 @@ class AdminEDTController extends AbstractController
         $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_count_stu_query));
 
+        $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_allroom_query));
+
+        $my_date_current = date('Y-m-d');
+        $day_of_week = date('w', strtotime($my_date_current)) - 1;
+
+        $my_date_mon_s0 =date('Y-m-d', strtotime($my_date_current. ' - ' . $day_of_week . ' days'));
+        $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
+        $my_date_mon_s1 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 7 days'));
+        $my_date_mon_s2 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 14 days'));
+        $my_date_mon_s3 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 21 days'));
+
+        $logger->debug("Show me my_date_current: " . $my_date_current . " Day: " . $day_of_week . " S0: " . $my_date_mon_s0);
+
+        $logger->debug("Show me my_date_mon_s0: " . $my_date_mon_s0 . " : " . date_format(date_create($my_date_mon_s0),"d/m"));
+        $logger->debug("Show me my_date_mon_s_1: " . $my_date_mon_s_1 . " : " . date_format(date_create($my_date_mon_s_1),"d/m"));
+        $logger->debug("Show me my_date_mon_s1: " . $my_date_mon_s1 . " : " . date_format(date_create($my_date_mon_s1),"d/m"));
+        $logger->debug("Show me my_date_mon_s3: " . $my_date_mon_s3 . " : " . date_format(date_create($my_date_mon_s3),"d/m"));
+
+        $tech_mondays = array($my_date_mon_s_1, $my_date_mon_s0, $my_date_mon_s1, $my_date_mon_s3);
+        $disp_mondays = array(date_format(date_create($my_date_mon_s_1),"d/m"),
+                              date_format(date_create($my_date_mon_s0),"d/m"),
+                              date_format(date_create($my_date_mon_s1),"d/m"),
+                              date_format(date_create($my_date_mon_s3),"d/m"));
 
 
-
+        $result_get_token = $this->getDailyTokenEDTStr($logger);
 
         $content = $twig->render('Admin/EDT/jqcreateedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
+                                                                'tech_mondays'=>$tech_mondays,
+                                                                'disp_mondays'=>$disp_mondays,
+                                                                'result_get_token'=>$result_get_token,
                                                                 'result_mention_query'=>$result_mention_query,
                                                                 'result_allclass_query'=>$result_allclass_query,
+                                                                'result_allroom_query'=>$result_allroom_query,
                                                                 'result_count_stu_query'=>$result_count_stu_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
@@ -72,6 +103,124 @@ class AdminEDTController extends AbstractController
         $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
+  }
+
+  public function jqPostEDTDB(Request $request, LoggerInterface $logger)
+  {
+
+      if (session_status() == PHP_SESSION_NONE) {
+          session_start();
+      }
+
+      $scale_right = ConnectionManager::whatScaleRight();
+      // Must be exactly 8 or more than 99
+      if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+          // We are good
+      }
+      else{
+        // Return error message that access right are KO
+        return new JsonResponse(array(
+            'status' => 'Err1402',
+            'message' => 'Erreur droits access'),
+        400);
+      }
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Err1403',
+              'message' => 'Erreur mauvaise requete'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenEDTStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Err1672',
+                  'message' => 'Erreur token corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_user_id = $request->request->get('currentUserId');
+          $logger->debug("Show me param_user_id: " . $param_user_id);
+
+          $param_cohort_id = $request->request->get('invCohortId');
+          $logger->debug("Show me param_cohort_id: " . $param_cohort_id);
+
+          $param_inv_tech_monday = $request->request->get('invTechMonday');
+          $logger->debug("Show me param_inv_tech_monday: " . $param_inv_tech_monday);
+
+          $param_order = $request->request->get('orderEDT');
+          $logger->debug("Show me param_order: " . $param_order);
+
+          $param_my_edt_array = json_decode($request->request->get('myEDTArray'), true);
+          $logger->debug("Show me param_my_edt_array: " . json_encode($param_my_edt_array));
+
+          //sleep(2);
+
+          //echo $param_jsondata[0]['username'];
+          $query_value = ' INSERT INTO uac_load_jqedt ';
+          $query_value = $query_value . ' (user_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES (';
+          // room_id, course_room, display_date, shift_duration, end_time,
+          // end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES ';
+          $first_comma = ' ';
+          foreach ($param_my_edt_array as $read)
+          {
+              $query_value = $query_value . $first_comma . $param_user_id . ", '" . $read['courseStatus'] . "', '"  . $read['refEnglishDay'] . "', '" . $read['techDate'] . "', " . $read['refDayCode'] . ", " . $read['startTimeHour'];
+              $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . $read['rawCourseTitle'] . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
+              $query_value = $query_value . "', " . $read['courseRoomId'] . ", '" . $read['courseRoom'] . "', '" . $read['displayDate'] . "', " . $read['shiftDuration'] . ", '" . $read['endTime'];
+              $query_value = $query_value . "', " . $read['endTimeHour'] . ", " . $read['endTimeMin'] . ", '" . $read['startTime'] . "', " . $read['startTimeHour'] . ", " . $read['startTimeMin'];
+              $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techDay'];
+              $first_comma = "'), (";
+          }
+          $query_value = $query_value . "');";
+
+          $logger->debug("Show me query_value: " . $query_value);
+          /*
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+          */
+          // Send all this back to client
+          $my_datetime_current = date('d/m/y h:i:s');
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'last_update' => $my_datetime_current,
+              'message' => 'Termine avec succes'),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Err1567',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
+
+  private function getDailyTokenEDTStr(LoggerInterface $logger){
+    // Get me the token !
+    $get_token_query = "SELECT fGetDailyTokenEDT() AS TOKEN;";
+    $logger->debug("Show me get_token_query: " . $get_token_query);
+    $dbconnectioninst = DBConnectionManager::getInstance();
+    $result_get_token = $dbconnectioninst->query($get_token_query)->fetchAll(PDO::FETCH_ASSOC);
+    $logger->debug("result_get_token: " . $result_get_token[0]["TOKEN"]);
+
+    return $result_get_token[0]["TOKEN"];
   }
 
   /*                         UP IS MANUAL CREATION OF EDT FOR HALF TIME                        */

@@ -7,10 +7,21 @@
       let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
       let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
       let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
+      let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
+
+
+      let techMondaysToJsonArray = JSON.parse('{{ tech_mondays | json_encode | raw }}');
+      let dispMondaysToJsonArray = JSON.parse('{{ disp_mondays | json_encode | raw }}');
+      const getToken = '{{ result_get_token }}';
+      const currentUserId = '{{ id }}';
+
 
       let tempMention = '';
+      let tempMentionCode = '';
       let tempClasse = '';
+      let tempClasseID = 0; // <> CourseID !!!
       let tempCountStu = 0;
+
 
       const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
       const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
@@ -20,8 +31,10 @@
       const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
       const classBackground = "edt-bg-free-{{ free_i }}";
       const maxRawCourseTitleLength = 800;
+      const constRowHalfSize = 20;
 
-      let invMondayStr = '2023-04-10';
+      let invMondayStr = techMondaysToJsonArray[2];
+      let dispMonday = dispMondaysToJsonArray[2];
       let dateArray = new Array();
       let techDateArray = new Array();
 
@@ -30,10 +43,12 @@
       let tempMinDuration = 0;
       let tempHalfHourShiftDuration = 0;
       let tempHalfHourTotalShiftDuration = 0;
-      let tempCourseId = '';
+      let tempCourseId = ''; // <> ClasseID !!!
       let tempStartTime = '';
       let tempEndTime = '';
       let tempCourseStatus = 'A';
+      let tempCourseRoomId = 0;
+      let tempCourseRoom = '';
 
       let myEDTArray = new Array();
       let myEDTRowSpanDebtArray = new Array();
@@ -46,56 +61,81 @@
     </script>
 {% endif %}
 
+
 <div id="mg-graph-identifier">jqc-edt</div>
 
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-1">
+    <a class="btn btn-outline-dark btn-sm btn-block" href="/manageredt" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
+  </div>
+  <div class="col-9">
+
+  </div>
+</div>
+
+<div class="white-ajax-wait">
+  <img id="waiting-ajax-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:400px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
+</div>
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-2">
+    <div class="col-lg-1">
     </div>
-    <div class="col-lg-8  info-cartouche">
+    <div class="col-lg-10  info-cartouche">
       <div id="cartouche-edt">
 
         <div class="menu-dropdown">
 
             <div class="dropdown btn-ace-menu">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Mention
+                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i id="drp-select">Mention</i>
                 </button>
                 <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  
+
                 </div>
             </div>
 
             <div class="dropdown btn-ace-menu">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Classe
+                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i id="selected-class">Classe</i>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Sélectionnez une mention</a>
                 </div>
             </div>
 
-            <div class="disp-class-name">
-              L1/DROIT/D1/Groupe 1
+            <div class="btn-ace-menu disp-class-qty">
+              <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
             </div>
-        </div>
 
-        <strong>Nombre d'étudiants:</strong><br>
-        <strong>Semaine du Lundi:</strong><br>
-        <i class="mgs-note">visible depuis le </i><br>
+        </div>
+        <div class="menu-dropdown">
+          <div class="sel-inline">
+            Semaine du Lundi:
+          </div>
+          <div id='sel-wmonday'>
+            <div id="crs-wmonday" class="btn-group" role="group" aria-label="Status">
+            </div>
+          </div>
+          <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-jqedt">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
+          <button id="btn-load-jqedt" class="btn btn-outline-dark btn-sm btn-blk-jqedt" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
+        </div>
+        <div class="edt-status"><i class="icon-exclamation-circle nav-text"></i>&nbsp;Status : <i id='last-update'>(non publié)</i></div>
 
         <div id="past-msg-edt">
-            <i class='err'><strong><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Attention vous intégrez une semaine en cours ou passée</strong>, nous sommes le {{ "now"|date("d/m/Y") }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
+            <i class='err'><strong><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Attention vous êtes sur une semaine en cours ou passée</strong>, nous sommes le {{ "now"|date("d/m/Y") }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
         </div>
 
+        <div id="exist-msg-edt">
+            <i class='err'><strong><i class="icon-bullhorn nav-text"></i>&nbsp;Attention un EDT existe déjà</strong>, vous pouvez le charger sinon vos changements (même en brouillon) vont l'annuler.</i><br>
+        </div>
 
 
       </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-1">
     </div>
   </div>
 </div>
@@ -109,6 +149,25 @@
     </div>
   </div>
 </div>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div id="edt-save-blk" class="btn-ace-right btn-bar-foot">
+
+
+        <button id="btn-export-jqedt" onclick="exportFile();" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Export &nbsp;<i class="icon-file-excel-o nav-text"></i></button>
+        <button id="btn-draft-jqedt" onclick="publishEDT('D');" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Enregistrer &nbsp;<i class="icon-floppy-o nav-text"></i></button>
+        <button id="btn-publish-jqedt" onclick="publishEDT('A');" class="btn btn-default btn-lg btn-blk-jqedt">Publier<i id="publish-cls"></i>&nbsp;<i class="icon-paper-plane-o nav-text"></i></button>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -133,23 +192,55 @@
           <div id="min-duration" class="btn-group" role="group" aria-label="Basic example">
           </div>
         </div>
-        <div id='modal-crs-status'>
-          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
-            <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group active">Actif</button>
-            <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Optionnel</button>
-            <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group">Hors site</button>
-            <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">Annulé</button>
-          </div>
+
+        <div class="menu-dropdown">
+              <div id='modal-crs-status'>
+                <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                  <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group active">Actif</button>
+                  <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Optionnel</button>
+                  <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group">Hors site</button>
+                  <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">Annulé</button>
+                </div>
+              </div>
+
+
+              <div id='modal-crs-room'>
+                  <select id='my-room-select' onchange="selectRoom(value);">
+                  </select>
+              </div>
         </div>
+
       <hr>
       <div>
         Nombre de caractère(s) restant(s) : <i id="crs-desc-length"></i><br>
-        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, salle, professeur..." name="w3review" rows="4" cols="88" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
+        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, indication, professeur..." name="w3review" rows="4" cols="88" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
       </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
         <button id="save-edt-line" type="button" class="btn btn-default" onclick="saveCourse()" disabled>Sauvegarder le cours</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="aj-fback-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id='ajax-feedback'>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Fermer</button>
       </div>
     </div>
   </div>
