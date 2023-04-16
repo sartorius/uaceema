@@ -10,6 +10,21 @@ BEGIN
 END$$
 
 DELIMITER $$
+DROP FUNCTION IF EXISTS fEscapeLineFeed$$
+CREATE FUNCTION fEscapeLineFeed(
+	input VARCHAR(1000)
+)
+RETURNS VARCHAR(1000)
+DETERMINISTIC
+BEGIN
+	RETURN REPLACE(
+	    REPLACE(input, '\r', '\\r'),
+	    '\n',
+	    '\\n'
+	);
+END$$
+
+DELIMITER $$
 DROP FUNCTION IF EXISTS fCapitalizeStr$$
 CREATE FUNCTION fCapitalizeStr(
 	input VARCHAR(1000)

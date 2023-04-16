@@ -1526,6 +1526,15 @@ textarea[name=inputRef] {
 
 /***************************  HALF EDT  ****************************/
 
+.edit-sel-off{
+  pointer-events: none;
+}
+
+.bg-red-error{
+  background-color: #CD0000;
+  color: WHITE !important;
+}
+
 #ajax-feedback{
   font-size: 17px;
 }
@@ -1552,6 +1561,10 @@ textarea[name=inputRef] {
 #past-msg-edt,
 #exist-msg-edt{
   display: none;
+}
+
+#delete-edt-line{
+  margin-right: 24.5em;
 }
 
 #modal-crs-dur-blk,

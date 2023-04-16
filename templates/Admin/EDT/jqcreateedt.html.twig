@@ -9,11 +9,18 @@
       let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
       let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
 
+      let dateLoadToJsonArray = JSON.parse('{{ result_load_edt | json_encode | raw }}');
+
 
       let techMondaysToJsonArray = JSON.parse('{{ tech_mondays | json_encode | raw }}');
       let dispMondaysToJsonArray = JSON.parse('{{ disp_mondays | json_encode | raw }}');
       const getToken = '{{ result_get_token }}';
       const currentUserId = '{{ id }}';
+      // Can be Y or N
+      const editRights = '{{ edit_rights }}';
+      // Can be CRT or LOA for load
+      const mode = '{{ mode }}';
+      let editMode = 'N';
 
 
       let tempMention = '';
@@ -35,6 +42,8 @@
 
       let invMondayStr = techMondaysToJsonArray[2];
       let dispMonday = dispMondaysToJsonArray[2];
+
+
       let dateArray = new Array();
       let techDateArray = new Array();
 
@@ -159,7 +168,7 @@
 
         <button id="btn-export-jqedt" onclick="exportFile();" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Export &nbsp;<i class="icon-file-excel-o nav-text"></i></button>
         <button id="btn-draft-jqedt" onclick="publishEDT('D');" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Enregistrer &nbsp;<i class="icon-floppy-o nav-text"></i></button>
-        <button id="btn-publish-jqedt" onclick="publishEDT('A');" class="btn btn-default btn-lg btn-blk-jqedt">Publier<i id="publish-cls"></i>&nbsp;<i class="icon-paper-plane-o nav-text"></i></button>
+        <button id="btn-publish-jqedt" onclick="publishEDT('V');" class="btn btn-default btn-lg btn-blk-jqedt">Publier<i id="publish-cls"></i>&nbsp;<i class="icon-paper-plane-o nav-text"></i></button>
 
 
       </div>
@@ -217,7 +226,8 @@
       </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
+        <button id="delete-edt-line" type="button" class="btn btn-outline-dark" onclick="deleteCourseAndDisplay()" disabled>Supprimer</button>
+        <button type="button" class="btn btn-dark" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
         <button id="save-edt-line" type="button" class="btn btn-default" onclick="saveCourse()" disabled>Sauvegarder le cours</button>
       </div>
     </div>

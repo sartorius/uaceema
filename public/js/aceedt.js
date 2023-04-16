@@ -20,7 +20,7 @@ function launchExportFile(){
   drawMainEDT();
 }
 
-
+// order can be D as Draft or V as Visible
 function publishEDT(order){
   $(".white-ajax-wait").show(100);
   for(let i=0; i<myEDTArray.length; i++){
@@ -42,9 +42,11 @@ function publishEDT(order){
 
       },  // data to submit
       success: function (data, status, xhr) {
+          $('.edt-status').removeClass('bg-red-error');
           $(".white-ajax-wait").hide(100);
           // Do something as success
-          let msg = "<i class='aj-succ'>publié le&nbsp;" + data['last_update'] + "</i>";
+          let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;')
+          let msg = "<i class='aj-succ'>" + lastOrder + " effectué le&nbsp;" + data['last_update'] + "</i>";
           let modalmsg = "<i class='aj-succ'><strong>publié avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>";
           $("#last-update").html(msg);
 
@@ -55,10 +57,14 @@ function publishEDT(order){
           console.log('Everything is fine: ' + data['status'] + ' ' + data['message']);
       },
       error: function (jqXhr, textStatus, errorMessage) {
+        $('.edt-status').addClass('bg-red-error');
+
         $(".white-ajax-wait").hide(100);
-        let msg = "<i class='err'><strong>erreur serveur: " + jqXhr['status'] + "&nbsp;<i class='icon-exclamation-triangle nav-text'></i></strong></i>";
+        let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;')
+        let msg = "<strong>" + lastOrder + "erreur serveur: " + jqXhr['status'] + "&nbsp;<i class='icon-exclamation-triangle nav-text'></i></strong>";
         $("#last-update").html(msg);
 
+        msg = "<i class='err'>" + msg + "</i>"
         $("#ajax-feedback").html('Attention: ' + msg + '. Veuillez contacter le support.');
         $('#aj-fback-modal').modal('show');
         // Do something as error here
@@ -80,13 +86,16 @@ function selectDatePicker(i){
   $('#wmon-' + i).addClass('active');
   invMondayStr = techMondaysToJsonArray[i];
   dispMonday = dispMondaysToJsonArray[i];
-  if(i < 2){
+  let invMonday = new Date(invMondayStr);
+  let myCurrentDate = new Date();
+  if(invMonday < myCurrentDate){
     // For current and past week
     $('#past-msg-edt').show(100);
   }
   else{
     $('#past-msg-edt').hide(100);
   }
+  $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + tempClasse + ']');
   // Now you draw the full EDT
   drawMainEDT();
 }
@@ -128,7 +137,7 @@ function selectClasse(classeId, str){
 
   // We display the save block only when class is selected.
   if(classeId > 0){
-      $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + str + ']');
+      $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + str + ']'); //tempClasse
       $("#edt-save-blk").show(100);
   }
   else{
@@ -275,7 +284,8 @@ function fillModalRoom(){
         if(i == 0){
           optionDisplay = dataAllRoomToJsonArray[i].name;
         }
-        listRoom = listRoom + '<option value="' + i + '">' + optionDisplay + '</option>';
+        listRoom = listRoom + '<option value="' + dataAllRoomToJsonArray[i].id + '">' + optionDisplay + '</option>';
+        //console.log("Here is listRoom: " + listRoom + " tempCountStu: " + tempCountStu);
       }
       else{
         //do nothing we do not display
@@ -520,6 +530,58 @@ function drawMainEDT(){
 
 
   refreshCellClick();
+  if(editMode == 'N'){
+    editModeOff();
+  }
+}
+
+function loadEDT(){
+  myEDTArray = new Array();
+  for(let i=0; i<dateLoadToJsonArray.length; i++){
+    let cell = dateLoadToJsonArray[i].course_id.toString().split("-");
+    let myEDTLine = {
+                      courseId: dateLoadToJsonArray[i].course_id,
+                      startTime: dateLoadToJsonArray[i].uel_start_time,
+                      endTime: dateLoadToJsonArray[i].uel_end_time,
+                      // Need the int only for DB
+                      startTimeHour: dateLoadToJsonArray[i].uel_hour_starts_at,
+                      startTimeMin: dateLoadToJsonArray[i].uel_min_starts_at,
+                      // Need the int only for DB
+                      endTimeHour: parseInt(dateLoadToJsonArray[i].uel_end_time.toString().split(":")[0]),
+                      endTimeMin: parseInt(dateLoadToJsonArray[i].uel_end_time.toString().split(":")[1]),
+                      techHour: cell[0],
+                      techDay: cell[1],
+                      hourDuration: dateLoadToJsonArray[i].uel_duration_hour,
+                      minuteDuration: dateLoadToJsonArray[i].uel_duration_min,
+                      shiftDuration: dateLoadToJsonArray[i].uel_shift_duration,
+                      displayDate: dateLoadToJsonArray[i].nday,
+                      techDate: null,
+                      techDateMonday: null,
+                      rawCourseTitle: dateLoadToJsonArray[i].raw_course_title,
+                      refDayCode: dateLoadToJsonArray[i].day_code,
+                      courseStatus: dateLoadToJsonArray[i].course_status,
+                      courseRoomId: dateLoadToJsonArray[i].urr_id,
+                      courseRoom: dateLoadToJsonArray[i].urr_name,
+                      refEnglishDay: dateLoadToJsonArray[i].uel_label_day
+                      };
+      myEDTArray.push(myEDTLine);
+
+      for(let j = 1; j<dateLoadToJsonArray[i].uel_shift_duration; j++){
+        myEDTRowSpanDebtArray.push( (parseInt(cell[0])+j).toString() + '-' + cell[1]);
+      }
+  }
+}
+
+function editModeOff(){
+  $('#dropdownMention').addClass('disabled');
+  $('#dropdownClasse').addClass('disabled');
+  $("#dropdownMention").addClass('edit-sel-off');
+  $("#dropdownClasse").addClass('edit-sel-off');
+  $(".wmon-group").addClass('disabled');
+  $(".wmon-group").addClass('edit-sel-off');
+  $('#btn-clear-jqedt').prop("disabled", true);
+  $("#edt-save-blk").hide(100);
+  $("#my-main-table").addClass('edit-sel-off');
 }
 
 function saveCourse(){
@@ -571,10 +633,8 @@ function saveCourse(){
                     };
 
    // We need to remove the previous item and save the new one
-   let index = findCourse(tempCourseId);
-   if(index > -1){
-     myEDTArray.splice(index, 1);
-   }
+   // And manage the debt
+   deleteCourse();
 
    myEDTArray.push(myEDTLine);
    //input debt here now
@@ -584,6 +644,30 @@ function saveCourse(){
 
    $('#exampleModal').modal('toggle');
    drawMainEDT();
+}
+
+function deleteCourse(){
+  let cell = tempCourseId.toString().split("-");
+  let index = findCourse(tempCourseId);
+  let tempCell = '';
+  if(index > -1){
+    let debtShiftDuration = myEDTArray[index].shiftDuration;
+    for(let i = 0; i<tempHalfHourTotalShiftDuration; i++){
+      for(let j=0; j<myEDTRowSpanDebtArray.length; j++){
+        tempCell = myEDTRowSpanDebtArray[j].split("-");
+        if((tempCell[1] == cell[1]) && (tempCell[0] == (parseInt(cell[0])+i).toString())){
+          myEDTRowSpanDebtArray.splice(j, 1);
+        }
+      } // end of j loop
+    } // end of i loop
+    myEDTArray.splice(index, 1);
+  }
+}
+
+function deleteCourseAndDisplay(){
+  deleteCourse();
+  $('#exampleModal').modal('toggle');
+  drawMainEDT();
 }
 
 function loadExistingIfExist(courseId){
@@ -624,9 +708,12 @@ function loadExistingIfExist(courseId){
     $("#my-room-select").val(tempCourseRoomId);
     $('#crs-desc').val(myEDTArray[index].rawCourseTitle);
 
+    // Then we allow delete
+    $('#delete-edt-line').prop("disabled", false);
   }
   else{
-    // Do nothing
+    // Block delete
+    $('#delete-edt-line').prop("disabled", true);
   }
 }
 
@@ -694,6 +781,20 @@ $(document).ready(function() {
     displayDatePicker();
     fillCartoucheMention();
 
+    if((mode == 'LOA') && (dateLoadToJsonArray.length > 0)){
+      invMondayStr = techMondaysToJsonArray[1];
+      dispMonday = dispMondaysToJsonArray[1];
+      selectDatePicker(1);
+      // Then we are in load mode we need to hydrate the JSON
+      selectMention(dateLoadToJsonArray[0].mention_code, dateLoadToJsonArray[0].mention);
+      selectClasse(dateLoadToJsonArray[0].cohort_id, dateLoadToJsonArray[0].short_classe);
+      // We need to refresh room here because they re defined here
+      loadEDT();
+      editMode = 'N';
+    }
+    else{
+      editMode = 'Y';
+    }
 
 
     /***** WORK ON EDT *****/

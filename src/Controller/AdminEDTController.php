@@ -28,8 +28,18 @@ class AdminEDTController extends AbstractController
     // Must be exactly 8 or more than 99
     if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
 
+        $edit_rights = 'N';
+        if(($scale_right == 11) || ($scale_right > 99)){
+          $edit_rights = 'Y';
+        }
+        $mode = 'CRT';
+        // Create it as empty
+        $result_load_edt = array();
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
+
+        $logger->debug("****************************************************************");
+        /****************** Start : Cartouche ******************/
 
         $mention_query = " SELECT * FROM uac_ref_mention; ";
         $logger->debug("Show me mention_query: " . $mention_query);
@@ -58,8 +68,69 @@ class AdminEDTController extends AbstractController
         $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_allroom_query));
 
+        /****************** End : Cartouche ******************/
+        $logger->debug("****************************************************************");
+        /*
+        $log_timestamp = strtotime('2023-04-10');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Monday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-11');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Tuesday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-12');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Wednesday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-13');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Thursday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-14');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Friday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-15');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Saturday code : " . $log_day_of_week . " Date: " . $log_day );
+
+        $log_timestamp = strtotime('2023-04-16');
+        $log_day = date('D', $log_timestamp);
+        $log_day_of_week = date('w', $log_timestamp);
+        $logger->debug("Show me Sunday code : " . $log_day_of_week . " Date: " . $log_day );
+        */
+
+        /*
+        ****************************************************************
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Monday code : 1 Date: Mon
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Tuesday code : 2 Date: Tue
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Wednesday code : 3 Date: Wed
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Thursday code : 4 Date: Thu
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Friday code : 5 Date: Fri
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Saturday code : 6 Date: Sat
+        [Application] Apr 16 11:20:55 |DEBUG  | APP    Show me Sunday code : 0 Date: Sun
+
+        */
+
+
+
         $my_date_current = date('Y-m-d');
-        $day_of_week = date('w', strtotime($my_date_current)) - 1;
+        $day_of_week = date('w', strtotime($my_date_current));
+
+        if($day_of_week == 0){
+          // Then we are Sunday
+          $day_of_week = 6;
+        }
+        else{
+          $day_of_week = $day_of_week - 1;
+        }
 
         $my_date_mon_s0 =date('Y-m-d', strtotime($my_date_current. ' - ' . $day_of_week . ' days'));
         $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
@@ -74,6 +145,7 @@ class AdminEDTController extends AbstractController
         $logger->debug("Show me my_date_mon_s1: " . $my_date_mon_s1 . " : " . date_format(date_create($my_date_mon_s1),"d/m"));
         $logger->debug("Show me my_date_mon_s3: " . $my_date_mon_s3 . " : " . date_format(date_create($my_date_mon_s3),"d/m"));
 
+        $logger->debug("****************************************************************");
         $tech_mondays = array($my_date_mon_s_1, $my_date_mon_s0, $my_date_mon_s1, $my_date_mon_s3);
         $disp_mondays = array(date_format(date_create($my_date_mon_s_1),"d/m"),
                               date_format(date_create($my_date_mon_s0),"d/m"),
@@ -87,6 +159,8 @@ class AdminEDTController extends AbstractController
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
+                                                                'edit_rights' => $edit_rights,
+                                                                'mode' => $mode,
                                                                 'tech_mondays'=>$tech_mondays,
                                                                 'disp_mondays'=>$disp_mondays,
                                                                 'result_get_token'=>$result_get_token,
@@ -94,6 +168,7 @@ class AdminEDTController extends AbstractController
                                                                 'result_allclass_query'=>$result_allclass_query,
                                                                 'result_allroom_query'=>$result_allroom_query,
                                                                 'result_count_stu_query'=>$result_count_stu_query,
+                                                                "result_load_edt"=>$result_load_edt,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -169,16 +244,22 @@ class AdminEDTController extends AbstractController
 
           //sleep(2);
 
+          // The stamp is to allow us to find back our lines
+          $get_time_stamp = time();
+          $tag_stamp_for_export = substr($get_time_stamp, -4);
+          $logger->debug("Show me get_time_stamp: " . $get_time_stamp . " Stamp: " . $tag_stamp_for_export);
+          // tag_stamp_for_export
+
           //echo $param_jsondata[0]['username'];
           $query_value = ' INSERT INTO uac_load_jqedt ';
-          $query_value = $query_value . ' (user_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES (';
+          $query_value = $query_value . ' (user_id, tag_stamp_for_export, cohort_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES (';
           // room_id, course_room, display_date, shift_duration, end_time,
           // end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES ';
           $first_comma = ' ';
           foreach ($param_my_edt_array as $read)
           {
-              $query_value = $query_value . $first_comma . $param_user_id . ", '" . $read['courseStatus'] . "', '"  . $read['refEnglishDay'] . "', '" . $read['techDate'] . "', " . $read['refDayCode'] . ", " . $read['startTimeHour'];
-              $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . $read['rawCourseTitle'] . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
+              $query_value = $query_value . $first_comma . $param_user_id . ", " . $tag_stamp_for_export . ", " . $param_cohort_id . ", '" . $read['courseStatus'] . "', '"  . $read['refEnglishDay'] . "', '" . $read['techDate'] . "', " . $read['refDayCode'] . ", " . $read['startTimeHour'];
+              $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . addslashes($read['rawCourseTitle']) . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
               $query_value = $query_value . "', " . $read['courseRoomId'] . ", '" . $read['courseRoom'] . "', '" . $read['displayDate'] . "', " . $read['shiftDuration'] . ", '" . $read['endTime'];
               $query_value = $query_value . "', " . $read['endTimeHour'] . ", " . $read['endTimeMin'] . ", '" . $read['startTime'] . "', " . $read['startTimeHour'] . ", " . $read['startTimeMin'];
               $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techDay'];
@@ -187,20 +268,26 @@ class AdminEDTController extends AbstractController
           $query_value = $query_value . "');";
 
           $logger->debug("Show me query_value: " . $query_value);
-          /*
+
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
           $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("Show me count result: " . count($result));
 
-          $logger->debug("Show me count: " . count($result));
 
-          */
+          $query_integration_EDT = "CALL SRV_CRT_JQEDT (" . $tag_stamp_for_export . ", '" . $param_inv_tech_monday . "', " . $param_cohort_id . ", '" . $param_order .  "' );";
+          $logger->debug("Show me query_integration_EDT: " . $query_integration_EDT);
+
+          $result_integration_EDT = $dbconnectioninst->query($query_integration_EDT)->fetchAll(PDO::FETCH_ASSOC);
+
+
           // Send all this back to client
           $my_datetime_current = date('d/m/y h:i:s');
           return new JsonResponse(array(
               'status' => 'OK',
               'last_update' => $my_datetime_current,
+              'result_integration_EDT' => $result_integration_EDT,
               'message' => 'Termine avec succes'),
           200);
       }
@@ -208,7 +295,7 @@ class AdminEDTController extends AbstractController
       // If we reach this point, it means that something went wrong
       return new JsonResponse(array(
           'status' => 'Err1567',
-          'message' => 'Error generation ticket facilité DB'),
+          'message' => 'Error publication EDT DB'),
       400);
   }
 
@@ -367,12 +454,21 @@ class AdminEDTController extends AbstractController
 
     $logger->debug("Enter the show ! ");
 
+    // Default is N as old fashin, the new version is Y
+    $jq_type = 'N';
     //Check if we are coming from POST
     if(isset($_POST["postmaster_id"]))
     {
         // Get data from ajax
         $logger->debug("See postmaster_id: " . $_POST["postmaster_id"]);
         $master_id = $_POST["postmaster_id"];
+    }
+
+    if(isset($_POST["postjq_type"]))
+    {
+        // Get data from ajax
+        $logger->debug("See postjq_type: " . $_POST["postjq_type"]);
+        $jq_type = $_POST["postjq_type"];
     }
 
 
@@ -387,16 +483,110 @@ class AdminEDTController extends AbstractController
 
               $dbconnectioninst = DBConnectionManager::getInstance();
 
-              $import_query = "CALL CLI_GET_SHOWEDTForADM(" . $master_id . ")";
-              $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+              if($jq_type == 'N'){
 
-              $content = $twig->render('Admin/EDT/showedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                                        'firstname' => $_SESSION["firstname"],
-                                                                        'lastname' => $_SESSION["lastname"],
-                                                                        'id' => $_SESSION["id"],
-                                                                        "sp_result"=>$resultsp,
-                                                                        'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                        'errtype' => '', 'master_id' => $master_id]);
+                  $import_query = "CALL CLI_GET_SHOWEDTForADM(" . $master_id . ")";
+                  $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+                  $content = $twig->render('Admin/EDT/showedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                            'firstname' => $_SESSION["firstname"],
+                                                                            'lastname' => $_SESSION["lastname"],
+                                                                            'id' => $_SESSION["id"],
+                                                                            "sp_result"=>$resultsp,
+                                                                            'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                            'errtype' => '', 'master_id' => $master_id]);
+              }
+              else{
+                  $result_get_token = $this->getDailyTokenEDTStr($logger);
+
+                  $edit_rights = 'N';
+                  if(($scale_right == 11) || ($scale_right > 99)){
+                    $edit_rights = 'Y';
+                  }
+                  $mode = 'LOA'; //'mode' => $mode,
+
+                  $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ")";
+                  $result_load_edt = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+                  /************************************ START: CALCULATE THE MONDAYS ************************************/
+                  $my_date_mon_s0 =date('Y-m-d', strtotime($result_load_edt[0]['inv_tech_monday']));
+                  $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
+                  $my_date_mon_s1 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 7 days'));
+                  $my_date_mon_s2 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 14 days'));
+                  $my_date_mon_s3 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 21 days'));
+
+
+                  $logger->debug("Show me my_date_mon_s0: " . $my_date_mon_s0 . " : " . date_format(date_create($my_date_mon_s0),"d/m"));
+                  $logger->debug("Show me my_date_mon_s_1: " . $my_date_mon_s_1 . " : " . date_format(date_create($my_date_mon_s_1),"d/m"));
+                  $logger->debug("Show me my_date_mon_s1: " . $my_date_mon_s1 . " : " . date_format(date_create($my_date_mon_s1),"d/m"));
+                  $logger->debug("Show me my_date_mon_s3: " . $my_date_mon_s3 . " : " . date_format(date_create($my_date_mon_s3),"d/m"));
+
+                  $logger->debug("****************************************************************");
+                  $tech_mondays = array($my_date_mon_s_1, $my_date_mon_s0, $my_date_mon_s1, $my_date_mon_s3);
+                  $disp_mondays = array(date_format(date_create($my_date_mon_s_1),"d/m"),
+                                        date_format(date_create($my_date_mon_s0),"d/m"),
+                                        date_format(date_create($my_date_mon_s1),"d/m"),
+                                        date_format(date_create($my_date_mon_s3),"d/m"));
+
+                  $logger->debug("Show me tech_mondays: " . json_encode($tech_mondays));
+                  $logger->debug("Show me disp_mondays: " . json_encode($disp_mondays));
+                  /************************************ END: CALCULATE THE MONDAYS ************************************/
+
+
+                  $logger->debug("****************************************************************");
+                  /****************** Start : Cartouche ******************/
+
+                  $mention_query = " SELECT * FROM uac_ref_mention; ";
+                  $logger->debug("Show me mention_query: " . $mention_query);
+
+                  $allclass_query = " SELECT * FROM v_class_cohort; ";
+                  $logger->debug("Show me allclass_query: " . $allclass_query);
+
+                  $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
+                  $logger->debug("Show me count_stu_query: " . $count_stu_query);
+
+                  $allroom_query = " SELECT id, name, capacity, category, size, is_video FROM uac_ref_room WHERE available = 'Y' ORDER BY rm_order, capacity ASC; ";
+                  $logger->debug("Show me allroom_query: " . $allroom_query);
+
+
+                  $dbconnectioninst = DBConnectionManager::getInstance();
+
+                  $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show me: " . count($result_mention_query));
+
+                  $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show me: " . count($result_allclass_query));
+
+                  $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show me: " . count($result_count_stu_query));
+
+                  $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show me: " . count($result_allroom_query));
+
+                  /****************** End : Cartouche ******************/
+                  $logger->debug("****************************************************************");
+
+                  $content = $twig->render('Admin/EDT/jqcreateedt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                          'firstname' => $_SESSION["firstname"],
+                                                                          'lastname' => $_SESSION["lastname"],
+                                                                          'id' => $_SESSION["id"],
+                                                                          'edit_rights' => $edit_rights,
+                                                                          'mode' => $mode,
+
+                                                                          'tech_mondays'=>$tech_mondays,
+                                                                          'disp_mondays'=>$disp_mondays,
+                                                                          'result_get_token'=>$result_get_token,
+
+                                                                          'result_mention_query'=>$result_mention_query,
+                                                                          'result_allclass_query'=>$result_allclass_query,
+                                                                          'result_allroom_query'=>$result_allroom_query,
+                                                                          'result_count_stu_query'=>$result_count_stu_query,
+
+                                                                          "result_load_edt"=>$result_load_edt,
+                                                                          'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                          'errtype' => '']);
+
+              }
 
           }
           else{

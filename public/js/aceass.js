@@ -597,14 +597,15 @@ function loadAllEDTGrid(){
               }
               else{
                 //console.log("I read masterId");
-                goToEDT(args.item.master_id);
+                goToEDT(args.item.master_id, args.item.uem_jq_edt_type);
               }
           }
     });
 }
 
-function goToEDT(masterId){
+function goToEDT(masterId, jqEDTType){
   $("#read-master-id").val(masterId);
+  $("#read-jq-type").val(jqEDTType);
 
   $("#mg-master-id-form").submit();
 }
