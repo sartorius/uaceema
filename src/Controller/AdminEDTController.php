@@ -40,7 +40,7 @@ class AdminEDTController extends AbstractController
 
         $logger->debug("****************************************************************");
         /****************** Start : Cartouche ******************/
-
+        /*
         $mention_query = " SELECT * FROM uac_ref_mention; ";
         $logger->debug("Show me mention_query: " . $mention_query);
 
@@ -67,7 +67,7 @@ class AdminEDTController extends AbstractController
 
         $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_allroom_query));
-
+        */
         /****************** End : Cartouche ******************/
         $logger->debug("****************************************************************");
         /*
@@ -131,7 +131,8 @@ class AdminEDTController extends AbstractController
         else{
           $day_of_week = $day_of_week - 1;
         }
-
+        $my_tech_monday = $my_date_current. ' - ' . $day_of_week . ' days';
+        /*
         $my_date_mon_s0 =date('Y-m-d', strtotime($my_date_current. ' - ' . $day_of_week . ' days'));
         $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
         $my_date_mon_s1 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 7 days'));
@@ -151,6 +152,26 @@ class AdminEDTController extends AbstractController
                               date_format(date_create($my_date_mon_s0),"d/m"),
                               date_format(date_create($my_date_mon_s1),"d/m"),
                               date_format(date_create($my_date_mon_s3),"d/m"));
+        */
+        $tech_mondays = array();
+        $disp_mondays = array();
+        $result_mention_query = array();
+        $result_allclass_query = array();
+        $result_count_stu_query = array();
+        $result_allroom_query = array();
+        
+        // Hydrate everything
+        $this->hydrateJQEDT(
+                            $my_tech_monday,
+                            $tech_mondays, 
+                            $disp_mondays, 
+                            $result_mention_query, 
+                            $result_allclass_query,
+                            $result_count_stu_query,
+                            $result_allroom_query,
+                            $logger);
+
+
 
 
         $result_get_token = $this->getDailyTokenEDTStr($logger);
@@ -506,9 +527,12 @@ class AdminEDTController extends AbstractController
                   $mode = 'LOA'; //'mode' => $mode,
 
                   $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ")";
+                  $logger->debug("Show me import_query: " . $import_query);
                   $result_load_edt = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
+                  
                   /************************************ START: CALCULATE THE MONDAYS ************************************/
+                  /*
                   $my_date_mon_s0 =date('Y-m-d', strtotime($result_load_edt[0]['inv_tech_monday']));
                   $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
                   $my_date_mon_s1 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 7 days'));
@@ -530,12 +554,30 @@ class AdminEDTController extends AbstractController
 
                   $logger->debug("Show me tech_mondays: " . json_encode($tech_mondays));
                   $logger->debug("Show me disp_mondays: " . json_encode($disp_mondays));
+                  */
                   /************************************ END: CALCULATE THE MONDAYS ************************************/
+                  $tech_mondays = array();
+                  $disp_mondays = array();
+                  $result_mention_query = array();
+                  $result_allclass_query = array();
+                  $result_count_stu_query = array();
+                  $result_allroom_query = array();
+                  
+                  // Hydrate everything
+                  $this->hydrateJQEDT(
+                                        $result_load_edt[0]['inv_tech_monday'],
+                                        $tech_mondays, 
+                                        $disp_mondays, 
+                                        $result_mention_query, 
+                                        $result_allclass_query,
+                                        $result_count_stu_query,
+                                        $result_allroom_query,
+                                        $logger);
 
-
+                
                   $logger->debug("****************************************************************");
                   /****************** Start : Cartouche ******************/
-
+                  /*
                   $mention_query = " SELECT * FROM uac_ref_mention; ";
                   $logger->debug("Show me mention_query: " . $mention_query);
 
@@ -551,6 +593,8 @@ class AdminEDTController extends AbstractController
 
                   $dbconnectioninst = DBConnectionManager::getInstance();
 
+                  
+
                   $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
                   $logger->debug("Show me: " . count($result_mention_query));
 
@@ -562,7 +606,7 @@ class AdminEDTController extends AbstractController
 
                   $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
                   $logger->debug("Show me: " . count($result_allroom_query));
-
+                  */
                   /****************** End : Cartouche ******************/
                   $logger->debug("****************************************************************");
 
@@ -595,6 +639,70 @@ class AdminEDTController extends AbstractController
           }
     }
     return new Response($content);
+  }
+
+  private function hydrateJQEDT(
+                    $my_tech_monday,
+                    &$tech_mondays,
+                    &$disp_mondays,
+                    &$result_mention_query,
+                    &$result_allclass_query,
+                    &$result_count_stu_query,
+                    &$result_allroom_query,
+                    LoggerInterface $logger
+  ){
+            $my_date_mon_s0 =date('Y-m-d', strtotime($my_tech_monday));
+            $my_date_mon_s_1 =date('Y-m-d', strtotime($my_date_mon_s0. ' - 7 days'));
+            $my_date_mon_s1 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 7 days'));
+            $my_date_mon_s2 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 14 days'));
+            $my_date_mon_s3 =date('Y-m-d', strtotime($my_date_mon_s0. ' + 21 days'));
+
+
+            $logger->debug("Show me my_date_mon_s0: " . $my_date_mon_s0 . " : " . date_format(date_create($my_date_mon_s0),"d/m"));
+            $logger->debug("Show me my_date_mon_s_1: " . $my_date_mon_s_1 . " : " . date_format(date_create($my_date_mon_s_1),"d/m"));
+            $logger->debug("Show me my_date_mon_s1: " . $my_date_mon_s1 . " : " . date_format(date_create($my_date_mon_s1),"d/m"));
+            $logger->debug("Show me my_date_mon_s3: " . $my_date_mon_s3 . " : " . date_format(date_create($my_date_mon_s3),"d/m"));
+
+            $logger->debug("****************************************************************");
+            $tech_mondays = array($my_date_mon_s_1, $my_date_mon_s0, $my_date_mon_s1, $my_date_mon_s3);
+            $disp_mondays = array(date_format(date_create($my_date_mon_s_1),"d/m"),
+                                date_format(date_create($my_date_mon_s0),"d/m"),
+                                date_format(date_create($my_date_mon_s1),"d/m"),
+                                date_format(date_create($my_date_mon_s3),"d/m"));
+
+            $logger->debug("Show me tech_mondays: " . json_encode($tech_mondays));
+            $logger->debug("Show me disp_mondays: " . json_encode($disp_mondays));
+
+            /****************** Start : Cartouche ******************/
+            
+            $mention_query = " SELECT * FROM uac_ref_mention; ";
+            $logger->debug("Show me mention_query: " . $mention_query);
+
+            $allclass_query = " SELECT * FROM v_class_cohort; ";
+            $logger->debug("Show me allclass_query: " . $allclass_query);
+
+            $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
+            $logger->debug("Show me count_stu_query: " . $count_stu_query);
+
+            $allroom_query = " SELECT id, name, capacity, category, size, is_video FROM uac_ref_room WHERE available = 'Y' ORDER BY rm_order, capacity ASC; ";
+            $logger->debug("Show me allroom_query: " . $allroom_query);
+
+            $dbconnectioninst = DBConnectionManager::getInstance();
+
+            $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_mention_query));
+
+            $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_allclass_query));
+
+            $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_count_stu_query));
+
+            $result_allroom_query = $dbconnectioninst->query($allroom_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_allroom_query));
+            
+            /****************** End : Cartouche ******************/
+
   }
 
   public function validateedt(Environment $twig, LoggerInterface $logger, $master_id)

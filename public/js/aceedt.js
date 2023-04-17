@@ -653,10 +653,12 @@ function deleteCourse(){
   if(index > -1){
     let debtShiftDuration = myEDTArray[index].shiftDuration;
     for(let i = 0; i<tempHalfHourTotalShiftDuration; i++){
+      
       for(let j=0; j<myEDTRowSpanDebtArray.length; j++){
         tempCell = myEDTRowSpanDebtArray[j].split("-");
         if((tempCell[1] == cell[1]) && (tempCell[0] == (parseInt(cell[0])+i).toString())){
           myEDTRowSpanDebtArray.splice(j, 1);
+          //console.log("Here is my: " + j + " length: " + myEDTRowSpanDebtArray.length);
         }
       } // end of j loop
     } // end of i loop
