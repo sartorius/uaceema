@@ -50,6 +50,10 @@
     background-color: var(--main-ace-color-contrast);
 }
 
+.btn-dark:hover{
+  color: var(--main-ace-color);
+  background-color: #F3F3F3;
+}
 
 html, body {
   height: 100%;
@@ -1540,7 +1544,7 @@ textarea[name=inputRef] {
 }
 
 #btn-clear-jqedt{
-  margin-left: 10em;
+  margin-left: 4em;
 }
 
 .menu-dropdown{
@@ -1610,6 +1614,11 @@ textarea[name=inputRef] {
   color: BLACK;
   opacity: 0.15;
   font-weight: 600;
+}
+
+.btn-blk-menu{
+  margin-left: 15px;
+  vertical-align: middle;
 }
 
 .btn-blk-jqedt{

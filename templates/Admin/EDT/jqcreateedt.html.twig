@@ -29,7 +29,6 @@
       let tempClasseID = 0; // <> CourseID !!!
       let tempCountStu = 0;
 
-
       const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
       const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
       const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
@@ -128,8 +127,14 @@
             <div id="crs-wmonday" class="btn-group" role="group" aria-label="Status">
             </div>
           </div>
-          <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-jqedt">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
-          <button id="btn-load-jqedt" class="btn btn-outline-dark btn-sm btn-blk-jqedt" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
+          <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-menu">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
+          <button id="btn-load-jqedt" class="btn btn-outline-dark btn-sm btn-blk-menu" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
+          
+          {# We have the rights to edit #}
+          {% if edit_rights == 'Y' %}
+              <button id="btn-edit-jqedt" onclick="startEdit();" class="btn btn-dark btn-sm btn-blk-menu" ><i id="btn-edit-name">Modifier EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
+          {% endif %}
+          
         </div>
         <div class="edt-status"><i class="icon-exclamation-circle nav-text"></i>&nbsp;Status : <i id='last-update'>(non publié)</i></div>
 

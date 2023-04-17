@@ -57,6 +57,7 @@ function publishEDT(order){
           console.log('Everything is fine: ' + data['status'] + ' ' + data['message']);
       },
       error: function (jqXhr, textStatus, errorMessage) {
+        
         $('.edt-status').addClass('bg-red-error');
 
         $(".white-ajax-wait").hide(100);
@@ -407,6 +408,25 @@ function myEDTRowSpanDebtArrayContains(str){
   return false;
 }
 
+function startEdit(){
+  if(editMode == 'N'){
+    // We start edit here
+    editMode = 'Y';
+    editModeOn();
+    $("#btn-edit-name").html("Figer EDT");
+    refreshCellClick();
+  }
+  else{
+    // If we are here then the button has change and we must edit
+    // We block Edit here
+    editMode = 'N';
+    editModeOff();
+    $("#btn-edit-name").html("Modifier EDT");
+
+  }
+
+}
+
 function clearEDT(){
   myEDTArray = new Array();
   drawMainEDT();
@@ -582,6 +602,18 @@ function editModeOff(){
   $('#btn-clear-jqedt').prop("disabled", true);
   $("#edt-save-blk").hide(100);
   $("#my-main-table").addClass('edit-sel-off');
+}
+
+function editModeOn(){
+  $('#dropdownMention').removeClass('disabled');
+  $('#dropdownClasse').removeClass('disabled');
+  $("#dropdownMention").removeClass('edit-sel-off');
+  $("#dropdownClasse").removeClass('edit-sel-off');
+  $(".wmon-group").removeClass('disabled');
+  $(".wmon-group").removeClass('edit-sel-off');
+  $('#btn-clear-jqedt').prop("disabled", false);
+  $("#edt-save-blk").show(100);
+  $("#my-main-table").removeClass('edit-sel-off');
 }
 
 function saveCourse(){
