@@ -547,6 +547,52 @@ function loadAllEDTGrid(){
           css: "cell-recap-l"
         },
         //Default width is auto
+        { name: "uem_jq_edt_type",
+          title: "Type",
+          type: "text",
+          width: 10,
+          headercss: "cell-recap-hd",
+          css: "cell-recap-m",
+          itemTemplate: function(value, item) {
+            let val = '';
+            if((item.master_id == '') || (item.master_id == null)){
+              // do nothing
+            }
+            else{
+                if(value == 'N'){
+                  val = '<span class="icon-file-excel-o nav-icon-fa-sm nav-text"></span>';
+                }
+                else{
+                  val = '<span class="icon-pencil-square-o nav-icon-fa-sm nav-text"></span>';
+                }
+            }
+            return val;
+          }
+        },
+        //Default width is auto
+        { name: "uem_visibility",
+          title: "Status",
+          type: "text",
+          width: 20,
+          headercss: "cell-recap-hd",
+          css: "cell-recap-m",
+          itemTemplate: function(value, item) {
+            let val = '';
+            if((item.master_id == '') || (item.master_id == null)){
+              // do nothing
+            }
+            else{
+                if(value == 'V'){
+                  val = '<span class="icon-paper-plane-o nav-icon-fa-sm nav-text"></span>';
+                }
+                else{
+                  val = '<span class="icon-floppy-o nav-icon-fa-sm nav-text"></span>';
+                }
+            }
+            return val;
+          }
+        },
+        //Default width is auto
         { name: "master_id",
           title: '#',
           type: "text",

@@ -125,8 +125,9 @@ BEGIN
 
     -- Return the result with flow ID and the number of day recalculated
     SELECT
-      inv_flow_id,
-      count_que_recal;
+      inv_flow_id AS flow_id,
+      count_que_recal AS day_recalc,
+      DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i') AS last_update;
 
 END$$
 -- Remove $$ for OVH

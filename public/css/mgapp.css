@@ -24,6 +24,10 @@
 
 /* Bootstrap */
 
+.btn-light{
+  border: 0.5px solid #000A00;
+}
+
 .btn-default{
    color: white !important;
    background-color:var(--main-ace-color);
@@ -1270,6 +1274,9 @@ textarea[name=inputRef] {
 }
 
 /*********  EDT Display  **********/
+.btn-up-menu{
+  margin-left: 10px;
+}
 .info-cartouche{
   font-size: 11px;
   color: var(--main-ace-color);
@@ -1568,7 +1575,7 @@ textarea[name=inputRef] {
 }
 
 #delete-edt-line{
-  margin-right: 24.5em;
+  margin-right: 31.15em;
 }
 
 #modal-crs-dur-blk,
@@ -1664,6 +1671,11 @@ textarea[name=inputRef] {
 
 .cell-recap-l{
   font-size: 12px;
+}
+
+.cell-recap-m{
+  font-size: 12px;
+  text-align: center;
 }
 
 .cell-recap-l-num{

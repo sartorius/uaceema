@@ -8,8 +8,12 @@
       let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
       let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
       let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
+      let dataAllMasterToJsonArray = JSON.parse('{{ result_allmaster_query | json_encode | raw }}');
 
-      let dateLoadToJsonArray = JSON.parse('{{ result_load_edt | json_encode | raw }}');
+
+      
+
+      let dataLoadToJsonArray = JSON.parse('{{ result_load_edt | json_encode | raw }}');
 
 
       let techMondaysToJsonArray = JSON.parse('{{ tech_mondays | json_encode | raw }}');
@@ -22,6 +26,11 @@
       const mode = '{{ mode }}';
       let editMode = 'N';
 
+      let edtExistAlready = 'N';
+      let edtExistAlreadyMasterId = 0;
+
+      // This variable only used for debug
+      let tempMisc;
 
       let tempMention = '';
       let tempMentionCode = '';
@@ -75,10 +84,11 @@
 <div class="row">
   <div class="col-1">
   </div>
-  <div class="col-1">
-    <a class="btn btn-outline-dark btn-sm btn-block" href="/manageredt" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
+  <div class="col-2 menu-dropdown">
+    <a class="btn btn-outline-dark btn-sm btn-up-menu" href="/manageredt" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
+    <a class="btn btn-dark btn-sm btn-up-menu" href="/jqcreateedt" role="button">Nouveau&nbsp;<span class="icon-calendar nav-text"></span></a>
   </div>
-  <div class="col-9">
+  <div class="col-8">
 
   </div>
 </div>
@@ -132,7 +142,7 @@
           
           {# We have the rights to edit #}
           {% if edit_rights == 'Y' %}
-              <button id="btn-edit-jqedt" onclick="startEdit();" class="btn btn-dark btn-sm btn-blk-menu" ><i id="btn-edit-name">Modifier EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
+              <button id="btn-edit-jqedt" onclick="startOnOffEdit();" class="btn btn-dark btn-sm btn-blk-menu" ><i id="btn-edit-name">Figer EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
           {% endif %}
           
         </div>
@@ -143,7 +153,7 @@
         </div>
 
         <div id="exist-msg-edt">
-            <i class='err'><strong><i class="icon-bullhorn nav-text"></i>&nbsp;Attention un EDT existe déjà</strong>, vous pouvez le charger sinon vos changements (même en brouillon) vont l'annuler.</i><br>
+            <i class='err'><strong><i class="icon-bullhorn nav-text"></i>&nbsp;Attention un EDT existe déjà</strong>, vous pouvez le charger en cliquant sur [Charger EDT] sinon vos changements (même en brouillon) vont le remplacer.</i><br>
         </div>
 
 
@@ -172,8 +182,8 @@
 
 
         <button id="btn-export-jqedt" onclick="exportFile();" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Export &nbsp;<i class="icon-file-excel-o nav-text"></i></button>
-        <button id="btn-draft-jqedt" onclick="publishEDT('D');" class="btn btn-outline-dark btn-lg btn-blk-jqedt">Enregistrer &nbsp;<i class="icon-floppy-o nav-text"></i></button>
-        <button id="btn-publish-jqedt" onclick="publishEDT('V');" class="btn btn-default btn-lg btn-blk-jqedt">Publier<i id="publish-cls"></i>&nbsp;<i class="icon-paper-plane-o nav-text"></i></button>
+        <button id="btn-draft-jqedt" onclick="publishEDT('D');" class="btn btn-dark btn-lg btn-blk-jqedt bdt-save-pub">Brouillon &nbsp;<i class="icon-floppy-o nav-text"></i></button>
+        <button id="btn-publish-jqedt" onclick="publishEDT('V');" class="btn btn-dark btn-lg btn-blk-jqedt bdt-save-pub">Publier<i id="publish-cls"></i>&nbsp;<i class="icon-paper-plane-o nav-text"></i></button>
 
 
       </div>
@@ -232,8 +242,8 @@
       </div>
       <div class="modal-footer">
         <button id="delete-edt-line" type="button" class="btn btn-outline-dark" onclick="deleteCourseAndDisplay()" disabled>Supprimer</button>
-        <button type="button" class="btn btn-dark" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
-        <button id="save-edt-line" type="button" class="btn btn-default" onclick="saveCourse()" disabled>Sauvegarder le cours</button>
+        <button type="button" class="btn btn-light" onclick="drawMainEDT()" data-dismiss="modal">Annuler</button>
+        <button id="save-edt-line" type="button" class="btn btn-dark" onclick="saveCourse()" disabled>Valider</button>
       </div>
     </div>
   </div>
