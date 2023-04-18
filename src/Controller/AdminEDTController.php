@@ -163,6 +163,7 @@ class AdminEDTController extends AbstractController
         $result_count_stu_query = array();
         $result_allroom_query = array();
         $result_allmaster_query = array();
+        $result_usedroom_query = array();
         
         // Hydrate everything
         $this->hydrateJQEDT(
@@ -174,6 +175,7 @@ class AdminEDTController extends AbstractController
                             $result_count_stu_query,
                             $result_allroom_query,
                             $result_allmaster_query,
+                            $result_usedroom_query,
                             $logger);
 
 
@@ -196,6 +198,7 @@ class AdminEDTController extends AbstractController
                                                                 'result_count_stu_query'=>$result_count_stu_query,
                                                                 "result_load_edt"=>$result_load_edt,
                                                                 "result_allmaster_query"=>$result_allmaster_query,
+                                                                "result_usedroom_query"=>$result_usedroom_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -455,7 +458,8 @@ class AdminEDTController extends AbstractController
                   $result_count_stu_query = array();
                   $result_allroom_query = array();
                   $result_allmaster_query = array();
-                  $my_tech_monday;
+                  $result_usedroom_query = array();
+                  $my_tech_monday = null;
                   
                   if(count($result_load_edt) > 0){
                     $my_tech_monday = $result_load_edt[0]['inv_tech_monday'];
@@ -474,6 +478,7 @@ class AdminEDTController extends AbstractController
                                         $result_count_stu_query,
                                         $result_allroom_query,
                                         $result_allmaster_query,
+                                        $result_usedroom_query,
                                         $logger);
 
                 
@@ -530,6 +535,7 @@ class AdminEDTController extends AbstractController
 
                                                                           "result_load_edt"=>$result_load_edt,
                                                                           "result_allmaster_query"=>$result_allmaster_query,
+                                                                          "result_usedroom_query"=>$result_usedroom_query,
                                                                           'scale_right' => ConnectionManager::whatScaleRight(),
                                                                           'errtype' => '']);
 
@@ -553,6 +559,7 @@ class AdminEDTController extends AbstractController
                     &$result_count_stu_query,
                     &$result_allroom_query,
                     &$result_allmaster_query,
+                    &$result_usedroom_query,
                     LoggerInterface $logger
   ){
             $my_date_mon_s0 =date('Y-m-d', strtotime($my_tech_monday));
@@ -596,6 +603,9 @@ class AdminEDTController extends AbstractController
             $allmaster_query = " SELECT * FROM uac_edt_master uem WHERE uem.visibility IN ('V', 'D') AND uem.monday_ofthew >= '" . $my_date_mon_s_1 . "' AND uem.monday_ofthew <= '" . $my_date_mon_s2 . "';";
             $logger->debug("Show me allmaster_query: " . $allmaster_query);
 
+            $usedroom_query = " SELECT * FROM v_edt_used_room WHERE uem_monday_ofthew >= '" . $my_date_mon_s_1 . "' AND uem_monday_ofthew <= '" . $my_date_mon_s2 . "';";
+            $logger->debug("Show me usedroom_query: " . $usedroom_query);
+
             $dbconnectioninst = DBConnectionManager::getInstance();
 
             $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -612,6 +622,9 @@ class AdminEDTController extends AbstractController
 
             $result_allmaster_query = $dbconnectioninst->query($allmaster_query)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me: " . count($result_allmaster_query));
+
+            $result_usedroom_query = $dbconnectioninst->query($usedroom_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_usedroom_query));
             
             /****************** End : Cartouche ******************/
 

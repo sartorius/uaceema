@@ -3,12 +3,17 @@
 
 {% if result_allclass_query is defined and result_allclass_query is not null %}
     <script>
+      const msgExistEdtForMonday = "<i class='err'><strong><i class='icon-bullhorn nav-text'></i>&nbsp;Attention un EDT existe déjà</strong>, vous pouvez le charger en cliquant sur [Charger EDT] sinon vos changements (même en brouillon) vont le remplacer.</i><br>"
+
 
       let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
       let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
       let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
       let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
       let dataAllMasterToJsonArray = JSON.parse('{{ result_allmaster_query | json_encode | raw }}');
+      let dataUsedRoomToJsonArray = JSON.parse('{{ result_usedroom_query | json_encode | raw }}');
+
+      
 
 
       
@@ -28,6 +33,7 @@
 
       let edtExistAlready = 'N';
       let edtExistAlreadyMasterId = 0;
+      let edtExistAlreadyMasterIdJQType = 'Y';
 
       // This variable only used for debug
       let tempMisc;
@@ -138,11 +144,11 @@
             </div>
           </div>
           <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-menu">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
-          <button id="btn-load-jqedt" class="btn btn-outline-dark btn-sm btn-blk-menu" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
+          <button id="btn-load-jqedt" onclick="goToExistingEDT()" class="btn btn-outline-dark btn-sm btn-blk-menu" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
           
           {# We have the rights to edit #}
           {% if edit_rights == 'Y' %}
-              <button id="btn-edit-jqedt" onclick="startOnOffEdit();" class="btn btn-dark btn-sm btn-blk-menu" ><i id="btn-edit-name">Figer EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
+              <button id="btn-edit-jqedt" onclick="startOnOffEdit();" class="btn btn-dark btn-sm btn-blk-menu" {% if mode == 'CRT' %}disabled{% endif %}><i id="btn-edit-name">{% if mode == 'CRT' %}Figer{% else %}Modifier{% endif %} EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
           {% endif %}
           
         </div>
@@ -153,7 +159,8 @@
         </div>
 
         <div id="exist-msg-edt">
-            <i class='err'><strong><i class="icon-bullhorn nav-text"></i>&nbsp;Attention un EDT existe déjà</strong>, vous pouvez le charger en cliquant sur [Charger EDT] sinon vos changements (même en brouillon) vont le remplacer.</i><br>
+            {# Message to be displayed here is msgExistEdtForMonday but not appearing because of hiding #}
+            
         </div>
 
 
@@ -271,4 +278,6 @@
   </div>
 </div>
 
+
+{% include 'Admin/EDT/_rawmanagerEDTGoToPost.html.twig' %}
 {% include 'RawTemplate/SPE/_footerjqedt.html.twig' %}

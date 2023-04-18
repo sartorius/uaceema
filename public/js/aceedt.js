@@ -4,6 +4,15 @@ Date.prototype.addDays = function(days) {
     return date;
 };
 
+function initUsedRoom(){
+  for(let i=0; i<dataUsedRoomToJsonArray.length; i++){
+    let cell = dataUsedRoomToJsonArray[i].course_id.toString().split("-");
+    dataUsedRoomToJsonArray[i].cell_1_shift = cell[0];
+    dataUsedRoomToJsonArray[i].cell_2_day = cell[1];
+    dataUsedRoomToJsonArray[i].cell_3_half = cell[2];
+  }
+}
+
 /**************** Export Function ****************/
 function exportFile(){
   $(".start-h-emp").html('');
@@ -11,6 +20,12 @@ function exportFile(){
 
 }
 
+function goToExistingEDT(){
+  $("#read-master-id").val(edtExistAlreadyMasterId);
+  $("#read-jq-type").val(edtExistAlreadyMasterIdJQType);
+
+  $("#mg-master-id-form").submit();
+}
 
 function launchExportFile(){
   $('#title-edt-export').html(tempClasse);
@@ -44,10 +59,15 @@ function publishEDT(order){
       success: function (data, status, xhr) {
           $('.edt-status').removeClass('bg-red-error');
           $(".white-ajax-wait").hide(100);
+          $("#exist-msg-edt").hide(100);
           // Do something as success
           let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;')
           let msg = "<i class='aj-succ'>" + lastOrder + " effectué le&nbsp;" + data['result_integration_EDT'][0]['last_update'] + "</i>";
-          let modalmsg = "<i class='aj-succ'><strong>publié avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>. Nombre de jour(s) du passé recalculé : " + data['result_integration_EDT'][0]['day_recalc'];
+          let addOrderMsg = "<br>Tant que cet EDT n'a pas été publié, les étudiants ne le verront pas.";
+          if(order == 'V'){
+            addOrderMsg = "<br>Nombre de jour(s) passé recalculé(s) :" + data['result_integration_EDT'][0]['day_recalc'];
+          }
+          let modalmsg = "<i class='aj-succ'><strong>publié avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>." + addOrderMsg;
           $("#last-update").html(msg);
           startOnOffEdit();
 
@@ -119,7 +139,7 @@ function selectMention(str, strTitle){
   $('#drp-select').html(strTitle);
   console.log('You have just click on: ' + str);
   // We reset the dropdown
-  selectClasse(0, 'Classe')
+  selectClasse(0, 'Classe', 0)
   fillCartoucheClasse();
 }
 
@@ -127,7 +147,7 @@ function fillCartoucheClasse(){
   let listClasse = '';
   for(let i=0; i<dataAllClassToJsonArray.length; i++){
     if(dataAllClassToJsonArray[i].mention_code == tempMentionCode){
-      listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasse(' + dataAllClassToJsonArray[i].id + ', \'' + dataAllClassToJsonArray[i].short_classe + '\')"  href="#">' + dataAllClassToJsonArray[i].short_classe + '</a>';
+      listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasse(' + dataAllClassToJsonArray[i].id + ', \'' + dataAllClassToJsonArray[i].short_classe + '\', 1)"  href="#">' + dataAllClassToJsonArray[i].short_classe + '</a>';
     }
   }
   $('#dpclasse-opt').html(listClasse);
@@ -157,6 +177,7 @@ function handleEDTForMondayExists(){
       $("#exist-msg-edt").show(100);
       edtExistAlready = 'Y';
       edtExistAlreadyMasterId = dataAllMasterToJsonArray[edtForMondayExistIndex].id;
+      edtExistAlreadyMasterIdJQType = dataAllMasterToJsonArray[edtForMondayExistIndex].jq_edt_type;
       $('#btn-load-jqedt').prop("disabled", false);
       $('#btn-load-jqedt').removeClass('btn-outline-dark').addClass('btn-danger');
     }
@@ -165,12 +186,13 @@ function handleEDTForMondayExists(){
       $("#exist-msg-edt").hide(100);
       edtExistAlready = 'N';
       edtExistAlreadyMasterId = 0;
+      edtExistAlreadyMasterIdJQType = 'Y';
       $('#btn-load-jqedt').prop("disabled", true);
       $('#btn-load-jqedt').removeClass('btn-danger').addClass('btn-outline-dark');
     }
 }
 
-function selectClasse(classeId, str){
+function selectClasse(classeId, str, humanAction){
   tempClasseID = classeId;
   tempClasse = str;
 
@@ -178,16 +200,22 @@ function selectClasse(classeId, str){
   tempCountStu = getQtyStu(classeId);
   $("#sel-stu-qty").html(tempCountStu);
 
+  if(humanAction == 1){
+    $("#exist-msg-edt").html(msgExistEdtForMonday);
+  }
+
   // We display the save block only when class is selected.
   if(classeId > 0){
       handleEDTForMondayExists();
       $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + str + ']'); //tempClasse
       $(".bdt-save-pub").prop("disabled", false);
+      $("#btn-edit-jqedt").prop("disabled", false);
       $("#edt-save-blk").show(100);
   }
   else{
       $("#publish-cls").html('');
       $("#edt-save-blk").hide(100);
+      $("#btn-edit-jqedt").prop("disabled", true);
   }
   //console.log('You have just classeId: ' + classeId);
 }
@@ -868,6 +896,7 @@ $(document).ready(function() {
   console.log('We are in ACE-EDT');
 
   if($('#mg-graph-identifier').text() == 'jqc-edt'){
+    initUsedRoom();
     // We need to wait for the ready we hide them else mismatch in design
     $("#edt-save-blk").hide(100);
     displayDatePicker();
@@ -879,15 +908,20 @@ $(document).ready(function() {
       selectDatePicker(1);
       // Then we are in load mode we need to hydrate the JSON
       selectMention(dataLoadToJsonArray[0].mention_code, dataLoadToJsonArray[0].mention);
-      selectClasse(dataLoadToJsonArray[0].cohort_id, dataLoadToJsonArray[0].short_classe);
+      // We get it empty because select Class will flash it
+      $("#exist-msg-edt").html('');
+      selectClasse(dataLoadToJsonArray[0].cohort_id, dataLoadToJsonArray[0].short_classe, 0);
+      $("#exist-msg-edt").hide(100);
       // Update the status
       $("#last-update").html('a déjà été publié le : ' + dataLoadToJsonArray[0].last_update);
       // We need to refresh room here because they re defined here
       loadEDT();
       editMode = 'N';
+      
     }
     else{
       editMode = 'Y';
+      $("#exist-msg-edt").html(msgExistEdtForMonday);
     }
 
 

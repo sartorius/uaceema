@@ -55,9 +55,6 @@ ALTER TABLE uac_edt_line
 ADD COLUMN `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftime number' AFTER end_time;
 
 
-
-
-
 DROP TABLE IF EXISTS uac_ref_day_queue;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_day_queue` (
   `id` TINYINT UNSIGNED NOT NULL,
@@ -72,6 +69,29 @@ INSERT INTO uac_ref_day_queue (id) VALUES (4);
 INSERT INTO uac_ref_day_queue (id) VALUES (5);
 INSERT INTO uac_ref_day_queue (id) VALUES (6);
 INSERT INTO uac_ref_day_queue (id) VALUES (7);
+
+
+DROP VIEW IF EXISTS v_edt_used_room;
+CREATE VIEW v_edt_used_room AS
+SELECT  uem.id AS uem_id, 
+        uem.monday_ofthew AS uem_monday_ofthew,
+        course_id AS course_id, 
+        uel.shift_duration AS shift_duration, 
+        room_id AS room_id, 
+        vcc.short_classe AS short_classe, 
+        uel.start_time AS start_time, 
+        DATE_FORMAT(uem.monday_ofthew, '%d/%m') AS disp_monday,
+        0 AS cell_1_shift,
+        0 AS cell_2_day,
+        0 AS cell_3_half
+FROM uac_edt_master uem JOIN uac_edt_line uel 
+							          ON uel.master_id = uem.id
+								        JOIN v_class_cohort vcc
+								        ON vcc.id = uem.cohort_id
+WHERE uem.visibility IN ('V', 'D')
+AND uel.course_status NOT IN ('C')
+AND uel.shift_duration > 0;
+-- AND uem.monday_ofthew >= '2023-04-10' AND uem.monday_ofthew <= '2023-05-01';
 
 /*************************************** LEGACY ***************************************/
 DROP TABLE IF EXISTS uac_edt_line;
