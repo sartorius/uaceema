@@ -264,11 +264,11 @@ function verifyOverlap(){
   let cell = tempCourseId.toString().split("-");
   for(let i=0; i<myEDTArray.length; i++){
       //We look for overlaping here for conflict hour and day
-      if((cell[1] == myEDTArray[i].techDay) &&
+      if((parseInt(cell[1]) == parseInt(myEDTArray[i].techDay)) &&
             // End time is > than Start over Time which is not good
-            (parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration) > myEDTArray[i].techHour) &&
+            (parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration) > parseInt(myEDTArray[i].techHour)) &&
             // Additionnally if our Start Time is also before then we are not good definitively
-            (parseInt(cell[0]) < myEDTArray[i].techHour)
+            (parseInt(cell[0]) < parseInt(myEDTArray[i].techHour))
           ){
         return myEDTArray[i].startTime + '/' + myEDTArray[i].rawCourseTitle.substring(0, 10);
       }
@@ -373,17 +373,17 @@ function isRoomAlreadyUsedMsg(roomId){
                   // Case one : New is starting before the end of Ancient
                   let usedEndOld = parseInt(dataUsedRoomToJsonArray[i].cell_1_shift) + parseInt(dataUsedRoomToJsonArray[i].shift_duration);
                   let tempEndNew = parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration);
-                  if((usedEndOld > cell[0]) &&
+                  if((usedEndOld > parseInt(cell[0])) &&
                       // We check here that the new is starting after
-                      (cell[0] >= dataUsedRoomToJsonArray[i].cell_1_shift)
+                      (parseInt(cell[0]) >= parseInt(dataUsedRoomToJsonArray[i].cell_1_shift))
                     ){
                     // The used course is not finished
                     // Get out here
                     return 'Indisponible: ' + dataUsedRoomToJsonArray[i].short_classe + ' - Fin: ' + dataUsedRoomToJsonArray[i].end_time;
                   }
-                  else if((tempEndNew > dataUsedRoomToJsonArray[i].cell_1_shift) &&
+                  else if((tempEndNew > parseInt(dataUsedRoomToJsonArray[i].cell_1_shift)) &&
                           // We check here that the new is starting before
-                          (cell[0] <= dataUsedRoomToJsonArray[i].cell_1_shift)
+                          (parseInt(cell[0]) <= parseInt(dataUsedRoomToJsonArray[i].cell_1_shift))
                           ){
                     // The used course is starting
                     // Get out here
@@ -426,11 +426,11 @@ function fillModalRoom(){
   }
   else{
     for(let i=0; i<dataAllRoomToJsonArray.length; i++){
-      console.log("value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name + " tempCountStu: " + tempCountStu);
+      //console.log("value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name + " tempCountStu: " + tempCountStu);
       if(parseInt(dataAllRoomToJsonArray[i].capacity) >= parseInt(tempCountStu)){
         //console.log("fillModalRoom: " + dataAllRoomToJsonArray[i]);
         // Once we are here we need to compare with existing occupied room
-        console.log("in capacity ----- > value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name + " tempCountStu: " + tempCountStu);
+        //console.log("in capacity ----- > value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name + " tempCountStu: " + tempCountStu);
         let usedMsg = isRoomAlreadyUsedMsg(dataAllRoomToJsonArray[i].id);
         if(i == 0){
           optionDisplay = dataAllRoomToJsonArray[i].name;
