@@ -61,7 +61,7 @@ function publishEDT(order){
           $(".white-ajax-wait").hide(100);
           $("#exist-msg-edt").hide(100);
           // Do something as success
-          let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;')
+          let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;');
           let msg = "<i class='aj-succ'>" + lastOrder + " effectué le&nbsp;" + data['result_integration_EDT'][0]['last_update'] + "</i>";
           let addOrderMsg = "<br>Tant que cet EDT n'a pas été publié, les étudiants ne le verront pas.";
           if(order == 'V'){

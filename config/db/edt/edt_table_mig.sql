@@ -98,6 +98,8 @@ AND uel.shift_duration > 0;
 -- AND uem.monday_ofthew >= '2023-04-10' AND uem.monday_ofthew <= '2023-05-01';
 
 /*************************************** LEGACY ***************************************/
+
+/*
 DROP TABLE IF EXISTS uac_edt_line;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt_line` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
