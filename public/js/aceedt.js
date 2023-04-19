@@ -1016,7 +1016,14 @@ $(document).ready(function() {
       selectClasse(dataLoadToJsonArray[0].cohort_id, dataLoadToJsonArray[0].short_classe, 0);
       $("#exist-msg-edt").hide(100);
       // Update the status
-      $("#last-update").html('a déjà été publié le : ' + dataLoadToJsonArray[0].last_update);
+      let statusMsgLoad = '';
+      if(dataLoadToJsonArray[0].visibility == 'V'){
+        statusMsgLoad = ' Publication le : ';
+      }
+      else{
+        statusMsgLoad = ' Brouillon enregistré le : ';
+      }
+      $("#last-update").html(statusMsgLoad + dataLoadToJsonArray[0].last_update);
       // We need to refresh room here because they re defined here
       loadEDT();
       editMode = 'N';
