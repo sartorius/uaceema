@@ -12,10 +12,6 @@
       let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
       let dataAllMasterToJsonArray = JSON.parse('{{ result_allmaster_query | json_encode | raw }}');
       let dataUsedRoomToJsonArray = JSON.parse('{{ result_usedroom_query | json_encode | raw }}');
-
-      
-
-
       
 
       let dataLoadToJsonArray = JSON.parse('{{ result_load_edt | json_encode | raw }}');
@@ -72,6 +68,7 @@
       let tempCourseStatus = 'A';
       let tempCourseRoomId = 0;
       let tempCourseRoom = '';
+      let tempCourseRoomCapacity = 0;
 
       let myEDTArray = new Array();
       let myEDTRowSpanDebtArray = new Array();
@@ -244,7 +241,7 @@
       <hr>
       <div>
         Nombre de caractère(s) restant(s) : <i id="crs-desc-length"></i><br>
-        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, indication, professeur..." name="w3review" rows="4" cols="88" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
+        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, indication, professeur..." name="w3review" rows="4" cols="86" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
       </div>
       </div>
       <div class="modal-footer">

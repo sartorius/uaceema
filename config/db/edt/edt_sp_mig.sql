@@ -280,6 +280,7 @@ BEGIN
             uel.label_day AS uel_label_day,
             urr.id AS urr_id,
             urr.name AS urr_name,
+            urr.capacity AS room_capacity,
             DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
           FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                 JOIN uac_cohort uc ON uc.id = uem.cohort_id
@@ -323,6 +324,7 @@ BEGIN
           NULL AS uel_label_day,
           NULL AS urr_id,
           NULL AS urr_name,
+          NULL AS room_capacity,
           DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
           FROM uac_edt_master uem
           JOIN uac_cohort uc ON uc.id = uem.cohort_id

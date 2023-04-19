@@ -218,6 +218,8 @@ function selectClasse(classeId, str, humanAction){
       $("#btn-edit-jqedt").prop("disabled", true);
   }
   //console.log('You have just classeId: ' + classeId);
+  // Refresh necessary to identify overcapacity
+  drawMainEDT();
 }
 
 function getQtyStu(classeId){
@@ -337,26 +339,102 @@ function selectMinDur(i){
   $('#sel-min-' + i).addClass('active');
 }
 
+function getRoomIndexFromId(myId){
+  for(let i=0; i<dataAllRoomToJsonArray.length; i++){
+    if(dataAllRoomToJsonArray[i].id == myId){
+      return i;
+    }
+  }
+  return -1;
+}
+
 function selectRoom(i){
-  tempCourseRoomId = dataAllRoomToJsonArray[i].id;
-  tempCourseRoom = dataAllRoomToJsonArray[i].name;
+  let index = getRoomIndexFromId(i);
+  tempCourseRoomId = dataAllRoomToJsonArray[index].id;
+  tempCourseRoom = dataAllRoomToJsonArray[index].name;
+  tempCourseRoomCapacity = dataAllRoomToJsonArray[index].capacity;
   verifyTextAreaSaveBtn();
 }
 
+function isRoomAlreadyUsedMsg(roomId){
+  let warnMsg = "";
+  //dataUsedRoomToJsonArray
+  if(roomId > 0){
+      for(let i=0; i<dataUsedRoomToJsonArray.length; i++){
+          //filter first on the week
+          if(dataUsedRoomToJsonArray[i].uem_monday_ofthew == invMondayStr){
+            //filter on the room
+            if(dataUsedRoomToJsonArray[i].room_id == roomId){
+              // Now we need to check the day !
+              let cell = tempCourseId.toString().split("-");
+              // hour shift is 0 and day is 1
+              if(dataUsedRoomToJsonArray[i].cell_2_day == cell[1]){
+                  // Now it is getting serious we work on overlap
+                  // Case one : New is starting before the end of Ancient
+                  let usedEnd = parseInt(dataUsedRoomToJsonArray[i].cell_1_shift) + parseInt(dataUsedRoomToJsonArray[i].shift_duration);
+                  let tempEnd = parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration);
+                  if(usedEnd > cell[0]){
+                    // The used course is not finished
+                    // Get out here
+                    return 'Indisponible: ' + dataUsedRoomToJsonArray[i].short_classe + ' - Fin: ' + dataUsedRoomToJsonArray[i].end_time;
+                  }
+                  else if(tempEnd > dataUsedRoomToJsonArray[i].cell_1_shift){
+                    // The used course is starting
+                    // Get out here
+                    return 'Indisponible: ' + dataUsedRoomToJsonArray[i].short_classe + ' - Début: ' + dataUsedRoomToJsonArray[i].start_time;
+                  }
+                  else{
+                    // Do nothing as no 
+                  }
+                  // Case two : New is finishing after the start of Ancient
+
+              }
+              else{
+                // Not the good day, we do nothing
+              }
+            }
+            else{
+              // Not the good room, we do nothing
+            }
+          }
+          else{
+            //Not the good Monday, we do nothing
+          }
+      }
+  }
+  else{
+    // Do nothing
+  }
+  return warnMsg;
+}
+
 function fillModalRoom(){
+  //console.log("in fillModalRoom");
   let listRoom = '';
   let optionDisplay = '';
   if((tempClasseID == 0) || (tempHalfHourTotalShiftDuration == 0)){
-    listRoom = listRoom + '<option value="' + dataAllRoomToJsonArray[0].id + '">' + dataAllRoomToJsonArray[0].name + '</option>';
+    let msgDurMiss = ((tempHalfHourTotalShiftDuration == 0) ? '&nbsp;[Durée manquante]' : '');
+    listRoom = listRoom + '<option value="' + dataAllRoomToJsonArray[0].id + '">' + dataAllRoomToJsonArray[0].name + msgDurMiss + '</option>';
     tempCourseRoomId = 0;
+    tempCourseRoomCapacity = 0;
   }
   else{
     for(let i=0; i<dataAllRoomToJsonArray.length; i++){
       if(dataAllRoomToJsonArray[i].capacity >= tempCountStu){
-        optionDisplay = dataAllRoomToJsonArray[i].category + ': ' + dataAllRoomToJsonArray[i].name + '&nbsp;[' + dataAllRoomToJsonArray[i].capacity + ']' + (dataAllRoomToJsonArray[i].is_video == 'Y' ? ' avec vidéo' : '');
+        //console.log("fillModalRoom: " + dataAllRoomToJsonArray[i]);
+        // Once we are here we need to compare with existing occupied room
+        let usedMsg = isRoomAlreadyUsedMsg(dataAllRoomToJsonArray[i].id);
         if(i == 0){
           optionDisplay = dataAllRoomToJsonArray[i].name;
         }
+        else if(usedMsg == ''){
+          optionDisplay = dataAllRoomToJsonArray[i].category + ': ' + dataAllRoomToJsonArray[i].name + '&nbsp;[' + dataAllRoomToJsonArray[i].capacity + ']' + (dataAllRoomToJsonArray[i].is_video == 'Y' ? ' avec vidéo' : '');
+        }
+        else{
+          optionDisplay = dataAllRoomToJsonArray[i].category + ': ' + dataAllRoomToJsonArray[i].name + '&nbsp;(' + usedMsg + ')';
+        }
+        
+
         listRoom = listRoom + '<option value="' + dataAllRoomToJsonArray[i].id + '">' + optionDisplay + '</option>';
         //console.log("Here is listRoom: " + listRoom + " tempCountStu: " + tempCountStu);
       }
@@ -577,6 +655,11 @@ function drawMainEDT(){
         }
         courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
 
+        let overCapacity = "";
+        if((tempCountStu > 0) && (tempCountStu > myEDTArray[cellIndex].courseRoomCapacity)){
+          overCapacity = "<i class='err'>[Capacité salle dépassée]</i><br>";
+          courseTitleTemp = overCapacity + courseTitleTemp;
+        }
         // Get the course status here
         switch (myEDTArray[cellIndex].courseStatus) {
           case 'A':
@@ -655,6 +738,7 @@ function loadEDT(){
                       courseStatus: dataLoadToJsonArray[i].course_status,
                       courseRoomId: dataLoadToJsonArray[i].urr_id,
                       courseRoom: dataLoadToJsonArray[i].urr_name,
+                      courseRoomCapacity: dataLoadToJsonArray[i].room_capacity,
                       refEnglishDay: dataLoadToJsonArray[i].uel_label_day
                       };
       myEDTArray.push(myEDTLine);
@@ -704,6 +788,7 @@ function editModeOn(){
 
 function saveCourse(){
   //let myEDTLine = [tempCourseId, tempStartTime, tempEndTime, tempHourDuration, tempMinDuration, tempHalfHourTotalShiftDuration];
+  console.log("saveCourse");
   let cell = tempCourseId.toString().split("-");
   let myEDTLine = {
                     courseId: tempCourseId,
@@ -728,6 +813,7 @@ function saveCourse(){
                     courseStatus: tempCourseStatus,
                     courseRoomId: tempCourseRoomId,
                     courseRoom: tempCourseRoom,
+                    courseRoomCapacity: tempCourseRoomCapacity,
                     refEnglishDay: getRefEnglishDay(tempCourseId)
                     /*
                     courseId: tempCourseId,
@@ -825,7 +911,15 @@ function loadExistingIfExist(courseId){
 
     tempCourseRoom = myEDTArray[index].courseRoom;
     tempCourseRoomId = myEDTArray[index].courseRoomId;
-    $("#my-room-select").val(tempCourseRoomId);
+    tempCourseRoomCapacity = myEDTArray[index].courseRoomCapacity;
+    //in case of overcapacity we need to force in non specifié
+    if(tempCountStu > tempCourseRoomCapacity){
+      $("#my-room-select").val(0);
+    }
+    else{
+      $("#my-room-select").val(tempCourseRoomId);
+    }
+
     $('#crs-desc').val(myEDTArray[index].rawCourseTitle);
 
     // Then we allow delete
@@ -854,6 +948,7 @@ function refreshCellClick(){
     tempCourseStatus = 'A';
     tempCourseRoom = '';
     tempCourseRoomId = 0;
+    tempCourseRoomCapacity = 0;
     $("#crs-desc").val('');
 
     $("#crs-desc-length").html(maxRawCourseTitleLength);

@@ -80,6 +80,7 @@ SELECT  uem.id AS uem_id,
         room_id AS room_id, 
         vcc.short_classe AS short_classe, 
         uel.start_time AS start_time, 
+        uel.end_time AS end_time, 
         DATE_FORMAT(uem.monday_ofthew, '%d/%m') AS disp_monday,
         0 AS cell_1_shift,
         0 AS cell_2_day,
@@ -90,6 +91,8 @@ FROM uac_edt_master uem JOIN uac_edt_line uel
 								        ON vcc.id = uem.cohort_id
 WHERE uem.visibility IN ('V', 'D')
 AND uel.course_status NOT IN ('C')
+-- We dont consider the non specified
+AND room_id > 0
 AND uel.shift_duration > 0;
 -- AND uem.monday_ofthew >= '2023-04-10' AND uem.monday_ofthew <= '2023-05-01';
 

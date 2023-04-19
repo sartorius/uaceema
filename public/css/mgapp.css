@@ -1537,6 +1537,9 @@ textarea[name=inputRef] {
 
 /***************************  HALF EDT  ****************************/
 
+#crs-desc{
+  padding: 10px;
+}
 .edit-sel-off{
   pointer-events: none;
 }
