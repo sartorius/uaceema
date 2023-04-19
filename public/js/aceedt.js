@@ -84,11 +84,11 @@ function publishEDT(order){
         $('.edt-status').addClass('bg-red-error');
 
         $(".white-ajax-wait").hide(100);
-        let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;')
+        let lastOrder = (order == 'D' ? '&nbsp;Brouillon&nbsp;' : '&nbsp;Publication&nbsp;');
         let msg = "<strong>" + lastOrder + "erreur serveur: " + jqXhr['status'] + "&nbsp;<i class='icon-exclamation-triangle nav-text'></i></strong>";
         $("#last-update").html(msg);
 
-        msg = "<i class='err'>" + msg + "</i>"
+        msg = "<i class='err'>" + msg + "</i>";
         $("#ajax-feedback").html('Attention: ' + msg + '. Veuillez contacter le support.');
         $('#aj-fback-modal').modal('show');
         // Do something as error here
@@ -139,7 +139,7 @@ function selectMention(str, strTitle){
   $('#drp-select').html(strTitle);
   console.log('You have just click on: ' + str);
   // We reset the dropdown
-  selectClasse(0, 'Classe', 0)
+  selectClasse(0, 'Classe', 0);
   fillCartoucheClasse();
 }
 
