@@ -426,9 +426,11 @@ function fillModalRoom(){
   }
   else{
     for(let i=0; i<dataAllRoomToJsonArray.length; i++){
+      console.log("value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name);
       if(dataAllRoomToJsonArray[i].capacity >= tempCountStu){
         //console.log("fillModalRoom: " + dataAllRoomToJsonArray[i]);
         // Once we are here we need to compare with existing occupied room
+        console.log("in capacity ----- > value i: " + i + " id: " + dataAllRoomToJsonArray[i].id + " capacity: " + dataAllRoomToJsonArray[i].capacity + " name: " + dataAllRoomToJsonArray[i].name);
         let usedMsg = isRoomAlreadyUsedMsg(dataAllRoomToJsonArray[i].id);
         if(i == 0){
           optionDisplay = dataAllRoomToJsonArray[i].name;
