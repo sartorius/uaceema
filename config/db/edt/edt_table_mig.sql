@@ -55,6 +55,7 @@ ALTER TABLE uac_edt_line
 ADD COLUMN `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftime number' AFTER end_time;
 
 
+
 DROP TABLE IF EXISTS uac_ref_day_queue;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_day_queue` (
   `id` TINYINT UNSIGNED NOT NULL,

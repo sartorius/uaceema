@@ -371,14 +371,20 @@ function isRoomAlreadyUsedMsg(roomId){
               if(dataUsedRoomToJsonArray[i].cell_2_day == cell[1]){
                   // Now it is getting serious we work on overlap
                   // Case one : New is starting before the end of Ancient
-                  let usedEnd = parseInt(dataUsedRoomToJsonArray[i].cell_1_shift) + parseInt(dataUsedRoomToJsonArray[i].shift_duration);
-                  let tempEnd = parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration);
-                  if(usedEnd > cell[0]){
+                  let usedEndOld = parseInt(dataUsedRoomToJsonArray[i].cell_1_shift) + parseInt(dataUsedRoomToJsonArray[i].shift_duration);
+                  let tempEndNew = parseInt(cell[0]) + parseInt(tempHalfHourTotalShiftDuration);
+                  if((usedEndOld > cell[0]) &&
+                      // We check here that the new is starting after
+                      (cell[0] >= dataUsedRoomToJsonArray[i].cell_1_shift)
+                    ){
                     // The used course is not finished
                     // Get out here
                     return 'Indisponible: ' + dataUsedRoomToJsonArray[i].short_classe + ' - Fin: ' + dataUsedRoomToJsonArray[i].end_time;
                   }
-                  else if(tempEnd > dataUsedRoomToJsonArray[i].cell_1_shift){
+                  else if((tempEndNew > dataUsedRoomToJsonArray[i].cell_1_shift) &&
+                          // We check here that the new is starting before
+                          (cell[0] <= dataUsedRoomToJsonArray[i].cell_1_shift)
+                          ){
                     // The used course is starting
                     // Get out here
                     return 'Indisponible: ' + dataUsedRoomToJsonArray[i].short_classe + ' - Début: ' + dataUsedRoomToJsonArray[i].start_time;
@@ -878,7 +884,7 @@ function deleteCourseAndDisplay(){
 
 function loadExistingIfExist(courseId){
   let index = findCourse(courseId);
-  console.log('loadExistingIfExist: ' + index);
+  //console.log('loadExistingIfExist: ' + index);
 
   if(index > -1){
     console.log('loadExistingIfExist > 0 ' + index);

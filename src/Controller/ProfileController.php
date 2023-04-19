@@ -153,34 +153,41 @@ class ProfileController extends AbstractController
             /** Manage emploi du temps **/
             // Be carefull if you have array of array
             $dbconnectioninst = DBConnectionManager::getInstance();
-            // Perform the importation
-            // Change the option here !
-            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'N')";
-            $logger->debug("Get EDT to fill display EDT: " . $import_query);
+            // Try first the JQ importation
+            $import_query = "CALL CLI_GET_FWEDTJQ('" . $result[0]['USERNAME'] . "', " . $week . ", 'N')";
+            $logger->debug("Get EDT CLI_GET_FWEDTJQ: " . $import_query);
             $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            /*
-            // We do not use split EDT anymore as we use plain and full one
-            $week_p_one = array();
-            $week_p_two = array();
+            $techInvMonday = $resultsp[0]['inv_tech_monday'];
 
-            for($k = 0; $k < count($resultsp); $k++){
-                if($resultsp[$k]['day_code'] < 4){
-                  array_push($week_p_one, $resultsp[$k]);
-                }
-                else{
-                  array_push($week_p_two, $resultsp[$k]);
-                }
-            }
-            */
-
-            $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'Y')";
+            $import_query = "CALL CLI_GET_FWEDTJQ('" . $result[0]['USERNAME'] . "', " . $week . ", 'Y')";
             $logger->debug("Get EDT with backup: " . $import_query);
             $resultspbackup = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            // By default we consider we are on EDT JQ
+            $modeIsJQ = 'Y';
+            if($resultsp[0]['jq_edt_type'] == 'N'){
+              $modeIsJQ = 'N';
+
+              // Depricated
+              // Perform the importation
+              // Change the option here !
+              $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'N')";
+              $logger->debug("Get EDT CLI_GET_FWEDT: " . $import_query);
+              $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+              $import_query = "CALL CLI_GET_FWEDT('" . $result[0]['USERNAME'] . "', " . $week . ", 'Y')";
+              $logger->debug("Get EDT with backup: " . $import_query);
+              $resultspbackup = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            }
+
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
                                       'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
+                                      'modeIsJQ' => $modeIsJQ,
+                                      'techInvMonday' => $techInvMonday,
                                       "sp_result"=>$resultsp, /*"resultsp_sm"=>$week_p_one,*/ "resultsp_sm_bkp"=>$resultspbackup,
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
