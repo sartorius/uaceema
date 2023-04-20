@@ -349,6 +349,7 @@ function getRoomIndexFromId(myId){
 }
 
 function selectRoom(i){
+  //Warning the user may not select any room to keep the default. In that case we keep it zero but we need to adapt tempCourseRoomCapacity
   let index = getRoomIndexFromId(i);
   tempCourseRoomId = dataAllRoomToJsonArray[index].id;
   tempCourseRoom = dataAllRoomToJsonArray[index].name;
@@ -664,7 +665,7 @@ function drawMainEDT(){
         courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
 
         let overCapacity = "";
-        if((tempCountStu > 0) && (tempCountStu > myEDTArray[cellIndex].courseRoomCapacity)){
+        if((parseInt(tempCountStu) > 0) && (parseInt(tempCountStu) > parseInt(myEDTArray[cellIndex].courseRoomCapacity))){
           overCapacity = "<i class='err'>[Capacité salle dépassée]</i><br>";
           courseTitleTemp = overCapacity + courseTitleTemp;
         }
@@ -821,7 +822,7 @@ function saveCourse(){
                     courseStatus: tempCourseStatus,
                     courseRoomId: tempCourseRoomId,
                     courseRoom: tempCourseRoom,
-                    courseRoomCapacity: tempCourseRoomCapacity,
+                    courseRoomCapacity: (tempCourseRoomId == 0 ? 10000 : tempCourseRoomCapacity),
                     refEnglishDay: getRefEnglishDay(tempCourseId)
                     /*
                     courseId: tempCourseId,
