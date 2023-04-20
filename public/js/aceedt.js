@@ -14,6 +14,11 @@ function initUsedRoom(){
 }
 
 /**************** Export Function ****************/
+
+function removeWaitingCB(){
+  $(".white-ajax-wait").hide(100);
+}
+
 function exportFile(){
   $(".start-h-emp").html('');
   launchExportFile();
@@ -32,7 +37,7 @@ function launchExportFile(){
 
   var wb = XLSX.utils.table_to_book(document.getElementById('my-main-table'));
   XLSX.writeFile(wb, 'EDT' + invMondayStr.replaceAll('-', '_') + tempClasse.replaceAll(' ', '_').replaceAll('/', '_') + '.xlsx');
-  drawMainEDT();
+  drawMainEDT(removeWaitingCB, 'launchExportFile');
 }
 
 // order can be D as Draft or V as Visible
@@ -77,7 +82,7 @@ function publishEDT(order){
           $('#aj-fback-modal').modal('show');
 
 
-          console.log('Everything is fine: ' + data['status'] + ' ' + data['message']);
+          //console.log('Everything is fine: ' + data['status'] + ' ' + data['message']);
       },
       error: function (jqXhr, textStatus, errorMessage) {
         
@@ -92,7 +97,7 @@ function publishEDT(order){
         $("#ajax-feedback").html('Attention: ' + msg + '. Veuillez contacter le support.');
         $('#aj-fback-modal').modal('show');
         // Do something as error here
-        console.log('Something went wrong: ' + jqXhr['status'] + ' ' + textStatus);
+        //console.log('Something went wrong: ' + jqXhr['status'] + ' ' + textStatus);
       }
   });
 }
@@ -122,7 +127,7 @@ function selectDatePicker(i){
   $("#publish-cls").html('&nbsp;' + dispMonday + '&nbsp;-&nbsp;[' + tempClasse + ']');
   handleEDTForMondayExists();
   // Now you draw the full EDT
-  drawMainEDT();
+  drawMainEDT(removeWaitingCB, 'selectDatePicker');
 }
 
 function fillCartoucheMention(){
@@ -137,7 +142,7 @@ function selectMention(str, strTitle){
   tempMentionCode = str;
   tempMention = strTitle;
   $('#drp-select').html(strTitle);
-  console.log('You have just click on: ' + str);
+  //console.log('You have just click on: ' + str);
   // We reset the dropdown
   selectClasse(0, 'Classe', 0);
   fillCartoucheClasse();
@@ -219,7 +224,7 @@ function selectClasse(classeId, str, humanAction){
   }
   //console.log('You have just classeId: ' + classeId);
   // Refresh necessary to identify overcapacity
-  drawMainEDT();
+  drawMainEDT(removeWaitingCB, 'selectClasse');
 }
 
 function getQtyStu(classeId){
@@ -574,7 +579,7 @@ function startOnOffEdit(){
     editModeOn();
     $("#btn-edit-name").html("Figer EDT");
     $("#last-update").html('en cours de modification.');
-    refreshCellClick();
+    refreshCellClick('startOnOffEdit');
   }
   else{
     // If we are here then the button has change and we must edit
@@ -589,7 +594,7 @@ function startOnOffEdit(){
 
 function clearEDT(){
   myEDTArray = new Array();
-  drawMainEDT();
+  drawMainEDT(removeWaitingCB, 'clearEDT');
 }
 
 function reinitDateArrays(){
@@ -603,7 +608,11 @@ function reinitDateArrays(){
   };
 }
 
-function drawMainEDT(){
+function drawMainEDT(callBack, caller){
+  if(myEDTArray.length > 1){
+    //$(".white-ajax-wait").show(100);
+  }
+  //console.log("call DrawMainEDT called by: " + caller);
   let tableText = '<table id="my-main-table" style="width: 100%" class="' + classBackground + '"><tbody>';
 
   reinitDateArrays();
@@ -713,10 +722,14 @@ function drawMainEDT(){
   tableText = tableText  + '</tbody></table>';
   $('#main-edt').html(tableText);
 
-
-  refreshCellClick();
+  // Previously refreshCellClick here
+  refreshCellClick('drawMainEDT');
   if(editMode == 'N'){
     editModeOff();
+  }
+
+  if (typeof callBack == "function"){
+    callBack();
   }
 }
 
@@ -797,7 +810,7 @@ function editModeOn(){
 
 function saveCourse(){
   //let myEDTLine = [tempCourseId, tempStartTime, tempEndTime, tempHourDuration, tempMinDuration, tempHalfHourTotalShiftDuration];
-  console.log("saveCourse");
+  //console.log("saveCourse");
   let cell = tempCourseId.toString().split("-");
   let myEDTLine = {
                     courseId: tempCourseId,
@@ -856,7 +869,7 @@ function saveCourse(){
    }
 
    $('#exampleModal').modal('toggle');
-   drawMainEDT();
+   drawMainEDT(removeWaitingCB, 'saveCourse');
 }
 
 function deleteCourse(){
@@ -882,7 +895,7 @@ function deleteCourse(){
 function deleteCourseAndDisplay(){
   deleteCourse();
   $('#exampleModal').modal('toggle');
-  drawMainEDT();
+  drawMainEDT(removeWaitingCB, 'deleteCourseAndDisplay');
 }
 
 function loadExistingIfExist(courseId){
@@ -890,7 +903,7 @@ function loadExistingIfExist(courseId){
   //console.log('loadExistingIfExist: ' + index);
 
   if(index > -1){
-    console.log('loadExistingIfExist > 0 ' + index);
+    //console.log('loadExistingIfExist > 0 ' + index);
     tempHourDuration = myEDTArray[index].hourDuration;
 
     let shift = (courseId).toString().split("-");
@@ -940,11 +953,12 @@ function loadExistingIfExist(courseId){
   }
 }
 
-function refreshCellClick(){
+function refreshCellClick(caller){
   // Click on the editing this is not available for not editor
+  // console.log('refreshCellClick called by: ' + caller);
   $( ".jqedt-crs" ).click(function() {
     let cell = this.id.toString().split("-");
-    console.log("You click on .jqedt-crs :" + this.id + ": " + getStartHour(this.id) + " le " + getInvDay(this.id) + ' ' + getInvDate(this.id)+ ' ' + getInvTechDate(this.id));
+    //console.log("You click on .jqedt-crs :" + this.id + ": " + getStartHour(this.id) + " le " + getInvDay(this.id) + ' ' + getInvDate(this.id)+ ' ' + getInvTechDate(this.id));
     //$("#exampleModal").show(100);
     tempHourDuration = 0;
     tempMinDuration = 0;
@@ -989,7 +1003,8 @@ function refreshCellClick(){
 
   $('#exampleModal').on('hidden.bs.modal', function () {
     // When close redo the full Main EDT
-    drawMainEDT();
+    //console.log("$('#exampleModal').on('hidden.bs.modal', function ()");
+    //drawMainEDT(removeWaitingCB, 'refreshCellClick');
   })
 
 }
@@ -997,7 +1012,7 @@ function refreshCellClick(){
 /***********************************************************************************************************/
 
 $(document).ready(function() {
-  console.log('We are in ACE-EDT');
+  //console.log('We are in ACE-EDT');
 
   if($('#mg-graph-identifier').text() == 'jqc-edt'){
     initUsedRoom();
@@ -1037,7 +1052,7 @@ $(document).ready(function() {
 
 
     /***** WORK ON EDT *****/
-    drawMainEDT();
+    drawMainEDT(removeWaitingCB, 'Ready');
   }
   else if($('#mg-graph-identifier').text() == 'xxx'){
     // Do something
