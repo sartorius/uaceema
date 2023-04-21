@@ -254,8 +254,8 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_room` (
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (0,'Non spécifiée',10000,'NA','L','N',1);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (1,'001',40,'PETITE','S','N',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (2,'002',40,'PETITE','S','N',2);
-  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (3,'101',42,'PETITE','S','N',2);
-  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (4,'102',41,'PETITE','S','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (3,'101',30,'PETITE','S','N',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (4,'102',30,'PETITE','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (5,'103',40,'PETITE','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (6,'104',46,'PETITE','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (7,'105',50,'PETITE','S','Y',2);
@@ -270,7 +270,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_room` (
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (16,'406',48,'PETITE','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (17,'504',41,'PETITE','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (18,'201-202',100,'GRANDE','L','N',2);
-  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (19,'205-205',150,'GRANDE','L','Y',2);
+  INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (19,'205-206',150,'GRANDE','L','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (20,'502-503',100,'GRANDE','L','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (21,'301',30,'LABO','S','Y',2);
   INSERT INTO uac_ref_room (id,name, capacity, category, size, is_video, rm_order) VALUES (22,'401',40,'LABO','S','N',2);

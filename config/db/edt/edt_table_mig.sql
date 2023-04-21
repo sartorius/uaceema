@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_jqedt` (
   `start_time_min` VARCHAR(5) NULL,
   `tech_day` VARCHAR(3) NULL COMMENT 'Related to courseId',
   `tech_hour` VARCHAR(3) NULL COMMENT 'Related to courseId',
+  `teacher_id` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
-
 
 
 ALTER TABLE uac_edt_master
@@ -53,6 +53,8 @@ ALTER TABLE uac_edt_line
 ADD COLUMN `start_time` VARCHAR(5) NULL AFTER course_id;
 ALTER TABLE uac_edt_line
 ADD COLUMN `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftime number' AFTER end_time;
+ALTER TABLE uac_edt_line
+ADD COLUMN `teacher_id` SMALLINT NOT NULL DEFAULT 0 AFTER shift_duration;
 
 
 
@@ -74,19 +76,19 @@ INSERT INTO uac_ref_day_queue (id) VALUES (7);
 
 DROP VIEW IF EXISTS v_edt_used_room;
 CREATE VIEW v_edt_used_room AS
-SELECT  uem.id AS uem_id, 
+SELECT  uem.id AS uem_id,
         uem.monday_ofthew AS uem_monday_ofthew,
-        course_id AS course_id, 
-        uel.shift_duration AS shift_duration, 
-        room_id AS room_id, 
-        vcc.short_classe AS short_classe, 
-        uel.start_time AS start_time, 
-        uel.end_time AS end_time, 
+        course_id AS course_id,
+        uel.shift_duration AS shift_duration,
+        room_id AS room_id,
+        vcc.short_classe AS short_classe,
+        uel.start_time AS start_time,
+        uel.end_time AS end_time,
         DATE_FORMAT(uem.monday_ofthew, '%d/%m') AS disp_monday,
         0 AS cell_1_shift,
         0 AS cell_2_day,
         0 AS cell_3_half
-FROM uac_edt_master uem JOIN uac_edt_line uel 
+FROM uac_edt_master uem JOIN uac_edt_line uel
 							          ON uel.master_id = uem.id
 								        JOIN v_class_cohort vcc
 								        ON vcc.id = uem.cohort_id
@@ -97,32 +99,53 @@ AND room_id > 0
 AND uel.shift_duration > 0;
 -- AND uem.monday_ofthew >= '2023-04-10' AND uem.monday_ofthew <= '2023-05-01';
 
+
+/************************************ Teacher Referential ************************************/
+DROP TABLE IF EXISTS uac_ref_teacher;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_teacher` (
+  `id` SMALLINT UNSIGNED NOT NULL,
+  `name` VARCHAR(100) NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+DROP TABLE IF EXISTS uac_xref_teacher_mention;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_teacher_mention` (
+  `teach_id` SMALLINT UNSIGNED NOT NULL,
+  `mention_code` CHAR(5) NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`teach_id`, `mention_code`))
+
+
+-- Find fill up here : https://docs.google.com/spreadsheets/d/1k0sESkSmMPVc2PPN-cL4oPznnEmClZLn5Qsjq4uDiZ0/edit?usp=sharing
+-- INSERT INTO uac_ref_teacher (id, name) VALUES (NULL, NULL);
+
+-- INSERT INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (NULL, NULL);
+
 /*************************************** LEGACY ***************************************/
 
 /*
 DROP TABLE IF EXISTS uac_edt_line;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt_line` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `master_id` BIGINT UNSIGNED NULL,
-    `compute_late_status` CHAR(3) NOT NULL DEFAULT 'NEW',
-    `label_day` VARCHAR(20) NOT NULL,
-    `day` DATE NOT NULL,
-    `day_code` TINYINT UNSIGNED NULL,
-    `hour_starts_at` TINYINT NOT NULL,
-    `duration_hour` TINYINT UNSIGNED NULL,
-    `raw_course_title` VARCHAR(2000) NULL,
-    -- Modication starts here
-    `room_id` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `min_starts_at` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    `duration_min` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    `course_id` VARCHAR(10) NULL COMMENT 'courseId is the position in the EDT and like x-y-z with x the hour, y the day and z is 1 or 2 to be first or second half',
-    `start_time` VARCHAR(5) NULL,
-    `end_time` VARCHAR(5) NULL,
-    `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftime number',
-    -- Modification ends here
-    `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`));
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `master_id` BIGINT UNSIGNED NULL,
+  `compute_late_status` CHAR(3) NOT NULL DEFAULT 'NEW',
+  `label_day` VARCHAR(20) NOT NULL,
+  `day` DATE NOT NULL,
+  `day_code` TINYINT UNSIGNED NULL,
+  `hour_starts_at` TINYINT NOT NULL,
+  `duration_hour` TINYINT UNSIGNED NULL,
+  `raw_course_title` VARCHAR(2000) NULL,
+  `room_id` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+  `min_starts_at` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `duration_min` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `course_id` VARCHAR(10) NULL COMMENT 'courseId is the position in the EDT and like x-y-z with x the hour, y the day and z is 1 or 2 to be first or second half',
+  `start_time` VARCHAR(5) NULL,
+  `end_time` VARCHAR(5) NULL,
+  `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftime number',
+  `teacher_id` SMALLINT NOT NULL DEFAULT 0,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
 
 DROP TABLE IF EXISTS uac_edt_master;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_edt_master` (

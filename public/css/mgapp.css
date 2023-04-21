@@ -1114,6 +1114,10 @@ textarea[name=inputRef] {
   display: none;
 }
 
+.uac-jqedt-version{
+  display: block;
+}
+
 
 /********************************** EDT ROWSPAN *************************************/
 
@@ -1537,9 +1541,32 @@ textarea[name=inputRef] {
 
 /***************************  HALF EDT  ****************************/
 
+#teacher-blk{
+  margin-top: 25px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+#teach-sel-msg{
+  display: none;
+  color: var(--err-ace-color);
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 20px;
+  width: 90%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#teach-sel{
+  font-size: 23px;
+  width: 90%;
+  padding-left: 10px;
+}
 
 #crs-desc{
   padding: 10px;
+  font-size: 20px;
 }
 .edit-sel-off{
   pointer-events: none;

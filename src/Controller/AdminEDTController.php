@@ -164,6 +164,7 @@ class AdminEDTController extends AbstractController
         $result_allroom_query = array();
         $result_allmaster_query = array();
         $result_usedroom_query = array();
+        $result_teacher_query = array();
         
         // Hydrate everything
         $this->hydrateJQEDT(
@@ -176,6 +177,7 @@ class AdminEDTController extends AbstractController
                             $result_allroom_query,
                             $result_allmaster_query,
                             $result_usedroom_query,
+                            $result_teacher_query,
                             $logger);
 
 
@@ -199,6 +201,7 @@ class AdminEDTController extends AbstractController
                                                                 "result_load_edt"=>$result_load_edt,
                                                                 "result_allmaster_query"=>$result_allmaster_query,
                                                                 "result_usedroom_query"=>$result_usedroom_query,
+                                                                "result_teacher_query"=>$result_teacher_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -282,7 +285,7 @@ class AdminEDTController extends AbstractController
 
           //echo $param_jsondata[0]['username'];
           $query_value = ' INSERT INTO uac_load_jqedt ';
-          $query_value = $query_value . ' (user_id, tag_stamp_for_export, cohort_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES (';
+          $query_value = $query_value . ' (user_id, tag_stamp_for_export, cohort_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour, teacher_id) VALUES (';
           // room_id, course_room, display_date, shift_duration, end_time,
           // end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES ';
           $first_comma = ' ';
@@ -292,10 +295,10 @@ class AdminEDTController extends AbstractController
               $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . addslashes($read['rawCourseTitle']) . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
               $query_value = $query_value . "', " . $read['courseRoomId'] . ", '" . $read['courseRoom'] . "', '" . $read['displayDate'] . "', " . $read['shiftDuration'] . ", '" . $read['endTime'];
               $query_value = $query_value . "', " . $read['endTimeHour'] . ", " . $read['endTimeMin'] . ", '" . $read['startTime'] . "', " . $read['startTimeHour'] . ", " . $read['startTimeMin'];
-              $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techDay'];
-              $first_comma = "'), (";
+              $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techHour'] . "', " . $read['teacherId'];
+              $first_comma = "), (";
           }
-          $query_value = $query_value . "');";
+          $query_value = $query_value . ");";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -459,6 +462,7 @@ class AdminEDTController extends AbstractController
                   $result_allroom_query = array();
                   $result_allmaster_query = array();
                   $result_usedroom_query = array();
+                  $result_teacher_query = array();
                   $my_tech_monday = null;
                   
                   if(count($result_load_edt) > 0){
@@ -479,6 +483,7 @@ class AdminEDTController extends AbstractController
                                         $result_allroom_query,
                                         $result_allmaster_query,
                                         $result_usedroom_query,
+                                        $result_teacher_query,
                                         $logger);
 
                 
@@ -536,6 +541,7 @@ class AdminEDTController extends AbstractController
                                                                           "result_load_edt"=>$result_load_edt,
                                                                           "result_allmaster_query"=>$result_allmaster_query,
                                                                           "result_usedroom_query"=>$result_usedroom_query,
+                                                                          "result_teacher_query"=>$result_teacher_query,
                                                                           'scale_right' => ConnectionManager::whatScaleRight(),
                                                                           'errtype' => '']);
 
@@ -560,6 +566,7 @@ class AdminEDTController extends AbstractController
                     &$result_allroom_query,
                     &$result_allmaster_query,
                     &$result_usedroom_query,
+                    &$result_teacher_query,
                     LoggerInterface $logger
   ){
             $my_date_mon_s0 =date('Y-m-d', strtotime($my_tech_monday));
@@ -606,6 +613,9 @@ class AdminEDTController extends AbstractController
             $usedroom_query = " SELECT * FROM v_edt_used_room WHERE uem_monday_ofthew >= '" . $my_date_mon_s_1 . "' AND uem_monday_ofthew <= '" . $my_date_mon_s2 . "';";
             $logger->debug("Show me usedroom_query: " . $usedroom_query);
 
+            $teacher_query = " SELECT urt.id, xm.mention_code, urt.name FROM uac_ref_teacher urt JOIN uac_xref_teacher_mention xm ON xm.teach_id = urt.id;";
+            $logger->debug("Show me usedroom_query: " . $teacher_query);
+
             $dbconnectioninst = DBConnectionManager::getInstance();
 
             $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -625,6 +635,9 @@ class AdminEDTController extends AbstractController
 
             $result_usedroom_query = $dbconnectioninst->query($usedroom_query)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me: " . count($result_usedroom_query));
+
+            $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me: " . count($result_teacher_query));
             
             /****************** End : Cartouche ******************/
 

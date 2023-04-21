@@ -66,6 +66,7 @@ BEGIN
       course_id,
       start_time,
       end_time,
+      teacher_id,
       shift_duration)
           SELECT
           inv_master_id,
@@ -82,6 +83,7 @@ BEGIN
           course_id,
           start_time,
           end_time,
+          teacher_id,
           shift_duration
           FROM uac_load_jqedt
           WHERE status = 'INP'
@@ -281,6 +283,8 @@ BEGIN
             urr.id AS urr_id,
             urr.name AS urr_name,
             urr.capacity AS room_capacity,
+            urt.id AS teacher_id,
+            urt.name AS teacher_name,
             DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
           FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
                                 JOIN uac_cohort uc ON uc.id = uem.cohort_id
@@ -290,6 +294,7 @@ BEGIN
                                 JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                                 JOIN uac_ref_room urr ON urr.id = uel.room_id
                                 JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
           WHERE uem.id = param_master_id
           AND uem.visibility IN ('V', 'D')
           ORDER BY uel.hour_starts_at, uel.day_code ASC;
@@ -325,6 +330,8 @@ BEGIN
           NULL AS urr_id,
           NULL AS urr_name,
           NULL AS room_capacity,
+          0 AS teacher_id,
+          NULL AS teacher_name,
           DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
           FROM uac_edt_master uem
           JOIN uac_cohort uc ON uc.id = uem.cohort_id
@@ -333,11 +340,12 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                             JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                            JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
                   WHERE uem.id = param_master_id;
     END IF;
 
 END$$
--- Remove $$ for OVH 
+-- Remove $$ for OVH
 
 
 -- Read the EDT for a specific username
@@ -400,6 +408,8 @@ BEGIN
               NULL AS start_time,
               0 AS shift_duration,
               NULL AS raw_course_title,
+              0 AS teacher_id,
+              NULL AS teacher_name,
               NULL AS last_update;
     ELSE
       -- We have result
@@ -439,6 +449,8 @@ BEGIN
                   uel.end_time AS uel_end_time,
                   uel.start_time AS uel_start_time,
                   uel.shift_duration AS uel_shift_duration,
+                  urt.id AS teacher_id,
+                  urt.name AS teacher_name,
                   uel.label_day AS uel_label_day,
                   DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
                 FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
@@ -449,6 +461,7 @@ BEGIN
                             					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                                       JOIN uac_ref_room urr ON urr.id = uel.room_id
                                       JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                      JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
                                       JOIN uac_showuser uas ON uas.cohort_id = uem.cohort_id
                                                             AND uas.username = param_username
                 WHERE uem.monday_ofthew = inv_monday_date
@@ -499,6 +512,8 @@ BEGIN
                     uel.end_time AS uel_end_time,
                     uel.start_time AS uel_start_time,
                     uel.shift_duration AS uel_shift_duration,
+                    urt.id AS teacher_id,
+                    urt.name AS teacher_name,
                     uel.label_day AS uel_label_day,
                    DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
                  FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
@@ -509,6 +524,7 @@ BEGIN
                              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                                       JOIN uac_ref_room urr ON urr.id = uel.room_id
                                       JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                      JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
                                       JOIN uac_showuser uas ON uas.cohort_id = uem.cohort_id
                                                             AND uas.username = param_username
                  WHERE uem.monday_ofthew = inv_monday_date

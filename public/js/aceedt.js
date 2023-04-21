@@ -138,6 +138,7 @@ function fillCartoucheMention(){
   $('#dpmention-opt').html(listMention);
 }
 
+
 function selectMention(str, strTitle){
   tempMentionCode = str;
   tempMention = strTitle;
@@ -146,6 +147,8 @@ function selectMention(str, strTitle){
   // We reset the dropdown
   selectClasse(0, 'Classe', 0);
   fillCartoucheClasse();
+  $('#teacher-blk').show(100);
+  fillModalTeacher();
 }
 
 function fillCartoucheClasse(){
@@ -156,6 +159,46 @@ function fillCartoucheClasse(){
     }
   }
   $('#dpclasse-opt').html(listClasse);
+}
+
+
+function fillModalTeacher(){
+  let teacherList = "";
+  filteredTeacherList = new Array();
+  for(let i=0; i<dataTeacherToJsonArray.length; i++){
+    if(dataTeacherToJsonArray[i].mention_code == tempMentionCode){
+      //teacherList = teacherList + '<option value="' + dataTeacherToJsonArray[i].id + '" >' + dataTeacherToJsonArray[i].name + '</option>';
+      teacherList = teacherList + '<option data-id="' + dataTeacherToJsonArray[i].id + '">' + dataTeacherToJsonArray[i].name + '</option>';
+      // Input in the list
+      filteredTeacherList.push(dataTeacherToJsonArray[i].name);
+    }
+    else{
+      // do nothing
+    }
+  }
+  $('#teach-list').html(teacherList);
+}
+
+
+
+function checkTeacher(){
+  let selectedTeacherId = $('#teach-list option').filter(function() {
+                              return this.value === $('#teach-sel').val();
+                          }).data("id");
+  if(selectedTeacherId == undefined){
+    $("#teach-sel-msg").show(100);
+    tempTeacherName = '';
+    tempTeacherId = 0;
+    //console.log('You lose focus on teacher: checkTeacher: ' + $('#teach-sel').val() + ' Not defined');
+  }
+  else{
+    $("#teach-sel-msg").hide(100);
+    //console.log('You lose focus on teacher: checkTeacher: ' + $('#teach-sel').val() + ' : ' + selectedTeacherId);
+    tempTeacherName = $('#teach-sel').val();
+    tempTeacherId = selectedTeacherId;
+  }
+  // Check now if it is in the list of not
+  
 }
 
 function doesEDTForMondayExists(){
@@ -650,6 +693,7 @@ function drawMainEDT(callBack, caller){
   let crsStatus = '';
   let courseTitleTemp = '';
   let myCourseRoom = '';
+  let myTeacher = '';
 
   for(let i=0; i<(refHours.length*2); i++){
     tableText = tableText + '<tr style="border:1px solid black; height : ' + constRowHalfSize + 'px">';
@@ -669,9 +713,13 @@ function drawMainEDT(callBack, caller){
         // Reinitialise the room
         myCourseRoom = '';
         if(myEDTArray[cellIndex].courseRoomId > 0){
-            myCourseRoom = '<br>Salle:&nbsp;' + myEDTArray[cellIndex].courseRoom;
+            myCourseRoom = '<br><strong>Salle:&nbsp;' + myEDTArray[cellIndex].courseRoom + '</strong>';
         }
-        courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
+        myTeacher = '';
+        if(myEDTArray[cellIndex].teacherId > 0){
+          myTeacher = myEDTArray[cellIndex].teacherName + '<br>';
+        }
+        courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myTeacher + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
 
         let overCapacity = "";
         if((parseInt(tempCountStu) > 0) && (parseInt(tempCountStu) > parseInt(myEDTArray[cellIndex].courseRoomCapacity))){
@@ -733,6 +781,7 @@ function drawMainEDT(callBack, caller){
   }
 }
 
+// Load all EDT from the DB
 function loadEDT(){
   myEDTArray = new Array();
   for(let i=0; i<dataLoadToJsonArray.length; i++){
@@ -760,6 +809,8 @@ function loadEDT(){
                       courseStatus: dataLoadToJsonArray[i].course_status,
                       courseRoomId: dataLoadToJsonArray[i].urr_id,
                       courseRoom: dataLoadToJsonArray[i].urr_name,
+                      teacherId: dataLoadToJsonArray[i].teacher_id,
+                      teacherName: dataLoadToJsonArray[i].teacher_name,
                       courseRoomCapacity: dataLoadToJsonArray[i].room_capacity,
                       refEnglishDay: dataLoadToJsonArray[i].uel_label_day
                       };
@@ -835,6 +886,8 @@ function saveCourse(){
                     courseStatus: tempCourseStatus,
                     courseRoomId: tempCourseRoomId,
                     courseRoom: tempCourseRoom,
+                    teacherName: tempTeacherName,
+                    teacherId: tempTeacherId,
                     courseRoomCapacity: (tempCourseRoomId == 0 ? 10000 : tempCourseRoomCapacity),
                     refEnglishDay: getRefEnglishDay(tempCourseId)
                     /*
@@ -898,6 +951,7 @@ function deleteCourseAndDisplay(){
   drawMainEDT(removeWaitingCB, 'deleteCourseAndDisplay');
 }
 
+// Load the data to the modal
 function loadExistingIfExist(courseId){
   let index = findCourse(courseId);
   //console.log('loadExistingIfExist: ' + index);
@@ -940,6 +994,10 @@ function loadExistingIfExist(courseId){
     }
     else{
       $("#my-room-select").val(tempCourseRoomId);
+    }
+
+    if(myEDTArray[index].teacherId > 0){
+      $('#teach-sel').val(myEDTArray[index].teacherName);
     }
 
     $('#crs-desc').val(myEDTArray[index].rawCourseTitle);
@@ -988,7 +1046,13 @@ function refreshCellClick(caller){
     fillModalMinDuration(shift[0], true, true);
     $('#save-edt-line').prop("disabled", true);
     $('#modal-crs-err').html('');
+    // Get the teacher list empty
+    $('#teach-sel').val('');
+    $("#teach-sel-msg").hide(100);
+
+    $('#teach-sel').focusout(checkTeacher)
     fillModalRoom();
+
 
     loadExistingIfExist(tempCourseId);
 

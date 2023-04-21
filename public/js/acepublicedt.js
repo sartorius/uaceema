@@ -54,6 +54,8 @@ function loadEDTPublic(){
                       courseRoomId: dataLoadToJsonArray[i].urr_id,
                       courseRoom: dataLoadToJsonArray[i].urr_name,
                       courseRoomCapacity: dataLoadToJsonArray[i].room_capacity,
+                      teacherId: dataLoadToJsonArray[i].teacher_id,
+                      teacherName: dataLoadToJsonArray[i].teacher_name,
                       refEnglishDay: dataLoadToJsonArray[i].uel_label_day
                       };
       myEDTArray.push(myEDTLine);
@@ -116,6 +118,7 @@ function publicDrawEDT(){
     let crsStatus = '';
     let courseTitleTemp = '';
     let myCourseRoom = '';
+    let myTeacher = '';
   
     for(let i=0; i<(refHours.length*2); i++){
       tableText = tableText + '<tr style="border:1px solid black; height : ' + constRowHalfSize + 'px">';
@@ -135,9 +138,13 @@ function publicDrawEDT(){
           // Reinitialise the room
           myCourseRoom = '';
           if(myEDTArray[cellIndex].courseRoomId > 0){
-              myCourseRoom = '<br>Salle:&nbsp;' + myEDTArray[cellIndex].courseRoom;
+              myCourseRoom = '<br><strong>Salle:&nbsp;' + myEDTArray[cellIndex].courseRoom + '</strong>';
           }
-          courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
+          myTeacher = '';
+          if(myEDTArray[cellIndex].teacherId > 0){
+            myTeacher = myEDTArray[cellIndex].teacherName + '<br>';
+          }
+          courseTitleTemp = myEDTArray[cellIndex].rawCourseTitle + myCourseRoom + '<br>' + myTeacher + myEDTArray[cellIndex].startTime + ' à ' + myEDTArray[cellIndex].endTime;
 
           // Get the course status here
           switch (myEDTArray[cellIndex].courseStatus) {

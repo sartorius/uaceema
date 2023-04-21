@@ -12,6 +12,10 @@
       let dataAllRoomToJsonArray = JSON.parse('{{ result_allroom_query | json_encode | raw }}');
       let dataAllMasterToJsonArray = JSON.parse('{{ result_allmaster_query | json_encode | raw }}');
       let dataUsedRoomToJsonArray = JSON.parse('{{ result_usedroom_query | json_encode | raw }}');
+      let dataTeacherToJsonArray = JSON.parse('{{ result_teacher_query | json_encode | raw }}');
+      let filteredTeacherList = new Array();
+
+
       
 
       let dataLoadToJsonArray = JSON.parse('{{ result_load_edt | json_encode | raw }}');
@@ -39,6 +43,8 @@
       let tempClasse = '';
       let tempClasseID = 0; // <> CourseID !!!
       let tempCountStu = 0;
+      let tempTeacherName = '';
+      let tempTeacherId = '';
 
       const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
       const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
@@ -238,11 +244,19 @@
                   </select>
               </div>
         </div>
-
+        <div id="teacher-blk" class="menu-dropdown">
+          <input id="teach-sel" list="teach-list" placeholder="Enseignant ou laisser vide">
+            <datalist id="teach-list">
+              {# <option>Russia</option> #}
+            </datalist>
+        </div>
+        <div id="teach-sel-msg">
+          <i class="icon-exclamation-triangle nav-text"></i>&nbsp;Enseignant introuvable dans notre référentiel : vous devez mettre son nom dans la partie description juste en bas, sinon aucun professeur ne sera indiqué pour ce cours.
+        </div>
       <hr>
       <div>
         Nombre de caractère(s) restant(s) : <i id="crs-desc-length"></i><br>
-        <textarea id="crs-desc" placeholder="Ne peut être vide. Décrivez le cours ici : titre, indication, professeur..." name="w3review" rows="4" cols="86" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
+        <textarea id="crs-desc" placeholder="Ne peut être vide : décrivez le cours ici : titre, indication, professeur si absent de la liste..." name="w3review" rows="4" cols="70" onKeyUp='verifyTextAreaSaveBtn()'></textarea>
       </div>
       </div>
       <div class="modal-footer">
