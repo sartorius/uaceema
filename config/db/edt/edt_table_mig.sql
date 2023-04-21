@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_teacher_mention` (
   `teach_id` SMALLINT UNSIGNED NOT NULL,
   `mention_code` CHAR(5) NOT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`teach_id`, `mention_code`))
+  PRIMARY KEY (`teach_id`, `mention_code`));
 
 
 -- Find fill up here : https://docs.google.com/spreadsheets/d/1k0sESkSmMPVc2PPN-cL4oPznnEmClZLn5Qsjq4uDiZ0/edit?usp=sharing

@@ -1048,6 +1048,8 @@ function refreshCellClick(caller){
     $('#modal-crs-err').html('');
     // Get the teacher list empty
     $('#teach-sel').val('');
+    tempTeacherName = '';
+    tempTeacherId = 0;
     $("#teach-sel-msg").hide(100);
 
     $('#teach-sel').focusout(checkTeacher)
