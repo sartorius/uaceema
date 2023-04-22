@@ -31,6 +31,15 @@ function goToExistingEDT(){
 
   $("#mg-master-id-form").submit();
 }
+/*
+function launchExportFile(){
+  html2canvas(document.querySelector("#my-full-edt")).then(canvas => {
+        canvas.toBlob(function(blob) {
+          window.saveAs(blob, 'my_image.jpg');
+        });
+    });
+}
+*/
 
 function launchExportFile(){
   $('#title-edt-export').html(tempClasse);
@@ -998,6 +1007,8 @@ function loadExistingIfExist(courseId){
 
     if(myEDTArray[index].teacherId > 0){
       $('#teach-sel').val(myEDTArray[index].teacherName);
+      tempTeacherName = myEDTArray[index].teacherName;
+      tempTeacherId = myEDTArray[index].teacherId;
     }
 
     $('#crs-desc').val(myEDTArray[index].rawCourseTitle);
