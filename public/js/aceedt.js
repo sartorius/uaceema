@@ -563,6 +563,8 @@ function updateCrsStatus(activeId){
   $('.stt-group').removeClass('active');  // Remove any existing active classes
   $('#' + activeId).addClass('active'); // Add the class to the nth element
   //console.log('updateCrsStatus: ' + $('#' + activeId).val());
+  // Allow Button Save or not
+  verifyTextAreaSaveBtn();
 }
 
 /**************** FUNCTION ****************/

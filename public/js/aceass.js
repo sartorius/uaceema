@@ -447,6 +447,68 @@ function loadAssRecapGrid(){
 /***************************************************************************/
 /***************************************************************************/
 
+function copyEDTS0(){
+  $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S0 : EDT de la semaine courante');
+  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
+  $('#copy-paste-txt').html(greetingMsg + textS0);
+  $('#copy-paste-modal').modal('show');
+}
+
+function copyEDTS1(){
+  $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S1 : EDT de la semaine prochaine');
+  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
+  $('#copy-paste-txt').html(greetingMsg + textS1);
+  $('#copy-paste-modal').modal('show');
+}
+
+function copyEDTD(){
+  $('#title-copy-paste').html("<i class='icon-calendar nav-text'></i>&nbsp;Modification EDT d'aujourd'hui");
+  let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes, veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
+  $('#copy-paste-txt').html(greetingMsg + textD);
+  $('#copy-paste-modal').modal('show');
+}
+
+function initTextExport(jsonArray){
+  let invClasse = 0;
+  const cReturn = '<br>';
+  const smbreakClasse = '--' + cReturn;
+  const breakClasse = '---------------------------------';
+  let text = '';
+  
+  for(let i=0; i<jsonArray.length; i++){
+    //console.log('in initTextExport');
+    if(invClasse !== parseInt(jsonArray[i].cohort_id)){
+      if(i>0){
+        text = text + cReturn;
+      }
+      invClasse = jsonArray[i].cohort_id;
+      text = text + breakClasse + cReturn + jsonArray[i].short_classe + cReturn;
+      text = text + breakClasse + cReturn;
+    }
+    text = text + jsonArray[i].label_day_fr + ' - ' + jsonArray[i].nday + ' début: ' + jsonArray[i].uel_start_time + ' fin: ' + jsonArray[i].uel_end_time  + cReturn;
+    switch(jsonArray[i].course_status) {
+      case 'A':
+        // Do nothing
+        break;
+      case 'C':
+        text = text + '[ATTENTION] ANNULÉ ';
+        break;
+      case 'O':
+        text = text + '[Optionnel] ';
+        break;
+      default:
+        text = text + '[Hors site Manakambahiny] ';
+    }
+    text = text + jsonArray[i].raw_course_title + cReturn;
+    text = text + 'Salle : ' + jsonArray[i].urr_name + cReturn;
+    if(parseInt(jsonArray[i].teacher_id) !== '0'){
+      text = text + jsonArray[i].teacher_name;
+    }
+    text = text + cReturn + smbreakClasse;
+  }
+  return text;
+}
+
 function initAllEDTGrid(){
   $('#filter-all-edt').keyup(function() {
     filterDataAllEDT();
@@ -1110,6 +1172,10 @@ $(document).ready(function() {
     // Do nothing
     initAllEDTGrid();
     loadAllEDTGrid();
+
+    textS0 = initTextExport(textS0ToJsonArray);
+    textS1 = initTextExport(textS1ToJsonArray);
+    textD = initTextExport(textDToJsonArray);
   }
   else if($('#mg-graph-identifier').text() == 'aft-loa'){
     // Do nothing

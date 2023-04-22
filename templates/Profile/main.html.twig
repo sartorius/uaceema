@@ -135,6 +135,12 @@
                 <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }}
               </div>
         </div>
+        {% if from_admin == 'S' %}
+              {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
+        <div class="disp-link carte-profile card-parent">
+            <span class="icon-key-1 nav-icon-fa-sm nav-text"></span>&nbsp;{{ current_url }}/profile/{{ profile['PAGE'] }}
+        </div>
+        {% endif %}
         <hr>
 
 
@@ -181,6 +187,7 @@
       {% include 'Admin/EDT/edtheader.html.twig' %}
 
       {% if from_admin == 'N' %}
+          {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
           <div class="container">
               <div class="row">
                   <div class="col-12">

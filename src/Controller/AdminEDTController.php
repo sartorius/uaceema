@@ -316,7 +316,9 @@ class AdminEDTController extends AbstractController
 
 
           // Send all this back to client
+          date_default_timezone_set('Africa/Djibouti');
           $my_datetime_current = date('d/m/y h:i:s');
+          $logger->debug("Show me my_datetime_current: " . $my_datetime_current);
           return new JsonResponse(array(
               'status' => 'OK',
               'last_update' => $my_datetime_current,
@@ -863,12 +865,29 @@ class AdminEDTController extends AbstractController
         $logger->debug("query_all_edt: CALL CLI_GET_MngEDTp3()");
 
         $query_all_edt = "CALL CLI_GET_MngEDTp3()";
-
-
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_edt = $dbconnectioninst->query($query_all_edt)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_edt));
 
+        /******************************* Text query  *******************************/
+        $query_text_s0 = "CALL CLI_GET_EDTTextExport('0')";
+        $logger->debug("call query_text_s0: " . $query_text_s0);
+
+        $query_text_s1 = "CALL CLI_GET_EDTTextExport('1')";
+        $logger->debug("call query_text_s1: " . $query_text_s1);
+
+        $query_text_d = "CALL CLI_GET_EDTTextExport('D')";
+        $logger->debug("call query_text_d: " . $query_text_d);
+
+
+        $result_text_s0 = $dbconnectioninst->query($query_text_s0)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_text_s0));
+
+        $result_text_s1 = $dbconnectioninst->query($query_text_s1)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_text_s1));
+
+        $result_text_d = $dbconnectioninst->query($query_text_d)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_text_d));
 
 
         $content = $twig->render('Admin/EDT/manageredt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -877,6 +896,9 @@ class AdminEDTController extends AbstractController
                                                                 'id' => $_SESSION["id"],
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'all_edt' => $result_all_edt,
+                                                                'result_text_s0' => $result_text_s0,
+                                                                'result_text_s1' => $result_text_s1,
+                                                                'result_text_d' => $result_text_d,
                                                                 'errtype' => '']);
 
     }

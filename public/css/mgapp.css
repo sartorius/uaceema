@@ -820,6 +820,9 @@ textarea[name=inputRef] {
   font-size: 0.8em;
 }
 
+.disp-link{
+  margin-top: 15px;
+}
 
 .blc-inline{
     display:inline-block;
@@ -1679,6 +1682,15 @@ textarea[name=inputRef] {
   color: var(--main-ace-color) !important;
 }
 
+#copy-paste-txt{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.btn-blk-export{
+  margin-left: 15px;
+  vertical-align: middle;
+}
 /*********  ASSIDUITE  **********/
 #blc-trace-in-out{
   text-align: center;

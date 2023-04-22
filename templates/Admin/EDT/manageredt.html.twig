@@ -5,7 +5,17 @@
 
     let dataAllEDTToJsonArray =JSON.parse('{{ all_edt | json_encode | raw }}');
     // We init here the filter value
-		var filteredDataAllEDTToJsonArray = Array.from(dataAllEDTToJsonArray);
+		let filteredDataAllEDTToJsonArray = Array.from(dataAllEDTToJsonArray);
+
+
+    let textS0ToJsonArray = JSON.parse('{{ result_text_s0 | json_encode | raw }}');
+    let textS1ToJsonArray = JSON.parse('{{ result_text_s1 | json_encode | raw }}');
+    let textDToJsonArray = JSON.parse('{{ result_text_d | json_encode | raw }}');
+    const dashRapMsg = 'Pour rappel, vous pouvez toujours retrouver vos emplois du temps en temps réel sur votre dashboard.<br>';
+
+    let textS0 = '';
+    let textS1 = '';
+    let textD = '';
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
@@ -41,8 +51,14 @@
       <i class="icon-refresh"></i>
     </button>
   </div>
+  <div class="col-3">
+    <button onclick="copyEDTS0()" class="btn btn-outline-dark btn-md btn-blk-export">S0 &nbsp;<i class="icon-file-text-o nav-text"></i></button>
+    <button onclick="copyEDTS1()" class="btn btn-outline-dark btn-md btn-blk-export">S1 &nbsp;<i class="icon-file-text-o nav-text"></i></button>
+    <button onclick="copyEDTD()" class="btn btn-outline-dark btn-md btn-blk-export">J &nbsp;<i class="icon-file-text-o nav-text"></i></button>
+  </div>
 
-  <div class="col-7">
+
+  <div class="col-4">
   </div>
 
   <div class="col-1">
@@ -58,6 +74,28 @@
   <div class="col-1">
   </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="copy-paste-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i id='title-copy-paste'></i>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id='copy-paste-txt'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 {# This is the post Goto #}
 {% include 'Admin/EDT/_rawmanagerEDTGoToPost.html.twig' %}

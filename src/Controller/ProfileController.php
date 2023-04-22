@@ -184,7 +184,7 @@ class ProfileController extends AbstractController
 
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
-                                      'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'],
+                                      'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
                                       'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
                                       'modeIsJQ' => $modeIsJQ,
                                       'techInvMonday' => $techInvMonday,
