@@ -449,22 +449,37 @@ function loadAssRecapGrid(){
 
 function copyEDTS0(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S0 : EDT de la semaine courante');
-  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
-  $('#copy-paste-txt').html(greetingMsg + textS0);
+  if(textS0ToJsonArray.length > 0){
+    let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
+    $('#copy-paste-txt').html(greetingMsg + textS0);
+  }
+  else{
+    $('#copy-paste-txt').html(emptyMsg);
+  }
   $('#copy-paste-modal').modal('show');
 }
 
 function copyEDTS1(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S1 : EDT de la semaine prochaine');
-  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
-  $('#copy-paste-txt').html(greetingMsg + textS1);
+  if(textS1ToJsonArray.length > 0){
+    let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
+    $('#copy-paste-txt').html(greetingMsg + textS1);
+  }
+  else{
+    $('#copy-paste-txt').html(emptyMsg);
+  }
   $('#copy-paste-modal').modal('show');
 }
 
 function copyEDTD(){
   $('#title-copy-paste').html("<i class='icon-calendar nav-text'></i>&nbsp;Modification EDT d'aujourd'hui");
-  let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes, veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
-  $('#copy-paste-txt').html(greetingMsg + textD);
+  if(textDToJsonArray.length > 0){
+    let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes, veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
+    $('#copy-paste-txt').html(greetingMsg + textD);
+  }
+  else{
+    $('#copy-paste-txt').html(emptyMsg);
+  }
   $('#copy-paste-modal').modal('show');
 }
 
