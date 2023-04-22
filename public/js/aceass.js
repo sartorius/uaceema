@@ -492,7 +492,7 @@ function initTextExport(jsonArray){
   
   for(let i=0; i<jsonArray.length; i++){
     //console.log('in initTextExport');
-    if(invClasse !== parseInt(jsonArray[i].cohort_id)){
+    if(parseInt(invClasse) !== parseInt(jsonArray[i].cohort_id)){
       if(i>0){
         text = text + cReturn;
       }
