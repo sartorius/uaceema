@@ -922,6 +922,7 @@ function saveCourse(){
                     */
                     };
 
+   // Here we are in case of update
    // We need to remove the previous item and save the new one
    // And manage the debt
    deleteCourse();
@@ -942,7 +943,9 @@ function deleteCourse(){
   let tempCell = '';
   if(index > -1){
     let debtShiftDuration = myEDTArray[index].shiftDuration;
-    for(let i = 0; i<tempHalfHourTotalShiftDuration; i++){
+    // for(let i = 0; i<tempHalfHourTotalShiftDuration; i++){
+    // We need to remove the full debt 
+    for(let i = 0; i<debtShiftDuration; i++){
       
       for(let j=0; j<myEDTRowSpanDebtArray.length; j++){
         tempCell = myEDTRowSpanDebtArray[j].split("-");
