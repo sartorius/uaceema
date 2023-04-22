@@ -276,22 +276,43 @@
                 <div class="col-1">
                 </div>
                 <div class="col-10">
-                    {% for line in resultsp_sm_bkp %}
-                        {% if line['duration_hour'] > 0 %}
-                            {% if line['course_status'] == 'C' %}
-                                [Attention] Annulé :&nbsp;
-                            {% elseif line['course_status'] == 'H' %}
-                                [Attention] Hors site Manakambahiny :&nbsp;
-                            {% elseif line['course_status'] == 'O' %}
-                                [Attention] Option :&nbsp;
-                            {% else %}
-                              {# Do nothing #}
-                            {% endif %}
-                            {{ line['label_day_fr'] }}-{{ line['nday'] }}: début : {{ line['hour_starts_at'] }}h00<br>
-                            {{ line['raw_course_title'] }}<br>
-                            <hr>
-                        {% endif %}
-                    {% endfor %}
+                  {% if modeIsJQ == 'N' %}
+                            {% for line in resultsp_sm_bkp %}
+                                {% if line['duration_hour'] > 0 %}
+                                    {% if line['course_status'] == 'C' %}
+                                        [Attention] Annulé :&nbsp;
+                                    {% elseif line['course_status'] == 'H' %}
+                                        [Attention] Hors site Manakambahiny :&nbsp;
+                                    {% elseif line['course_status'] == 'O' %}
+                                        Option :&nbsp;
+                                    {% else %}
+                                      {# Do nothing #}
+                                    {% endif %}
+                                    {{ line['label_day_fr'] }}-{{ line['nday'] }}: début : {{ line['hour_starts_at'] }}h00<br>
+                                    {{ line['raw_course_title'] }}<br>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                    {% else %}
+                            {% for line in resultsp_sm_bkp %}
+                                {% if line['uel_shift_duration'] > 0 %}
+                                    {% if line['course_status'] == 'C' %}
+                                        [Attention] Annulé :&nbsp;
+                                    {% elseif line['course_status'] == 'H' %}
+                                        [Attention] Hors site Manakambahiny :&nbsp;
+                                    {% elseif line['course_status'] == 'O' %}
+                                        Option :&nbsp;
+                                    {% else %}
+                                      {# Do nothing #}
+                                    {% endif %}
+                                    {{ line['label_day_fr'] }}-{{ line['nday'] }} - début : {{ line['uel_start_time'] }} fin : {{ line['uel_end_time'] }}<br>
+                                    {{ line['raw_course_title'] }}<br>
+                                    <strong>Salle {{ line['urr_name'] }}</strong><br>
+                                    {{ line['teacher_name'] }}<br>
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="col-1">
                 </div>

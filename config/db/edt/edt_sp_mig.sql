@@ -481,11 +481,11 @@ BEGIN
                    urp.title AS parcours,
                    urg.title AS groupe,
                    CASE
-                      WHEN uel.day_code = 1 THEN "LUNDI"
-                      WHEN uel.day_code = 2 THEN "MARDI"
-                      WHEN uel.day_code = 3 THEN "MERCREDI"
-                      WHEN uel.day_code = 4 THEN "JEUDI"
-                      WHEN uel.day_code = 5 THEN "VENDREDI"
+                      WHEN uel.day_code = 0 THEN "LUNDI"
+                      WHEN uel.day_code = 1 THEN "MARDI"
+                      WHEN uel.day_code = 2 THEN "MERCREDI"
+                      WHEN uel.day_code = 3 THEN "JEUDI"
+                      WHEN uel.day_code = 4 THEN "VENDREDI"
                       ELSE "SAMEDI"
                       END AS label_day_fr,
                    DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
