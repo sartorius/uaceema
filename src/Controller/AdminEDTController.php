@@ -282,31 +282,39 @@ class AdminEDTController extends AbstractController
           $tag_stamp_for_export = substr($get_time_stamp, -4);
           $logger->debug("Show me get_time_stamp: " . $get_time_stamp . " Stamp: " . $tag_stamp_for_export);
           // tag_stamp_for_export
-
-          //echo $param_jsondata[0]['username'];
-          $query_value = ' INSERT INTO uac_load_jqedt ';
-          $query_value = $query_value . ' (user_id, tag_stamp_for_export, cohort_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour, teacher_id) VALUES (';
-          // room_id, course_room, display_date, shift_duration, end_time,
-          // end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES ';
-          $first_comma = ' ';
-          foreach ($param_my_edt_array as $read)
-          {
-              $query_value = $query_value . $first_comma . $param_user_id . ", " . $tag_stamp_for_export . ", " . $param_cohort_id . ", '" . $read['courseStatus'] . "', '"  . $read['refEnglishDay'] . "', '" . $read['techDate'] . "', " . $read['refDayCode'] . ", " . $read['startTimeHour'];
-              $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . addslashes($read['rawCourseTitle']) . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
-              $query_value = $query_value . "', " . $read['courseRoomId'] . ", '" . $read['courseRoom'] . "', '" . $read['displayDate'] . "', " . $read['shiftDuration'] . ", '" . $read['endTime'];
-              $query_value = $query_value . "', " . $read['endTimeHour'] . ", " . $read['endTimeMin'] . ", '" . $read['startTime'] . "', " . $read['startTimeHour'] . ", " . $read['startTimeMin'];
-              $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techHour'] . "', " . $read['teacherId'];
-              $first_comma = "), (";
-          }
-          $query_value = $query_value . ");";
-
-          $logger->debug("Show me query_value: " . $query_value);
-
+    
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
-          $logger->debug("Show me count result: " . count($result));
+          if(count($param_my_edt_array) > 0){
+              // We do have data
+              //echo $param_jsondata[0]['username'];
+              $query_value = ' INSERT INTO uac_load_jqedt ';
+              $query_value = $query_value . ' (user_id, tag_stamp_for_export, cohort_id, course_status, label_day, tech_date, day_code, hour_starts_at, min_starts_at, duration_hour, duration_min, raw_course_title, course_id, monday_ofthew, room_id, course_room, display_date, shift_duration, end_time, end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour, teacher_id) VALUES (';
+              // room_id, course_room, display_date, shift_duration, end_time,
+              // end_time_hour, end_time_min, start_time, start_time_hour, start_time_min, tech_day, tech_hour) VALUES ';
+              $first_comma = ' ';
+              foreach ($param_my_edt_array as $read)
+              {
+                  $query_value = $query_value . $first_comma . $param_user_id . ", " . $tag_stamp_for_export . ", " . $param_cohort_id . ", '" . $read['courseStatus'] . "', '"  . $read['refEnglishDay'] . "', '" . $read['techDate'] . "', " . $read['refDayCode'] . ", " . $read['startTimeHour'];
+                  $query_value = $query_value . ", " . $read['startTimeMin'] . ", " . $read['hourDuration'] . ", " . $read['minuteDuration'] . ", '" . addslashes($read['rawCourseTitle']) . "', '" . $read['courseId'] . "', '" . $read['techDateMonday'];
+                  $query_value = $query_value . "', " . $read['courseRoomId'] . ", '" . $read['courseRoom'] . "', '" . $read['displayDate'] . "', " . $read['shiftDuration'] . ", '" . $read['endTime'];
+                  $query_value = $query_value . "', " . $read['endTimeHour'] . ", " . $read['endTimeMin'] . ", '" . $read['startTime'] . "', " . $read['startTimeHour'] . ", " . $read['startTimeMin'];
+                  $query_value = $query_value . ", '" . $read['techDay'] . "', '" . $read['techHour'] . "', " . $read['teacherId'];
+                  $first_comma = "), (";
+              }
+              $query_value = $query_value . ");";
+    
+              $logger->debug("Show me query_value: " . $query_value);
+    
+              $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+              $logger->debug("Show me count result: " . count($result));
+
+          }
+          else{
+            // The EDT is empty
+            $logger->debug("We do not insert anything as the EDT is empty");
+          }
 
 
           $query_integration_EDT = "CALL SRV_CRT_JQEDT (" . $tag_stamp_for_export . ", '" . $param_inv_tech_monday . "', " . $param_cohort_id . ", '" . $param_order .  "' );";

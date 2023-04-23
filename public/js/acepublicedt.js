@@ -202,7 +202,13 @@ $(document).ready(function() {
     if($('#mg-graph-identifier').text() == 'ua-profile'){
       // We need to make sure we are JQ
       if(modeIsJQ == 'Y'){
-        loadEDTPublic();
+        // We need to refresh room here because they re defined here
+        if(dataLoadToJsonArray[0].course_id != null){
+          loadEDTPublic();
+        }
+        else{
+          // We do nothing as the EDT is empty
+        }
         publicDrawEDT();
       }
       else{

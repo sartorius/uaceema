@@ -1123,7 +1123,12 @@ $(document).ready(function() {
       }
       $("#last-update").html(statusMsgLoad + dataLoadToJsonArray[0].last_update);
       // We need to refresh room here because they re defined here
-      loadEDT();
+      if(dataLoadToJsonArray[0].course_id != null){
+        loadEDT();
+      }
+      else{
+        // We do nothing as the EDT is empty
+      }
       editMode = 'N';
       
     }
