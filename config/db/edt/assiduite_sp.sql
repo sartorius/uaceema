@@ -69,6 +69,7 @@ BEGIN
                 CONCAT(
                   CASE WHEN (CHAR_LENGTH(ue.hour_starts_at + ue.duration_hour) = 1)
                     THEN CONCAT('0', ue.hour_starts_at + ue.duration_hour) ELSE ue.hour_starts_at + ue.duration_hour END,
+                    -- we consider the cours which are finished after 25min otherwise they will be consider after
                     -- wait_b_compute ':25:00'
                     wait_b_compute), TIME) < inv_time;
 

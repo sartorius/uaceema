@@ -4,7 +4,6 @@
 {% if recap_assiduites is defined and recap_assiduites is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
-
     let dataTagToJsonArray =JSON.parse('{{ recap_assiduites | json_encode | raw }}');
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
@@ -32,31 +31,31 @@
 {# We handle here the JQ EDT #}
 {% if sp_result is defined and sp_result is not null %}
     <script>
+      const modeIsJQ = "{{ modeIsJQ }}";
+      {% if modeIsJQ == 'Y' %}
+          let dataLoadToJsonArray = JSON.parse('{{ sp_result | json_encode | raw }}');
+          let myEDTArray = new Array();
+          let myEDTRowSpanDebtArray = new Array();
 
-      let dataLoadToJsonArray = JSON.parse('{{ sp_result | json_encode | raw }}');
-      let myEDTArray = new Array();
-      let myEDTRowSpanDebtArray = new Array();
+          const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
+          const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
+          const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
+          const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+          const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+          const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
+          const classBackground = "edt-bg-free-{{ free_i }}";
+          const maxRawCourseTitleLength = 800;
+          const constRowHalfSize = 20;
 
-      const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
-      const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
-      const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
-      const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-      const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
-      const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
-      const classBackground = "edt-bg-free-{{ free_i }}";
-      const maxRawCourseTitleLength = 800;
-      const constRowHalfSize = 20;
+          let invMondayStr = '{{ techInvMonday }}';
 
-      let invMondayStr = '{{ techInvMonday }}';
-
-      let dateArray = new Array();
-      let techDateArray = new Array();
-
+          let dateArray = new Array();
+          let techDateArray = new Array();
+      {% endif %}
     </script>
 {% else %}
-    // Error
     <script>
-      let rawEDTToJsonArray = "";
+      let dataLoadToJsonArray = null;
     </script>
 {% endif %}
 

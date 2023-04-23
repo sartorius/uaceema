@@ -200,8 +200,14 @@ $(document).ready(function() {
     // Some part of the dashboard are handled somewhere else
   
     if($('#mg-graph-identifier').text() == 'ua-profile'){
-      loadEDTPublic();
-      publicDrawEDT();
+      // We need to make sure we are JQ
+      if(modeIsJQ == 'Y'){
+        loadEDTPublic();
+        publicDrawEDT();
+      }
+      else{
+        // We are not JQ so we do nothing
+      }
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){
       // Do something

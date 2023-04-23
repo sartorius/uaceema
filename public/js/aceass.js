@@ -297,7 +297,23 @@ function loadAssRecapGrid(){
           css: "cell-recap",
           headercss: "cell-recap-hd",
           itemTemplate: function(value, item) {
-            return item.LABEL_DAY_FR.substring(0, 3) + ' ' + value;
+            let dayEn = item.LABEL_DAY_EN.substring(0, 2);
+            switch(dayEn) {
+              case 'MO':
+                return  'LUN' + ' ' + value;
+              case 'TU':
+                return  'MAR' + ' ' + value;
+              case 'WE':
+                return  'MER' + ' ' + value;
+              case 'TH':
+                return  'JEU' + ' ' + value;
+              case 'FR':
+                return  'VEN' + ' ' + value;
+              case 'SA':
+                return  'SAM' + ' ' + value;
+              default:
+                return  'DIM' + ' ' + value;
+            }
           }
         },
         //Default width is auto
@@ -333,6 +349,9 @@ function loadAssRecapGrid(){
             }
             else if(value == 'LAT'){
               val = '<i class="recap-lat">Retard</i>';
+            }
+            else if(value == 'VLA'){
+              val = '<i class="recap-vla">Très en retard</i>';
             }
             else if(value == 'ABS'){
               val = '<i class="recap-mis">Absent(e)</i>';

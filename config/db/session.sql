@@ -88,6 +88,9 @@ select distinct flow_code from uac_working_flow order by 1 desc;
 -- 39 to 56
 
 
+-- Day 26/04
+-- Communication L1
+
 
 
 
