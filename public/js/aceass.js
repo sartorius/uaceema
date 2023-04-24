@@ -324,7 +324,12 @@ function loadAssRecapGrid(){
           headercss: "cell-recap-hd",
           css: "cell-recap",
           itemTemplate: function(value, item) {
-            return (value.toString().length == 1) ? ('0' + value + 'h00') : (value + 'h00');
+            if(item.TECH_DEBUT_HALF == '30'){
+              return (value.toString().length == 1) ? ('0' + value + 'h30') : (value + 'h30');
+            }
+            else{
+              return (value.toString().length == 1) ? ('0' + value + 'h00') : (value + 'h00');
+            }
           }
         },
         //Default width is auto

@@ -27,7 +27,7 @@ SELECT vcc.short_classe AS CLASSE,
                       WHEN DATE_FORMAT(uel.day, "%m") = '11' THEN "Novembre"
                       ELSE "Décembre"
                       END AS MOIS,
-    CONCAT(uel.hour_starts_at, 'h00') AS DEBUT_COURS,
+    CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN '00' ELSE uel.min_starts_at END) AS DEBUT_COURS,
     CASE WHEN t_abs.abs_cnt IS NULL THEN 0 ELSE t_abs.abs_cnt END AS NBR_ABS,
     CASE WHEN t_qui.qui_cnt IS NULL THEN 0 ELSE t_qui.qui_cnt END AS NBR_QUI, t_cohort_count.cohort_count AS NUMBER_STUD,
     CASE WHEN uao.id IS NULL THEN 'NON' ELSE 'OUI' END AS OFF_DAY, uel.day AS TECH_DAY, uel.hour_starts_at AS TECH_HOUR

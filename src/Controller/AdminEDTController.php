@@ -673,7 +673,7 @@ class AdminEDTController extends AbstractController
 
         $late_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
-                          . " WHERE ass.status = 'LAT' "
+                          . " WHERE ass.status IN ('LAT', 'VLA') "
 											    . " GROUP BY mu.city, ass.status; ";
         $logger->debug("Show me late_query: " . $late_query);
 
@@ -691,7 +691,7 @@ class AdminEDTController extends AbstractController
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
         $query_report = " SELECT UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
-									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS, "
+									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'VLA' THEN 'Très en retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS, "
                           . " CASE WHEN uel.day_code = 1 THEN 'Lundi' "
                           . " WHEN uel.day_code = 2 THEN 'Mardi' "
                           . " WHEN uel.day_code = 3 THEN 'Mercredi' "
@@ -699,10 +699,10 @@ class AdminEDTController extends AbstractController
                           . " WHEN uel.day_code = 5 THEN 'Vendredi' "
                           . " ELSE 'Samedi' "
                           . " END AS JOUR, "
-                          . " DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE, CONCAT(uel.hour_starts_at, 'h00') AS DEBUT_COURS, "
+                          . " DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE, CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN CONCAT('0', uel.min_starts_at) ELSE uel.min_starts_at END) AS DEBUT_COURS, "
                           . " CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(REPLACE(uel.raw_course_title, '\n', ' - '), ',', '') AS COURS_DETAILS "
                           . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id JOIN uac_edt_line uel ON uel.id = ass.edt_id JOIN uac_showuser uas ON mu.username = uas.username "
-                          . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT', 'QUI') AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off) ORDER BY uel.day DESC LIMIT 2000; ";
+                          . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT', 'VLA', 'QUI') AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off) ORDER BY uel.day DESC LIMIT 2000; ";
         $logger->debug("Show me query_report: " . $query_report);
 
 

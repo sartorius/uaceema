@@ -111,7 +111,7 @@ class ProfileController extends AbstractController
 
             $query_ass_recap = " SELECT ass.status AS STATUS, "
                                       .  " uae.hour_starts_at AS DEBUT, DATE_FORMAT(uae.day, '%d/%m') AS JOUR, REPLACE(SUBSTRING(uae.raw_course_title, 1, 20), '\n', ' ') AS COURS, sca.scan_date AS SCAN_DATE, sca.scan_time AS SCAN_TIME, "
-                                      . " UPPER(DAYNAME(uae.day)) AS LABEL_DAY_EN, uae.day AS TECH_DAT, uae.hour_starts_at AS TECH_DEBUT "
+                                      . " UPPER(DAYNAME(uae.day)) AS LABEL_DAY_EN, uae.day AS TECH_DAT, uae.hour_starts_at AS TECH_DEBUT, uae.min_starts_at AS TECH_DEBUT_HALF "
                                       . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
                       								. " JOIN uac_showuser uas ON mu.username = uas.username "
                       									  . " JOIN uac_edt_line uae ON uae.id = ass.edt_id "
@@ -121,8 +121,8 @@ class ProfileController extends AbstractController
             $query_ass_recap = "SELECT * FROM ( "
                                 . $query_ass_recap
                                 . " SELECT 'XXX' AS STATUS, '0' AS DEBUT, DATE_FORMAT(working_date, '%d/%m') AS JOUR, 'XXX' AS COURS, NULL AS SCAN_DATE, NULL AS SCAN_TIME, UPPER(DAYNAME(working_date)) AS "
-                                . " LABEL_DAY_EN, working_date AS TECH_DAT, 0 AS TECH_DEBUT FROM uac_assiduite_off ) a "
-                                          . " ORDER BY ADDTIME(TECH_DAT, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(TECH_DEBUT) = 1) THEN CONCAT('0', TECH_DEBUT) ELSE TECH_DEBUT END, ':00:00'), TIME)) DESC;";
+                                . " LABEL_DAY_EN, working_date AS TECH_DAT, 0 AS TECH_DEBUT, 0 AS TECH_DEBUT_HALF FROM uac_assiduite_off ) a "
+                                          . " ORDER BY ADDTIME(TECH_DAT, CONVERT(CONCAT(CASE WHEN (CHAR_LENGTH(TECH_DEBUT) = 1) THEN CONCAT('0', TECH_DEBUT) ELSE TECH_DEBUT END, ':',  CASE WHEN (CHAR_LENGTH(TECH_DEBUT_HALF) = 1) THEN '00' ELSE TECH_DEBUT_HALF END,':00'), TIME)) DESC;";
 
             $logger->debug("Query query_ass_recap: " . $query_ass_recap);
 
