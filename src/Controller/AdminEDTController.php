@@ -887,6 +887,10 @@ class AdminEDTController extends AbstractController
         $query_text_d = "CALL CLI_GET_EDTTextExport('D')";
         $logger->debug("call query_text_d: " . $query_text_d);
 
+        $query_text_warn = "CALL CLI_GET_EDTTextExportWarningS0S1()";
+        $logger->debug("call query_text_warn: " . $query_text_warn);
+        
+
 
         $result_text_s0 = $dbconnectioninst->query($query_text_s0)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_s0));
@@ -896,6 +900,9 @@ class AdminEDTController extends AbstractController
 
         $result_text_d = $dbconnectioninst->query($query_text_d)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_d));
+
+        $result_text_warn = $dbconnectioninst->query($query_text_warn)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_text_warn));
 
 
         $content = $twig->render('Admin/EDT/manageredt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -907,6 +914,7 @@ class AdminEDTController extends AbstractController
                                                                 'result_text_s0' => $result_text_s0,
                                                                 'result_text_s1' => $result_text_s1,
                                                                 'result_text_d' => $result_text_d,
+                                                                'result_text_warn' => $result_text_warn,
                                                                 'errtype' => '']);
 
     }

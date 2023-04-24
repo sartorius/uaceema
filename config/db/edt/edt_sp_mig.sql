@@ -681,6 +681,72 @@ BEGIN
 END$$
 -- Remove $$ for OVH
 
+
+-- The export expect value as CHAR(1) 0, 1 or D and D i for the current day
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_EDTTextExportWarningS0S1$$
+CREATE PROCEDURE `CLI_GET_EDTTextExportWarningS0S1` ()
+BEGIN
+    DECLARE monday_zero	DATE;
+    DECLARE monday_one	DATE;
+
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+
+    -- Monday Zero
+    SELECT DAYOFWEEK(CURRENT_DATE) INTO inv_cur_dayw;
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_zero;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY) INTO inv_cur_date;
+    SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_one;
+
+    SELECT
+        'S0' AS inv_s,
+        vcc.id AS vcc_id,
+        vcc.short_classe AS vcc_short_classe,
+        'M' AS status,
+        monday_zero AS monday_ofthew
+        FROM v_class_cohort vcc
+        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_zero)
+    UNION
+    SELECT
+        'S0' AS inv_s,
+        vcc.id AS vcc_id,
+        vcc.short_classe AS vcc_short_classe,
+        'E' AS status,
+        monday_zero AS monday_ofthew
+        FROM v_class_cohort vcc
+        WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
+                                                                  ON uel.master_id = uem.id
+                                          WHERE uel.id IS NULL
+                                          AND uem.monday_ofthew = monday_zero)
+    UNION
+    SELECT
+        'S1' AS inv_s,
+        vcc.id AS vcc_id,
+        vcc.short_classe AS vcc_short_classe,
+        'M' AS status,
+        monday_one AS monday_ofthew
+        FROM v_class_cohort vcc
+        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_one)
+    UNION
+    SELECT
+        'S1' AS inv_s,
+        vcc.id AS vcc_id,
+        vcc.short_classe AS vcc_short_classe,
+        'E' AS status,
+        monday_one AS monday_ofthew
+        FROM v_class_cohort vcc
+        WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
+                                                                  ON uel.master_id = uem.id
+                                          WHERE uel.id IS NULL
+                                          AND uem.monday_ofthew = monday_one)
+    ORDER BY 1, 2, 4 DESC;
+
+
+END$$
+-- Remove $$ for OVH
+
 -- Legacy to be dropped
 -- DROP PROCEDURE IF EXISTS CLI_GET_SHOWEDTForADM$$
 -- DROP PROCEDURE IF EXISTS CLI_GET_FWEDT$$

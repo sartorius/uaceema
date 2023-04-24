@@ -468,38 +468,70 @@ function loadAssRecapGrid(){
 
 function copyEDTS0(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S0 : EDT de la semaine courante');
-  if(textS0ToJsonArray.length > 0){
-    let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
-    $('#copy-paste-txt').html(greetingMsg + textS0);
-  }
-  else{
-    $('#copy-paste-txt').html(emptyMsg);
-  }
+  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
+  $('#copy-paste-txt').html(greetingMsg + textWarningS0 + '<br>' + textS0);
   $('#copy-paste-modal').modal('show');
 }
 
 function copyEDTS1(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S1 : EDT de la semaine prochaine');
-  if(textS1ToJsonArray.length > 0){
-    let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
-    $('#copy-paste-txt').html(greetingMsg + textS1);
-  }
-  else{
-    $('#copy-paste-txt').html(emptyMsg);
-  }
+  let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
+  $('#copy-paste-txt').html(greetingMsg + textWarningS1 + '<br>' + textS1);
   $('#copy-paste-modal').modal('show');
 }
 
 function copyEDTD(){
   $('#title-copy-paste').html("<i class='icon-calendar nav-text'></i>&nbsp;Modification EDT d'aujourd'hui");
   if(textDToJsonArray.length > 0){
-    let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes, veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
+    let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes de la même [classe + semaine], veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
     $('#copy-paste-txt').html(greetingMsg + textD);
   }
   else{
     $('#copy-paste-txt').html(emptyMsg);
   }
   $('#copy-paste-modal').modal('show');
+}
+
+function initWarningEDT(){
+  textWarningS0 = '';
+  textWarningS1 = '';
+  const introM = '[Manquant]&nbsp;';
+  const introE = '[Pas de cours]&nbsp;';
+  const separatorWarn = '<br>';
+  let headerS0 = null;
+  let headerS1 = null;
+  for(let i=0; i<textWarnToJsonArray.length; i++){
+    if(textWarnToJsonArray[i].inv_s == 'S0'){
+      if(headerS0 == null){
+        headerS0 = 'Semaine du lundi : ' + textWarnToJsonArray[i].monday_ofthew + '<br><br>';
+      }
+      if(textWarnToJsonArray[i].status == 'M'){
+        textWarningS0 = textWarningS0 + introM + textWarnToJsonArray[i].vcc_short_classe + separatorWarn;
+      }
+      else{
+        textWarningS0 = textWarningS0 + introE + textWarnToJsonArray[i].vcc_short_classe + separatorWarn;
+      }
+    }
+    else{
+      if(headerS1 == null){
+        headerS1 = 'Semaine du lundi : ' + textWarnToJsonArray[i].monday_ofthew + '<br><br>';
+      }
+      if(textWarnToJsonArray[i].status == 'M'){
+        textWarningS1 = textWarningS1 + introM + textWarnToJsonArray[i].vcc_short_classe  + separatorWarn;
+      }
+      else{
+        textWarningS1 = textWarningS1 + introE + textWarnToJsonArray[i].vcc_short_classe + separatorWarn;
+      }
+    }
+  }
+  // We add the hearder only if we have data
+  if(textWarningS0.length  > 0){
+    textWarningS0 = headerS0 + textWarningS0;
+  }
+  // We add the hearder only if we have data
+  if(textWarningS1.length  > 0){
+    textWarningS1 = headerS1 + textWarningS1;
+  }
 }
 
 function initTextExport(jsonArray){
@@ -1206,7 +1238,7 @@ $(document).ready(function() {
     // Do nothing
     initAllEDTGrid();
     loadAllEDTGrid();
-
+    initWarningEDT();
     textS0 = initTextExport(textS0ToJsonArray);
     textS1 = initTextExport(textS1ToJsonArray);
     textD = initTextExport(textDToJsonArray);
