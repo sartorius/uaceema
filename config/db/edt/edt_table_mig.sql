@@ -123,15 +123,17 @@ DROP VIEW IF EXISTS rep_course_dash;
 CREATE VIEW rep_course_dash AS
 SELECT vcc.short_classe AS CLASSE,
 	CASE
-                      WHEN uel.day_code = 1 THEN "Lundi"
-                      WHEN uel.day_code = 2 THEN "Mardi"
-                      WHEN uel.day_code = 3 THEN "Mercredi"
-                      WHEN uel.day_code = 4 THEN "Jeudi"
-                      WHEN uel.day_code = 5 THEN "Vendredi"
+                      WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
+                      WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"
+                      WHEN UPPER(DAYNAME(uel.day)) = 'WEDNESDAY' THEN "Mercredi"
+                      WHEN UPPER(DAYNAME(uel.day)) = 'THURSDAY' THEN "Jeudi"
+                      WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
                       ELSE "Samedi"
                       END AS JOUR,
     CASE WHEN uel.course_status = "A" THEN "Présenté" ELSE "Annulé" END AS COURSE_STATUS,
-    REPLACE(REPLACE(uel.raw_course_title, "\n", " - "), ",", "") AS COURS_DETAILS,
+    REPLACE(CONCAT(fEscapeLineFeed(fEscapeStr(uel.raw_course_title)), ' ', urt.name,
+                CASE WHEN uel.start_time IS NOT NULL THEN CONCAT(" - Début ", uel.start_time) ELSE "" END,
+                CASE WHEN uel.end_time IS NOT NULL THEN CONCAT(" - Fin ", uel.end_time) ELSE "" END), '\\n', ' - ') AS COURS_DETAILS,
     DATE_FORMAT(uel.day, "%d/%m") AS COURS_DATE,
     CASE
                       WHEN DATE_FORMAT(uel.day, "%m") = '01' THEN "Janvier"
@@ -157,6 +159,7 @@ SELECT vcc.short_classe AS CLASSE,
 		WHERE status = 'ABS'
 		GROUP BY edt_id
   ) t_abs RIGHT JOIN uac_edt_line uel ON uel.id = t_abs.abs_edt_id
+                JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
 	 LEFT JOIN (
 		SELECT edt_id AS qui_edt_id, count(1) AS qui_cnt
 		FROM uac_assiduite
