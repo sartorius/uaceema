@@ -42,39 +42,39 @@ INSERT INTO uac_ref_frais_scolarite
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 4, 800000, 'A', '2023-02-06', 'T');
+(4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 4, 800000, 'A', '2023-01-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 5, 850000, 'A', '2023-04-10', 'T');
+(5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 5, 850000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 6, 850000, 'A', '2023-06-10', 'T');
+(6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 6, 850000, 'A', '2023-07-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 7, 850000, 'A', '2023-02-06', 'T');
+(7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 7, 850000, 'A', '2023-01-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 8, 850000, 'A', '2023-04-10', 'T');
+(8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 8, 850000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 9, 850000, 'A', '2023-06-10', 'T');
+(9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 9, 850000, 'A', '2023-07-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 10, 950000, 'A', '2023-02-06', 'T');
+(10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 10, 950000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 11, 950000, 'A', '2023-04-10', 'T');
+(11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 11, 950000, 'A', '2023-07-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 12, 950000, 'A', '2023-06-10', 'T');
+(12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 12, 950000, 'A', '2023-09-30', 'T');
 
 
 -- Cross ref table

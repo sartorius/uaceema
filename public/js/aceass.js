@@ -474,14 +474,14 @@ function loadAssRecapGrid(){
 function copyEDTS0(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S0 : EDT de la semaine courante');
   let greetingMsg = "Bonjour, voici les emploi du temps de la semaine courante :<br>" + dashRapMsg + "<br>";
-  $('#copy-paste-txt').html(greetingMsg + textWarningS0 + '<br>' + textS0);
+  $('#copy-paste-txt').html(greetingMsg + textWarningS0 + '<br>' + textS0 + endMsg);
   $('#copy-paste-modal').modal('show');
 }
 
 function copyEDTS1(){
   $('#title-copy-paste').html('<i class="icon-calendar nav-text"></i>&nbsp;S1 : EDT de la semaine prochaine');
   let greetingMsg = "Bonjour, voici les emploi du temps de la semaine prochaine :<br>" + dashRapMsg + "<br>";
-  $('#copy-paste-txt').html(greetingMsg + textWarningS1 + '<br>' + textS1);
+  $('#copy-paste-txt').html(greetingMsg + textWarningS1 + '<br>' + textS1 + endMsg);
   $('#copy-paste-modal').modal('show');
 }
 
@@ -489,7 +489,7 @@ function copyEDTD(){
   $('#title-copy-paste').html("<i class='icon-calendar nav-text'></i>&nbsp;Modification EDT d'aujourd'hui");
   if(textDToJsonArray.length > 0){
     let greetingMsg = "Bonjour, voici les dernières modifications d'emploi du temps. Annule et remplace les précédentes de la même [classe + semaine], veuillez nous excuser pour la gêne occasionnée :<br>" + dashRapMsg + "<br>";
-    $('#copy-paste-txt').html(greetingMsg + textD);
+    $('#copy-paste-txt').html(greetingMsg + textD + endMsg);
   }
   else{
     $('#copy-paste-txt').html(emptyMsg);

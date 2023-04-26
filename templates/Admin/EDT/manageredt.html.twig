@@ -13,6 +13,7 @@
     let textDToJsonArray = JSON.parse('{{ result_text_d | json_encode | raw }}');
     let textWarnToJsonArray = JSON.parse('{{ result_text_warn | json_encode | raw }}');
     const dashRapMsg = 'Pour rappel, vous pouvez toujours retrouver vos emplois du temps en temps réel sur votre dashboard.<br>';
+    const endMsg = '<br><br>[Fin du message]';
     const emptyMsg = 'Cette section est vide.';
 
     let textS0 = '';

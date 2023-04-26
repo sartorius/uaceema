@@ -941,7 +941,7 @@ textarea[name=inputRef] {
 
 .waiting-msg{
   text-align: center;
-  font-size: 1.1em;
+  font-size: 1.1em !important;
   color: var(--main-gray-75);
   padding-top: 10px;
 }

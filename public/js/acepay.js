@@ -190,7 +190,7 @@ function generateHistoryPrint(){
     let contentHeight = 0;
     doc.setFontSize(8);
     // Print Ticket Identification Information
-    for(var i=0; i< 6; i++){
+    for(var i=0; i< 5; i++){
       contentHeight = margTop + (i*5);
       if(i>0){
         doc.text(maxPadLeft, contentHeight, myTicket[i].substring(0, (maxLgTicket - maxPrintTicket)));
