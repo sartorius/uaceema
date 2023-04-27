@@ -118,6 +118,39 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_teacher_mention` (
 
 
 /************************************ View ************************************/
+DROP VIEW IF EXISTS rep_global_ass_dash;
+CREATE VIEW rep_global_ass_dash AS
+SELECT
+	 UPPER(mu.username) AS USERNAME,
+	 mu.matricule AS MATRICULE,
+	 REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS NAME,
+	 CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'VLA' THEN 'Très en retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS,
+   CASE
+       WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
+       WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"
+       WHEN UPPER(DAYNAME(uel.day)) = 'WEDNESDAY' THEN "Mercredi"
+       WHEN UPPER(DAYNAME(uel.day)) = 'THURSDAY' THEN "Jeudi"
+       WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
+       ELSE "Samedi"
+       END AS JOUR,
+	  DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE,
+    CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN CONCAT('0', uel.min_starts_at) ELSE uel.min_starts_at END) AS DEBUT_COURS,
+	  CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE,
+    REPLACE(REPLACE(REPLACE(fEscapeLineFeed(uel.raw_course_title), ' ', ' - '), ',', ''), '\\n', ' - ') AS COURS_DETAILS
+	  FROM uac_assiduite ass JOIN mdl_user mu
+                            ON mu.id = ass.user_id
+                            JOIN uac_edt_line uel
+                            ON uel.id = ass.edt_id
+                            JOIN uac_showuser uas
+                            ON mu.username = uas.username
+                            JOIN v_class_cohort vcc
+                            ON vcc.id = uas.cohort_id
+	  WHERE ass.status IN ('ABS', 'LAT', 'VLA', 'QUI')
+	  AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
+    -- We take maximum 15 last days
+	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -15 DAY)
+	  ORDER BY uel.day DESC;
+
 -- Report are here
 DROP VIEW IF EXISTS rep_course_dash;
 CREATE VIEW rep_course_dash AS

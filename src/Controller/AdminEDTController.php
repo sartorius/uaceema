@@ -690,6 +690,7 @@ class AdminEDTController extends AbstractController
 											    . " GROUP BY mu.firstname, mu.lastname, ass.status, vcc.short_classe, vsu.PAGE ORDER BY COUNT(1) DESC LIMIT 100; ";
         $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
 
+        /*
         $query_report = " SELECT UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "
 									        . " CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'VLA' THEN 'Très en retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS, "
                           . " CASE WHEN uel.day_code = 1 THEN 'Lundi' "
@@ -703,6 +704,8 @@ class AdminEDTController extends AbstractController
                           . " CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE, REPLACE(REPLACE(uel.raw_course_title, '\n', ' - '), ',', '') AS COURS_DETAILS "
                           . " FROM uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id JOIN uac_edt_line uel ON uel.id = ass.edt_id JOIN uac_showuser uas ON mu.username = uas.username "
                           . " JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id WHERE ass.status IN ('ABS', 'LAT', 'VLA', 'QUI') AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off) ORDER BY uel.day DESC LIMIT 2000; ";
+                          */
+        $query_report = " SELECT * FROM rep_global_ass_dash; "; 
         $logger->debug("Show me query_report: " . $query_report);
 
 
