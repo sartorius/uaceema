@@ -147,8 +147,8 @@ SELECT
                             ON vcc.id = uas.cohort_id
 	  WHERE ass.status IN ('ABS', 'LAT', 'VLA', 'QUI')
 	  AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
-    -- We take maximum 15 last days
-	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -15 DAY)
+    -- We take maximum 9 last days
+	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -9 DAY)
 	  ORDER BY uel.day DESC;
 
 -- Report are here
