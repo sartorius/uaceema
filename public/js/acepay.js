@@ -190,6 +190,7 @@ function generateHistoryPrint(){
     let contentHeight = 0;
     doc.setFontSize(8);
     // Print Ticket Identification Information but to 5 lines only
+    // Test comment
     for(var i=0; i< 5; i++){
       contentHeight = margTop + (i*5);
       if(i>0){
