@@ -508,7 +508,8 @@ function initWarningEDT(){
   for(let i=0; i<textWarnToJsonArray.length; i++){
     if(textWarnToJsonArray[i].inv_s == 'S0'){
       if(headerS0 == null){
-        headerS0 = 'Semaine du lundi : ' + textWarnToJsonArray[i].monday_ofthew + '<br><br>';
+        let mondayDateS0 = new Date(textWarnToJsonArray[i].monday_ofthew);
+        headerS0 = 'Semaine du lundi : ' + new Intl.DateTimeFormat('fr-FR').format(mondayDateS0) + '<br><br>';
       }
       if(textWarnToJsonArray[i].status == 'M'){
         textWarningS0 = textWarningS0 + introM + textWarnToJsonArray[i].vcc_short_classe + separatorWarn;
@@ -519,7 +520,8 @@ function initWarningEDT(){
     }
     else{
       if(headerS1 == null){
-        headerS1 = 'Semaine du lundi : ' + textWarnToJsonArray[i].monday_ofthew + '<br><br>';
+        let mondayDateS1 = new Date(textWarnToJsonArray[i].monday_ofthew);
+        headerS1 = 'Semaine du lundi : ' + new Intl.DateTimeFormat('fr-FR').format(mondayDateS1) + '<br><br>';
       }
       if(textWarnToJsonArray[i].status == 'M'){
         textWarningS1 = textWarningS1 + introM + textWarnToJsonArray[i].vcc_short_classe  + separatorWarn;

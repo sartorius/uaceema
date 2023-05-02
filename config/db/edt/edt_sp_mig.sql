@@ -674,6 +674,7 @@ BEGIN
                                   JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
                                   JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
              WHERE uem.last_update > CURRENT_DATE
+             AND uem.monday_ofthew <= CURRENT_DATE
              AND uem.visibility = 'V'
              AND uem.jq_edt_type = 'Y'
              ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
