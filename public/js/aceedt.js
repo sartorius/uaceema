@@ -648,6 +648,7 @@ function startOnOffEdit(){
 
 function clearEDT(){
   myEDTArray = new Array();
+  // Need to remove debt
   myEDTRowSpanDebtArray = new Array();
   drawMainEDT(removeWaitingCB, 'clearEDT');
 }
