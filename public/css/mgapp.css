@@ -1627,8 +1627,19 @@ textarea[name=inputRef] {
   color: var(--main-gray-50);
   height: 2.2em;
   border-radius: 4px;
-  width: 20em;
+  width: 16.5em;
 }
+
+.modal-edt-n1{
+  background-color: #9700CB;
+  color: WHITE;
+}
+
+.modal-edt-n2{
+  background-color: #CB6C00;
+  color: WHITE;
+}
+
 
 .sel-inline{
   color: var(--main-gray-50);

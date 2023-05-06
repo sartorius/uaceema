@@ -137,7 +137,7 @@ END$$
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_GET_MngEDTp3$$
-CREATE PROCEDURE `CLI_GET_MngEDTp3` ()
+CREATE PROCEDURE `CLI_GET_MngEDTp3` (IN param_allow_draft_read CHAR(1))
 BEGIN
     DECLARE monday_m_one	DATE;
     DECLARE monday_zero	DATE;
@@ -149,6 +149,16 @@ BEGIN
     DECLARE inv_monday_date	DATE;
     DECLARE inv_cur_dayw	TINYINT;
     DECLARE count_result_set	INT;
+
+
+    DECLARE draft_value_set	CHAR(1);
+
+    IF (param_allow_draft_read = 'Y') THEN
+      SELECT 'D' INTO draft_value_set;
+    ELSE
+      -- 0 is a value we must never use for this
+      SELECT '0' INTO draft_value_set;
+    END IF;
 
 
     -- Monday Zero
@@ -177,7 +187,7 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                               LEFT JOIN uac_edt_master uem ON uem.cohort_id = uc.id
-                                                          AND uem.visibility IN ('V', 'D')
+                                                          AND uem.visibility IN ('V', draft_value_set)
                                                           AND uem.monday_ofthew = monday_m_one ORDER BY cohort_id ASC) as a
         UNION ALL
         SELECT * FROM (SELECT 'S0' AS s, 0 AS inv_w, DATE_FORMAT(monday_zero, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
@@ -189,7 +199,7 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                               LEFT JOIN uac_edt_master uem ON uem.cohort_id = uc.id
-                                                          AND uem.visibility IN ('V', 'D')
+                                                          AND uem.visibility IN ('V', draft_value_set)
                                                           AND uem.monday_ofthew = monday_zero ORDER BY cohort_id ASC) as b
         UNION ALL
         SELECT * FROM (SELECT 'S1' AS s, 1 AS inv_w, DATE_FORMAT(monday_one, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
@@ -201,7 +211,7 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                               LEFT JOIN uac_edt_master uem ON uem.cohort_id = uc.id
-                                                          AND uem.visibility IN ('V', 'D')
+                                                          AND uem.visibility IN ('V', draft_value_set)
                                                           AND uem.monday_ofthew = monday_one ORDER BY cohort_id ASC) as c
         UNION ALL
         SELECT * FROM (SELECT	'S2' AS s, 2 AS inv_w, DATE_FORMAT(monday_two, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
@@ -213,7 +223,7 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                               LEFT JOIN uac_edt_master uem ON uem.cohort_id = uc.id
-                                                          AND uem.visibility IN ('V', 'D')
+                                                          AND uem.visibility IN ('V', draft_value_set)
                                                           AND uem.monday_ofthew = monday_two ORDER BY cohort_id ASC) as d
         UNION ALL
         SELECT * FROM (SELECT 'S3' AS s, 3 AS inv_w, DATE_FORMAT(monday_three, "%d/%m") AS monday_ofthew, uc.id AS cohort_id, urm.title AS mention, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uem.id AS master_id, uem.visibility AS visibility, uem.monday_ofthew AS inv_monday,
@@ -225,7 +235,7 @@ BEGIN
                             JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
                             JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
                               LEFT JOIN uac_edt_master uem ON uem.cohort_id = uc.id
-                                                          AND uem.visibility IN ('V', 'D')
+                                                          AND uem.visibility IN ('V', draft_value_set)
                                                           AND uem.monday_ofthew = monday_three ORDER BY cohort_id ASC) as e
         ) union_all_tab ORDER BY tech_last_update DESC;
 
@@ -235,7 +245,7 @@ END$$
 -- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_GET_SHOWJQEDTForADM$$
-CREATE PROCEDURE `CLI_GET_SHOWJQEDTForADM` (IN param_master_id VARCHAR(25))
+CREATE PROCEDURE `CLI_GET_SHOWJQEDTForADM` (IN param_master_id VARCHAR(25), IN param_allow_note_read CHAR(1))
 BEGIN
     -- We must now how many line we have because if there is no line because no course we cannot fail
     DECLARE count_edt_line	SMALLINT;
@@ -254,51 +264,101 @@ BEGIN
 
     IF (count_edt_line > 0) THEN
 
-          SELECT
-            uem.id AS master_id,
-            uem.jq_edt_type AS jq_edt_type,
-            uem.visibility AS visibility,
-            uem.cohort_id AS cohort_id,
-            vcc.short_classe AS short_classe,
-            urm.par_code AS mention_code,
-            urm.title AS mention,
-            uc.niveau AS niveau,
-            urp.title AS parcours,
-            urg.title AS groupe,
-            DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
-            DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
-            DATE_FORMAT(uel.day, "%d/%m") AS nday,
-            DATE_FORMAT(uel.day, "%Y-%m-%d") AS tech_date,
-            uel.day_code AS day_code,
-            uel.hour_starts_at AS uel_hour_starts_at,
-            uel.duration_hour AS uel_duration_hour,
-            fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
-            uel.course_status AS course_status,
-            uel.course_id AS course_id,
-            uel.duration_min AS uel_duration_min,
-            uel.min_starts_at AS uel_min_starts_at,
-            uel.end_time AS uel_end_time,
-            uel.start_time AS uel_start_time,
-            uel.shift_duration AS uel_shift_duration,
-            uel.label_day AS uel_label_day,
-            urr.id AS urr_id,
-            urr.name AS urr_name,
-            urr.capacity AS room_capacity,
-            urt.id AS teacher_id,
-            urt.name AS teacher_name,
-            DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
-          FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
-                                JOIN uac_cohort uc ON uc.id = uem.cohort_id
-                                JOIN uac_ref_mention urm ON urm.par_code = uc.mention
-                                JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
-                                JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
-                                JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
-                                JOIN uac_ref_room urr ON urr.id = uel.room_id
-                                JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
-                                JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
-          WHERE uem.id = param_master_id
-          AND uem.visibility IN ('V', 'D')
-          ORDER BY uel.hour_starts_at, uel.day_code ASC;
+          IF (param_allow_note_read = 'Y') THEN
+                SELECT
+                  uem.id AS master_id,
+                  uem.jq_edt_type AS jq_edt_type,
+                  uem.visibility AS visibility,
+                  uem.cohort_id AS cohort_id,
+                  vcc.short_classe AS short_classe,
+                  urm.par_code AS mention_code,
+                  urm.title AS mention,
+                  uc.niveau AS niveau,
+                  urp.title AS parcours,
+                  urg.title AS groupe,
+                  DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+                  DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
+                  DATE_FORMAT(uel.day, "%d/%m") AS nday,
+                  DATE_FORMAT(uel.day, "%Y-%m-%d") AS tech_date,
+                  uel.day_code AS day_code,
+                  uel.hour_starts_at AS uel_hour_starts_at,
+                  uel.duration_hour AS uel_duration_hour,
+                  fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+                  uel.course_status AS course_status,
+                  uel.course_id AS course_id,
+                  uel.duration_min AS uel_duration_min,
+                  uel.min_starts_at AS uel_min_starts_at,
+                  uel.end_time AS uel_end_time,
+                  uel.start_time AS uel_start_time,
+                  uel.shift_duration AS uel_shift_duration,
+                  uel.label_day AS uel_label_day,
+                  urr.id AS urr_id,
+                  urr.name AS urr_name,
+                  urr.capacity AS room_capacity,
+                  urt.id AS teacher_id,
+                  urt.name AS teacher_name,
+                  DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+                FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                                      JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                                      JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                                      JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                                      JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                                      JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                      JOIN uac_ref_room urr ON urr.id = uel.room_id
+                                      JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                      JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+                WHERE uem.id = param_master_id
+                AND uem.visibility IN ('V', 'D')
+                ORDER BY uel.hour_starts_at, uel.day_code ASC;
+          ELSE
+              -- Notes are note allowed for this user
+              SELECT
+                uem.id AS master_id,
+                uem.jq_edt_type AS jq_edt_type,
+                uem.visibility AS visibility,
+                uem.cohort_id AS cohort_id,
+                vcc.short_classe AS short_classe,
+                urm.par_code AS mention_code,
+                urm.title AS mention,
+                uc.niveau AS niveau,
+                urp.title AS parcours,
+                urg.title AS groupe,
+                DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+                DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
+                DATE_FORMAT(uel.day, "%d/%m") AS nday,
+                DATE_FORMAT(uel.day, "%Y-%m-%d") AS tech_date,
+                uel.day_code AS day_code,
+                uel.hour_starts_at AS uel_hour_starts_at,
+                uel.duration_hour AS uel_duration_hour,
+                fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+                uel.course_status AS course_status,
+                uel.course_id AS course_id,
+                uel.duration_min AS uel_duration_min,
+                uel.min_starts_at AS uel_min_starts_at,
+                uel.end_time AS uel_end_time,
+                uel.start_time AS uel_start_time,
+                uel.shift_duration AS uel_shift_duration,
+                uel.label_day AS uel_label_day,
+                urr.id AS urr_id,
+                urr.name AS urr_name,
+                urr.capacity AS room_capacity,
+                urt.id AS teacher_id,
+                urt.name AS teacher_name,
+                DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+              FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                                    JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                                    JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                                    JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                                    JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                                    JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                    JOIN uac_ref_room urr ON urr.id = uel.room_id
+                                    JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                    JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+              WHERE uem.id = param_master_id
+              AND uem.visibility IN ('V')
+              AND uel.course_status NOT IN ('1', '2')
+              ORDER BY uel.hour_starts_at, uel.day_code ASC;
+          END IF;
 
     ELSE
     SELECT
@@ -351,6 +411,7 @@ END$$
 -- Read the EDT for a specific username
 -- param_bkp is to read the EDT per line if the display does not work
 -- Display EDT for specific username
+-- Does not see any note 1 or 2
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_GET_FWEDTJQ$$
 CREATE PROCEDURE `CLI_GET_FWEDTJQ` (IN param_username VARCHAR(25), IN param_week TINYINT, IN param_bkp CHAR(1))
@@ -466,6 +527,7 @@ BEGIN
                                                             AND uas.username = param_username
                 WHERE uem.monday_ofthew = inv_monday_date
                 AND uem.visibility = 'V'
+                AND uel.course_status NOT IN ('1', '2')
                 ORDER BY uel.hour_starts_at, uel.day_code ASC;
 
          ELSE
@@ -529,6 +591,7 @@ BEGIN
                                                             AND uas.username = param_username
                  WHERE uem.monday_ofthew = inv_monday_date
                  AND uem.visibility = 'V'
+                 AND uel.course_status NOT IN ('1', '2')
                  -- We need another order because we do not display per line here
                  ORDER BY uel.day_code, uel.hour_starts_at ASC;
 
@@ -596,6 +659,7 @@ BEGIN
                WHERE uem.monday_ofthew = monday_zero
                AND uem.visibility = 'V'
                AND uem.jq_edt_type = 'Y'
+               AND uel.course_status NOT IN ('1', '2')
                ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
     ELSEIF (param_type = '1')  THEN
               SELECT
@@ -636,6 +700,7 @@ BEGIN
              WHERE uem.monday_ofthew = monday_one
              AND uem.visibility = 'V'
              AND uem.jq_edt_type = 'Y'
+             AND uel.course_status NOT IN ('1', '2')
              ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
     ELSEIF (param_type = 'D')  THEN
               SELECT
@@ -677,6 +742,7 @@ BEGIN
              AND uem.monday_ofthew <= CURRENT_DATE
              AND uem.visibility = 'V'
              AND uem.jq_edt_type = 'Y'
+             AND uel.course_status NOT IN ('1', '2')
              ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
     END IF;
 END$$
@@ -684,6 +750,7 @@ END$$
 
 
 -- The export expect value as CHAR(1) 0, 1 or D and D i for the current day
+-- We tell here if the EDT is empty or missing
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_GET_EDTTextExportWarningS0S1$$
 CREATE PROCEDURE `CLI_GET_EDTTextExportWarningS0S1` ()
@@ -719,8 +786,10 @@ BEGIN
         FROM v_class_cohort vcc
         WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
                                                                   ON uel.master_id = uem.id
-                                          WHERE uel.id IS NULL
-                                          AND uem.monday_ofthew = monday_zero)
+                                          WHERE uem.monday_ofthew = monday_zero
+                                          AND uel.id IS NULL
+                                          -- OR uel.id IS NOT NULL AND NOT EXISTS uel.course_status IN (A, H, O, C)
+                                          )
     UNION
     SELECT
         'S1' AS inv_s,
@@ -740,8 +809,10 @@ BEGIN
         FROM v_class_cohort vcc
         WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
                                                                   ON uel.master_id = uem.id
-                                          WHERE uel.id IS NULL
-                                          AND uem.monday_ofthew = monday_one)
+                                          WHERE uem.monday_ofthew = monday_one
+                                          AND uel.id IS NULL
+                                          -- OR uel.id IS NOT NULL AND NOT EXISTS uel.course_status IN (A, H, O, C)
+                                          )
     ORDER BY 1, 2, 4 DESC;
 
 

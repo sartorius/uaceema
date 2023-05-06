@@ -434,7 +434,10 @@ class AdminEDTController extends AbstractController
                   }
                   $mode = 'LOA'; //'mode' => $mode,
 
-                  $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ")";
+                  $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ", 'N')";
+                  if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+                      $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ", 'Y')";
+                  }
                   $logger->debug("Show me import_query: " . $import_query);
                   $result_load_edt = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -872,10 +875,16 @@ class AdminEDTController extends AbstractController
     if(isset($scale_right) && ($scale_right > 4)){
 
 
-        $logger->debug("Firstname: " . $_SESSION["firstname"]);
-        $logger->debug("query_all_edt: CALL CLI_GET_MngEDTp3()");
+        
 
-        $query_all_edt = "CALL CLI_GET_MngEDTp3()";
+        $query_all_edt = "CALL CLI_GET_MngEDTp3('N')";
+        if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+            $query_all_edt = "CALL CLI_GET_MngEDTp3('Y')";
+        }
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        $logger->debug("query_all_edt: " . $query_all_edt);
+
+
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_edt = $dbconnectioninst->query($query_all_edt)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_edt));
@@ -884,25 +893,29 @@ class AdminEDTController extends AbstractController
         $query_text_s0 = "CALL CLI_GET_EDTTextExport('0')";
         $logger->debug("call query_text_s0: " . $query_text_s0);
 
-        $query_text_s1 = "CALL CLI_GET_EDTTextExport('1')";
-        $logger->debug("call query_text_s1: " . $query_text_s1);
-
-        $query_text_d = "CALL CLI_GET_EDTTextExport('D')";
-        $logger->debug("call query_text_d: " . $query_text_d);
-
-        $query_text_warn = "CALL CLI_GET_EDTTextExportWarningS0S1()";
-        $logger->debug("call query_text_warn: " . $query_text_warn);
-        
-
-
         $result_text_s0 = $dbconnectioninst->query($query_text_s0)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_s0));
+
+        //
+
+        $query_text_s1 = "CALL CLI_GET_EDTTextExport('1')";
+        $logger->debug("call query_text_s1: " . $query_text_s1);
 
         $result_text_s1 = $dbconnectioninst->query($query_text_s1)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_s1));
 
+        //
+
+        $query_text_d = "CALL CLI_GET_EDTTextExport('D')";
+        $logger->debug("call query_text_d: " . $query_text_d);
+
         $result_text_d = $dbconnectioninst->query($query_text_d)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_d));
+
+        //
+
+        $query_text_warn = "CALL CLI_GET_EDTTextExportWarningS0S1()";
+        $logger->debug("call query_text_warn: " . $query_text_warn);
 
         $result_text_warn = $dbconnectioninst->query($query_text_warn)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_text_warn));

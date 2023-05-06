@@ -564,6 +564,17 @@ function updateCrsStatus(activeId){
   $('#' + activeId).addClass('active'); // Add the class to the nth element
   //console.log('updateCrsStatus: ' + $('#' + activeId).val());
   // Allow Button Save or not
+  $('#crs-desc').removeClass('modal-edt-n1');
+  $('#crs-desc').removeClass('modal-edt-n2');
+  if(activeId == 'stt-1'){
+    $('#crs-desc').addClass('modal-edt-n1');
+  }
+  else if(activeId == 'stt-2'){
+    $('#crs-desc').addClass('modal-edt-n2');
+  }
+  else{
+    // Do nothing
+  }
   verifyTextAreaSaveBtn();
 }
 
@@ -1051,6 +1062,9 @@ function refreshCellClick(caller){
     $("#crs-desc").val('');
 
     $("#crs-desc-length").html(maxRawCourseTitleLength);
+    // Remove color for description
+    $('#crs-desc').removeClass('modal-edt-n1');
+    $('#crs-desc').removeClass('modal-edt-n2');
 
     let infosCours = '';
     infosCours = infosCours + '<i class="icon-calendar nav-text"></i>&nbsp;<strong>' + getInvDay(this.id) + '</strong>&nbsp;';
