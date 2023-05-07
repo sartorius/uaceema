@@ -574,7 +574,7 @@ function updateCrsStatus(activeId){
   }
   else{
     // Do nothing
-  }
+  };
   verifyTextAreaSaveBtn();
 }
 
@@ -987,6 +987,7 @@ function deleteCourseAndDisplay(){
 }
 
 // Load the data to the modal
+// Load the course data to the modal
 function loadExistingIfExist(courseId){
   let index = findCourse(courseId);
   //console.log('loadExistingIfExist: ' + index);
@@ -1018,6 +1019,19 @@ function loadExistingIfExist(courseId){
     tempCourseStatus = myEDTArray[index].courseStatus;
     $('.stt-group').removeClass('active');
     $('#stt-' + tempCourseStatus.toLowerCase()).addClass('active');
+
+    // Check if we are in note 1 or 2
+    $('#crs-desc').removeClass('modal-edt-n1');
+    $('#crs-desc').removeClass('modal-edt-n2');
+    if(tempCourseStatus === '1'){
+      $('#crs-desc').addClass('modal-edt-n1');
+    }
+    else if(tempCourseStatus === '2'){
+      $('#crs-desc').addClass('modal-edt-n2');
+    }
+    else{
+      // Do nothing because it is not 
+    };
 
 
     tempCourseRoom = myEDTArray[index].courseRoom;
