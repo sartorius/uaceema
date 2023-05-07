@@ -364,6 +364,9 @@ function loadAssRecapGrid(){
             else if(value == 'QUI'){
               val = '<i class="recap-qui">Quitté</i>';
             }
+            else if(value == 'NEX'){
+              val = '<i class="recap-nex"><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Sortie</i>';
+            }
             else if(value == 'JUS'){
               val = 'Justifié';
             }
@@ -1109,10 +1112,10 @@ function generateNoExitReportCSV(){
   let csvContent = "";
   const SEP_ = ","
 
-	let dataString = "Classe" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "Raison" + SEP_ + "\n";
+	let dataString = "Classe" + SEP_ + "Username" + SEP_ + "Matricule" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "Raison" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayNoExitReport.length; i++){
-		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ +  dataTagToJsonArrayNoExitReport[i].REASON + SEP_ ;
+		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].USERNAME + SEP_ + dataTagToJsonArrayNoExitReport[i].MATRICULE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ +  dataTagToJsonArrayNoExitReport[i].REASON + SEP_ ;
     // easy close here
     csvContent += i < dataTagToJsonArrayNoExitReport.length ? dataString+ "\n" : dataString;
 	}

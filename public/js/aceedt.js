@@ -763,6 +763,14 @@ function drawMainEDT(callBack, caller){
             crsStatus = '-hos';
             courseTitleTemp = '<strong>Hors site</strong> : ' + courseTitleTemp;
             break;
+          case '1':
+            crsStatus = '-n1';
+            courseTitleTemp = '<strong>Note 1</strong> : ' + courseTitleTemp;
+            break;
+          case '2':
+            crsStatus = '-n2';
+            courseTitleTemp = '<strong>Note 2</strong> : ' + courseTitleTemp;
+            break;
           default:
             // Last case
             crsStatus = '-opt';

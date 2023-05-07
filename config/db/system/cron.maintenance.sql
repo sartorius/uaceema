@@ -17,5 +17,6 @@ OPTIMIZE TABLE uac_assiduite;
 OPTIMIZE TABLE uac_connection_log;
 OPTIMIZE TABLE uac_studashboard_log;
 OPTIMIZE TABLE uac_working_flow;
+OPTIMIZE TABLE uac_assiduite_noexit;
 
 SELECT NOW() AS END_TIME;

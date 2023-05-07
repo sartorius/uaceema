@@ -775,7 +775,7 @@ BEGIN
         'M' AS status,
         monday_zero AS monday_ofthew
         FROM v_class_cohort vcc
-        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_zero)
+        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_zero AND visibility = 'V')
     UNION
     SELECT
         'S0' AS inv_s,
@@ -786,6 +786,8 @@ BEGIN
         FROM v_class_cohort vcc
         WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
                                                                   ON uel.master_id = uem.id
+                                                                  AND uem.visibility = 'V'
+                                                                  AND uel.course_status IN ('A', 'H', 'O', 'C')
                                           WHERE uem.monday_ofthew = monday_zero
                                           AND uel.id IS NULL
                                           -- OR uel.id IS NOT NULL AND NOT EXISTS uel.course_status IN (A, H, O, C)
@@ -798,7 +800,7 @@ BEGIN
         'M' AS status,
         monday_one AS monday_ofthew
         FROM v_class_cohort vcc
-        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_one)
+        WHERE vcc.id NOT IN (SELECT cohort_id FROM uac_edt_master WHERE monday_ofthew = monday_one AND visibility = 'V')
     UNION
     SELECT
         'S1' AS inv_s,
@@ -809,6 +811,8 @@ BEGIN
         FROM v_class_cohort vcc
         WHERE vcc.id IN (SELECT cohort_id FROM uac_edt_master uem LEFT JOIN uac_edt_line uel
                                                                   ON uel.master_id = uem.id
+                                                                  AND uem.visibility = 'V'
+                                                                  AND uel.course_status IN ('A', 'H', 'O', 'C')
                                           WHERE uem.monday_ofthew = monday_one
                                           AND uel.id IS NULL
                                           -- OR uel.id IS NOT NULL AND NOT EXISTS uel.course_status IN (A, H, O, C)

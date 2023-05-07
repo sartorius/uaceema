@@ -2,15 +2,16 @@
 DROP VIEW IF EXISTS rep_course_dash;
 CREATE VIEW rep_course_dash AS
 SELECT vcc.short_classe AS CLASSE,
-	CASE
-                      WHEN uel.day_code = 1 THEN "Lundi"
-                      WHEN uel.day_code = 2 THEN "Mardi"
-                      WHEN uel.day_code = 3 THEN "Mercredi"
-                      WHEN uel.day_code = 4 THEN "Jeudi"
-                      WHEN uel.day_code = 5 THEN "Vendredi"
-                      ELSE "Samedi"
-                      END AS JOUR,
-    CASE WHEN uel.course_status = "A" THEN "Présenté" ELSE "Annulé" END AS COURSE_STATUS,
+		CASE
+        WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
+        WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"
+        WHEN UPPER(DAYNAME(uel.day)) = 'WEDNESDAY' THEN "Mercredi"
+        WHEN UPPER(DAYNAME(uel.day)) = 'THURSDAY' THEN "Jeudi"
+        WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
+        ELSE "Samedi"
+        END AS JOUR,
+		-- C is for CANCEL the rest are not
+    CASE WHEN uel.course_status = "C" THEN "Annulé" ELSE "Présenté" END AS COURSE_STATUS,
     REPLACE(REPLACE(uel.raw_course_title, "\n", " - "), ",", "") AS COURS_DETAILS,
     DATE_FORMAT(uel.day, "%d/%m") AS COURS_DATE,
     CASE
@@ -52,14 +53,15 @@ SELECT vcc.short_classe AS CLASSE,
 	GROUP BY cohort_id
 	) t_cohort_count ON t_cohort_count.vshcohort_id = uem.cohort_id
 	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
-	WHERE uel.duration_hour > 0
+	WHERE (uel.duration_hour + uel.duration_min) > 0
+	AND uel.course_status NOT IN ('1', '2')
 	AND uel.day <= CURRENT_DATE
 	ORDER BY uel.day DESC;
 
 
 DROP VIEW IF EXISTS rep_no_exit;
 CREATE VIEW rep_no_exit AS
-SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, vcc.short_classe AS CLASSE, DATE_FORMAT(max_scan.scan_date, "%d/%m") AS INVDATE, max_scan.scan_date AS TECH_DATE,
+SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, UPPER(vsh.USERNAME) AS USERNAME, vsh.MATRICULE AS MATRICULE, vcc.short_classe AS CLASSE, DATE_FORMAT(max_scan.scan_date, "%d/%m") AS INVDATE, max_scan.scan_date AS TECH_DATE,
 	CASE
                       WHEN DAYOFWEEK(max_scan.scan_date) = 2 THEN "Lundi"
                       WHEN DAYOFWEEK(max_scan.scan_date) = 3 THEN "Mardi"
@@ -68,28 +70,35 @@ SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS N
                       WHEN DAYOFWEEK(max_scan.scan_date) = 6 THEN "Vendredi"
                       ELSE "Samedi"
                       END AS JOUR, 'Scan sortie manquant' AS REASON  FROM (
-          -- List of people who entered but never exit
+          -- List of last scan of people
           SELECT mu.id AS mu_id, usa.scan_date AS nooutscan_date, max(usa.scan_time) AS scan_in from uac_scan usa
           JOIN mdl_user mu on usa.user_id = mu.id
           WHERE 1=1
+					-- For these specific dates
           AND usa.scan_date < CURRENT_DATE
+					AND usa.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
           GROUP BY mu.id, usa.scan_date
           ) t_student_noout JOIN uac_scan max_scan
+																	-- Match the full scan if it is I
                                   ON max_scan.user_id = t_student_noout.mu_id
                 			   	  			AND max_scan.scan_time = scan_in
                 			   	  			AND max_scan.scan_date = t_student_noout.nooutscan_date
                 			   	  			AND max_scan.in_out = 'I'
+														-- Need to know if he as been PON/LAT etc
           			   	  			JOIN uac_assiduite uaa
                                     ON uaa.user_id = max_scan.user_id
-          			   	  				     AND max_scan.id = uaa.scan_id
-          			   	  				     AND uaa.status IN ('PON', 'LAT')
+          			   	  				     -- AND max_scan.id = uaa.scan_id
+          			   	  				     AND uaa.status IN ('PON', 'LAT', 'VLA', 'QUI')
+          			   	  				JOIN uac_edt_line uel
+          			   	  				ON uel.id = uaa.edt_id
+          			   	  				AND uel.day = max_scan.scan_date
           			   	  		JOIN v_showuser vsh ON vsh.id = max_scan.user_id
           			   	  		JOIN v_class_cohort vcc ON vcc.id = vsh.cohort_id
           			   	  			ORDER BY TECH_DATE DESC;
 
 DROP VIEW IF EXISTS rep_no_entry;
 CREATE VIEW rep_no_entry AS
-SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, vcc.short_classe AS CLASSE, DATE_FORMAT(min_scan.scan_date, "%d/%m") AS INVDATE, min_scan.scan_date AS TECH_DATE,
+SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS NAME, UPPER(vsh.USERNAME) AS USERNAME, vsh.MATRICULE AS MATRICULE, vcc.short_classe AS CLASSE, DATE_FORMAT(min_scan.scan_date, "%d/%m") AS INVDATE, min_scan.scan_date AS TECH_DATE,
 	CASE
                       WHEN DAYOFWEEK(min_scan.scan_date) = 2 THEN "Lundi"
                       WHEN DAYOFWEEK(min_scan.scan_date) = 3 THEN "Mardi"
@@ -98,21 +107,28 @@ SELECT DISTINCT REPLACE(CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME), "'", " ") AS N
                       WHEN DAYOFWEEK(min_scan.scan_date) = 6 THEN "Vendredi"
                       ELSE "Samedi"
                       END AS JOUR, 'Scan entrée manquant' AS REASON  FROM (
-          -- List of people who entered but never exit
+          -- List of last scan of people
           SELECT mu.id AS mu_id, usa.scan_date AS nooutscan_date, min(usa.scan_time) AS scan_in from uac_scan usa
           JOIN mdl_user mu on usa.user_id = mu.id
           WHERE 1=1
+					-- For these specific dates
           AND usa.scan_date < CURRENT_DATE
+					AND usa.scan_date > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
           GROUP BY mu.id, usa.scan_date
           ) t_student_noout JOIN uac_scan min_scan
+																	-- Match the full scan if it is I
                                   ON min_scan.user_id = t_student_noout.mu_id
                 			   	  			AND min_scan.scan_time = scan_in
                 			   	  			AND min_scan.scan_date = t_student_noout.nooutscan_date
                 			   	  			AND min_scan.in_out = 'O'
-          			   	  			JOIN uac_assiduite uaa
-                                    ON uaa.user_id = min_scan.user_id
-          			   	  				     AND min_scan.id = uaa.scan_id
-          			   	  				     AND uaa.status IN ('PON', 'LAT')
+												-- Need to know if he as been PON/LAT etc
+												JOIN uac_assiduite uaa
+																ON uaa.user_id = min_scan.user_id
+															 -- AND max_scan.id = uaa.scan_id
+															 AND uaa.status IN ('PON', 'LAT', 'VLA', 'QUI')
+													JOIN uac_edt_line uel
+													ON uel.id = uaa.edt_id
+													AND uel.day = min_scan.scan_date
           			   	  		JOIN v_showuser vsh ON vsh.id = min_scan.user_id
           			   	  		JOIN v_class_cohort vcc ON vcc.id = vsh.cohort_id
           			   	  			ORDER BY TECH_DATE DESC;

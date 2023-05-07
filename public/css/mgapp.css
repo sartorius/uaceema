@@ -14,13 +14,14 @@
   --val-ace-color: #00561A;
   --deep-ace-blue: #002C8A;
   --deep-ace-brown: #5B3600;
-  --course-txt-lg: 12px;
-  --course-txt-sm: 10px;
+  --course-txt-lg: 13px;
+  --course-txt-sm: 12px;
   --course-width-sm: 14%;
   --course-width-lg: 15.5%;
   --jsgrid-txt-sm: 17px;
+  --color-n1: #9700CB;
+  --color-n2: #CB6C00;
 }
-
 
 /* Bootstrap */
 
@@ -1161,8 +1162,8 @@ textarea[name=inputRef] {
 }
 
 .myedt-course{
-  color : BLACK;
-  background-color: #F2F5FF;
+  color : WHITE;
+  background-color: var(--deep-ace-blue);
   text-align: center;
   border:1px solid black;
   font-size: var(--course-txt-sm);
@@ -1210,6 +1211,25 @@ textarea[name=inputRef] {
   border:1px solid black;
   width: 15.5%;
   vertical-align: top;
+}
+
+
+.myedt-course-n1{
+  color : var(--color-n1);
+  background-color: #FAECFF;
+  text-align: center;
+  border:1px solid black;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+.myedt-course-n2{
+  color : var(--color-n2);
+  background-color: #FFFDEC;
+  text-align: center;
+  border:1px solid black;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
 }
 
 /********************************** EDT ROWSPAN *************************************/
@@ -1631,12 +1651,12 @@ textarea[name=inputRef] {
 }
 
 .modal-edt-n1{
-  background-color: #9700CB;
+  background-color: var(--color-n1);
   color: WHITE;
 }
 
 .modal-edt-n2{
-  background-color: #CB6C00;
+  background-color: var(--color-n2);
   color: WHITE;
 }
 
@@ -1767,6 +1787,11 @@ textarea[name=inputRef] {
   font-weight: 800;
 }
 
+.recap-nex{
+  color: var(--deep-ace-blue);
+  font-weight: 800;
+}
+
 .recap-qui{
   color: #6600B1;
   font-weight: 800;
@@ -1884,6 +1909,17 @@ img.part-img{
 
 .part-img:hover{
   transform: scale(1.1);
+}
+
+.dash-info{
+  font-size: 15px;
+  color: WHITE;
+  background-color: var(--deep-ace-blue);
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 6em;
 }
 
 /* Override col-1 */

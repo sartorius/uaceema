@@ -2,6 +2,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('ASSHVLA', 'Half Very late consideration minute VLA', 59, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('ASSHWAI', 'Half late consideration minute', 25, NULL);
 
+INSERT IGNORE INTO uac_param (key_code, description, par_time, par_code) VALUES ('LSTCRSD', 'Last course time end of the day', '18:00:00', NULL);
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_ComptAssdFlow$$
@@ -34,10 +35,34 @@ BEGIN
     DECLARE inv_edt_starts_in_time	TIME;
     DECLARE inv_edt_ends_in_time	TIME;
 
+    DECLARE all_course_finished_time	TIME;
+
     DECLARE i INT default 0;
     SET i = 0;
     SET count_courses_total = 0;
     SET inv_shifduration = 0;
+
+
+
+
+      -- If the parameter is null, we consider the day of today !
+      IF param IS NULL THEN
+          -- statements ;
+          -- SELECT 'empty parameters';
+          SELECT CURRENT_DATE INTO inv_date;
+          select CURRENT_TIME INTO inv_time;
+
+     ELSE
+          -- statements ;
+          -- We will work for the full day
+          SELECT param INTO inv_date;
+          SELECT CONVERT('23:59:59', TIME) INTO inv_time;
+
+     END IF;
+     -- Manage Date NULL
+
+    -- Last time of course to calculate no exit NEX
+    SELECT par_time INTO all_course_finished_time FROM uac_param WHERE key_code = 'LSTCRSD';
 
 
 
@@ -46,12 +71,12 @@ BEGIN
 
     IF concurrent_flow > 0 THEN
       -- A flow is running we input a CAN line
-      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW());
+      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'CAN', inv_date, 0, NOW());
     ELSE
       -- Previous RUN has finished
       -- We can work !
 
-        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, NOW());
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (inv_flow_code, 'NEW', inv_date, 0, NOW());
         SELECT LAST_INSERT_ID() INTO inv_flow_id;
 
         SELECT par_value INTO late_definition FROM uac_param WHERE key_code = 'ASSLATE';
@@ -61,23 +86,6 @@ BEGIN
         SELECT par_int INTO very_late_jq_definition FROM uac_param WHERE key_code = 'ASSHVLA';
         SELECT par_int INTO late_jq_definition FROM uac_param WHERE key_code = 'ASSHLAT';
         SELECT par_int INTO wait_jq_b_compute FROM uac_param WHERE key_code = 'ASSHWAI';
-
-
-        -- If the parameter is null, we consider the day of today !
-        IF param IS NULL THEN
-            -- statements ;
-            -- SELECT 'empty parameters';
-            SELECT CURRENT_DATE INTO inv_date;
-            select CURRENT_TIME INTO inv_time;
-
-       ELSE
-            -- statements ;
-            -- We will work for the full day
-            SELECT param INTO inv_date;
-            SELECT CONVERT('23:59:59', TIME) INTO inv_time;
-
-       END IF;
-       -- Manage Date NULL
 
         -- BODY START
         -- Part one of two because we will redo the same for JQ
@@ -511,6 +519,7 @@ BEGIN
                          JOIN mdl_user mu on mu.username = uas.username
                             JOIN uac_scan max_scan ON max_scan.user_id = mu.id
                                             AND max_scan.scan_time = scan_in
+                                            AND max_scan.scan_date = inv_date
                                             AND max_scan.in_out = 'O';
           -- End of the duration > 2
           END IF;
@@ -536,6 +545,7 @@ BEGIN
                    JOIN mdl_user mu on mu.username = uas.username
                       JOIN uac_scan max_scan ON max_scan.user_id = mu.id
                                       AND max_scan.scan_time = scan_in
+                                      AND max_scan.scan_date = inv_date
                                       AND max_scan.in_out = 'I';
 
           -- I AM JQ
@@ -558,6 +568,7 @@ BEGIN
                    JOIN mdl_user mu on mu.username = uas.username
                       JOIN uac_scan max_scan ON max_scan.user_id = mu.id
                                       AND max_scan.scan_time = scan_in
+                                      AND max_scan.scan_date = inv_date
                                       AND max_scan.in_out = 'I';
 
 
@@ -575,6 +586,70 @@ BEGIN
         -- ********************************************
         -- ********************************************
 
+        -- *****************************************************************************
+        -- *****************************************************************************
+        -- ****************** START : HANDLE THE NO EXIT TO BE ABSENT ******************
+        -- *****************************************************************************
+        -- *****************************************************************************
+
+        IF (CURRENT_TIME > all_course_finished_time) OR (CURRENT_DATE > inv_date) THEN
+          -- DELETE ALL Lines for involved date
+          DELETE FROM uac_assiduite_noexit WHERE inv_nex_date = inv_date;
+
+          -- Fill it again
+          INSERT INTO uac_assiduite_noexit (user_id, max_scan_id, max_edt_id, inv_nex_date)
+          -- Do an update with this couple of value
+          SELECT max_scan.user_id, max_scan.id, MAX(uel.id), inv_date FROM (
+                    -- List of last scan of people
+                    SELECT mu.id AS mu_id, usa.scan_date AS nooutscan_date, max(usa.scan_time) AS scan_in from uac_scan usa
+                    JOIN mdl_user mu on usa.user_id = mu.id
+                    WHERE 1=1
+                    -- For these specific dates
+                    AND usa.scan_date = inv_date
+                    GROUP BY mu.id, usa.scan_date
+                    ) t_student_noout JOIN uac_scan max_scan
+                                            -- Match the full scan if it is I
+                                            ON max_scan.user_id = t_student_noout.mu_id
+                                            AND max_scan.scan_time = scan_in
+                                            AND max_scan.scan_date = t_student_noout.nooutscan_date
+                                            AND max_scan.in_out = 'I'
+                                      -- Need to know if he as been PON/LAT etc
+                                      JOIN uac_assiduite uaa
+                                              ON uaa.user_id = max_scan.user_id
+                                             -- AND max_scan.id = uaa.scan_id
+                                             AND uaa.status IN ('PON', 'LAT', 'VLA', 'QUI')
+                                        JOIN uac_edt_line uel
+                                        ON uel.id = uaa.edt_id
+                                        AND uel.day = max_scan.scan_date
+                                    JOIN v_showuser vsh ON vsh.id = max_scan.user_id
+                                    JOIN v_class_cohort vcc ON vcc.id = vsh.cohort_id
+                     GROUP BY max_scan.user_id, max_scan.id;
+
+          -- We calculate here the student who has not exit for the end of the day
+          UPDATE uac_assiduite
+            SET status = 'NEX',
+            last_update = CURRENT_TIMESTAMP
+            WHERE (user_id, edt_id) IN (
+              SELECT user_id, max_edt_id FROM uac_assiduite_noexit WHERE inv_nex_date = inv_date
+            );
+
+          -- UPDATE All lines which has been before the last entry no exit to ABS
+          UPDATE uac_assiduite
+            SET status = 'ABS',
+            last_update = CURRENT_TIMESTAMP
+            WHERE status NOT IN ('NEX')
+            AND (user_id, scan_id) IN (
+              SELECT user_id, max_scan_id FROM uac_assiduite_noexit WHERE inv_nex_date = inv_date
+            );
+          -- ELSE : Nothing to do
+        END IF;
+        -- *****************************************************************************
+        -- *****************************************************************************
+        -- ******************  STOP : HANDLE THE NO EXIT TO BE ABSENT  *****************
+        -- *****************************************************************************
+        -- *****************************************************************************
+
+
         -- BODY END
         -- End of the flow correctly
         UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = CONCAT('EDT updated: ', count_courses_total) WHERE id = inv_flow_id;
@@ -588,3 +663,29 @@ END$$
 -- both following will be deprecated
 -- INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('ASSLATE', 'Late maximum consideration', ':15:00', NULL, NULL);
 -- INSERT IGNORE INTO uac_param (key_code, description, par_value, par_int, par_code) VALUES ('ASSWAIT', 'Attente script avant compute', ':25:00', NULL, NULL);
+
+
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_PRG_Ass$$
+CREATE PROCEDURE `SRV_PRG_Ass` ()
+BEGIN
+    DECLARE prg_date	DATE;
+    DECLARE prg_history_delta	INT;
+    -- CALL SRV_PRG_Scan();
+
+    SELECT par_int INTO prg_history_delta FROM uac_param WHERE key_code = 'ASSIPRG';
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -prg_history_delta DAY) INTO prg_date;
+
+    -- Delete all old dates/ uas SCAN will be purged in ASSIDUITE
+    DELETE FROM uac_scan WHERE scan_date < prg_date;
+    -- We need to keep the off days for traceability purpose
+    -- DELETE FROM uac_assiduite_off WHERE working_date < prg_date;
+    DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE day < prg_date) AND status IN ('PON');
+
+    DELETE FROM uac_assiduite_noexit WHERE inv_nex_date < prg_date;
+
+    DELETE FROM uac_working_flow WHERE flow_code = 'ASSIDUI' AND create_date < prg_date;
+
+END$$
+-- Remove $$ for OVH
