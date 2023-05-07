@@ -59,7 +59,13 @@
     </button>
   </div>
   <div class="col-1">
-    <a class="btn btn-dark btn-md btn-up-menu" href="/jqcreateedt" role="button">Nouveau&nbsp;<span class="icon-calendar nav-text"></span></a>
+    
+    {% if (create_edt_right == 'Y') %}
+            <a class="btn btn-dark btn-md btn-up-menu" href="/jqcreateedt" role="button">Nouveau&nbsp;<span class="icon-calendar nav-text"></span></a>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
+    
   </div>
   <div class="col-3">
     <button onclick="copyEDTS0()" class="btn btn-outline-dark btn-md btn-blk-export">S0 &nbsp;<i class="icon-file-text-o nav-text"></i></button>

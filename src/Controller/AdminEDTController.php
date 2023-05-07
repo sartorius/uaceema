@@ -872,6 +872,8 @@ class AdminEDTController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
+    $create_edt_right = 'N';
+
     if(isset($scale_right) && ($scale_right > 4)){
 
 
@@ -879,6 +881,7 @@ class AdminEDTController extends AbstractController
 
         $query_all_edt = "CALL CLI_GET_MngEDTp3('N')";
         if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+            $create_edt_right = 'Y';
             $query_all_edt = "CALL CLI_GET_MngEDTp3('Y')";
         }
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
@@ -928,6 +931,7 @@ class AdminEDTController extends AbstractController
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
+                                                                'create_edt_right' => $create_edt_right,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'all_edt' => $result_all_edt,
                                                                 'result_text_s0' => $result_text_s0,
