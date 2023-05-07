@@ -597,7 +597,7 @@ BEGIN
           DELETE FROM uac_assiduite_noexit WHERE inv_nex_date = inv_date;
 
           -- Fill it again
-          INSERT INTO uac_assiduite_noexit (user_id, max_scan_id, max_edt_id, inv_nex_date)
+          INSERT IGNORE INTO uac_assiduite_noexit (user_id, max_scan_id, max_edt_id, inv_nex_date)
           -- Do an update with this couple of value
           SELECT max_scan.user_id, max_scan.id, MAX(uel.id), inv_date FROM (
                     -- List of last scan of people
