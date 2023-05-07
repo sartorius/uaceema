@@ -31,15 +31,6 @@ function goToExistingEDT(){
 
   $("#mg-master-id-form").submit();
 }
-/*
-function launchExportFile(){
-  html2canvas(document.querySelector("#my-full-edt")).then(canvas => {
-        canvas.toBlob(function(blob) {
-          window.saveAs(blob, 'my_image.jpg');
-        });
-    });
-}
-*/
 
 function launchExportFile(){
   $('#title-edt-export').html(tempClasse);
