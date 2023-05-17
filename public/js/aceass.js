@@ -1051,7 +1051,7 @@ function goToSTUFromDashAssiduite(page){
 function generateGlobalAssCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
   let csvContent = "";
-  const SEP_ = ","
+  const SEP_ = ";"
 
 	let dataString = "Username" + SEP_ + "Matricule" + SEP_ + "Étudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Débute" + SEP_ + "Classe" + SEP_ + "Détail du cours" + SEP_ + "\n";
 	csvContent += dataString;
@@ -1071,7 +1071,7 @@ function generateGlobalAssCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportGlobalAssiduite.csv';
+  link.download = 'RapportGlobalAssiduite9j.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -1080,7 +1080,7 @@ function generateGlobalAssCSV(){
 function generateCourseReportCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
   let csvContent = "";
-  const SEP_ = ","
+  const SEP_ = ";"
 
 	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Détail du cours" + SEP_ + "Débute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nbr d'étudiant total dans la classe" + SEP_ + "Journée non-comptée" + SEP_ + "\n";
 	csvContent += dataString;
@@ -1099,7 +1099,7 @@ function generateCourseReportCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportCoursDispenses.csv';
+  link.download = 'RapportCoursAnnules30j.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -1110,7 +1110,7 @@ function generateCourseReportCSV(){
 function generateNoExitReportCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
   let csvContent = "";
-  const SEP_ = ","
+  const SEP_ = ";"
 
 	let dataString = "Classe" + SEP_ + "Username" + SEP_ + "Matricule" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "Raison" + SEP_ + "\n";
 	csvContent += dataString;
@@ -1129,7 +1129,7 @@ function generateNoExitReportCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportAnomalieScanEntreeSortie.csv';
+  link.download = 'RapportAnomalieScanEntreeSortie7j.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

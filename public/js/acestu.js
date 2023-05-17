@@ -574,7 +574,7 @@ function generateAllMngStudentReportCSV(){
 	const csvContentType = "data:text/csv;charset=utf-8,";
 
   let csvContent = "";
-  const SEP_ = ","
+  const SEP_ = ";"
 
 	let dataString = "Username" + SEP_ + "Nom" + SEP_ + "Prénom" + SEP_  + "Matricule" + SEP_  + "Genre" + SEP_  + "email" + SEP_ + "Date de naissance" + SEP_ + "Lieu de naissance" + SEP_ + "Téléphone étudiant" + SEP_ + "Classe ID" + SEP_ + "Mention" + SEP_ + "Niveau" + SEP_ + "Parcours" + SEP_ + "Groupe" + SEP_ + "Inscrit(e) depuis" + SEP_ + "Adresse" + SEP_ + "Quartier" + SEP_ + "Facebook" + SEP_ + "Établissement d'origine" + SEP_ + "Série Bac" + SEP_ + "Année du BAC" + SEP_ + "CIN" + SEP_ + "Date de délivrance" + SEP_ + "Lieu Délivrance CIN" + SEP_ + "Parent 1" + SEP_ + "Téléphone Parent 1" + SEP_ + "Profession Parent 1" + SEP_ + "Adresse Parent 1" + SEP_ + "Quartier Parent 1" + SEP_ + "Parent 2" + SEP_ + "Profession Parent 2" + SEP_ + "Téléphone Parent 2" + SEP_ + "Centres d'intéret" + SEP_ + "Situation Matrimoniale" + SEP_  + "\n";
 	csvContent += dataString;
