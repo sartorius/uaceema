@@ -72,13 +72,13 @@ function publishEDT(order){
           if(order == 'V'){
             addOrderMsg = "<br>Nombre de jour(s) passé recalculé(s) :" + data['result_integration_EDT'][0]['day_recalc'];
           }
-          let modalmsg = "<i class='aj-succ'><strong>publié avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>." + addOrderMsg;
+          let modalmsg = "<i class='aj-succ'><strong>" + lastOrder + " effectué(e) avec succès&nbsp;<i class='icon-check-square nav-text'></i></strong></i>." + addOrderMsg;
           $("#last-update").html(msg);
           startOnOffEdit();
 
           tempMisc = data['result_integration_EDT'];
 
-          $("#ajax-feedback").html("Votre EDT vient d'être " + modalmsg);
+          $("#ajax-feedback").html("EDT opération " + modalmsg);
           $('#aj-fback-modal').modal('show');
 
 

@@ -56,6 +56,9 @@ function loadRefPayGrid(){
             if(value == 'U'){
               return "Unique";
             }
+            else if(value == 'M'){
+              return "Multiple";
+            }
             else{
               return "Tranche";
             }

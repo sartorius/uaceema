@@ -44,3 +44,8 @@ INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Tel
 
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Ambassade de France à Madagascar', NULL, 'ambassadefrancemadagascar.png', 'https://mg.ambafrance.org/');
 INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('SBM Banque à Madagascar', NULL, 'sbmbank.png', 'https://globalpresence.sbmgroup.mu/fr/madagascar/');
+
+-- Mai 2023
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('BNI', NULL, 'bni.png', 'https://www.bni.mg/');
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Habibo', NULL, 'habibo.png', 'https://habibo.mg/');
+INSERT INTO uac_ref_partner (title, description, img_path, website) VALUES ('Orange Madagascar', NULL, 'orangemadagascar.png', 'https://www.orange.mg/');

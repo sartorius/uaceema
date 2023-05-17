@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_frais_scolarite` (
   `amount` INT UNSIGNED NOT NULL,
   `status` CHAR(1) NOT NULL DEFAULT 'A' COMMENT 'By default A is active and I for inactive',
   `deadline` DATE NOT NULL COMMENT 'Deadline per each school year so to be revised every year during end of the year',
-  `type` CHAR(1) NOT NULL DEFAULT 'U' COMMENT 'Can be U for Unique Payment or T for Tranche',
+  `type` CHAR(1) NOT NULL DEFAULT 'U' COMMENT 'Can be U for Unique Payment or M for Multiple or T for Tranche',
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -42,39 +42,43 @@ INSERT INTO uac_ref_frais_scolarite
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 4, 800000, 'A', '2023-01-31', 'T');
+(13, 'CERTSCO', 'Certificat Scolarité', 'Certificat Scolarité', 4, 5000, 'A', '2023-12-31', 'M');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 5, 850000, 'A', '2023-04-30', 'T');
+(4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 20, 800000, 'A', '2023-01-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 6, 850000, 'A', '2023-07-31', 'T');
+(5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 21, 850000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 7, 850000, 'A', '2023-01-31', 'T');
+(6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 22, 850000, 'A', '2023-07-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 8, 850000, 'A', '2023-04-30', 'T');
+(7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 23, 850000, 'A', '2023-01-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 9, 850000, 'A', '2023-07-31', 'T');
+(8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 24, 850000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 10, 950000, 'A', '2023-04-30', 'T');
+(9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 25, 850000, 'A', '2023-07-31', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 11, 950000, 'A', '2023-07-31', 'T');
+(10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 26, 950000, 'A', '2023-04-30', 'T');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 12, 950000, 'A', '2023-09-30', 'T');
+(11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 27, 950000, 'A', '2023-07-31', 'T');
+
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 28, 950000, 'A', '2023-09-30', 'T');
 
 
 -- Cross ref table
@@ -96,6 +100,9 @@ SELECT 2, id FROM v_class_cohort vcc;
 
 INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 3, id FROM v_class_cohort vcc;
+
+INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 13, id FROM v_class_cohort vcc;
 
 -- Insert Tranche for L1
 INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)

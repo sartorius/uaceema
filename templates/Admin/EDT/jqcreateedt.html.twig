@@ -147,25 +147,27 @@
             <div id="crs-wmonday" class="btn-group" role="group" aria-label="Status">
             </div>
           </div>
-          <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-menu">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
-          <button id="btn-load-jqedt" onclick="goToExistingEDT()" class="btn btn-outline-dark btn-sm btn-blk-menu" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
-          
           {# We have the rights to edit #}
           {% if edit_rights == 'Y' %}
+
+              <button id="btn-clear-jqedt" onclick="clearEDT();" class="btn btn-outline-dark btn-sm btn-blk-menu">Vider EDT &nbsp;<i class="icon-repeat nav-text"></i></button>
+              <button id="btn-load-jqedt" onclick="goToExistingEDT()" class="btn btn-outline-dark btn-sm btn-blk-menu" disabled>Charger EDT &nbsp;<i class="icon-arrow-down nav-text"></i></button>
               <button id="btn-edit-jqedt" onclick="startOnOffEdit();" class="btn btn-dark btn-sm btn-blk-menu" {% if mode == 'CRT' %}disabled{% endif %}><i id="btn-edit-name">{% if mode == 'CRT' %}Figer{% else %}Modifier{% endif %} EDT</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
           {% endif %}
           
         </div>
         <div class="edt-status"><i class="icon-exclamation-circle nav-text"></i>&nbsp;Status : <i id='last-update'>(non publié)</i></div>
 
-        <div id="past-msg-edt">
-            <i class='err'><strong><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Attention vous êtes sur une semaine en cours ou passée</strong>, nous sommes le {{ "now"|date("d/m/Y") }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
-        </div>
+        {# We have the rights to edit #}
+        {% if edit_rights == 'Y' %}
+            <div id="past-msg-edt">
+                <i class='err'><strong><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Attention vous êtes sur une semaine en cours ou passée</strong>, nous sommes le {{ "now"|date("d/m/Y") }}. Les assiduités de moins d'une semaine seront re-calculés dans la journée.</i><br>
+            </div>
 
-        <div id="exist-msg-edt">
-            {# Message to be displayed here is msgExistEdtForMonday but not appearing because of hiding #}
-            
-        </div>
+            <div id="exist-msg-edt">
+                {# Message to be displayed here is msgExistEdtForMonday but not appearing because of hiding #}
+            </div>
+        {% endif %}
 
 
       </div>
