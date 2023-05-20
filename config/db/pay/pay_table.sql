@@ -141,17 +141,15 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
   `category` CHAR(1) NOT NULL COMMENT 'R for Reduction, M for Mensualite',
-  `ticket_ref` CHAR(10) NULL,
+  `ticket_ref` CHAR(10) NOT NULL,
   `red_pc` TINYINT UNSIGNED NULL COMMENT 'Percentage of reduction',
-  `status` CHAR(1) NOT NULL DEFAULT 'A' COMMENT 'By default A is active and I for inactive',
+  `status` CHAR(1) NOT NULL DEFAULT 'I' COMMENT 'A is active and I for inactive',
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   -- Manual add of the constraint
   UNIQUE KEY `user_id_category_UNIQUE` (`user_id`, `category`),
   UNIQUE KEY `ticket_ref_UNIQUE` (`ticket_ref`));
-
-
 
 -- WORKING TABLE FOR THE PAYMENTS
 -- REDUCTION ARE CREATING FULL PAYMENT AS REDUCTION
@@ -161,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
   `ref_fsc_id` INT NULL COMMENT 'When not null then related to ref frais de scolarite else it is a manual payment',
-  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'By default N as Not Paid or P as Paid or F as Filled (by manual payment) ',
+  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) ',
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
   `manual_amount` INT NULL,
@@ -214,23 +212,28 @@ SELECT
 -- Payment view
 DROP VIEW IF EXISTS v_payment_for_user;
 CREATE VIEW v_payment_for_user AS
-  SELECT
-    up.id AS UP_ID,
-    up.user_id AS UP_USER_ID,
-    ref.id AS REF_ID,
-    up.status AS UP_STATUS,
-    up.payment_ref AS UP_PAYMENT_REF,
-    up.facilite_id AS UP_FACILITE_ID,
-    up.manual_amount AS UP_MANUAL_AMOUNT,
-    up.type_of_payment AS UP_TYPE_OF_PAYMENT,
-    up.comment AS UP_COMMENT,
-    up.create_date AS UP_CREATE_DATE,
-    up.last_update AS UP_LAST_UPDATE,
-		ref.code AS REF_CODE,
-    ref.title AS REF_TITLE,
-    ref.amount AS REF_AMOUNT,
-    ref.deadline AS REF_DEADLINE,
-    DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
-    ref.type AS REF_TYPE,
-    ref.fs_order AS REF_FS_ORDER
-FROM uac_payment up LEFT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id;
+    SELECT
+      up.id AS UP_ID,
+      up.user_id AS UP_USER_ID,
+      IFNULL(up.status, 'N') AS UP_STATUS,
+      up.payment_ref AS UP_PAYMENT_REF,
+      up.facilite_id AS UP_FACILITE_ID,
+      up.manual_amount AS UP_MANUAL_AMOUNT,
+      up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+      up.comment AS UP_COMMENT,
+      up.create_date AS UP_CREATE_DATE,
+      up.last_update AS UP_LAST_UPDATE,
+      ref.id AS REF_ID,
+      ref.code AS REF_CODE,
+      ref.title AS REF_TITLE,
+      ref.amount AS REF_AMOUNT,
+      ref.deadline AS REF_DEADLINE,
+      DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+      ref.type AS REF_TYPE,
+      ref.fs_order AS REF_FS_ORDER,
+      vcc.id AS COHORT_ID
+    FROM uac_payment up RIGHT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id
+                            JOIN uac_xref_cohort_fsc xref ON ref.id = xref.fsc_id
+                            JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id
+    -- We exclude multiple which has no real deadline
+    WHERE ref.type IN ('T', 'U');

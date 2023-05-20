@@ -111,6 +111,53 @@ class AdminPayController extends AbstractController
     return new Response($content);
   }
 
+  public function addpaiddoc(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("scale_right: " . $scale_right);
+
+    // Must be exactly 21 or more than 99
+    if(isset($scale_right) &&  (($scale_right == 51) || ($scale_right > 99))){
+
+
+        $result_get_token = $this->getDailyTokenPayStr($logger);
+
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        // Get All USERNAME
+        $allusrn_query = " SELECT *  from v_payfoundusrn; ";
+
+        $logger->debug("Show me allusrn_query: " . $allusrn_query);
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_all_usrn = $dbconnectioninst->query($allusrn_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_all_usrn));
+
+
+
+        $content = $twig->render('Admin/PAY/addpaiddoc.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'result_all_usrn'=>$result_all_usrn,
+                                                                'result_get_token'=>$result_get_token,
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+
   public function generatefaciliteDB(Request $request, LoggerInterface $logger)
   {
 
@@ -208,9 +255,9 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
-          $param_user_id = $request->request->get('foundUserId');
+          $param_username = $request->request->get('foundUserName');
           //echo $param_jsondata[0]['username'];
-          $query_getpay = " SELECT * FROM v_payment_for_user WHERE UP_USER_ID = " . $param_user_id . " ORDER BY UP_USER_ID, REF_FS_ORDER ASC; ";
+          $query_getpay = " SELECT * FROM v_payment_for_user vpu JOIN uac_showuser uas ON vpu.COHORT_ID = uas.cohort_id AND uas.username = '" . $param_username . "' ORDER BY UP_USER_ID, REF_FS_ORDER ASC; ";
 
           $logger->debug("Show me query_getpay: " . $query_getpay);
 

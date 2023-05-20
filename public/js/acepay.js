@@ -119,7 +119,7 @@ function getAllPaymentForFoundUser(){
   $.ajax('/getpaymentforuserDB', {
       type: 'POST',  // http method
       data: {
-        foundUserId: foundUserId,
+        foundUserName: foundUserName,
         token : getToken
       },  // data to submit
       success: function (data, status, xhr) {

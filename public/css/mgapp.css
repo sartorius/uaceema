@@ -2041,12 +2041,13 @@ img.part-img{
   text-align: left;
   position: absolute;
   margin-top: -135px;
-  margin-left: 10%;
-  max-width: 54%;
-  font-size: 1.2em;
+  margin-left: 20%;
+  max-width: 50%;
+  font-size: 1.3em;
   color: white;
   font-family: "Montserrat", "Helvetica Neue", helvetica, arial, sans-serif;
-  font-weight: 700;
+  font-weight: 500;
+  border-top: 2px solid WHITE;
   /* Do nothing on hover */
   pointer-events: none;
 }

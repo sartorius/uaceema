@@ -124,7 +124,7 @@ SELECT
 	 UPPER(mu.username) AS USERNAME,
 	 mu.matricule AS MATRICULE,
 	 REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS NAME,
-	 CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'VLA' THEN 'Très en retard' WHEN ass.status = 'QUI' THEN 'Quitté' ELSE 'à l\'heure' END AS STATUS,
+	 CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status = 'LAT' THEN 'Retard' WHEN ass.status = 'VLA' THEN 'Tres en retard' WHEN ass.status = 'QUI' THEN 'Quitte' ELSE 'a l\'heure' END AS STATUS,
    CASE
        WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
        WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"

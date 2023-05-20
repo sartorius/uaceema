@@ -1,0 +1,157 @@
+{% include 'Dirty/dirtyjsbarcode.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
+
+{% include 'RawTemplate/_hearder.html.twig' %}
+{# Handle here the files relatives to JS #}
+
+{% if result_all_usrn is defined and result_all_usrn is not null %}
+  <script>
+
+    let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
+    let myTicket = new Array();
+    let myRecap = new Array();
+    const getToken = '{{ result_get_token }}';
+
+    let foundiInJson = 0;
+    let foundUserName = '';
+    let foundMatricule = '';
+    let foundName = '';
+    let foundClasse = '';
+    let foundUserId = 0;
+    let foundExisting_Facilite = '';
+
+    const paddChar = '.';
+    const maxLgTicket = 45;
+    const maxLgRecap = 38;
+    const sizeTime = 12;
+    const sepTime = ' '
+
+    let ticketRef = '';
+    let ticketRefFile = '';
+    let ticketType = 'X';
+    let redPc = 0;
+    const msgFooterRedPdt = 'DATE, SIGNATURE ET CACHET PDT';
+    const msgFooterRedDaf = 'DATE, SIGNATURE ET CACHET DAF';
+
+    const maxPrintTicket = sizeTime - 3;
+    const maxPadLeft = 6;
+
+
+    let dataPaymentForUserJsonArray = new Array();
+
+
+    // Create our number formatter.
+    const formatterCurrency = new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'MGA',
+
+      // These options are needed to round to whole numbers if that's what you want.
+      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
+    const formatterDateFR = new Intl.DateTimeFormat('fr-FR');
+
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllUSRNToJsonArray = "";
+    </script>
+{% endif %}
+
+<div id="mg-graph-identifier">add-pay</div>
+
+{# Message up #}
+
+<div class="row">
+  <div class="col-lg-4 mgs-mainblk-txt blk-ticket-left">
+    <img id="waiting-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:120px; height:90px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
+    <br>
+
+    <div id="pay-recap" class="blk-recap-pay">
+      Historique&nbsp;<i class="icon-arrow-down nav-text"></i>
+      <div id="pay-recap-tra" class="pay-sc-log-tra-txt">
+
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt ua-scan-mn">
+
+
+    <div class="carte-profile ace-xs">
+      {{ firstname }}&nbsp;{{ lastname }}/<i id="load-username">{{ amiconnected }}</i>/<i id="load-userid">{{ id }}</i> <br>
+    </div>
+    <div class="carte-profile ace-sm">
+      <span class="icon-person nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-bc" class="mgs-addpay-lg"></i><br>
+      <i id="last-read-time"></i>
+
+    </div>
+    <hr>
+
+    <div>
+        <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
+    </div>
+    <div class="btn-profil mid-blc">
+      <div id="addp-mainop" class="pay-big-blk">
+            <div id="btn-addcut" class="pay-big-btn pay-big-btn-txt red-opt-btn-1">
+              <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
+            </div>
+            <div id="btn-addpay" class="pay-big-btn pay-big-btn-txt pay-big-btn-1">
+              <br>Ajouter un<br>paiement &nbsp;<i class="icon-plus-square nav-text"></i><br>
+            </div>
+      </div>
+
+      <div class="btn-ace-right">
+        <button id="btn-print-recap" class="btn btn-outline-secondary btn-md histo-btn-print">Imprimer historique &nbsp;<i class="icon-print nav-text"></i></button>
+        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+
+      </div>
+      <hr>
+      <div id="addp-red-option" class="pay-big-blk">
+            <div id="btn-addcut-1" class="pay-big-btn pay-opt-btn-txt red-opt-btn-2">
+              <br>Réduction<br>50%<br>
+            </div>
+            <div id="btn-addcut-2" class="pay-big-btn pay-opt-btn-txt red-opt-btn-1">
+              <br>Réduction<br>100%<br>
+            </div>
+            <div id="btn-addfac-1" class="pay-big-btn pay-opt-btn-txt fac-opt-btn-1">
+              <br>Autorisation<br>mensualisation<br>
+            </div>
+      </div>
+
+
+      <div id="addp-print" class="pay-big-blk">
+            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Imprimer &nbsp;<i class="icon-print nav-text"></i></button>
+      </div>
+
+    </div>
+
+    <div id="valid-code-read">
+    </div>
+    <div id="exist-code-read">
+    </div>
+
+  </div>
+  <div class="col-lg-4 mgs-mainblk-txt">
+
+    <div id="pay-sc-log" class="blk-log-pay">
+      <i class="icon-arrow-down nav-text"></i>&nbsp;Ticket&nbsp;<i id="sh-ticketref"></i>
+      <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<img id="logo-carte" src="{{ path('main') }}img/logotext_black600x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >
+<div class="barcode-not-seen">
+  <img id="barcode"/>
+</div>
+
+
+
+
+
+{% include 'RawTemplate/SPE/_footerpaiddoc.html.twig' %}

@@ -1053,7 +1053,7 @@ function generateGlobalAssCSV(){
   let csvContent = "";
   const SEP_ = ";"
 
-	let dataString = "Username" + SEP_ + "Matricule" + SEP_ + "Étudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Débute" + SEP_ + "Classe" + SEP_ + "Détail du cours" + SEP_ + "\n";
+	let dataString = "Username" + SEP_ + "Matricule" + SEP_ + "Etudiant" + SEP_ + "Status" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Debute" + SEP_ + "Classe" + SEP_ + "Detail du cours" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayReport.length; i++){
 		// dataString = removeDiacritics(dataTagToJsonArrayReport[i].NAME) + SEP_ + removeDiacritics(dataTagToJsonArrayReport[i].STATUS) + SEP_ + removeDiacritics(dataTagToJsonArrayReport[i].JOUR) + SEP_ +  removeDiacritics(dataTagToJsonArrayReport[i].COURS_DATE) + SEP_ +  removeDiacritics(dataTagToJsonArray[i].DEBUT_COURS) + SEP_ + removeDiacritics(dataTagToJsonArray[i].CLASSE) + SEP_ + removeDiacritics(dataTagToJsonArray[i].COURS_DETAILS) + SEP_ ;
@@ -1082,7 +1082,7 @@ function generateCourseReportCSV(){
   let csvContent = "";
   const SEP_ = ";"
 
-	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Détail du cours" + SEP_ + "Débute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nbr d'étudiant total dans la classe" + SEP_ + "Journée non-comptée" + SEP_ + "\n";
+	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Detail du cours" + SEP_ + "Debute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nbr etudiant total dans la classe" + SEP_ + "Journee non-comptee" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<dataTagToJsonArrayCourseReport.length; i++){
 		dataString = dataTagToJsonArrayCourseReport[i].CLASSE + SEP_ + dataTagToJsonArrayCourseReport[i].JOUR + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayCourseReport[i].MOIS + SEP_ +  dataTagToJsonArrayCourseReport[i].COURSE_STATUS + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DETAILS + SEP_ + dataTagToJsonArrayCourseReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_ABS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_QUI + SEP_ + dataTagToJsonArrayCourseReport[i].NUMBER_STUD + SEP_  + dataTagToJsonArrayCourseReport[i].OFF_DAY + SEP_ ;

@@ -125,6 +125,9 @@ refpay:
 addpay:
     path:       /addpay
     controller: App\Controller\AdminPayController::addpay
+addpaiddoc:
+    path:       /addpaiddoc
+    controller: App\Controller\AdminPayController::addpaiddoc
 getpaymentforuserDB:
     path:       /getpaymentforuserDB
     controller: App\Controller\AdminPayController::getpaymentforuserDB
