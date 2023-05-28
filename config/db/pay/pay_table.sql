@@ -140,7 +140,7 @@ DROP TABLE IF EXISTS uac_facilite_payment;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
-  `category` CHAR(1) NOT NULL COMMENT 'R for Reduction, M for Mensualite',
+  `category` CHAR(1) NOT NULL COMMENT 'R for Reduction, M for Mensualite, L for Letter of commitment',
   `ticket_ref` CHAR(10) NOT NULL,
   `red_pc` TINYINT UNSIGNED NULL COMMENT 'Percentage of reduction',
   `status` CHAR(1) NOT NULL DEFAULT 'I' COMMENT 'A is active and I for inactive',
@@ -159,17 +159,16 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
   `ref_fsc_id` INT NULL COMMENT 'When not null then related to ref frais de scolarite else it is a manual payment',
-  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) ',
+  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) or R for Reversed',
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
-  `manual_amount` INT NULL,
+  `manual_amount` INT NULL COMMENT 'Can be null then it is the ref fsc id or zero then it is engagement letter or free input then it is full manual',
   `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction',
+  `pay_date` DATETIME NULL,
   `comment` VARCHAR(45) NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`));
-
-
+PRIMARY KEY (`id`));
 
 -- VIEW
 -- Get the referential per class

@@ -54,7 +54,7 @@ download - Herinirina Ratinahirana.jpg
 
 
 
-
+-- INSERT INTO uac_assiduite_off (working_date, reason, day_code) VALUES ('2023-05-27', 'Prob connexion', DAYOFWEEK('2023-05-27'));
 
 select * from uac_load_scan where scan_date = '2022-11-23'
 

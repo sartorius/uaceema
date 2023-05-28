@@ -2055,8 +2055,21 @@ img.part-img{
 
 /***************************  ADD Pay  ****************************/
 
+.mgs-amount{
+  font-size: 1.5em;
+  color: var(--main-ace-color);
+}
+
+.amo-note{
+  font-size: 0.7em;
+  text-align: left;
+  color: var(--main-ace-color);
+}
+
+
 #addp-mainop,
 #addp-red-option,
+#addp-pay-part,
 #addp-print{
   display: none;
 }
@@ -2093,7 +2106,7 @@ img.part-img{
   text-align: center;
   margin-top: 15px;
 }
-.pay-big-btn{
+.red-big-btn{
   width: 46%;
   display: inline-block;
   border-radius: 5px;
@@ -2105,6 +2118,42 @@ img.part-img{
   font-weight: 400;
   margin-top: 15px;
 }
+.pay-big-btn{
+  width: 30%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 1em;
+  padding-bottom: 1.9em;
+  color: WHITE;
+  font-weight: 400;
+  margin-top: 15px;
+}
+.pay-man-btn{
+  width: 65%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 1em;
+  padding-bottom: 1.9em;
+  margin-top: 15px;
+}
+.pay-man-btn-subm{
+  width: 30%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 0.8em;
+  padding-bottom: 0.5em;
+  color: WHITE;
+  font-weight: 400;
+  margin-top: 15px;
+  background-color: var(--deep-ace-blue);
+  font-size: 1.1em;
+}
 .pay-big-btn-txt{
   font-size: 1em;
 }
@@ -2113,6 +2162,9 @@ img.part-img{
   font-size: 1.2em;
 }
 
+.pay-part-btn-txt{
+  font-size: 1.0em;
+}
 .pay-big-btn:hover{
   transform: scale(1.05);
   color: var(--main-gray-75);
@@ -2125,6 +2177,9 @@ img.part-img{
 .pay-big-btn-1:hover{
   background-color: var(--main-ace-color-light);
 }
+.red-opt-btn-com{
+  background-color: #0e0012;
+}
 .red-opt-btn-2{
   background-color: #66496E;
 }
@@ -2134,6 +2189,12 @@ img.part-img{
 .fac-opt-btn-1{
   background-color: #3B003A;
 }
+.pay-opt-btn-t-a{
+  background-color: #1d1d75;
+}
+.pay-opt-btn-t-late{
+  background-color: var(--err-ace-color);
+}
 
 .red-opt-btn-2:hover{
   background-color: #DECCE3;
@@ -2141,7 +2202,12 @@ img.part-img{
 .fac-opt-btn-1:hover{
   background-color: #ECE5EC;
 }
-.red-opt-btn-1:hover{
+
+.pay-opt-btn-t-a:hover,
+.pay-opt-btn-t-late:hover,
+.red-opt-btn-1:hover,
+.pay-man-btn-subm:hover,
+.red-opt-btn-com:hover{
   background-color: #DCDCDC;
 }
 
@@ -2180,6 +2246,7 @@ img.part-img{
 .deactive-btn{
     pointer-events: none;
     background-color: #7F7F7F;
+    color: #4d4d4d;
 }
 
 /***************************  ADD Pay  ****************************/

@@ -134,3 +134,6 @@ getpaymentforuserDB:
 generatefaciliteDB:
     path:       /generatefaciliteDB
     controller: App\Controller\AdminPayController::generatefaciliteDB
+generatepayDB:
+    path:       /generatepayDB
+    controller: App\Controller\AdminPayController::generatepayDB

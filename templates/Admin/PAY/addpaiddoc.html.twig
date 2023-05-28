@@ -29,7 +29,6 @@
     let ticketRef = '';
     let ticketRefFile = '';
     let ticketType = 'X';
-    let redPc = 0;
     const msgFooterRedPdt = 'DATE, SIGNATURE ET CACHET PDT';
     const msgFooterRedDaf = 'DATE, SIGNATURE ET CACHET DAF';
 
@@ -60,7 +59,7 @@
     </script>
 {% endif %}
 
-<div id="mg-graph-identifier">add-pay</div>
+<div id="mg-graph-identifier">add-paydoc</div>
 
 {# Message up #}
 
@@ -69,11 +68,8 @@
     <img id="waiting-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:120px; height:90px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
     <br>
 
-    <div id="pay-recap" class="blk-recap-pay">
-      Historique&nbsp;<i class="icon-arrow-down nav-text"></i>
-      <div id="pay-recap-tra" class="pay-sc-log-tra-txt">
+    <div id="paydoc-xxx" class="blk-recap-pay">
 
-      </div>
     </div>
 
   </div>

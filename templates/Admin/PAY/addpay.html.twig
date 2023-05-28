@@ -24,7 +24,7 @@
     const maxLgTicket = 45;
     const maxLgRecap = 38;
     const sizeTime = 12;
-    const sepTime = ' '
+    const sepTime = ' ';
 
     let ticketRef = '';
     let ticketRefFile = '';
@@ -32,12 +32,26 @@
     let redPc = 0;
     const msgFooterRedPdt = 'DATE, SIGNATURE ET CACHET PDT';
     const msgFooterRedDaf = 'DATE, SIGNATURE ET CACHET DAF';
+    const msgFooterLOC = 'DATE, SIGNATURE ETUDIANT/PARENT';
 
     const maxPrintTicket = sizeTime - 3;
     const maxPadLeft = 6;
 
 
     let dataPaymentForUserJsonArray = new Array();
+
+
+    const MIN_AMOUNT = 100;
+    const INVALID_AMOUNT = 'invalide';
+    const LATE_FLATICON = '&nbsp;<i class="icon-clock-o nav-text"></i>';
+
+    let invAmountToPay = 0;
+    let invFscId = 0;
+    let invFscCode = 'NA';
+    // C for Cash and H for Check
+    let invTypeOfPayment = 'C';
+    // F for Facilite or P for Payment
+    let invOperation = 'F';
 
 
     // Create our number formatter.
@@ -95,11 +109,17 @@
     </div>
     <div class="btn-profil mid-blc">
       <div id="addp-mainop" class="pay-big-blk">
-            <div id="btn-addcut" class="pay-big-btn pay-big-btn-txt red-opt-btn-1">
+            <div id="btn-addcut" class="red-big-btn pay-big-btn-txt red-opt-btn-1">
               <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
             </div>
-            <div id="btn-addpay" class="pay-big-btn pay-big-btn-txt pay-big-btn-1">
-              <br>Ajouter un<br>paiement &nbsp;<i class="icon-plus-square nav-text"></i><br>
+            <div id="btn-addpay" class="red-big-btn pay-big-btn-txt pay-big-btn-1">
+              <br>Payer une<br>tranche &nbsp;<i class="icon-plus-square nav-text"></i><br>
+            </div>
+            <div id="btn-adduni" class="red-big-btn pay-big-btn-txt pay-big-btn-1">
+              <br>Payer<br>frais fixe &nbsp;<i class="icon-plus-circle nav-text"></i><br>
+            </div>
+            <div id="btn-canpay" class="red-big-btn pay-big-btn-txt pay-opt-btn-t-late">
+              <br>Annuler<br>une opération&nbsp;<i class="icon-minus-square nav-text"></i><br>
             </div>
       </div>
 
@@ -109,21 +129,61 @@
 
       </div>
       <hr>
+      {# Cut box #}
       <div id="addp-red-option" class="pay-big-blk">
-            <div id="btn-addcut-1" class="pay-big-btn pay-opt-btn-txt red-opt-btn-2">
+            <div id="btn-addcut-com" class="red-big-btn pay-opt-btn-txt red-opt-btn-com">
+              <br>Lettre<br>d'engagement<br>
+            </div>
+            <div id="btn-addcut-1" class="red-big-btn pay-opt-btn-txt red-opt-btn-2 pay-fac-rm">
+              <br>Réduction<br>10%<br>
+            </div>
+            <div id="btn-addcut-2" class="red-big-btn pay-opt-btn-txt red-opt-btn-2 pay-fac-rm">
+              <br>Réduction<br>20%<br>
+            </div>
+            <div id="btn-addcut-3" class="red-big-btn pay-opt-btn-txt red-opt-btn-2 pay-fac-rm">
               <br>Réduction<br>50%<br>
             </div>
-            <div id="btn-addcut-2" class="pay-big-btn pay-opt-btn-txt red-opt-btn-1">
+            <div id="btn-addcut-4" class="red-big-btn pay-opt-btn-txt red-opt-btn-1 pay-fac-rm">
               <br>Réduction<br>100%<br>
             </div>
-            <div id="btn-addfac-1" class="pay-big-btn pay-opt-btn-txt fac-opt-btn-1">
+            <div id="btn-addfac-1" class="red-big-btn pay-opt-btn-txt fac-opt-btn-1">
               <br>Autorisation<br>mensualisation<br>
             </div>
       </div>
 
+      {# Payment box #}
+      <div id="addp-pay-part" class="pay-big-blk">
+            <div id="btn-part-1-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+              <br><i id="id-part-1-3">AM1/3</i><br>
+              Tranche&nbsp;<i id="lbl-part-1-3">T1</i><br>
+            </div>
+            <div id="btn-part-2-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+              <br><i id="id-part-2-3">AM2/3</i><br>
+              Tranche&nbsp;<i id="lbl-part-2-3">T2</i><br>
+            </div>
+            <div id="btn-part-3-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+              <br><i id="id-part-3-3">AM3/3</i><br>
+              Tranche&nbsp;<i id="lbl-part-3-3">T3</i><br>
+            </div>
 
+            {# Manual part #}
+
+            <div id="btn-part-man" class="pay-man-btn pay-part-btn-txt pay-fac-rm">
+                <div class="amo-note">
+                  Montant :&nbsp;<i id="id-amo-note"></i>
+                </div>
+                <input class="form-control mgs-amount" rows="1" id="addman-amo" name="inputManualName" placeholder="min. 1000 AR">
+            </div>
+
+            <div id="btn-part-man-subm" class="pay-man-btn-subm pay-fac-rm">
+              Valider
+            </div>
+      </div>
+
+
+      
       <div id="addp-print" class="pay-big-blk">
-            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Imprimer &nbsp;<i class="icon-print nav-text"></i></button>
+            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Valider & imprimer &nbsp;<i class="icon-print nav-text"></i></button>
       </div>
 
     </div>
@@ -150,6 +210,13 @@
   <img id="barcode"/>
 </div>
 
+<i id="id-rawpayamt-1-3" class="raw-element"></i>
+<i id="id-rawpayamt-3-3" class="raw-element"></i>
+<i id="id-rawpayamt-2-3" class="raw-element"></i>
+
+<i id="id-fscid-1-3" class="raw-element"></i>
+<i id="id-fscid-3-3" class="raw-element"></i>
+<i id="id-fscid-2-3" class="raw-element"></i>
 
 
 
