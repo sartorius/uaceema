@@ -162,13 +162,15 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) or R for Reversed',
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
-  `manual_amount` INT NULL COMMENT 'Can be null then it is the ref fsc id or zero then it is engagement letter or free input then it is full manual',
+  `input_amount` INT NOT NULL COMMENT 'Can be zero then it is engagement letter or free input then it is full manual',
   `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction',
   `pay_date` DATETIME NULL,
   `comment` VARCHAR(45) NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`));
+
+
 
 -- VIEW
 -- Get the referential per class
@@ -209,20 +211,22 @@ SELECT
         GROUP BY ID, USERNAME, NAME, CLASSE;
 
 -- Payment view
-DROP VIEW IF EXISTS v_payment_for_user;
-CREATE VIEW v_payment_for_user AS
+DROP VIEW IF EXISTS v_histopayment_for_user;
+CREATE VIEW v_histopayment_for_user AS
     SELECT
-      up.id AS UP_ID,
-      up.user_id AS UP_USER_ID,
+    up.id AS UP_ID,
+      vsh.ID AS VSH_USER_ID,
+      vsh.USERNAME AS VSH_USERNAME,
       IFNULL(up.status, 'N') AS UP_STATUS,
       up.payment_ref AS UP_PAYMENT_REF,
       up.facilite_id AS UP_FACILITE_ID,
-      up.manual_amount AS UP_MANUAL_AMOUNT,
+      IFNULL(up.input_amount, 0) AS UP_INPUT_AMOUNT,
       up.type_of_payment AS UP_TYPE_OF_PAYMENT,
       up.comment AS UP_COMMENT,
+      up.pay_date AS UP_PAY_DATE,
       up.create_date AS UP_CREATE_DATE,
       up.last_update AS UP_LAST_UPDATE,
-      ref.id AS REF_ID,
+      xref.fsc_id AS REF_ID,
       ref.code AS REF_CODE,
       ref.title AS REF_TITLE,
       ref.amount AS REF_AMOUNT,
@@ -230,9 +234,43 @@ CREATE VIEW v_payment_for_user AS
       DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
       ref.type AS REF_TYPE,
       ref.fs_order AS REF_FS_ORDER,
-      vcc.id AS COHORT_ID
-    FROM uac_payment up RIGHT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id
-                            JOIN uac_xref_cohort_fsc xref ON ref.id = xref.fsc_id
-                            JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id
-    -- We exclude multiple which has no real deadline
-    WHERE ref.type IN ('T', 'U');
+      vsh.COHORT_ID AS COHORT_ID
+    FROM uac_xref_cohort_fsc xref JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id
+                     JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id
+                                                      -- We exclude multiple which has no real deadline
+                                                      AND ref.type IN ('T', 'U')
+                     LEFT JOIN uac_payment up ON up.user_id = vsh.ID
+                                                    AND up.ref_fsc_id = xref.fsc_id;
+/*
+  -- Payment view
+  DROP VIEW IF EXISTS v_histopayment_for_user;
+  CREATE VIEW v_histopayment_for_user AS
+      SELECT
+        up.id AS UP_ID,
+        up.user_id AS UP_USER_ID,
+        IFNULL(up.status, 'N') AS UP_STATUS,
+        up.payment_ref AS UP_PAYMENT_REF,
+        up.facilite_id AS UP_FACILITE_ID,
+        IFNULL(up.input_amount, 0) AS UP_INPUT_AMOUNT,
+        up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+        up.comment AS UP_COMMENT,
+        up.pay_date AS UP_PAY_DATE,
+        up.create_date AS UP_CREATE_DATE,
+        up.last_update AS UP_LAST_UPDATE,
+        ref.id AS REF_ID,
+        ref.code AS REF_CODE,
+        ref.title AS REF_TITLE,
+        ref.amount AS REF_AMOUNT,
+        ref.deadline AS REF_DEADLINE,
+        DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+        ref.type AS REF_TYPE,
+        ref.fs_order AS REF_FS_ORDER,
+        vcc.id AS COHORT_ID
+      FROM uac_payment up JOIN v_showuser vsh ON up.user_id = vsh.ID
+                          RIGHT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id
+                                JOIN uac_xref_cohort_fsc xref ON ref.id = xref.fsc_id
+                                                              AND vsh.COHORT_ID = xref.cohort_id
+      -- We exclude multiple which has no real deadline
+      WHERE ref.type IN ('T', 'U');
+
+*/

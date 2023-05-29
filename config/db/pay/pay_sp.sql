@@ -25,7 +25,7 @@ END$$
 -- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddPayment$$
-CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_amount INT, IN param_type_payment CHAR(1))
+CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_input_amount INT, IN param_type_payment CHAR(1))
 BEGIN
     DECLARE inv_status	CHAR(1);
     -- END OF DECLARE
@@ -33,8 +33,8 @@ BEGIN
     SELECT 'P' INTO inv_status;
 
     -- Set the correct status value
-    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, manual_amount, type_of_payment, pay_date)
-    VALUES (param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_amount, 'C', CURRENT_TIMESTAMP);
+    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
+    VALUES (param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, CURRENT_TIMESTAMP);
 
 END$$
 -- Remove $$ for OVH

@@ -2066,13 +2066,15 @@ img.part-img{
   color: var(--main-ace-color);
 }
 
-
 #addp-mainop,
 #addp-red-option,
 #addp-pay-part,
+#addp-pay-uni,
+#addp-type-pay,
 #addp-print{
   display: none;
 }
+.raw-element,
 .barcode-not-seen{
   visibility: hidden;
 }
@@ -2115,6 +2117,30 @@ img.part-img{
   padding-top: 1em;
   padding-bottom: 1.9em;
   color: WHITE;
+  font-weight: 400;
+  margin-top: 15px;
+}
+.type-med-btn{
+  width: 46%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 1em;
+  padding-bottom: 1.9em;
+  color: rgb(255, 254, 214);
+  font-weight: 400;
+  margin-top: 15px;
+}
+.type-big-btn{
+  width: 46%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 3.5em;
+  padding-bottom: 4.9em;
+  color: rgb(255, 254, 214);
   font-weight: 400;
   margin-top: 15px;
 }
@@ -2173,7 +2199,15 @@ img.part-img{
 .pay-big-btn-1{
   background-color: var(--main-ace-color);
 }
-
+.pay-type-btn-t-h{
+  background-color: #0c000f;
+}
+.pay-type-btn-t-c{
+  background-color: #004612;
+}
+.pay-type-btn-t-v{
+  background-color: #5e1c00;
+}
 .pay-big-btn-1:hover{
   background-color: var(--main-ace-color-light);
 }
@@ -2201,6 +2235,11 @@ img.part-img{
 }
 .fac-opt-btn-1:hover{
   background-color: #ECE5EC;
+}
+.pay-type-btn-t-v:hover,
+.pay-type-btn-t-h:hover,
+.pay-type-btn-t-c:hover{
+  background-color: #656565;
 }
 
 .pay-opt-btn-t-a:hover,

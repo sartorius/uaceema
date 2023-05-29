@@ -224,7 +224,7 @@ class AdminPayController extends AbstractController
   }
 
 
-  public function generatepayDB(Request $request, LoggerInterface $logger)
+  public function generatepaymentDB(Request $request, LoggerInterface $logger)
   {
 
 
@@ -259,21 +259,34 @@ class AdminPayController extends AbstractController
           $param_amount = $request->request->get('invAmountToPay');
           $param_fsc_id = $request->request->get('invFscId');
           $param_type_of_payment = $request->request->get('invTypeOfPayment');
+          
 
-
-          //echo $param_jsondata[0]['username'];
-          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
-
-          $logger->debug("Show me query_value: " . $query_value);
+          $pay_uni_left_array = json_decode($request->request->get('payUniLeftOperationForUserJsonArray'), true);
 
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          if(($param_amount == 0) && ($param_fsc_id ==  0)){
+                // In that case when amount and fsc id are 0 both then we are on total mode
+                foreach ($pay_uni_left_array as $read)
+                {
+                    $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $read['typeOfPayment'] . "')";
+                    $logger->debug("Left Operation show me query_value: " . $query_value);
+                    $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
 
-          $logger->debug("Show me count: " . count($result));
+                    $logger->debug("Show me count: " . count($result));
+                }
+          }
+          else{
+                //echo $param_jsondata[0]['username'];
+                //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+                $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
+                $logger->debug("Show me query_value: " . $query_value);
+                $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+                $logger->debug("Show me count: " . count($result));
+          }
 
 
           // Send all this back to client
@@ -323,15 +336,27 @@ class AdminPayController extends AbstractController
           // Get data from ajax
           $param_username = $request->request->get('foundUserName');
           //echo $param_jsondata[0]['username'];
-          $query_getpay = " SELECT * FROM v_payment_for_user vpu JOIN uac_showuser uas ON vpu.COHORT_ID = uas.cohort_id AND uas.username = '" . $param_username . "' ORDER BY UP_USER_ID, REF_FS_ORDER ASC; ";
-
+          $query_getpay = " SELECT * FROM v_histopayment_for_user vpu WHERE VSH_USERNAME = '" . $param_username . "' ORDER BY REF_FS_ORDER, UP_PAY_DATE ASC; ";
           $logger->debug("Show me query_getpay: " . $query_getpay);
+
+          //$query_getleftoperation = " SELECT MAX(vhu.REF_ID) AS REF_ID, vhu.ref_type AS REF_TYPE from v_histopayment_for_user vhu WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.UP_ID IS NULL GROUP BY vhu.ref_type; ";
+          $query_getleftoperation = " SELECT t1.SUM_INPUT, t1.REF_TYPE FROM ( "
+                                . " SELECT SUM(vhu.UP_INPUT_AMOUNT) AS SUM_INPUT, vhu.ref_type AS REF_TYPE FROM v_histopayment_for_user vhu "
+                                . " WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.ref_type IN ('T', 'U') "
+                                . " GROUP BY vhu.ref_type "
+                                . " ) t1 WHERE (t1.SUM_INPUT, t1.REF_TYPE) NOT IN ( "
+                                . " SELECT SUM(ref.amount), ref.type "
+                                . " FROM uac_xref_cohort_fsc xref JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id "
+                                . " JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id AND ref.type IN ('T', 'U') "
+                                . " AND vsh.USERNAME = '" . $param_username . "' GROUP BY ref.type ) ";
+          $logger->debug("Show me query_getleftoperation: " . $query_getleftoperation);
 
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
           $result = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
+          $resultLeftOperation = $dbconnectioninst->query($query_getleftoperation)->fetchAll(PDO::FETCH_ASSOC);
 
           $logger->debug("Show me count: " . count($result));
 
@@ -339,6 +364,7 @@ class AdminPayController extends AbstractController
           return new JsonResponse(array(
               'status' => 'OK',
               'result' => $result,
+              'resultLeftOperation' => $resultLeftOperation,
               'message' => 'Tout est OK: '),
           200);
       }

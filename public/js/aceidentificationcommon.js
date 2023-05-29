@@ -127,7 +127,22 @@ function getAllPaymentForFoundUser(){
           //console.log('End of the Ajax correctly');
           //console.log(data['result']);
           dataPaymentForUserJsonArray = data['result'].slice();
+          dataLeftOperationForUserJsonArray = data['resultLeftOperation'].slice();
           // Only here we allow to progress
+          for(let i=0; i<dataLeftOperationForUserJsonArray.length; i++){
+            if(dataLeftOperationForUserJsonArray[i].REF_TYPE == 'T'){
+                // Still Tranche operation remains
+                // Only if there are Tranche left we allow cut
+                $('#btn-addpay').removeClass('deactive-btn');
+                $('#btn-addcut').removeClass('deactive-btn');
+            }
+            
+            if(dataLeftOperationForUserJsonArray[i].REF_TYPE == 'U'){
+                // Still Unique operation remains
+                $('#btn-adduni').removeClass('deactive-btn');
+            }
+          }
+
           $("#addp-mainop").show(100);
           $("#btn-print-recap").show(100);
           // Display paiements
@@ -147,7 +162,7 @@ function getAllPaymentForFoundUser(){
 
 function printReceiptPDF(tempTicketRef){
 
-  console.log('Click on printReceiptPDF');
+  //console.log('Click on printReceiptPDF');
 
 
   // Let say we are in a cut
@@ -206,7 +221,7 @@ function printReceiptPDF(tempTicketRef){
   contentHeight = contentHeight + 40;
   doc.setFontSize(5);
   let filename = 'FS_' + foundUserName + '_' + tempTicketRef + ticketRefFile;
-  doc.text(5, contentHeight, "REF_Fich_" + filename + "_FRAISDESCOLARITE");
+  doc.text(5, contentHeight, "REF_Fich_" + filename + "_FRAIS");
 
   doc.save(filename);
 
@@ -235,6 +250,14 @@ function clearFoundUser(){
   $("#btn-addcut").removeClass('deactive-btn');
   $(".pay-fac-rm").removeClass('deactive-btn');
   $("#btn-addfac-1").removeClass('deactive-btn');
+
+  $("#btn-clear-addpay").prop("disabled", true);
+
+  // Clear Data
+  dataPaymentForUserJsonArray = new Array();
+  dataLeftOperationForUserJsonArray = new Array();
+  payUniLeftOperationForUserJsonArray = new Array();
+  $(".init-deactive").addClass('deactive-btn');
 }
 
 function addPayUserExists(val){
@@ -247,6 +270,8 @@ function addPayUserExists(val){
       foundClasse = dataAllUSRNToJsonArray[i].CLASSE;
       foundUserId = dataAllUSRNToJsonArray[i].ID;
       foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
+
+      $("#btn-clear-addpay").prop("disabled", false);
 
       // Check if we already have a Reduction
       if((foundExisting_Facilite != undefined) && (foundExisting_Facilite != null)){
@@ -289,10 +314,13 @@ function addPayClear(){
 
   $("#addp-mainop").hide(100);
   $("#addp-print").hide(100);
+  $("#addp-type-pay").hide(100);
 
   /** SPECIFIC PAYMENT */
   $("#addp-red-option").hide(100);
   $("#addp-pay-part").hide(100);
+  $("#addp-pay-uni").hide(100);
+  $("#addp-pay-success").hide(100);
   invAmountToPay = 0;
   invFscId = 0;
   invTypeOfPayment = 'C';
@@ -325,7 +353,7 @@ function verityAddComContentScan(){
 
     let originalRedInput = $('#addpay-ace').val();
     let readInput = $('#addpay-ace').val().replace(/[^a-z0-9]/gi,'').toUpperCase();
-    console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
+    //console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
 
     if(readInput.length < 10){
       // We are on the wrong keyboard config as it must be 10
@@ -436,6 +464,8 @@ function displayHistoryPayment(){
   let statusPay = 'Non payé';
   let refDate;
   let recAmount = '';
+  let typeOfPayment = '';
+  let refRecAmount = '';
   let notifRetard = '';
   const separatorRecap = '----x---x---x---x---x---x---x---x---x---x----';
 
@@ -449,9 +479,6 @@ function displayHistoryPayment(){
     recapLine = ('À payer avant le :' + formatterDateFR.format(refDate)).padStart(maxLgRecap, paddChar);
     myRecap.push(recapLine);
     recapTxt = recapTxt + recapLine + '<br>';
-
-    recAmount = (('Montant :' + renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString())) + '/' + (statusPay)).padStart(maxLgRecap, paddChar);
-    myRecap.push(recAmount);
 
 
     recapLine = '';
@@ -476,7 +503,26 @@ function displayHistoryPayment(){
       statusPay = 'Complété';
     }
 
-    recapTxt = recapTxt + recAmount + '<br>' + notifRetard + '<br>';
+    refRecAmount = (('Tranche :' + renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString())) + '/' + (statusPay)).padStart(maxLgRecap, paddChar);
+    myRecap.push(refRecAmount);
+    recapTxt = recapTxt + refRecAmount + '<br>' + notifRetard + '<br>';
+    typeOfPayment = '';
+    if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'H'){
+        typeOfPayment = '/CHEQ';
+    }
+    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'C'){
+        typeOfPayment = '/CASH';
+    }
+    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'V'){
+        typeOfPayment = '/VIRTPE';
+    }
+    else{
+        //Do nothing
+    }
+    recAmount = (('Paiement' + typeOfPayment + ' :' + renderAmount(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT.toString()))).padStart(maxLgRecap, paddChar);
+    myRecap.push(recAmount);
+
+    recapTxt = recapTxt + recAmount + '<br>';
     recapTxt = recapTxt + separatorRecap + '<br>';
   }
   $('#pay-recap-tra').html(recapTxt);

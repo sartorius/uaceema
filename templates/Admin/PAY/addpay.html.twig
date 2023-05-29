@@ -39,15 +39,18 @@
 
 
     let dataPaymentForUserJsonArray = new Array();
+    let dataLeftOperationForUserJsonArray = new Array();
+    let payUniLeftOperationForUserJsonArray = new Array();
 
 
-    const MIN_AMOUNT = 100;
+    const MIN_AMOUNT = 1000;
     const INVALID_AMOUNT = 'invalide';
     const LATE_FLATICON = '&nbsp;<i class="icon-clock-o nav-text"></i>';
 
     let invAmountToPay = 0;
+    let maxManualAmount = 0;
+    // This will be used to define which fisc ID is involved
     let invFscId = 0;
-    let invFscCode = 'NA';
     // C for Cash and H for Check
     let invTypeOfPayment = 'C';
     // F for Facilite or P for Payment
@@ -109,14 +112,14 @@
     </div>
     <div class="btn-profil mid-blc">
       <div id="addp-mainop" class="pay-big-blk">
-            <div id="btn-addcut" class="red-big-btn pay-big-btn-txt red-opt-btn-1">
-              <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
+            <div id="btn-adduni" class="red-big-btn pay-big-btn-txt pay-big-btn-1 init-deactive deactive-btn">
+              <br>Payer<br>frais fixe &nbsp;<i class="icon-plus-circle nav-text"></i><br>
             </div>
-            <div id="btn-addpay" class="red-big-btn pay-big-btn-txt pay-big-btn-1">
+            <div id="btn-addpay" class="red-big-btn pay-big-btn-txt pay-big-btn-1 init-deactive deactive-btn">
               <br>Payer une<br>tranche &nbsp;<i class="icon-plus-square nav-text"></i><br>
             </div>
-            <div id="btn-adduni" class="red-big-btn pay-big-btn-txt pay-big-btn-1">
-              <br>Payer<br>frais fixe &nbsp;<i class="icon-plus-circle nav-text"></i><br>
+            <div id="btn-addcut" class="red-big-btn pay-big-btn-txt red-opt-btn-1 init-deactive deactive-btn">
+              <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
             </div>
             <div id="btn-canpay" class="red-big-btn pay-big-btn-txt pay-opt-btn-t-late">
               <br>Annuler<br>une opération&nbsp;<i class="icon-minus-square nav-text"></i><br>
@@ -125,7 +128,7 @@
 
       <div class="btn-ace-right">
         <button id="btn-print-recap" class="btn btn-outline-secondary btn-md histo-btn-print">Imprimer historique &nbsp;<i class="icon-print nav-text"></i></button>
-        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Ré-initialiser la recherche &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Annuler &nbsp;<i class="icon-android-cancel nav-text"></i></button>
 
       </div>
       <hr>
@@ -151,17 +154,17 @@
             </div>
       </div>
 
-      {# Payment box #}
+      {# Payment Part box #}
       <div id="addp-pay-part" class="pay-big-blk">
-            <div id="btn-part-1-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+            <div id="btn-part-1-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
               <br><i id="id-part-1-3">AM1/3</i><br>
               Tranche&nbsp;<i id="lbl-part-1-3">T1</i><br>
             </div>
-            <div id="btn-part-2-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+            <div id="btn-part-2-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
               <br><i id="id-part-2-3">AM2/3</i><br>
               Tranche&nbsp;<i id="lbl-part-2-3">T2</i><br>
             </div>
-            <div id="btn-part-3-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm">
+            <div id="btn-part-3-3" class="pay-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
               <br><i id="id-part-3-3">AM3/3</i><br>
               Tranche&nbsp;<i id="lbl-part-3-3">T3</i><br>
             </div>
@@ -179,18 +182,59 @@
               Valider
             </div>
       </div>
+      {# Payment Unique box #}
+      <div id="addp-pay-uni" class="pay-big-blk">
+            <div id="btn-uni-1" class="red-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
+              <br><i id="id-uni-1">UNI1</i><br>
+              <i id="lbl-uni-1">U1</i><br>
+            </div>
+            <div id="btn-uni-2" class="red-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
+              <br><i id="id-uni-2">UNI2</i><br>
+              <i id="lbl-uni-2">U2</i><br>
+            </div>
+            <div id="btn-uni-3" class="red-big-btn pay-part-btn-txt pay-opt-btn-t-a pay-fac-rm init-deactive deactive-btn">
+              <br><i id="id-uni-3">UNI3</i><br>
+              <i id="lbl-uni-3">U3</i><br>
+            </div>
+            <div id="btn-uni-left" class="red-big-btn pay-part-btn-txt pay-big-btn-1 pay-fac-rm">
+              <br><i id="id-uni-left">UNI4</i><br>
+              Totalité restante<br>
+            </div>
+
+      </div>
 
 
       
       <div id="addp-print" class="pay-big-blk">
-            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Valider & imprimer &nbsp;<i class="icon-print nav-text"></i></button>
+            <button id="btn-print-addpay" class="btn btn-default btn-lg btn-block btn-print">Valider & imprimer reçu &nbsp;<i class="icon-print nav-text"></i></button>
+      </div>
+
+      {# Payment Unique box #}
+      <div id="addp-type-pay" class="pay-big-blk">
+            <div id="btn-type-h" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-h pay-fac-rm">
+              <br>CHÈQUE&nbsp;
+              <i class="icon-pencil-square-o nav-text"></i><br>
+            </div>
+            <div id="btn-type-c" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-c pay-fac-rm">
+              <br>CASH&nbsp;
+              <i class="icon-cash nav-text"></i><br>
+            </div>
+            <div id="btn-type-v" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
+              <br>VIREMENT/TPE&nbsp;
+              <i class="icon-credit-card nav-text"></i><br>
+            </div>
+            <div class="type-med-btn pay-part-btn-txt pay-fac-rm">
+              <br>
+              <br>
+            </div>
+
       </div>
 
     </div>
 
     <div id="valid-code-read">
     </div>
-    <div id="exist-code-read">
+    <div id="exist-code-read" class="raw-element">
     </div>
 
   </div>
@@ -218,6 +262,13 @@
 <i id="id-fscid-3-3" class="raw-element"></i>
 <i id="id-fscid-2-3" class="raw-element"></i>
 
+<i id="id-rawuniamt-1" class="raw-element"></i>
+<i id="id-rawuniamt-3" class="raw-element"></i>
+<i id="id-rawuniamt-2" class="raw-element"></i>
+
+<i id="id-fscuni-1" class="raw-element"></i>
+<i id="id-fscuni-3" class="raw-element"></i>
+<i id="id-fscuni-2" class="raw-element"></i>
 
 
 
