@@ -8,6 +8,8 @@
   <script>
 
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
+    let dataAllREDUCToJsonArray = JSON.parse('{{ result_all_reduc | json_encode | raw }}');
+    
     let myTicket = new Array();
     let myRecap = new Array();
     const getToken = '{{ result_get_token }}';
@@ -35,7 +37,7 @@
     const msgFooterLOC = 'DATE, SIGNATURE ETUDIANT/PARENT';
 
     const maxPrintTicket = sizeTime - 3;
-    const maxPadLeft = 6;
+    const maxPadLeft = 5;
 
 
     let dataPaymentForUserJsonArray = new Array();
@@ -56,6 +58,11 @@
     // F for Facilite or P for Payment
     let invOperation = 'F';
 
+    const TYPE_OF_PAYMENT_CODE_ARRAY = ["h", "c", "t", "m"];
+    const TYPE_OF_PAYMENT_LBL_ARRAY = ["CHEQUE", "CASH", "VIRM/TPE", "MVOLA"];
+
+    // If we are Reduction (R) or Payment (P)
+    let currentTicketMode = 'P';
 
     // Create our number formatter.
     const formatterCurrency = new Intl.NumberFormat('fr-FR', {
@@ -108,7 +115,7 @@
     <hr>
 
     <div>
-        <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
+        <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username ou réduction">
     </div>
     <div class="btn-profil mid-blc">
       <div id="addp-mainop" class="pay-big-blk">
@@ -219,16 +226,35 @@
               <br>CASH&nbsp;
               <i class="icon-cash nav-text"></i><br>
             </div>
-            <div id="btn-type-v" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
+            <div id="btn-type-t" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
               <br>VIREMENT/TPE&nbsp;
               <i class="icon-credit-card nav-text"></i><br>
             </div>
-            <div class="type-med-btn pay-part-btn-txt pay-fac-rm">
-              <br>
-              <br>
+            <div id="btn-type-m" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
+              <br>MVOLA&nbsp;
+              <i class="icon-mobile nav-text"></i><br>
             </div>
 
       </div>
+
+      {# Validation Reduction box #}
+      <div id="addp-valred" class="pay-big-blk">
+            <div class="type-big-btn pay-opt-btn-txt">
+            </div>
+            <div id="btn-red-val" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-c">
+              <br>Valider&nbsp;
+              <i class="icon-check-square nav-text"></i><br>
+              <i class="sm-btn-txt">Vérifier signature et tampon</i>
+            </div>
+            <div id="btn-red-can" class="type-sma-btn pay-big-btn-txt pay-type-btn-t-v">
+              <br>Supprimer&nbsp;
+              <i class="icon-minus-square nav-text"></i><br>
+            </div>
+            <div class="type-sma-btn">
+            </div>
+      </div>
+
+      
 
     </div>
 

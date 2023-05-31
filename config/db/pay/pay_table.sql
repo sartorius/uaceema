@@ -241,36 +241,3 @@ CREATE VIEW v_histopayment_for_user AS
                                                       AND ref.type IN ('T', 'U')
                      LEFT JOIN uac_payment up ON up.user_id = vsh.ID
                                                     AND up.ref_fsc_id = xref.fsc_id;
-/*
-  -- Payment view
-  DROP VIEW IF EXISTS v_histopayment_for_user;
-  CREATE VIEW v_histopayment_for_user AS
-      SELECT
-        up.id AS UP_ID,
-        up.user_id AS UP_USER_ID,
-        IFNULL(up.status, 'N') AS UP_STATUS,
-        up.payment_ref AS UP_PAYMENT_REF,
-        up.facilite_id AS UP_FACILITE_ID,
-        IFNULL(up.input_amount, 0) AS UP_INPUT_AMOUNT,
-        up.type_of_payment AS UP_TYPE_OF_PAYMENT,
-        up.comment AS UP_COMMENT,
-        up.pay_date AS UP_PAY_DATE,
-        up.create_date AS UP_CREATE_DATE,
-        up.last_update AS UP_LAST_UPDATE,
-        ref.id AS REF_ID,
-        ref.code AS REF_CODE,
-        ref.title AS REF_TITLE,
-        ref.amount AS REF_AMOUNT,
-        ref.deadline AS REF_DEADLINE,
-        DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
-        ref.type AS REF_TYPE,
-        ref.fs_order AS REF_FS_ORDER,
-        vcc.id AS COHORT_ID
-      FROM uac_payment up JOIN v_showuser vsh ON up.user_id = vsh.ID
-                          RIGHT JOIN uac_ref_frais_scolarite ref ON up.ref_fsc_id = ref.id
-                                JOIN uac_xref_cohort_fsc xref ON ref.id = xref.fsc_id
-                                                              AND vsh.COHORT_ID = xref.cohort_id
-      -- We exclude multiple which has no real deadline
-      WHERE ref.type IN ('T', 'U');
-
-*/

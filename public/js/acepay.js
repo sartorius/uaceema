@@ -54,7 +54,7 @@ function generatePayDBAndPrint(){
 
 function generateHistoryPrint(){
   /**************** HISTORY *****************/
-  let doc = new jsPDF('p', 'mm', [(35 + (myRecap.length * 6)), 75]);
+  let doc = new jsPDF('p', 'mm', [(35 + (myRecap.length * 7)), 75]);
   doc.setFont("Courier");
   doc.setFontType("bold");
 
@@ -354,26 +354,18 @@ $(document).ready(function() {
         addPayClear();
       });
 
-      $( "#btn-type-h" ).click(function() {
-        invTypeOfPayment = 'H';
-        logInAddPay('*** CHEQUE ***');
-        $("#addp-type-pay").hide(100);
-        $("#addp-print").show(300);
-      });
+      // Handle here all type of payment
+      for(let i=0; i<TYPE_OF_PAYMENT_CODE_ARRAY.length; i++){
+          $("#btn-type-" + TYPE_OF_PAYMENT_CODE_ARRAY[i]).click(function() {
+            invTypeOfPayment = TYPE_OF_PAYMENT_CODE_ARRAY[i].toString().toUpperCase();
+            logInAddPay('*** ' + TYPE_OF_PAYMENT_LBL_ARRAY[i] + ' ***');
+            $("#addp-type-pay").hide(100);
+            $("#addp-print").show(300);
+          });
+    
+      }
 
-      $( "#btn-type-c" ).click(function() {
-        invTypeOfPayment = 'C';
-        logInAddPay('*** CASH ***');
-        $("#addp-type-pay").hide(100);
-        $("#addp-print").show(300);
-      });
 
-      $( "#btn-type-v" ).click(function() {
-        invTypeOfPayment = 'V';
-        logInAddPay('*** VIREMENT/TPE ***');
-        $("#addp-type-pay").hide(100);
-        $("#addp-print").show(300);
-      });
       // STAIRS 1 **********************************************************************************************************************************
       // Generate a cut
       $( "#btn-addcut" ).click(function() {

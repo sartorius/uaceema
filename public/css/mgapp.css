@@ -1693,6 +1693,10 @@ textarea[name=inputRef] {
   vertical-align: middle;
 }
 
+.nosee{
+  color: #F9F5FA;
+}
+
 .btn-blk-jqedt{
   margin-left: 15px;
   min-width: 10em;
@@ -2065,7 +2069,7 @@ img.part-img{
   text-align: left;
   color: var(--main-ace-color);
 }
-
+#addp-valred,
 #addp-mainop,
 #addp-red-option,
 #addp-pay-part,
@@ -2117,6 +2121,18 @@ img.part-img{
   padding-top: 1em;
   padding-bottom: 1.9em;
   color: WHITE;
+  font-weight: 400;
+  margin-top: 15px;
+}
+.type-sma-btn{
+  width: 46%;
+  display: inline-block;
+  border-radius: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-top: 0em;
+  padding-bottom: 1.1em;
+  color: rgb(255, 254, 214);
   font-weight: 400;
   margin-top: 15px;
 }
@@ -2190,6 +2206,9 @@ img.part-img{
 
 .pay-part-btn-txt{
   font-size: 1.0em;
+}
+.sm-btn-txt{
+  font-size: 0.6em;
 }
 .pay-big-btn:hover{
   transform: scale(1.05);

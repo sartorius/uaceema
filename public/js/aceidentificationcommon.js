@@ -143,7 +143,16 @@ function getAllPaymentForFoundUser(){
             }
           }
 
-          $("#addp-mainop").show(100);
+          if(currentTicketMode == 'P'){
+              $("#addp-mainop").show(100);
+          }
+          else if(currentTicketMode == 'R'){
+              $("#addp-valred").show(100);
+          }
+          else{
+            //Do nothing
+            $('#msg-alert').html("Err138D:" + foundUserName + " erreur affichage, contactez le support.");
+          }
           $("#btn-print-recap").show(100);
           // Display paiements
           displayHistoryPayment();
@@ -304,6 +313,15 @@ function addPayUserExists(val){
   return false;
 }
 
+function addPayReductionExists(val){
+    for (var i = 0; i < dataAllREDUCToJsonArray.length; i++) {
+      if (dataAllREDUCToJsonArray[i].TICKET_REF === val){
+        return dataAllREDUCToJsonArray[i].USERNAME;
+      }
+    }
+    return 'na';
+  }
+
 // Common element
 function addPayClear(){
   $('#addpay-ace').val('');
@@ -321,6 +339,7 @@ function addPayClear(){
   $("#addp-pay-part").hide(100);
   $("#addp-pay-uni").hide(100);
   $("#addp-pay-success").hide(100);
+  $("#addp-valred").hide(100);
   invAmountToPay = 0;
   invFscId = 0;
   invTypeOfPayment = 'C';
@@ -337,6 +356,17 @@ function addPayClear(){
   dataPaymentForUserJsonArray = new Array();
   $("#waiting-gif").hide(100);
 }
+
+function commonOperationIfFoundUsername(paramUsername){
+    $("#exist-code-read").html('Y');
+    $('#addpay-ace').hide(100);
+    logInAddPay('username:' + paramUsername);
+    logInAddPay(foundMatricule);
+    logInAddPay(foundName);
+    logInAddPay(foundClasse);
+    logInAddPay('A DÉJÀ DEMANDÉ: ' + ((foundExisting_Facilite == null) ? 'NÉANT' : foundExisting_Facilite));
+}
+
 
 function verityAddComContentScan(){
 
@@ -364,29 +394,58 @@ function verityAddComContentScan(){
     // Here we check the format
     if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
       // Only if the read is clean
-
+      currentTicketMode = 'P';
       if(addPayUserExists(readInput)){
         /********************************************************** FOUND **********************************************************/
-
         scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
-        $("#exist-code-read").html('Y');
-        $('#addpay-ace').hide(100);
-
-
-
-        logInAddPay('username:' + readInput);
-
-
-        logInAddPay(foundMatricule);
-        logInAddPay(foundName);
-        logInAddPay(foundClasse);
-        logInAddPay('A DÉJÀ DEMANDÉ: ' + ((foundExisting_Facilite == null) ? 'NÉANT' : foundExisting_Facilite));
+        commonOperationIfFoundUsername(readInput);
 
       }
       else{
         /******************************************************** NOT FOUND ********************************************************/
         scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;Étudiant introuvable&nbsp;</i>';
       }
+    }
+    else{
+        // If we are on the pay screen we need to do somthing
+        // We do not match a username
+        if(($('#mg-graph-identifier').text() == 'add-pay')){
+            if(/[0-9]{9}[R]/.test(readInput)){
+                console.log('Format OK readInput: ' + readInput);
+                /******************************* Look in the list *********************************/
+                /********************* Retrieve only Reduction Inactive ***************************/
+
+                currentTicketMode = 'R';
+                // xxx
+                let reductionUsername = addPayReductionExists(readInput);
+                if(reductionUsername != 'na'){
+                    if(addPayUserExists(reductionUsername)){
+                        /********************************************************** FOUND **********************************************************/
+                        scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Réduction valide&nbsp;</i>';
+                        commonOperationIfFoundUsername(reductionUsername);
+                        updateTicketType('V');
+                        logInAddPay('VALIDATION*' + readInput);
+                
+                      }
+                      else{
+                        /******************************************************** NOT FOUND ********************************************************/
+                        scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;ERR93 Étudiant&nbsp;</i>';
+                      }
+                }
+                else{
+                    // reductionUsername == 'na'
+                    /******************************************************** NOT FOUND ********************************************************/
+                    scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;Ticket introuvable&nbsp;</i>';
+                }
+            }
+            else{
+              /******************************************************** NOT FOUND ********************************************************/
+              scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;ERR92Format&nbsp;</i>';
+            }
+        }
+        else{
+            //We are not in pay screen we do nothing
+        }
     }
 
     //console.log('We have read: ' + $('#addpay-ace').val());
@@ -444,6 +503,7 @@ function logInAddPay(someMsg){
     myBreak = '';
 
     let ticketRefTime = myNow.getHours().toString().padStart(2, '4') + myNow.getMinutes().toString().padStart(2, '0') + myNow.getSeconds().toString().padStart(2, '0');
+    // This will be HHMMss + Day of the year on 3 digit + Type
     ticketRef = ticketRefTime + (Math.floor((myNow - new Date(myNow.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24)).toString().padStart(3, '0');
 
     let tdate = myNow.getDate().toString().padStart(2, '0')+'_'+(myNow.getMonth()+1).toString().padStart(2, '0')+'_'+myNow.getFullYear();
@@ -513,8 +573,11 @@ function displayHistoryPayment(){
     else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'C'){
         typeOfPayment = '/CASH';
     }
-    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'V'){
+    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'T'){
         typeOfPayment = '/VIRTPE';
+    }
+    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'M'){
+        typeOfPayment = '/MVOLA';
     }
     else{
         //Do nothing

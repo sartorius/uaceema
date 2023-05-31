@@ -86,10 +86,15 @@ class AdminPayController extends AbstractController
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
         // Get All USERNAME
         $allusrn_query = " SELECT *  from v_payfoundusrn; ";
-
         $logger->debug("Show me allusrn_query: " . $allusrn_query);
+
+        $allreduc_query = " SELECT UPPER(vhu.USERNAME) AS USERNAME, ufp.ticket_ref AS TICKET_REF FROM uac_facilite_payment ufp JOIN v_showuser vhu ON ufp.user_id = vhu.ID WHERE ufp.category IN ('R') AND ufp.status IN ('I'); ";
+        $logger->debug("Show me allreduc_query: " . $allreduc_query);
+
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_usrn = $dbconnectioninst->query($allusrn_query)->fetchAll(PDO::FETCH_ASSOC);
+
+        $result_all_reduc = $dbconnectioninst->query($allreduc_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_usrn));
 
 
@@ -99,6 +104,7 @@ class AdminPayController extends AbstractController
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'result_all_usrn'=>$result_all_usrn,
+                                                                'result_all_reduc'=>$result_all_reduc,
                                                                 'result_get_token'=>$result_get_token,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);

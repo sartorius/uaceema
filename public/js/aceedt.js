@@ -661,7 +661,7 @@ function reinitDateArrays(){
   techDateArray = new Array();
 
   for(let i=0; i<refDays.length; i++){
-    dateArray.push(refInvMonday.addDays(i).getDate().toString().padStart(2, '0')+'/'+(refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0'));
+    dateArray.push("<i class='nosee'>[</i>" + refInvMonday.addDays(i).getDate().toString().padStart(2, '0')+'.'+(refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0') + "<i class='nosee'>]</i>");
     techDateArray.push(refInvMonday.addDays(i).getFullYear() + '-' + (refInvMonday.addDays(i).getMonth()+1).toString().padStart(2, '0') + '-' + refInvMonday.addDays(i).getDate().toString().padStart(2, '0'));
   };
 }
