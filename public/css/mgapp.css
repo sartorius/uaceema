@@ -2213,6 +2213,12 @@ img.part-img{
 .sm-btn-txt{
   font-size: 0.6em;
 }
+.md-btn-txt{
+  font-size: 0.9em;
+}
+.btn-amt-col{
+  color: gold;
+}
 .pay-big-btn:hover{
   transform: scale(1.05);
   color: var(--main-gray-75);

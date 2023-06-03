@@ -195,7 +195,7 @@ function printReceiptPDF(tempTicketRef){
   // Document of 210mm wide and 297mm high > A4
   // new jsPDF('p', 'mm', [297, 210]);
   // Here format A7
-  let doc = new jsPDF('p', 'mm', [150, 75]);
+  let doc = new jsPDF('p', 'mm', [(35 + (myTicket.length * 7)), 75]);
 
   doc.setFont("Courier");
   doc.setFontType("bold");
@@ -289,6 +289,8 @@ function addPayUserExists(val){
       foundClasse = dataAllUSRNToJsonArray[i].CLASSE;
       foundUserId = dataAllUSRNToJsonArray[i].ID;
       foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
+      //Display the price of the Certificat de scolarité here
+      $("#cert-sco-am").html(renderAmount(dataAllUSRNToJsonArray[i].CERT_SCO_AMOUNT));
 
       $("#btn-clear-addpay").prop("disabled", false);
 
@@ -345,6 +347,7 @@ function addPayReductionExists(val){
             $('#btn-red-can').removeClass('deactive-btn');
             logInAddPay('REFERENCE*' + val);
             ticketRefToDelete = val;
+            ticketRefToValidate = val;
         }
         return dataAllREDUCToJsonArray[i].USERNAME;
       }
@@ -378,11 +381,14 @@ function addPayClear(){
   $('#btn-part-man-subm').show(100);
   $('#pay-recap').show(100);
   $("#addp-canpay").hide(100);
+  $("#cert-sco-am").html('AMTC AR');
+  lblDate = '';
   invAmountToPay = 0;
   invFscId = 0;
   invTypeOfPayment = 'C';
   invOperation = 'F';
   ticketRefToDelete = '';
+  ticketRefToValidate = '';
   ticketRefPayment = '';
 
   updateTicketType('X');
@@ -459,6 +465,7 @@ function verityAddComContentScan(){
                 let reductionUsername = addPayReductionExists(readInput);
                 if(reductionUsername != 'na'){
                     if(addPayUserExists(reductionUsername)){
+                        //xxx
                         /********************************************************** FOUND **********************************************************/
                         scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Réduction valide&nbsp;</i>';
                         commonOperationIfFoundUsername(reductionUsername);
@@ -545,6 +552,7 @@ function logInAddPay(someMsg){
   }
   else{
     appendLog = ('GÉNÉRÉ LE ' + date + sepTime + time).toString().padStart(maxLgTicket, paddChar);
+    lblDate = date;
     $('#pay-sc-log-tra').html('');
     redPc = 0;
     clearFoundUser();
@@ -790,6 +798,7 @@ $(document).ready(function() {
     }
     else if($('#mg-graph-identifier').text() == 'ref-pay'){
       // Do something
+      console.log('in ref-pay');
       loadRefPayGrid();
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){

@@ -199,18 +199,22 @@ SELECT
                           ON urfs.id = xref.fsc_id;
 
 -- Get the list of user and reduction they get
-  DROP VIEW IF EXISTS v_payfoundusrn;
-  CREATE VIEW v_payfoundusrn AS
-  SELECT
-        vsh.ID AS ID,
-        UPPER(vsh.USERNAME) AS USERNAME,
-        vsh.MATRICULE AS MATRICULE,
-        REPLACE(CONCAT(fCapitalizeStr(vsh.FIRSTNAME), ' ', vsh.LASTNAME), "'", " ") AS NAME,
-        vsh.SHORTCLASS AS CLASSE,
-        GROUP_CONCAT(category, red_pc) AS EXISTING_FACILITE
-        FROM v_showuser vsh LEFT JOIN uac_facilite_payment ufp ON vsh.ID = ufp.user_id
-                                                               AND ufp.status IN ('I', 'A')
-        GROUP BY ID, USERNAME, NAME, CLASSE;
+DROP VIEW IF EXISTS v_payfoundusrn;
+CREATE VIEW v_payfoundusrn AS
+SELECT
+      vsh.ID AS ID,
+      UPPER(vsh.USERNAME) AS USERNAME,
+      vsh.MATRICULE AS MATRICULE,
+      REPLACE(CONCAT(fCapitalizeStr(vsh.FIRSTNAME), ' ', vsh.LASTNAME), "'", " ") AS NAME,
+      vsh.SHORTCLASS AS CLASSE,
+      ref.amount AS CERT_SCO_AMOUNT,
+      GROUP_CONCAT(category, red_pc) AS EXISTING_FACILITE
+      FROM v_showuser vsh JOIN uac_xref_cohort_fsc xref ON xref.cohort_id = vsh.COHORT_ID
+                          JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id
+                                                           AND ref.code = 'CERTSCO'
+                              LEFT JOIN uac_facilite_payment ufp ON vsh.ID = ufp.user_id
+                                                             AND ufp.status IN ('I', 'A')
+      GROUP BY ID, USERNAME, NAME, CLASSE, CERT_SCO_AMOUNT;
 
 -- Payment view
 DROP VIEW IF EXISTS v_histopayment_for_user;

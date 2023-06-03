@@ -13,15 +13,18 @@ function generateFaciliteDBAndPrint(){
         token : getToken
       },  // data to submit
       success: function (data, status, xhr) {
-          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
-          printReceiptPDF(tempTicketRef);
-          //We have to locally create the reduction in case of re-scan
+          //We have to locally create the reduction in case of re-scan 
+          //let iMyReduction = data['param_user_id'];
           let myReduction = {
             USERNAME: dataAllUSRNToJsonArray[foundiInJson].USERNAME,
             UFP_STATUS: 'I',
             TICKET_REF: tempTicketRef
           };
           dataAllREDUCToJsonArray.push(myReduction);
+
+          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(tempTicketRef);
+          
 
       },
       error: function (jqXhr, textStatus, errorMessage) {
@@ -32,23 +35,44 @@ function generateFaciliteDBAndPrint(){
       }
   });
 }
-function generateValidateRedDBAndPrint(){
+
+function generateCertificatScoDBAndPrint(){
   let tempTicketRef = ticketRef + ticketType;
 
 
-  $.ajax('/generateValidateRedDB', {
+  $.ajax('/generateCertificatScoDB', {
       type: 'POST',  // http method
       data: {
         foundUserId: foundUserId,
-        ticketRef: tempTicketRef
+        invTypeOfPayment: invTypeOfPayment,
+        ticketRef: tempTicketRef,
+        token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
           dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
           printReceiptPDF(tempTicketRef);
           //We have to locally create the reduction in case of re-scan
 
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR792:" + tempTicketRef + " erreur certificat de scolarité, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+function generateValidateRedDBAndPrint(){
 
-
+  $.ajax('/generateValidateRedDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUserId: foundUserId,
+        ticketRef: ticketRefToValidate,
+        token: getToken
+      },  // data to submit
+      success: function (data, status, xhr) {
+          
           // **********************************************************************
           let tempTicketAjaxValid = data['paramTicketRef'];
           // We need to delete it locally else we need to reload
@@ -67,9 +91,13 @@ function generateValidateRedDBAndPrint(){
           dataAllREDUCToJsonArray.push(myReduction);
           // **********************************************************************
 
+          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(ticketRefToValidate);
+          //We have to locally create the reduction in case of re-scan
+
       },
       error: function (jqXhr, textStatus, errorMessage) {
-        $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support. ");
+        $('#msg-alert').html("ERR712:" + ticketRefToValidate + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support. ");
         $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
         $('#ace-alert-msg').show(100);
         addPayClear();
@@ -113,9 +141,6 @@ function generateDeleteRedDBAndPrint(){
         token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
-          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
-          let tempTicketAjaxDelete = data['paramTicketRef'];
-          printReceiptPDF(tempTicketAjaxDelete);
           // We need to delete it locally else we need to reload
           let deleteUsername = '';
           for(let j=0; j<dataAllREDUCToJsonArray.length; j++){
@@ -132,6 +157,9 @@ function generateDeleteRedDBAndPrint(){
             TICKET_REF: tempTicketAjaxDelete
           };
           dataAllREDUCToJsonArray.push(myReduction);
+          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          let tempTicketAjaxDelete = data['paramTicketRef'];
+          printReceiptPDF(tempTicketAjaxDelete);
       },
       error: function (jqXhr, textStatus, errorMessage) {
         $('#msg-alert').html("ERR789:" + ticketRefToDelete + " suppression du ticket impossible, contactez le support. ");
@@ -347,94 +375,7 @@ function setPartButtonsAndListener(isCommitmentLetter){
       invRefLineTranche = invRefLineTranche + 1;
   }
 
-  /*
-  for(let i=0; i<dataPaymentForUserJsonArray.length; i++){
-    if(dataPaymentForUserJsonArray[i].REF_TYPE.toString() == 'T'){
-      //Check first if we handling a new Tranche
-      if(dataPaymentForUserJsonArray[i].REF_CODE != invCodeTranche){
-        // We have a new tranche code we need to handle it
-        // Set the data
-        invCodeTranche = dataPaymentForUserJsonArray[i].REF_CODE;
-        invRefCodeTrancheAmount = parseInt(dataPaymentForUserJsonArray[i].REF_AMOUNT);
-
-        if(trancheStillOpen == 'Y'){
-          // But we have move of Tranche so we need to not allow next tranche open
-          blockNextTranche = 'Y';
-        }
-        // Whatever we need to keep reset to zero but we need to check the previous
-        invTotalCodeTrancheAmount = 0;
-
-        // We are on a Tranche
-        $('#id-part-' + invRefLineTranche +  '-3').html(renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()));
-        $('#id-rawpayamt-' + invRefLineTranche +  '-3').html(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
-        $('#id-fscid-' + invRefLineTranche +  '-3').html(dataPaymentForUserJsonArray[i].REF_ID.toString());
-        //invFscId
-        // Hanlde late
-        if(dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0){
-          $('#btn-part-' + invRefLineTranche + '-3').removeClass('pay-opt-btn-t-a');
-          $('#btn-part-' + invRefLineTranche + '-3').addClass('pay-opt-btn-t-late');
-          $('#lbl-part-' + invRefLineTranche +  '-3').html(invRefLineTranche + LATE_FLATICON);
-        }
-        else{
-          $('#lbl-part-' + invRefLineTranche +  '-3').html(invRefLineTranche);
-        }
-
-        //Compute the amount here New Tranche
-        invTotalCodeTrancheAmount = parseInt(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT);
   
-        invRefLineTranche = invRefLineTranche + 1;
-
-      }
-      else{
-        // We need to handle partial payment here
-        invTotalCodeTrancheAmount = invTotalCodeTrancheAmount + parseInt(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT);
-      }
-
-
-      let tempinvRefLineTrancheMinus1 = (parseInt(invRefLineTranche) -  1);
-      // Identify here if the Tranche is filled or not
-      if(invTotalCodeTrancheAmount < invRefCodeTrancheAmount){
-        //We keep this fisc ID
-        if(blockNextTranche == 'N'){
-          invFscId = dataPaymentForUserJsonArray[i].REF_ID;
-          // This must the be the only option we allow
-          // We need to remove 1 because the previous step has added 1
-          //Set also Max Manual Amount
-          maxManualAmount = invRefCodeTrancheAmount - invTotalCodeTrancheAmount;
-          $('#id-part-' + tempinvRefLineTrancheMinus1 +  '-3').html(renderAmount(maxManualAmount.toString()));
-          $('#id-rawpayamt-' + tempinvRefLineTrancheMinus1 +  '-3').html(maxManualAmount.toString());
-
-          //console.log('tempinvRefLineTrancheMinus1: ' + tempinvRefLineTrancheMinus1 + ' - maxManualAmount: ' + maxManualAmount);
-
-          $('#btn-part-' + tempinvRefLineTrancheMinus1 + '-3').removeClass('deactive-btn');
-          trancheStillOpen = 'Y';
-          //console.log('in CP1a');
-        }
-        else{
-          $('#btn-part-' + tempinvRefLineTrancheMinus1 + '-3').addClass('deactive-btn');
-          //console.log('in CP1b');
-        }
-      }
-      else{
-        // We have found that it is filled so remove it
-        maxManualAmount = 0;
-        $('#id-part-' + tempinvRefLineTrancheMinus1 +  '-3').html(renderAmount(invRefCodeTrancheAmount.toString()));
-        $('#id-rawpayamt-' + tempinvRefLineTrancheMinus1 +  '-3').html(invRefCodeTrancheAmount.toString());
-        $('#btn-part-' + tempinvRefLineTrancheMinus1 + '-3').addClass('deactive-btn');
-        trancheStillOpen = 'N';
-        //console.log('in CP2');
-      }
-      //console.log('trancheStillOpen: ' + trancheStillOpen + '/blockNextTranche: ' + blockNextTranche);
-
-    }
-    else{
-      //Do nothing
-      //We are not on a Tranche
-      //We are on a Unique Payment
-    }
-
-  }
-  */
 
   for(let k=1; k<4; k++){
       // Add listener
@@ -674,6 +615,34 @@ $(document).ready(function() {
         $("#addp-pay-part").show(300);
   
       });
+
+      // CREATE CERTIFICAT SCOLARITE
+      // Create the LOC
+      $( "#btn-cert-sco" ).click(function() {
+        //console.log("#btn-cert-sco");
+        invOperation = 'S';
+        updateTicketType('S');
+        //Reset the ticket
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay('*** CERTIFICAT DE SCOLARITE ***');
+        logInAddPay('Nous,');
+        logInAddPay('Université ACEEM Manakambahiny');
+        logInAddPay('certifions que Mme/Mlle/M.');
+        logInAddPay(foundName);
+        logInAddPay('est régulièrement');
+        logInAddPay('inscrit(e) en classe de');
+        logInAddPay(foundClasse);
+        logInAddPay('à date du ' + lblDate);
+        logInAddPay("et ce jusqu'à");
+        logInAddPay("la fin de l'année en cours.");
+        logInAddPay(MSG_FOOTER_CSCO);
+  
+        $("#addp-mainop").hide(100);
+        $("#addp-type-pay").show(300);
+  
+      });
   
       // STAIRS 2 **********************************************************************************************************************************
       // Reduction button
@@ -770,6 +739,7 @@ $(document).ready(function() {
       });
   
       //btn-addfac-1
+      /*
       $( "#btn-addfac-1" ).click(function() {
         console.log("You click on #btn-addfac-1");
         updateTicketType('M');
@@ -779,6 +749,8 @@ $(document).ready(function() {
         $("#addp-red-option").hide(100);
         $("#addp-print").show(300);
       });
+
+      */
   
   
       // PRINT BUTTON !!!
@@ -803,6 +775,10 @@ $(document).ready(function() {
         else if(invOperation == 'C'){
           //Delete and print
           generateCancelPaymentDBAndPrint();
+        }
+        else if(invOperation == 'S'){
+          //Delete and print
+          generateCertificatScoDBAndPrint();
         }
         else{
           generatePayDBAndPrint();

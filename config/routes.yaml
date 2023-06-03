@@ -149,3 +149,6 @@ getPaymentDetailsDB:
 generateCancelPaymentDB:
     path:       /generateCancelPaymentDB
     controller: App\Controller\AdminPayController::generateCancelPaymentDB
+generateCertificatScoDB:
+    path:       /generateCertificatScoDB
+    controller: App\Controller\AdminPayController::generateCertificatScoDB

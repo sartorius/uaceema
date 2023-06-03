@@ -21,6 +21,7 @@
     let foundClasse = '';
     let foundUserId = 0;
     let foundExisting_Facilite = '';
+    let lblDate = '';
 
     const paddChar = '.';
     const maxLgTicket = 45;
@@ -37,6 +38,7 @@
     const msgFooterRedPdt = 'DATE, SIGNATURE ET CACHET PDT';
     const msgFooterRedDaf = 'DATE, SIGNATURE ET CACHET DAF';
     const msgFooterLOC = 'DATE, SIGNATURE ETUDIANT/PARENT';
+    const MSG_FOOTER_CSCO = "DATE, SIGNATURE ET CACHET";
 
     const maxPrintTicket = sizeTime - 3;
     const maxPadLeft = 5;
@@ -134,6 +136,13 @@
             <div id="btn-addcut-com" class="red-big-btn pay-big-btn-txt red-opt-btn-com init-deactive deactive-btn">
               <br>Lettre<br>d'engagement &nbsp;<i class="icon-file-1 nav-text"></i><br>
             </div>
+            <div id="btn-cert-sco" class="red-big-btn pay-big-btn-txt red-opt-btn-com">
+              <br>Certificat<br>de scolarité &nbsp;<i class="icon-graduation-cap nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="cert-sco-am">AMTC AR</i></i>
+            </div>
+            <div class="red-big-btn pay-big-btn-txt">
+              <br><br><br>
+            </div>
       </div>
 
       {# Cut box #}
@@ -150,12 +159,14 @@
             <div id="btn-addcut-4" class="red-big-btn pay-opt-btn-txt red-opt-btn-1 pay-fac-rm">
               <br>Réduction<br>100%<br>
             </div>
+            {#
             <div id="btn-addfac-1" class="red-big-btn pay-opt-btn-txt fac-opt-btn-1">
               <br>Autorisation<br>mensualisation<br>
             </div>
             <div class="red-big-btn pay-opt-btn-txt">
               <br><br><br>
             </div>
+             #}
       </div>
 
       {# Payment Part box #}
