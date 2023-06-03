@@ -134,6 +134,18 @@ getpaymentforuserDB:
 generatefaciliteDB:
     path:       /generatefaciliteDB
     controller: App\Controller\AdminPayController::generatefaciliteDB
+generateValidateRedDB:
+    path:       /generateValidateRedDB
+    controller: App\Controller\AdminPayController::generateValidateRedDB
+generateDeleteRedDB:
+    path:       /generateDeleteRedDB
+    controller: App\Controller\AdminPayController::generateDeleteRedDB
 generatepaymentDB:
     path:       /generatepaymentDB
     controller: App\Controller\AdminPayController::generatepaymentDB
+getPaymentDetailsDB:
+    path:       /getPaymentDetailsDB
+    controller: App\Controller\AdminPayController::getPaymentDetailsDB
+generateCancelPaymentDB:
+    path:       /generateCancelPaymentDB
+    controller: App\Controller\AdminPayController::generateCancelPaymentDB

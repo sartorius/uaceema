@@ -9,11 +9,20 @@ function generateFaciliteDBAndPrint(){
         ticketRef: tempTicketRef,
         redPc: redPc,
         ticketType: ticketType,
+        invFscId: invFscId,
         token : getToken
       },  // data to submit
       success: function (data, status, xhr) {
           dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
           printReceiptPDF(tempTicketRef);
+          //We have to locally create the reduction in case of re-scan
+          let myReduction = {
+            USERNAME: dataAllUSRNToJsonArray[foundiInJson].USERNAME,
+            UFP_STATUS: 'I',
+            TICKET_REF: tempTicketRef
+          };
+          dataAllREDUCToJsonArray.push(myReduction);
+
       },
       error: function (jqXhr, textStatus, errorMessage) {
         $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support. ");
@@ -23,7 +32,50 @@ function generateFaciliteDBAndPrint(){
       }
   });
 }
+function generateValidateRedDBAndPrint(){
+  let tempTicketRef = ticketRef + ticketType;
 
+
+  $.ajax('/generateValidateRedDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUserId: foundUserId,
+        ticketRef: tempTicketRef
+      },  // data to submit
+      success: function (data, status, xhr) {
+          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(tempTicketRef);
+          //We have to locally create the reduction in case of re-scan
+
+
+
+          // **********************************************************************
+          let tempTicketAjaxValid = data['paramTicketRef'];
+          // We need to delete it locally else we need to reload
+          let validateUsername = '';
+          for(let j=0; j<dataAllREDUCToJsonArray.length; j++){
+            if(dataAllREDUCToJsonArray[j].TICKET_REF == tempTicketAjaxValid){
+              validateUsername = dataAllREDUCToJsonArray[j].USERNAME;
+              dataAllREDUCToJsonArray.splice(j, 1);
+            }
+          } // end of j loop
+          let myReduction = {
+            USERNAME: validateUsername,
+            UFP_STATUS: 'A',
+            TICKET_REF: tempTicketAjaxValid
+          };
+          dataAllREDUCToJsonArray.push(myReduction);
+          // **********************************************************************
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR782:" + tempTicketRef + " vérifiez que cet étudiant ne bénéficie pas déjà d'une facilité sinon contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
 function generatePayDBAndPrint(){
   let tempTicketRef = ticketRef + ticketType;
 
@@ -51,6 +103,120 @@ function generatePayDBAndPrint(){
       }
   });
 }
+
+function generateDeleteRedDBAndPrint(){
+
+  $.ajax('/generateDeleteRedDB', {
+      type: 'POST',  // http method
+      data: {
+        ticketRef: ticketRefToDelete,
+        token: getToken
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          let tempTicketAjaxDelete = data['paramTicketRef'];
+          printReceiptPDF(tempTicketAjaxDelete);
+          // We need to delete it locally else we need to reload
+          let deleteUsername = '';
+          for(let j=0; j<dataAllREDUCToJsonArray.length; j++){
+            //console.log(dataAllREDUCToJsonArray[j].TICKET_REF + ' vs ' + tempTicketAjaxDelete);
+            if(dataAllREDUCToJsonArray[j].TICKET_REF == tempTicketAjaxDelete){
+              //console.log('I read: ' + dataAllREDUCToJsonArray[j].USERNAME);
+              deleteUsername = dataAllREDUCToJsonArray[j].USERNAME;
+              dataAllREDUCToJsonArray.splice(j, 1);
+            }
+          } // end of j loop
+          let myReduction = {
+            USERNAME: deleteUsername,
+            UFP_STATUS: 'D',
+            TICKET_REF: tempTicketAjaxDelete
+          };
+          dataAllREDUCToJsonArray.push(myReduction);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR789:" + ticketRefToDelete + " suppression du ticket impossible, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
+
+function getPaymentDetailsDB(){
+
+  $.ajax('/getPaymentDetailsDB', {
+      type: 'POST',  // http method
+      data: {
+        ticketRef: ticketRefPayment,
+        token: getToken
+      },  // data to submit
+      success: function (data, status, xhr) {
+          let dataPaymentDetailsArray = data['result'].slice();
+          if(dataPaymentDetailsArray.length > 0){
+                // We need to check how many payment are involved
+                // It can be several
+                $("#exist-code-read").html('Y');
+                $('#addpay-ace').hide(100);
+                let j = 1;
+                //logInAddPay
+                logInAddPay('username:'+dataPaymentDetailsArray[0].VSH_USERNAME);
+                logInAddPay(dataPaymentDetailsArray[0].MATRICULE);
+                logInAddPay(dataPaymentDetailsArray[0].FIRSTNAME + ' ' + dataPaymentDetailsArray[0].LASTNAME);
+                logInAddPay(dataPaymentDetailsArray[0].SHORTCLASS);
+
+                for(let i=0; i<dataPaymentDetailsArray.length; i++){
+                  //logInAddPay
+                  logInAddPay(ticketRefPayment + '/' + j);
+                  logInAddPay(dataPaymentDetailsArray[i].REF_CODE);
+                  logInAddPay(renderAmount(dataPaymentDetailsArray[i].UP_INPUT_AMOUNT));
+                  j = j+1;
+                }
+                $('#pay-recap').hide(100);
+                $("#btn-clear-addpay").prop("disabled", false);
+                $("#addp-canpay").show(300);
+          }
+          else{
+            $('#msg-alert').html("ERR799:" + ticketRefPayment + " le paiement est introuvable, vérifiez-le et si besoin contactez le support. ");
+            $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+            $('#ace-alert-msg').show(100);
+            addPayClear();
+          }
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR787:" + ticketRefPayment + " récupération du paiement impossible, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
+function generateCancelPaymentDBAndPrint(){
+
+  $.ajax('/generateCancelPaymentDB', {
+      type: 'POST',  // http method
+      data: {
+        ticketRef: ticketRefPayment,
+        token: getToken
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //xxx
+          let tempTicketAjaxCancelPayment = data['paramTicketRef'];
+          printReceiptPDF(tempTicketAjaxCancelPayment);
+          $('#msg-alert').html(tempTicketAjaxCancelPayment + " a été annulé avec succés.");
+          $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+          $('#ace-alert-msg').show(100);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR780:" + ticketRefPayment + " annulation du paiement impossible, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
 
 function generateHistoryPrint(){
   /**************** HISTORY *****************/
@@ -110,12 +276,14 @@ function verifyManualAmount(){
   let isValidMIN = false;
 
   if ($('#addman-amo').val().length > 3){
+    
     if($('#addman-amo').val().endsWith('00')){
       if(validateAmountMIN($('#addman-amo').val())){
         // I have a valid amount here
         let tempAmount = parseInt($('#addman-amo').val());
         if(tempAmount > MIN_AMOUNT){
           if(tempAmount <= maxManualAmount){
+            //console.log('read input: ' + $('#addman-amo').val());
             isValidMIN = true;
           }
         }
@@ -135,7 +303,7 @@ function verifyManualAmount(){
   }
 }
 
-function setPartButtonsAndListener(){
+function setPartButtonsAndListener(isCommitmentLetter){
   let invRefLineTranche = 1;
   let invCodeTranche = 'XXX';
   let invRefCodeTrancheAmount = 0;
@@ -144,9 +312,42 @@ function setPartButtonsAndListener(){
   //We need to consider that tranche initial (as previous) is closed
   let trancheStillOpen = 'N';
   let blockNextTranche = 'N';
+  let lblCommitmentLetter = '';
   
+  let sumPerTrancheStillOpen = 'Y';
+  for(let i=0; i<dataSumPerTranche.length; i++){
+      if((parseInt(dataSumPerTranche[i].REST_TO_PAY) > 0) && (sumPerTrancheStillOpen == 'Y')){
+        // First time we open the line
+        // By default they are closed
+        $('#btn-part-' + invRefLineTranche + '-3').removeClass('deactive-btn');
+        // And we set here the maximum manual amount
+        maxManualAmount = parseInt(dataSumPerTranche[i].REST_TO_PAY);
+        invFscId = dataSumPerTranche[i].REF_ID;
+        if(isCommitmentLetter == 'Y'){
+          lblCommitmentLetter = "<br><br>LETTRE D'ENGAGEMENT<br>";
+        }
+        sumPerTrancheStillOpen = 'N';
+      }
+      else{
+        lblCommitmentLetter = '';
+      }
 
+      $('#id-part-' + invRefLineTranche +  '-3').html(renderAmount(dataSumPerTranche[i].REST_TO_PAY.toString()));
+      $('#id-rawpayamt-' + invRefLineTranche +  '-3').html(dataSumPerTranche[i].REST_TO_PAY.toString());
+      $('#id-fscid-' + invRefLineTranche +  '-3').html(dataSumPerTranche[i].REF_ID.toString());
+      // Hanlde late
+      if((dataSumPerTranche[i].NEGATIVE_IS_LATE < 0) && (parseInt(dataSumPerTranche[i].REST_TO_PAY) > 0)){
+        $('#btn-part-' + invRefLineTranche + '-3').removeClass('pay-opt-btn-t-a');
+        $('#btn-part-' + invRefLineTranche + '-3').addClass('pay-opt-btn-t-late');
+        $('#lbl-part-' + invRefLineTranche +  '-3').html(invRefLineTranche + LATE_FLATICON + lblCommitmentLetter);
+      }
+      else{
+        $('#lbl-part-' + invRefLineTranche +  '-3').html(invRefLineTranche + lblCommitmentLetter);
+      }
+      invRefLineTranche = invRefLineTranche + 1;
+  }
 
+  /*
   for(let i=0; i<dataPaymentForUserJsonArray.length; i++){
     if(dataPaymentForUserJsonArray[i].REF_TYPE.toString() == 'T'){
       //Check first if we handling a new Tranche
@@ -233,26 +434,44 @@ function setPartButtonsAndListener(){
     }
 
   }
+  */
 
   for(let k=1; k<4; k++){
       // Add listener
       $("#btn-part-" + k + "-3").off('click');
       $( "#btn-part-" + k + "-3" ).click(function() {
-        invAmountToPay = parseInt($('#id-rawpayamt-' + k +  '-3').html());
         invFscId = parseInt($('#id-fscid-' + k +  '-3').html());
         //console.log('You click on: ' + k + '/' + invAmountToPay);
+        if(isCommitmentLetter == 'Y'){
+          invAmountToPay = 0;
+          logInAddPay('TRANCHE*' + k);
 
-        logInAddPay(renderAmount(invAmountToPay));
-        $("#addp-pay-part").hide(100);
-        $("#addp-type-pay").show(300);
+          $("#addp-pay-part").hide(100);
+          $("#addp-print").show(300);
+        }
+        else{
+          invAmountToPay = parseInt($('#id-rawpayamt-' + k +  '-3').html());
+          logInAddPay(renderAmount(invAmountToPay));
+
+          $("#addp-pay-part").hide(100);
+          $("#addp-type-pay").show(300);
+        }
       });
   }
 
 }
 
+function setCommitmentLetterAndListener(){
+  setPartButtonsAndListener('Y');
+  $('#btn-part-man').hide(100);
+  $('#btn-part-man-subm').hide(100);
+}
+
+
 function setUniButtonsAndListener(){
   let invRefLineUnique = 1;
   let totalUniLeftPay = 0;
+  let atLeastOneFraisFixeIsOpen = 0;
 
   
 
@@ -274,12 +493,15 @@ function setUniButtonsAndListener(){
         $('#btn-uni-' + invRefLineUnique).addClass('pay-opt-btn-t-late');
         $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE + LATE_FLATICON);
       }
+      else{
+        $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
+      }
       
       if(dataPaymentForUserJsonArray[i].UP_STATUS ==  'N'){
-        $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
         $( "#btn-uni-" + invRefLineUnique).removeClass('deactive-btn');
         $('#id-rawuniamt-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
         totalUniLeftPay = totalUniLeftPay + parseInt(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
+        atLeastOneFraisFixeIsOpen = atLeastOneFraisFixeIsOpen + 1;
 
         let myUniPayment = {
           fscId: dataPaymentForUserJsonArray[i].REF_ID.toString(),
@@ -322,6 +544,10 @@ function setUniButtonsAndListener(){
       });
   }
 
+  //If the left is more than one then we open the button
+  if(atLeastOneFraisFixeIsOpen > 1){
+    $("#btn-uni-left").removeClass('deactive-btn');
+  }
   $("#btn-uni-left").off('click');
   $("#btn-uni-left").click(function() {
     // All payment will be managed in payUniLeftOperationForUserJsonArray
@@ -370,7 +596,7 @@ $(document).ready(function() {
       // Generate a cut
       $( "#btn-addcut" ).click(function() {
         //console.log("You click on #btn-addcut");
-        invOperation = 'F';
+        invOperation = 'R';
         $('#sh-ticketref').html(ticketRef + ticketType);
         // We do not do updateTicketType('R') here because we may use the Letter of commitment
   
@@ -409,7 +635,7 @@ $(document).ready(function() {
         $("#addp-pay-part").show(300);
 
         // Load payment options
-        setPartButtonsAndListener();
+        setPartButtonsAndListener('N');
 
         // Add the listener on the amount
         $( "#addman-amo" ).keyup(function() {
@@ -432,21 +658,63 @@ $(document).ready(function() {
         // Load payment options
         setUniButtonsAndListener();
       });
-  
 
-      // STAIRS 2 **********************************************************************************************************************************
       // CREATE THE LETTEROF COMMITMENT
       // Create the LOC
       $( "#btn-addcut-com" ).click(function() {
         //console.log("You click on #btn-addcut-com");
+        invOperation = 'L';
         updateTicketType('L');
         logInAddPay('*** LETTRE ENGAGEMENT ***');
         logInAddPay(msgFooterLOC);
   
-        $("#addp-red-option").hide(100);
+        $("#addp-mainop").hide(100);
+        /** Do commitmen letter opertion */
+        setCommitmentLetterAndListener();
+        $("#addp-pay-part").show(300);
+  
+      });
+  
+      // STAIRS 2 **********************************************************************************************************************************
+      // Reduction button
+      $( "#btn-red-can" ).click(function() {
+        console.log("You click on #btn-red-can");
+        invOperation = 'D';
+        updateTicketType('D');
+        logInAddPay('*** SUPPRESSION ***');
+  
+        $("#addp-valred").hide(100);
         $("#addp-print").show(300);
   
       });
+
+      $( "#btn-red-val" ).click(function() {
+        console.log("You click on #btn-red-val");
+        invOperation = 'V';
+        updateTicketType('V');
+        logInAddPay('*** VALIDATION ***');
+  
+        $("#addp-valred").hide(100);
+        $("#addp-print").show(300);
+  
+      });
+
+      
+      $( "#btn-can-pay" ).click(function() {
+        console.log("You click on #btn-can-pay");
+        
+        // No need involved operation as we have set it in ajax
+        invOperation = 'C';
+        updateTicketType('C');
+        logInAddPay('*** ANNULATION PAIEMENT ***');
+  
+        $("#addp-canpay").hide(100);
+        $("#addp-print").show(300);
+  
+      });
+
+      // STAIRS 3 **********************************************************************************************************************************
+      
   
       // CREATE THE CUTS
       // Create the cut
@@ -517,8 +785,24 @@ $(document).ready(function() {
       $( "#addp-print" ).click(function() {
         //console.log("You click on #addp-print");
         // Choose the operation
-        if(invOperation == 'F'){
+        if(invOperation == 'R'){
           generateFaciliteDBAndPrint();
+        }
+        else if(invOperation == 'L'){
+          //Delete and print
+          generateFaciliteDBAndPrint();
+        }
+        else if(invOperation == 'V'){
+          //Delete and print
+          generateValidateRedDBAndPrint();
+        }
+        else if(invOperation == 'D'){
+          //Delete and print
+          generateDeleteRedDBAndPrint();
+        }
+        else if(invOperation == 'C'){
+          //Delete and print
+          generateCancelPaymentDBAndPrint();
         }
         else{
           generatePayDBAndPrint();

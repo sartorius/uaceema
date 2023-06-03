@@ -143,12 +143,13 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (
   `category` CHAR(1) NOT NULL COMMENT 'R for Reduction, M for Mensualite, L for Letter of commitment',
   `ticket_ref` CHAR(10) NOT NULL,
   `red_pc` TINYINT UNSIGNED NULL COMMENT 'Percentage of reduction',
-  `status` CHAR(1) NOT NULL DEFAULT 'I' COMMENT 'A is active and I for inactive',
+  `status` CHAR(1) NOT NULL DEFAULT 'I' COMMENT 'A is active, I for inactive, D is deleted',
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   -- Manual add of the constraint
-  UNIQUE KEY `user_id_category_UNIQUE` (`user_id`, `category`),
+  -- user id and category has been removed because can have several Letter of commitment and deleted reduction
+  -- UNIQUE KEY `user_id_category_UNIQUE` (`user_id`, `category`),
   UNIQUE KEY `ticket_ref_UNIQUE` (`ticket_ref`));
 
 -- WORKING TABLE FOR THE PAYMENTS
@@ -163,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
   `input_amount` INT NOT NULL COMMENT 'Can be zero then it is engagement letter or free input then it is full manual',
-  `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction',
+  `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction, L for Engagement Letter',
   `pay_date` DATETIME NULL,
   `comment` VARCHAR(45) NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -208,6 +209,7 @@ SELECT
         vsh.SHORTCLASS AS CLASSE,
         GROUP_CONCAT(category, red_pc) AS EXISTING_FACILITE
         FROM v_showuser vsh LEFT JOIN uac_facilite_payment ufp ON vsh.ID = ufp.user_id
+                                                               AND ufp.status IN ('I', 'A')
         GROUP BY ID, USERNAME, NAME, CLASSE;
 
 -- Payment view
@@ -241,3 +243,39 @@ CREATE VIEW v_histopayment_for_user AS
                                                       AND ref.type IN ('T', 'U')
                      LEFT JOIN uac_payment up ON up.user_id = vsh.ID
                                                     AND up.ref_fsc_id = xref.fsc_id;
+
+-- left to pay on tranche view
+-- To be used in combination with v_original_to_pay_for_user
+DROP VIEW IF EXISTS v_left_to_pay_for_user;
+CREATE VIEW v_left_to_pay_for_user AS
+SELECT SUM(up.input_amount) AS ALREADY_PAID, (urf.amount - SUM(up.input_amount)) AS REST_TO_PAY,
+    urf.id AS REF_ID, urf.description AS DESCRIPTION,
+	urf.amount AS TRANCHE_AMOUNT, urf.code AS TRANCHE_CODE,
+	DATE_FORMAT(urf.deadline, '%d/%m/%Y') AS TRANCHE_DDL,
+	DATEDIFF(urf.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+	 vsh.USERNAME AS VSH_USERNAME,
+	 vsh.ID AS VSH_ID, urf.fs_order URF_FS_ORDER
+			FROM uac_ref_frais_scolarite urf
+			JOIN uac_xref_cohort_fsc xref ON xref.fsc_id = urf.id
+												AND urf.type = 'T'
+			  JOIN uac_payment up ON up.ref_fsc_id = xref.fsc_id
+			  JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id
+			  							AND vsh.ID = up.user_id
+			  GROUP BY urf.amount, urf.code, urf.description, urf.deadline, urf.id, vsh.USERNAME, vsh.ID ORDER BY urf.fs_order ASC;
+
+-- left to pay on tranche view
+-- To be used in combination with v_left_to_pay_for_user
+DROP VIEW IF EXISTS v_original_to_pay_for_user;
+CREATE VIEW v_original_to_pay_for_user AS
+SELECT
+	0 AS ALREADY_PAID, urf.amount AS REST_TO_PAY,
+    urf.id AS REF_ID, urf.description AS DESCRIPTION,
+	urf.amount AS TRANCHE_AMOUNT, urf.code AS TRANCHE_CODE,
+	DATE_FORMAT(urf.deadline, '%d/%m/%Y') AS TRANCHE_DDL,
+	DATEDIFF(urf.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+	 vsh.USERNAME AS VSH_USERNAME,
+	 vsh.ID AS VSH_ID, urf.fs_order URF_FS_ORDER
+			FROM uac_ref_frais_scolarite urf
+			JOIN uac_xref_cohort_fsc xref ON xref.fsc_id = urf.id
+												AND urf.type = 'T'
+				JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id ORDER BY urf.fs_order ASC;

@@ -88,7 +88,7 @@ class AdminPayController extends AbstractController
         $allusrn_query = " SELECT *  from v_payfoundusrn; ";
         $logger->debug("Show me allusrn_query: " . $allusrn_query);
 
-        $allreduc_query = " SELECT UPPER(vhu.USERNAME) AS USERNAME, ufp.ticket_ref AS TICKET_REF FROM uac_facilite_payment ufp JOIN v_showuser vhu ON ufp.user_id = vhu.ID WHERE ufp.category IN ('R') AND ufp.status IN ('I'); ";
+        $allreduc_query = " SELECT UPPER(vhu.USERNAME) AS USERNAME, ufp.ticket_ref AS TICKET_REF, ufp.status AS UFP_STATUS FROM uac_facilite_payment ufp JOIN v_showuser vhu ON ufp.user_id = vhu.ID WHERE ufp.category IN ('R') AND ufp.status IN ('I', 'A', 'D'); ";
         $logger->debug("Show me allreduc_query: " . $allreduc_query);
 
         $dbconnectioninst = DBConnectionManager::getInstance();
@@ -198,11 +198,13 @@ class AdminPayController extends AbstractController
           $param_ticket_ref = $request->request->get('ticketRef');
           $param_ticket_type = $request->request->get('ticketType');
           $param_red_pc = $request->request->get('redPc');
+          // If we in CL this is ignored in the SP
+          $param_inv_fsc_id = $request->request->get('invFscId');
 
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ")";
+          $query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -229,6 +231,195 @@ class AdminPayController extends AbstractController
       400);
   }
 
+  public function generateDeleteRedDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_ticket_ref = $request->request->get('ticketRef');
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " UPDATE uac_facilite_payment SET status = 'D' WHERE ticket_ref = '" . $param_ticket_ref . "'; ";
+
+          $logger->debug("Show me query_value: " . $query_value);
+
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'paramTicketRef' => $param_ticket_ref,
+              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
+
+  public function generateCancelPaymentDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_ticket_ref = $request->request->get('ticketRef');
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " CALL CLI_CAN_PayCanPaymentPerRef('" . $param_ticket_ref . "'); ";
+
+          $logger->debug("Show me query_value: " . $query_value);
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'paramTicketRef' => $param_ticket_ref,
+              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
+
+
+  public function generateValidateRedDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_user_id = $request->request->get('foundUserId');
+          $param_ticket_ref = $request->request->get('ticketRef');
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " CALL CLI_VAL_PayAddValidate( " . $param_user_id . ", '" . $param_ticket_ref . ")";
+
+          $logger->debug("Show me query_value: " . $query_value);
+
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'paramTicketRef' => $param_ticket_ref,
+              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
 
   public function generatepaymentDB(Request $request, LoggerInterface $logger)
   {
@@ -310,6 +501,65 @@ class AdminPayController extends AbstractController
   }
 
 
+  public function getPaymentDetailsDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_ticket_ref = $request->request->get('ticketRef');
+          //echo $param_jsondata[0]['username'];
+          $query_getpaydetails = " SELECT vsh.FIRSTNAME AS FIRSTNAME, vsh.LASTNAME AS LASTNAME, vsh.MATRICULE AS MATRICULE, vsh.SHORTCLASS AS SHORTCLASS, vpu.* "
+                    . " FROM v_histopayment_for_user vpu JOIN v_showuser vsh ON vsh.ID = vpu.VSH_USER_ID "
+                    . " WHERE UP_PAYMENT_REF = '" . $param_ticket_ref . "'; ";
+          $logger->debug("Show me query_getpay: " . $query_getpaydetails);
+
+ 
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+          $result = $dbconnectioninst->query($query_getpaydetails)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'result' => $result,
+              'message' => 'Tout est OK: '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Err134P récupération payments'),
+      400);
+  }
+
   public function getpaymentforuserDB(Request $request, LoggerInterface $logger)
   {
 
@@ -346,6 +596,7 @@ class AdminPayController extends AbstractController
           $logger->debug("Show me query_getpay: " . $query_getpay);
 
           //$query_getleftoperation = " SELECT MAX(vhu.REF_ID) AS REF_ID, vhu.ref_type AS REF_TYPE from v_histopayment_for_user vhu WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.UP_ID IS NULL GROUP BY vhu.ref_type; ";
+          // This complexe query retrieve a grouping to know if we still have a T or U left (to invalidate or no the button)
           $query_getleftoperation = " SELECT t1.SUM_INPUT, t1.REF_TYPE FROM ( "
                                 . " SELECT SUM(vhu.UP_INPUT_AMOUNT) AS SUM_INPUT, vhu.ref_type AS REF_TYPE FROM v_histopayment_for_user vhu "
                                 . " WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.ref_type IN ('T', 'U') "
@@ -357,12 +608,24 @@ class AdminPayController extends AbstractController
                                 . " AND vsh.USERNAME = '" . $param_username . "' GROUP BY ref.type ) ";
           $logger->debug("Show me query_getleftoperation: " . $query_getleftoperation);
 
+          //We retrieve here the left to be paid and original
+          $query_getsumpertranche = " SELECT * FROM (  "
+                    . " SELECT vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER FROM v_original_to_pay_for_user vop "
+                    . " LEFT JOIN uac_payment up ON vop.REF_ID = up.ref_fsc_id AND up.user_id = vop.VSH_ID AND up.type_of_payment = 'L' "
+                    . " WHERE vop.VSH_USERNAME = '" . $param_username . "' AND vop.TRANCHE_CODE NOT IN ( "
+                    . " SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu WHERE tvpu.VSH_USERNAME = '" . $param_username . "') UNION "
+                    . " SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER FROM v_left_to_pay_for_user vpu "
+                    . " LEFT JOIN uac_payment up ON vpu.REF_ID = up.ref_fsc_id AND up.user_id = vpu.VSH_ID AND up.type_of_payment = 'L' "
+                    . " WHERE VSH_USERNAME ='". $param_username . "') t ORDER BY t.URF_FS_ORDER ASC;";
 
+          $logger->debug("Show me query_getsumpertranche: " . $query_getsumpertranche);
+ 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
           $result = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
           $resultLeftOperation = $dbconnectioninst->query($query_getleftoperation)->fetchAll(PDO::FETCH_ASSOC);
+          $resultSumPerTranche = $dbconnectioninst->query($query_getsumpertranche)->fetchAll(PDO::FETCH_ASSOC);
 
           $logger->debug("Show me count: " . count($result));
 
@@ -371,6 +634,7 @@ class AdminPayController extends AbstractController
               'status' => 'OK',
               'result' => $result,
               'resultLeftOperation' => $resultLeftOperation,
+              'resultSumPerTranche' => $resultSumPerTranche,
               'message' => 'Tout est OK: '),
           200);
       }

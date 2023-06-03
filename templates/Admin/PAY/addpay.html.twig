@@ -29,6 +29,8 @@
     const sepTime = ' ';
 
     let ticketRef = '';
+    let ticketRefToDelete = '';
+    let ticketRefPayment = '';
     let ticketRefFile = '';
     let ticketType = 'X';
     let redPc = 0;
@@ -43,6 +45,7 @@
     let dataPaymentForUserJsonArray = new Array();
     let dataLeftOperationForUserJsonArray = new Array();
     let payUniLeftOperationForUserJsonArray = new Array();
+    let dataSumPerTranche = new Array();
 
 
     const MIN_AMOUNT = 1000;
@@ -120,30 +123,21 @@
     <div class="btn-profil mid-blc">
       <div id="addp-mainop" class="pay-big-blk">
             <div id="btn-adduni" class="red-big-btn pay-big-btn-txt pay-big-btn-1 init-deactive deactive-btn">
-              <br>Payer<br>frais fixe &nbsp;<i class="icon-plus-circle nav-text"></i><br>
+              <br>Payer<br>frais fixe &nbsp;<i class="icon-page-multiple nav-text"></i><br>
             </div>
             <div id="btn-addpay" class="red-big-btn pay-big-btn-txt pay-big-btn-1 init-deactive deactive-btn">
-              <br>Payer une<br>tranche &nbsp;<i class="icon-plus-square nav-text"></i><br>
+              <br>Payer une<br>tranche &nbsp;<i class="icon-pie-chart nav-text"></i><br>
             </div>
             <div id="btn-addcut" class="red-big-btn pay-big-btn-txt red-opt-btn-1 init-deactive deactive-btn">
               <br>Générer une<br>facilité &nbsp;<i class="icon-scissors nav-text"></i><br>
             </div>
-            <div id="btn-canpay" class="red-big-btn pay-big-btn-txt pay-opt-btn-t-late">
-              <br>Annuler<br>une opération&nbsp;<i class="icon-minus-square nav-text"></i><br>
+            <div id="btn-addcut-com" class="red-big-btn pay-big-btn-txt red-opt-btn-com init-deactive deactive-btn">
+              <br>Lettre<br>d'engagement &nbsp;<i class="icon-file-1 nav-text"></i><br>
             </div>
       </div>
 
-      <div class="btn-ace-right">
-        <button id="btn-print-recap" class="btn btn-outline-secondary btn-md histo-btn-print">Imprimer historique &nbsp;<i class="icon-print nav-text"></i></button>
-        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Annuler &nbsp;<i class="icon-android-cancel nav-text"></i></button>
-
-      </div>
-      <hr>
       {# Cut box #}
       <div id="addp-red-option" class="pay-big-blk">
-            <div id="btn-addcut-com" class="red-big-btn pay-opt-btn-txt red-opt-btn-com">
-              <br>Lettre<br>d'engagement<br>
-            </div>
             <div id="btn-addcut-1" class="red-big-btn pay-opt-btn-txt red-opt-btn-2 pay-fac-rm">
               <br>Réduction<br>10%<br>
             </div>
@@ -158,6 +152,9 @@
             </div>
             <div id="btn-addfac-1" class="red-big-btn pay-opt-btn-txt fac-opt-btn-1">
               <br>Autorisation<br>mensualisation<br>
+            </div>
+            <div class="red-big-btn pay-opt-btn-txt">
+              <br><br><br>
             </div>
       </div>
 
@@ -178,7 +175,7 @@
 
             {# Manual part #}
 
-            <div id="btn-part-man" class="pay-man-btn pay-part-btn-txt pay-fac-rm">
+            <div id="btn-part-man" class="pay-man-btn pay-part-btn-txt">
                 <div class="amo-note">
                   Montant :&nbsp;<i id="id-amo-note"></i>
                 </div>
@@ -218,19 +215,19 @@
 
       {# Payment Unique box #}
       <div id="addp-type-pay" class="pay-big-blk">
-            <div id="btn-type-h" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-h pay-fac-rm">
+            <div id="btn-type-h" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-h">
               <br>CHÈQUE&nbsp;
               <i class="icon-pencil-square-o nav-text"></i><br>
             </div>
-            <div id="btn-type-c" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-c pay-fac-rm">
+            <div id="btn-type-c" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-c">
               <br>CASH&nbsp;
               <i class="icon-cash nav-text"></i><br>
             </div>
-            <div id="btn-type-t" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
+            <div id="btn-type-t" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v">
               <br>VIREMENT/TPE&nbsp;
               <i class="icon-credit-card nav-text"></i><br>
             </div>
-            <div id="btn-type-m" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v pay-fac-rm">
+            <div id="btn-type-m" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v">
               <br>MVOLA&nbsp;
               <i class="icon-mobile nav-text"></i><br>
             </div>
@@ -239,6 +236,9 @@
 
       {# Validation Reduction box #}
       <div id="addp-valred" class="pay-big-blk">
+            <div id="used-red" class="msg-center-notif">
+              Ce ticket de réduction a déjà été utilisé ou a été supprimé
+            </div>
             <div class="type-big-btn pay-opt-btn-txt">
             </div>
             <div id="btn-red-val" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-c">
@@ -254,6 +254,29 @@
             </div>
       </div>
 
+      {# Cancel Payment box #}
+      <div id="addp-canpay" class="pay-big-blk">
+            <div class="type-big-btn pay-opt-btn-txt">
+            </div>
+            <div id="btn-can-pay" class="type-big-btn pay-opt-btn-txt pay-type-btn-t-v">
+              <br>Annuler tous<br>les paiements liés<br>à cette référence&nbsp;
+              <i class="icon-times nav-text"></i><br>
+              <i class="sm-btn-txt">Vérifier le ticket à droite</i>
+            </div>
+            <br><br><br>
+            <div id="can-pay" class="mgs-note">
+              <i class="icon-info-circle nav-text"></i>&nbsp;Les paiements supprimés ne sont plus comptabilisés mais continuent à être visibles dans le dashboard étudiant.
+            </div>
+      </div>
+
+
+      {# Bottom Operation #}
+      <div class="btn-ace-right">
+        <button id="btn-print-recap" class="btn btn-outline-secondary btn-md histo-btn-print">Imprimer historique &nbsp;<i class="icon-print nav-text"></i></button>
+        <button id="btn-clear-addpay" class="btn btn-outline-secondary btn-md btn-print">Annuler &nbsp;<i class="icon-android-cancel nav-text"></i></button>
+
+      </div>
+      <hr>
       
 
     </div>

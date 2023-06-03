@@ -128,6 +128,7 @@ function getAllPaymentForFoundUser(){
           //console.log(data['result']);
           dataPaymentForUserJsonArray = data['result'].slice();
           dataLeftOperationForUserJsonArray = data['resultLeftOperation'].slice();
+          dataSumPerTranche = data['resultSumPerTranche'].slice();
           // Only here we allow to progress
           for(let i=0; i<dataLeftOperationForUserJsonArray.length; i++){
             if(dataLeftOperationForUserJsonArray[i].REF_TYPE == 'T'){
@@ -135,11 +136,20 @@ function getAllPaymentForFoundUser(){
                 // Only if there are Tranche left we allow cut
                 $('#btn-addpay').removeClass('deactive-btn');
                 $('#btn-addcut').removeClass('deactive-btn');
+                $('#btn-addcut-com').removeClass('deactive-btn');
             }
             
             if(dataLeftOperationForUserJsonArray[i].REF_TYPE == 'U'){
                 // Still Unique operation remains
                 $('#btn-adduni').removeClass('deactive-btn');
+            }
+          }
+
+          for(let i=0; i<dataSumPerTranche.length; i++){
+            // If we have a commitment Letter on rest to pay then no new commitment letter. He has to pay first
+            if((parseInt(dataSumPerTranche[i].REST_TO_PAY) > 0) 
+                    && (dataSumPerTranche[i].COMMITMENT_LETTER == 'L')){
+                $('#btn-addcut-com').addClass('deactive-btn');
             }
           }
 
@@ -151,7 +161,7 @@ function getAllPaymentForFoundUser(){
           }
           else{
             //Do nothing
-            $('#msg-alert').html("Err138D:" + foundUserName + " erreur affichage, contactez le support.");
+            $('#msg-alert').html("ERR138D:" + foundUserName + " erreur affichage, contactez le support.");
           }
           $("#btn-print-recap").show(100);
           // Display paiements
@@ -159,7 +169,7 @@ function getAllPaymentForFoundUser(){
       },
       error: function (jqXhr, textStatus, errorMessage) {
         $("#waiting-gif").hide(100);
-        $('#msg-alert').html("Err134P:" + foundUserName + " impossible de récupérer ses paiements, contactez le support.");
+        $('#msg-alert').html("ERR134P:" + foundUserName + " impossible de récupérer ses paiements, contactez le support.");
         $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
         $('#ace-alert-msg').show(100);
         addPayClear();
@@ -316,6 +326,26 @@ function addPayUserExists(val){
 function addPayReductionExists(val){
     for (var i = 0; i < dataAllREDUCToJsonArray.length; i++) {
       if (dataAllREDUCToJsonArray[i].TICKET_REF === val){
+        // Handle here if the reduction can be applied or not
+        if((dataAllREDUCToJsonArray[i].UFP_STATUS === 'D') || 
+                (dataAllREDUCToJsonArray[i].UFP_STATUS === 'A')){
+            $('#btn-red-val').addClass('deactive-btn');
+            $('#btn-red-can').addClass('deactive-btn');
+            $('#used-red').show(100);
+            if(dataAllREDUCToJsonArray[i].UFP_STATUS === 'A'){
+                logInAddPay('DEJA*VALIDE*' + val);
+            }
+            else{
+                logInAddPay('DEJA*SUPPRIME*' + val);
+            }
+        }
+        else{
+            $('#used-red').hide(100);
+            $('#btn-red-val').removeClass('deactive-btn');
+            $('#btn-red-can').removeClass('deactive-btn');
+            logInAddPay('REFERENCE*' + val);
+            ticketRefToDelete = val;
+        }
         return dataAllREDUCToJsonArray[i].USERNAME;
       }
     }
@@ -340,10 +370,20 @@ function addPayClear(){
   $("#addp-pay-uni").hide(100);
   $("#addp-pay-success").hide(100);
   $("#addp-valred").hide(100);
+  $('#used-red').hide(100);
+  $('#btn-red-val').removeClass('deactive-btn');
+  $('#btn-red-can').removeClass('deactive-btn');
+  $('#btn-addcut-com').removeClass('deactive-btn');
+  $('#btn-part-man').show(100);
+  $('#btn-part-man-subm').show(100);
+  $('#pay-recap').show(100);
+  $("#addp-canpay").hide(100);
   invAmountToPay = 0;
   invFscId = 0;
   invTypeOfPayment = 'C';
   invOperation = 'F';
+  ticketRefToDelete = '';
+  ticketRefPayment = '';
 
   updateTicketType('X');
   clearFoundUser();
@@ -411,12 +451,11 @@ function verityAddComContentScan(){
         // We do not match a username
         if(($('#mg-graph-identifier').text() == 'add-pay')){
             if(/[0-9]{9}[R]/.test(readInput)){
-                console.log('Format OK readInput: ' + readInput);
+                //console.log('Format Reduction OK readInput: ' + readInput);
                 /******************************* Look in the list *********************************/
                 /********************* Retrieve only Reduction Inactive ***************************/
 
                 currentTicketMode = 'R';
-                // xxx
                 let reductionUsername = addPayReductionExists(readInput);
                 if(reductionUsername != 'na'){
                     if(addPayUserExists(reductionUsername)){
@@ -424,7 +463,7 @@ function verityAddComContentScan(){
                         scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Réduction valide&nbsp;</i>';
                         commonOperationIfFoundUsername(reductionUsername);
                         updateTicketType('V');
-                        logInAddPay('VALIDATION*' + readInput);
+                        
                 
                       }
                       else{
@@ -437,6 +476,16 @@ function verityAddComContentScan(){
                     /******************************************************** NOT FOUND ********************************************************/
                     scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;Ticket introuvable&nbsp;</i>';
                 }
+            }
+            else if(/[0-9]{9}[P]/.test(readInput)){
+                //We deal here with Payment cancellation
+                console.log('Format Payment OK readInput: ' + readInput);
+                scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Format Paiement valide&nbsp;</i>';
+                ticketRefPayment = readInput;
+                // xxx
+                // Need to retrieve the payment in DB
+                getPaymentDetailsDB();
+
             }
             else{
               /******************************************************** NOT FOUND ********************************************************/
@@ -518,76 +567,203 @@ function logInAddPay(someMsg){
 
 };
 
+function displayAndPushRecapTrancheHistory(myRecapTxt){
+    let recapLine = '';
+    let notifRetard = '';
+    for(let i=0; i<dataSumPerTranche.length; i++){
+        recapLine = ('*******' + dataSumPerTranche[i].DESCRIPTION.toString() +'*'+ dataSumPerTranche[i].TRANCHE_CODE.toString()).padStart(maxLgRecap, paddChar);
+        myRecap.push(recapLine);
+        myRecapTxt = myRecapTxt + recapLine + '<br>';
+
+        if(dataSumPerTranche[i].COMMITMENT_LETTER.toString() == 'L'){
+            recapLine = ('LETTRE*ENGAGEMENT').padStart(maxLgRecap, paddChar);
+            myRecap.push(recapLine);
+            myRecapTxt = myRecapTxt + recapLine + '<br>';
+        }
+        
+        statusPayDate = 'À payer avant le :';
+        recapLine = (statusPayDate + dataSumPerTranche[i].TRANCHE_DDL.toString()).padStart(maxLgRecap, paddChar);
+        myRecap.push(recapLine);
+        myRecapTxt = myRecapTxt + recapLine + '<br>';
+
+        if((dataSumPerTranche[i].NEGATIVE_IS_LATE < 0) &&
+             (dataSumPerTranche[i].REST_TO_PAY > 0)){
+            notifRetard = 'PAIEMENT EN RETARD !!!';
+            recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+            notifRetard = '<i class="late-notif">' + notifRetard + '</i>';
+        }
+        else if (dataSumPerTranche[i].REST_TO_PAY > 0){
+            notifRetard = 'EN ATTENTE DE PAIEMENT';
+            recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+        }
+        else{
+            // There is nothing to pay more
+            notifRetard = 'DEJA TOUT REGLE';
+            recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+        }
+        myRecap.push(recapLine);
+        myRecapTxt = myRecapTxt + notifRetard + '<br>';
+
+        recapLine = (dataSumPerTranche[i].ALREADY_PAID.toString() +'/'+ dataSumPerTranche[i].TRANCHE_AMOUNT.toString()).padStart(maxLgRecap, paddChar);
+        myRecap.push(recapLine);
+        myRecapTxt = myRecapTxt + recapLine + '<br>';
+
+        recapLine = ('Restant à payer:'+ renderAmount(dataSumPerTranche[i].REST_TO_PAY.toString())).padStart(maxLgRecap, paddChar);
+        myRecap.push(recapLine);
+        myRecapTxt = myRecapTxt + recapLine + '<br>';
+
+    }
+    return myRecapTxt;
+}
+
+
 function displayHistoryPayment(){
   let recapTxt = '';
   let recapLine = '';
-  let statusPay = 'Non payé';
+  let statusPayDate = '';
   let refDate;
   let recAmount = '';
   let typeOfPayment = '';
   let refRecAmount = '';
   let notifRetard = '';
+  // Not to be pushed in recap
   const separatorRecap = '----x---x---x---x---x---x---x---x---x---x----';
+  let recapOfPaymentHasStarted = 'N';
+
+
+  //Recapitulatif Tranche
+
 
   for(let i=0; i<dataPaymentForUserJsonArray.length; i++){
-    recapLine = dataPaymentForUserJsonArray[i].REF_TITLE.toString().padStart(maxLgRecap, paddChar);
-    myRecap.push(recapLine);
-    recapTxt = recapTxt + recapLine + '<br>';
+
+    //We do not treat Commitment Letter in the History
+    if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT != 'L'){
+                /******************************************************************************** */
+                /******************************************************************************** */
+                /******************************************************************************** */
+                /************************** NOT COMMITMENT LETTER ******************************* */
+                /******************************************************************************** */
+                /******************************************************************************** */
+                /******************************************************************************** */
 
 
-    refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].REF_DEADLINE.toString()));
-    recapLine = ('À payer avant le :' + formatterDateFR.format(refDate)).padStart(maxLgRecap, paddChar);
-    myRecap.push(recapLine);
-    recapTxt = recapTxt + recapLine + '<br>';
+                if(dataPaymentForUserJsonArray[i].REF_TYPE.toString() == 'T'){
+                    //We need to call the Recap Tranche first
+                    if(recapOfPaymentHasStarted == 'N'){
+                        
+            
+                        recapLine = ('******* SOLDE ACTUEL *******').padStart(maxLgRecap, paddChar);
+                        myRecap.push(recapLine);
+                        recapTxt = recapTxt + recapLine + '<br>';
+            
+                        //Call the tranche solde here
+                        recapTxt = displayAndPushRecapTrancheHistory(recapTxt);
+            
+                        recapTxt = recapTxt + separatorRecap + '<br>';
+                        recapLine = ('********* HISTORIQUE *********').padStart(maxLgRecap, paddChar);
+                        myRecap.push(recapLine);
+                        recapTxt = recapTxt + recapLine + '<br>';
+            
+            
+                        recapTxt = recapTxt + separatorRecap + '<br>';
+                        
+                        recapOfPaymentHasStarted = 'Y';
+                    }
+                    else{
+                        
+                    }
+                }
+                else{
+                    //Do nothing
+                }
+            
+                recapLine = dataPaymentForUserJsonArray[i].REF_TITLE.toString().padStart(maxLgRecap, paddChar);
+                myRecap.push(recapLine);
+                recapTxt = recapTxt + recapLine + '<br>';
+            
+            
+                
+            
+            
+                recapLine = '';
+                notifRetard = '';
+            
+                // List of Frais Generaux cannot be split
+                if(dataPaymentForUserJsonArray[i].REF_TYPE.toString() == 'U'){
+                        // If unitaire and not tranche
+                        if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'N'){
+            
+                            refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].REF_DEADLINE.toString()));
+                            statusPayDate = 'À payer avant le :';
+            
+            
+                                if(dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0){
+                                    notifRetard = 'PAIEMENT EN RETARD !!!';
+                                    recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+                                    notifRetard = '<i class="late-notif">' + notifRetard + '</i>';
+                                }
+                                else{
+                                    notifRetard = 'EN ATTENTE DE PAIEMENT';
+                                    recapLine = notifRetard.padStart(maxLgRecap, paddChar);
+                                }
+            
+                            myRecap.push(recapLine);
+                        }
+                }
+            
+                // Here for U and T if paid
+                if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P'){
+                    // if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P')
+                    refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].UP_PAY_DATE.toString()));
+                    statusPayDate = 'Déjà réglé le :';
+                }
+                else{
+                    refDate = new Date(Date.parse(dataPaymentForUserJsonArray[i].REF_DEADLINE.toString()));
+                    statusPayDate = 'À payer avant le :';
+                }
+            
+            
+            
+                
+                recapLine = (statusPayDate + formatterDateFR.format(refDate)).padStart(maxLgRecap, paddChar);
+                myRecap.push(recapLine);
+                recapTxt = recapTxt + recapLine + '<br>';
+            
+                refRecAmount = (('REF*MONTANT:' + renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()))).padStart(maxLgRecap, paddChar);
+                myRecap.push(refRecAmount);
+                recapTxt = recapTxt + refRecAmount + '<br>' + notifRetard + '<br>';
+                typeOfPayment = '';
+                if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'H'){
+                    typeOfPayment = '/CHEQ';
+                }
+                else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'C'){
+                    typeOfPayment = '/CASH';
+                }
+                else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'T'){
+                    typeOfPayment = '/VIRTPE';
+                }
+                else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'M'){
+                    typeOfPayment = '/MVOLA';
+                }
+                else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'R'){
+                    typeOfPayment = '/REDUCTION';
+                }
+                else{
+                    //Do nothing
+                }
+                recAmount = (('Paiement' + typeOfPayment + ' :' + renderAmount(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT.toString()))).padStart(maxLgRecap, paddChar);
+                myRecap.push(recAmount);
+            
+                recapTxt = recapTxt + recAmount + '<br>';
+                recapTxt = recapTxt + separatorRecap + '<br>';
 
-
-    recapLine = '';
-    notifRetard = '';
-    if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'N'){
-      statusPay = 'Non payé';
-      if(dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0){
-          notifRetard = 'PAIEMENT EN RETARD !!!';
-          recapLine = notifRetard.padStart(maxLgRecap, paddChar);
-          notifRetard = '<i class="late-notif">' + notifRetard + '</i>';
-      }
-      else{
-          notifRetard = 'EN ATTENTE DE PAIEMENT';
-          recapLine = notifRetard.padStart(maxLgRecap, paddChar);
-      }
-      myRecap.push(recapLine);
-    }
-    else if(dataPaymentForUserJsonArray[i].UP_STATUS.toString() == 'P'){
-      statusPay = 'Payé';
     }
     else{
-      statusPay = 'Complété';
+        //We do nothing were are in Commitment Letter
     }
-
-    refRecAmount = (('Tranche :' + renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString())) + '/' + (statusPay)).padStart(maxLgRecap, paddChar);
-    myRecap.push(refRecAmount);
-    recapTxt = recapTxt + refRecAmount + '<br>' + notifRetard + '<br>';
-    typeOfPayment = '';
-    if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'H'){
-        typeOfPayment = '/CHEQ';
-    }
-    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'C'){
-        typeOfPayment = '/CASH';
-    }
-    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'T'){
-        typeOfPayment = '/VIRTPE';
-    }
-    else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'M'){
-        typeOfPayment = '/MVOLA';
-    }
-    else{
-        //Do nothing
-    }
-    recAmount = (('Paiement' + typeOfPayment + ' :' + renderAmount(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT.toString()))).padStart(maxLgRecap, paddChar);
-    myRecap.push(recAmount);
-
-    recapTxt = recapTxt + recAmount + '<br>';
-    recapTxt = recapTxt + separatorRecap + '<br>';
   }
+
+
   $('#pay-recap-tra').html(recapTxt);
 }
 

@@ -2069,6 +2069,8 @@ img.part-img{
   text-align: left;
   color: var(--main-ace-color);
 }
+#addp-canpay,
+#used-red,
 #addp-valred,
 #addp-mainop,
 #addp-red-option,
@@ -2085,6 +2087,7 @@ img.part-img{
 
 #addp-print{
   margin-top: 45px;
+  margin-bottom: 9em;
 }
 
 #btn-clear-addpay{
@@ -2214,6 +2217,10 @@ img.part-img{
   transform: scale(1.05);
   color: var(--main-gray-75);
   cursor: pointer;
+}
+.msg-center-sm-notif{
+  color: var(--light-violet-80);
+  font-size: 1em;
 }
 .pay-big-btn-1{
   background-color: var(--main-ace-color);

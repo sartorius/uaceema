@@ -95,7 +95,10 @@
   </div>
   <div class="col-2 menu-dropdown">
     <a class="btn btn-outline-dark btn-sm btn-up-menu" href="/manageredt" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
-    <a class="btn btn-dark btn-sm btn-up-menu" href="/jqcreateedt" role="button">Nouveau&nbsp;<span class="icon-calendar nav-text"></span></a>
+    {# We have the rights to edit/create #}
+    {% if edit_rights == 'Y' %}
+        <a class="btn btn-dark btn-sm btn-up-menu" href="/jqcreateedt" role="button">Nouveau&nbsp;<span class="icon-calendar nav-text"></span></a>
+    {% endif %}
   </div>
   <div class="col-8">
 
