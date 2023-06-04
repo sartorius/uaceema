@@ -1,0 +1,26 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">aft-mvo</div>
+<i id="anchor-up-mvo"></i>
+
+        {% set reportcmt = result_for_one_file['extract_report'] %}
+        {% set reportqueries = result_for_one_file['extract_queries'] %}
+        {% set sp_result = result_for_one_file['sp_result'] %}
+        {# We are NOT in zip here ! #}
+        {# There is no need validation as we have pushed data already #}
+
+        {% include 'Admin/PAY/_rawafterload.html.twig' %}
+
+<div class="row button-bottom">
+  <div class="col-lg-5">
+  </div>
+  <div class="col-lg-3">
+    <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="#" role="button"><span class="icon-file-text nav-icon-fa nav-text"></span>&nbsp;Voir les paiement Mvola</a>
+  </div>
+  <div class="col-lg-2">
+    <button type="button" id="aftload-mvo-nav-up" class="btn btn-default btn-md  btn-block"><span class="icon-arrow-up nav-text"></span>&nbsp;Remonter&nbsp;<span class="icon-arrow-up nav-text"></span></button>
+  </div>
+  <div class="col-lg-2">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

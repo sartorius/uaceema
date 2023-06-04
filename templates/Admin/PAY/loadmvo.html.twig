@@ -1,0 +1,60 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">load-mvo</div>
+
+{% if validated is defined %}
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-7 alert alert-success alert-uac" role="alert">
+          <span class="nav-text">Votre fichier CRA a bien été validé #{{ validated }}. Vous pouvez intégrer un autre CRA.</span>&nbsp;<span class="icon-check nav-icon-fa nav-text"></span>
+        </div>
+        <div class="col-lg-3">
+        </div>
+    </div>
+{% endif %}
+{% if nofile is defined %}
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-7 alert alert-danger alert-uac" role="alert">
+          <span class="icon-times-circle nav-icon-fa nav-text"></span>&nbsp;<span class="nav-text">Votre fichier n'a pas été reconnu.</span>
+        </div>
+        <div class="col-lg-3">
+        </div>
+    </div>
+{% endif %}
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Charger CRA Mvola</h1>
+
+    <div id="blk-selfie" class="mgs-mainblk-txt">
+          <img id="loader-img" src="{{ path('main') }}img/mvo_img370x850.png" style="width:490px; height:220px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
+          <img id="loader-wait" src="{{ path('main') }}img/waiting.gif" style="width:500px; height:330px; opacity: 1;" title="cloud folder" alt="cloud folder" class="uac-img-center">
+    </div>
+    <hr>
+
+    {% if errtype != "" %}
+          <span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;{{ errtype }}</span><br>
+    {% endif %}
+    Chargez votre fichier Mvola&nbsp;<span class="icon-upload nav-icon-fa nav-text"></span><br><br>
+    <div id="loader-block">
+        <form action="/checkandloadmvo" method="post" enctype="multipart/form-data">
+          Choisissez un fichier en .csv &nbsp;
+          <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
+
+          <input type="submit" value="Uploader le fichier" name="submit" id="file-upl-loader-sub" class="btn btn-default btn-lg btn-print btn-block">
+        </form>
+    </div>
+    <br>
+    <span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Si vous chargez plusieurs fois le même fichier, seuls les nouveaux paiements seront reconnus.<br>
+    <hr>
+    Le fichier Mvola contient une référence unique pour chaque paiement, si un paiement a déjà été chargé, il sera ignoré.
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

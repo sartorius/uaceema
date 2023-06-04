@@ -283,3 +283,45 @@ SELECT
 			JOIN uac_xref_cohort_fsc xref ON xref.fsc_id = urf.id
 												AND urf.type = 'T'
 				JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id ORDER BY urf.fs_order ASC;
+
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- MVOLA
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref)
+-- VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+DROP TABLE IF EXISTS uac_load_mvola;
+CREATE TABLE IF NOT EXISTS uac_load_mvola (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'This unique ID will be use as PK for the core table',
+  `flow_id` BIGINT NULL COMMENT 'Codification is for reference',
+  `status` CHAR(3) NOT NULL DEFAULT 'NEW',
+  `load_cra_date` VARCHAR(45) NULL,
+  `transac_ref` VARCHAR(20) NULL,
+  `mvo_initiator` VARCHAR(20) NULL,
+  `mvo_type` VARCHAR(35) NULL,
+  `canal` VARCHAR(45) NULL,
+  `statut` VARCHAR(45) NULL,
+  `account` VARCHAR(45) NULL,
+  `load_amount` VARCHAR(45) NULL,
+  `load_rrp` VARCHAR(45) NULL,
+  `from_phone` VARCHAR(45) NULL,
+  `to_phone` VARCHAR(45) NULL,
+  `load_balance_before` VARCHAR(45) NULL,
+  `load_before_after` VARCHAR(45) NULL,
+  `details_a` VARCHAR(45) NULL,
+  `details_b` VARCHAR(45) NULL,
+  `validator` VARCHAR(45) NULL,
+  `notif_ref` VARCHAR(45) NULL,
+  `core_cra_datetime` DATETIME NULL,
+  `core_amount` INT NULL,
+  `core_rrp` INT NULL,
+  `core_balance_before` INT NULL,
+  `core_balance_after` INT NULL,
+  `core_username` VARCHAR(20) NULL,
+  `reject_reason` VARCHAR(45) NULL,
+  `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));

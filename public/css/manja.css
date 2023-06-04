@@ -2045,3 +2045,24 @@
 .icon-file-directory:before {
   content: "\e1c3";
 }
+.icon-telma:before {
+  content: "\e1c4";
+}
+.icon-diamond-3:before {
+  content: "\e1c5";
+}
+.icon-money-bills-ar:before {
+  content: "\e1c6";
+}
+.icon-mvola:before {
+  content: "\e1c7";
+}
+.icon-pie-chart-1:before {
+  content: "\e1e0";
+}
+.icon-telma-1:before {
+  content: "\e1e1";
+}
+.icon-wallet:before {
+  content: "\e1e4";
+}

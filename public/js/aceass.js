@@ -1253,6 +1253,18 @@ $(document).ready(function() {
     textS1 = initTextExport(textS1ToJsonArray);
     textD = initTextExport(textDToJsonArray);
   }
+  else if($('#mg-graph-identifier').text() == 'aft-mvo'){
+    
+      $("#aftload-mvo-nav-up").click(function() {
+        console.log('You click on aftload-edt-nav-up');
+
+        document.getElementById('anchor-up-mvo').scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+
+
+  }
   else if($('#mg-graph-identifier').text() == 'aft-loa'){
     // Do nothing
     $(".after-load-edt-trace").click(function() {
