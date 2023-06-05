@@ -76,7 +76,6 @@ INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKEDTD', 'Token d
 
 
 
-
 DROP TABLE IF EXISTS uac_working_flow;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

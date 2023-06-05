@@ -210,178 +210,103 @@ BEGIN
 END$$
 -- Remove $$ for OVH
 
+
+
+-- MVOLA
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLOAD', 'Integration Mvola', NULL, NULL);
+-- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
+-- PROD
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
+
+
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_CRAMvola$$
 CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_filename VARCHAR(300))
 BEGIN
-    DECLARE flow_code	CHAR(7);
+    DECLARE inv_flow_code	CHAR(7);
     DECLARE inv_flow_id	BIGINT;
+    DECLARE concurrent_flow INT;
 
-    DECLARE inv_master_id	BIGINT;
-    DECLARE inv_old_master_id	BIGINT;
+    SELECT 'MVOLOAD' INTO inv_flow_code;
 
-    DECLARE exist_cohort_id	TINYINT;
-    DECLARE inv_cohort_id	INTEGER;
+    SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE status = 'NEW' AND flow_code = inv_flow_code;
 
-
-    DECLARE inv_time_stamp	DATETIME;
-    DECLARE inv_date	      DATE;
-    DECLARE inv_date_m12	  DATE;
-
-    -- 1/ Check amount
-    -- 2/ Check if valid date
-    -- SELECT IFNULL(CONVERT('2022-08-17 97:13:28', DATETIME), CONVERT('2000-01-01 12:00:00', DATETIME));
-
-    
-    SELECT 'EDTLOAD' INTO flow_code;
-
-    INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
-    SELECT LAST_INSERT_ID() INTO inv_flow_id;
-
-    UPDATE uac_load_edt SET flow_id = inv_flow_id, status = 'INP' WHERE filename = param_filename AND status = 'NEW';
-
-    SELECT COUNT(1) INTO exist_cohort_id FROM uac_cohort uc
-            				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
-            					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
-            					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
-            					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
-                      WHERE urm.title = param_mention
-                      AND uc.niveau = param_niveau
-                      AND urp.title = param_uaparcours
-                      AND urg.title = param_uagroupe;
-
-    IF (exist_cohort_id = 0) THEN
-      -- We have found no cohort so the file is probably corrupt
-      UPDATE uac_load_edt SET status = 'ERR' WHERE flow_id = inv_flow_id;
-      UPDATE uac_working_flow SET status = 'ERR', comment = 'Cohort not found', last_update = NOW() WHERE id = inv_flow_id;
-
-      -- Return empty
-      -- Return the list for control
-      SELECT
-        0 AS master_id,
-        NULL AS mention,
-        NULL AS niveau,
-        NULL AS parcours,
-        NULL AS groupe,
-        DATE_FORMAT(param_monday_date, "%d/%m/%Y") AS mondayw,
-        NULL AS nday,
-        'X' AS course_status,
-        0 AS day_code,
-        0 AS hour_starts_at,
-        0 AS duration_hour,
-        NULL AS raw_course_title,
-        NULL AS last_update;
-
+    IF concurrent_flow > 0 THEN
+        -- A flow is running we input a CAN line
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update, comment) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW(), 'Concurrent flow running');
     ELSE
-      -- A cohort id exist !
-      SELECT uc.id INTO inv_cohort_id FROM uac_cohort uc
-              				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
-              					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
-              					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
-              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
-                        WHERE urm.title = param_mention
-                        AND uc.niveau = param_niveau
-                        AND urp.title = param_uaparcours
-                        AND urg.title = param_uagroupe;
+
+        INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
+        SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+        /************************************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
+        /** START : LOAD CONTROL ************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
+
+        UPDATE uac_load_mvola SET
+                flow_id = inv_flow_id,
+                status = 'INP'
+                  WHERE status = 'NEW';
+
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Transaction reference vide',
+                status = 'EMP',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND transac_ref = '';
+
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Montant vide',
+                status = 'EMP',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND load_amount = '';
+
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Compte vide',
+                status = 'EMP',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND account = '';
+
+        -- Control the CRA data
+        UPDATE uac_load_mvola SET
+                core_amount = CAST(load_amount AS SIGNED),
+                core_rrp = CAST(load_rrp AS SIGNED),
+                core_cra_datetime = CONVERT(load_cra_date, DATETIME),
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Credit Debit invalide',
+                status = 'ERR',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_amount = 0;
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Montant invalide',
+                status = 'ERR',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_rrp = 0;
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Date transaction invalide',
+                status = 'ERR',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_cra_datetime IS NULL;
 
 
-      -- Delete old lines
-      -- Delete old lines to keep only one for this cohort
-      SELECT id INTO inv_old_master_id
-              FROM uac_edt_master
-              WHERE monday_ofthew = param_monday_date
-              AND cohort_id = inv_cohort_id;
-
-      -- **********************************************************
-      -- Delete the assiduite
-      -- **********************************************************
-      DELETE FROM uac_assiduite WHERE edt_id IN (
-        SELECT id FROM uac_edt_line WHERE master_id = inv_old_master_id
-      );
-      DELETE FROM uac_edt_line WHERE master_id = inv_old_master_id;
-      DELETE FROM uac_edt_master WHERE id = inv_old_master_id;
-
-      -- Proceed to new lines !
-
-      INSERT INTO uac_edt_master (flow_id, cohort_id, monday_ofthew) VALUES (inv_flow_id, inv_cohort_id, param_monday_date);
-      SELECT LAST_INSERT_ID() INTO inv_master_id;
-
-      INSERT INTO uac_edt_line (master_id, label_day, day, day_code, hour_starts_at, duration_hour, raw_course_title, course_status)
-            SELECT inv_master_id, label_day, day, day_code, hour_starts_at, duration_hour,
-                    -- Remove the A: in the file
-                    CASE WHEN (raw_course_title like 'A:%') OR (raw_course_title like 'H:%') OR (raw_course_title like 'O:%')
-                      THEN TRIM(SUBSTRING(raw_course_title, 3, length(raw_course_title))) ELSE TRIM(raw_course_title) END,
-                    CASE
-                          WHEN raw_course_title like 'A:%' THEN 'C'
-                          -- H is for Hors Site when it is not Manankambahiny
-                          WHEN raw_course_title like 'H:%' THEN 'H'
-                          -- O is for Optionnal when course is not required
-                          WHEN raw_course_title like 'O:%' THEN 'O'
-                          -- A is for Active
-                          ELSE 'A' END
-            FROM uac_load_edt
-            WHERE status = 'INP'
-            AND flow_id = inv_flow_id;
+        /************************************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
+        /** END : LOAD CONTROL **************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
 
 
-
-      -- Remove duplicate
-      UPDATE uac_working_flow uwf SET uwf.status = 'DUP'
-      WHERE uwf.flow_code = 'QUEASSI'
-      AND uwf.status IN ('NEW', 'QUE')
-      AND uwf.working_date IN (
-        SELECT DISTINCT ule.day FROM uac_load_edt ule
-        WHERE ule.flow_id = inv_flow_id
-      );
-
-
-      -- Recalculate Assiduite If they have been in the past Add recalculation line here !!!
-      SELECT CURRENT_DATE INTO inv_date;
-      SELECT CURRENT_TIMESTAMP INTO inv_time_stamp;
-      SELECT DATE_ADD(inv_date, INTERVAL -12 DAY) INTO inv_date_m12;
-
-
-      INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update)
-            SELECT DISTINCT 'QUEASSI', 'NEW', day, 0, filename, inv_time_stamp
-            FROM uac_load_edt
-            WHERE flow_id = inv_flow_id
-            AND status = 'INP'
-            AND day < inv_date
-            AND inv_date_m12 < day;
-
-      UPDATE uac_load_edt SET status = 'END' WHERE flow_id = inv_flow_id AND status = 'INP';
-
-      -- End of the flow correctly
-      UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
-
-      -- Return the list for control
-      SELECT
-        uem.id AS master_id,
-        urm.title AS mention,
-        uc.niveau AS niveau,
-        urp.title AS parcours,
-        urg.title AS groupe,
-        DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
-        DATE_FORMAT(uel.day, "%d/%m") AS nday,
-        uel.day_code AS day_code,
-        uel.hour_starts_at AS hour_starts_at,
-        uel.duration_hour AS duration_hour,
-        uel.raw_course_title AS raw_course_title,
-        uel.course_status AS course_status,
-        DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
-      FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
-                            JOIN uac_cohort uc ON uc.id = uem.cohort_id
-                  				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
-                  					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
-                  					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
-                  					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
-      WHERE uem.id = inv_master_id
-      ORDER BY uel.hour_starts_at, uel.day_code ASC;
+        UPDATE uac_load_mvola SET status = 'END', update_date = NOW() WHERE flow_id = inv_flow_id AND status = 'INP';
+        -- End of the flow correctly
+        UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 
 
     END IF;
-
-
 
 END$$
 -- End of SRV_CRT_CRAMvola

@@ -791,7 +791,7 @@ class AdminPayController extends AbstractController
 
         $report_queries = '';
         $insert_lines = '';
-        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref) VALUES (';
+        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref, cra_filename) VALUES (';
 
         $insert_queries = array();
         $resultsp = array();
@@ -1002,7 +1002,8 @@ class AdminPayController extends AbstractController
                                                         . $data[13] . "', '"
                                                         . $data[14] . "', '"
                                                         . $data[15] . "', '"
-                                                        . $data[16] . "');";
+                                                        . $data[16] . "', '"
+                                                        . $filename_to_log_in . "');";
                                 array_push($insert_queries, $my_insert_query);
                             }
 
@@ -1026,25 +1027,22 @@ class AdminPayController extends AbstractController
                                 $dbqueries_insert = $dbqueries_insert . ' ' . $insert_queries[$j];
                             }
 
-                            //to unlock
-                            /*
+                            
                             // Be carefull if you have array of array
                             $dbconnectioninst = DBConnectionManager::getInstance();
                             $result = $dbconnectioninst->query($dbqueries_insert)->fetchAll(PDO::FETCH_ASSOC);
-                            $logger->debug("Show me: " . count($result));
-                            */
+                            $logger->debug("Insert show me: " . count($result));
+                            
                             // Perform the importation
                             // Change the option here !
                             //`SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_monday_date DATE, IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_uaparcours VARCHAR(100), IN param_uagroupe VARCHAR(100))
                             //$import_query = "CALL SRV_CRT_EDT('" . $filename_to_log_in . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
                             
 
-                            $import_query = "CALL xxx";
-                            //to unlock
-                            /*
+                            $import_query = "CALL SRV_CRT_CRAMvola('" . $filename_to_log_in . "');";
                             $logger->debug("Here is import_query: " . $import_query);
                             $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
-                            */
+                            
 
 
                             $report_queries = '<br><hr><div class="ace-sm report-val"> Nombre des input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';

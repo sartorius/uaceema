@@ -322,6 +322,7 @@ CREATE TABLE IF NOT EXISTS uac_load_mvola (
   `core_balance_after` INT NULL,
   `core_username` VARCHAR(20) NULL,
   `reject_reason` VARCHAR(45) NULL,
+  `cra_filename` VARCHAR(300) NULL,
   `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));

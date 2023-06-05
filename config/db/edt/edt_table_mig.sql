@@ -597,6 +597,24 @@ INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (1
 INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (186, 'RIDXX');
 INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (187, 'RIDXX');
 INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (188, 'RIDXX');
+/*************************************** New Update for Teacher ***************************************/
+INSERT  IGNORE  INTO uac_ref_teacher (id, name) VALUES (190, 'M. RAMIANDRISOA Andriamampihantona Lalao');
+INSERT  IGNORE  INTO uac_ref_teacher (id, name) VALUES (191, 'M. RANDRIA Mamy Jean de Dieu');
+
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (190, 'SIENS');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (191, 'SIENS');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (177, 'SIENS');
+
+DELETE FROM uac_xref_teacher_mention WHERE teach_id = 115;
+DELETE FROM uac_ref_teacher WHERE id = 115;
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'DROIT');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'GESTI');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'ECONO');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'SIENS');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'MBSXX');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'INFOE');
+INSERT  IGNORE  INTO uac_xref_teacher_mention (teach_id, mention_code) VALUES (10, 'RIDXX');
+
 /*************************************** LEGACY ***************************************/
 
 /*
