@@ -214,6 +214,7 @@ END$$
 
 -- MVOLA
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLOAD', 'Integration Mvola', NULL, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLUPD', 'Last update Mvola', NULL, NULL);
 -- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
 -- PROD
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
@@ -227,13 +228,23 @@ BEGIN
     DECLARE inv_flow_id	BIGINT;
     DECLARE concurrent_flow INT;
 
-    SELECT 'MVOLOAD' INTO inv_flow_code;
+    DECLARE param_last_update DATETIME;
 
+
+    DECLARE nbr_new_line INT;
+    DECLARE nbr_dup_line INT;
+    DECLARE nbr_emp_line INT;
+    -- nbr_new_line, nbr_dup_line, nbr_emp_line
+
+    SELECT NOW() INTO param_last_update;
+    SELECT 'MVOLOAD' INTO inv_flow_code;
     SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE status = 'NEW' AND flow_code = inv_flow_code;
 
     IF concurrent_flow > 0 THEN
         -- A flow is running we input a CAN line
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update, comment) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW(), 'Concurrent flow running');
+
+        SELECT 5 AS CODE_SP, 'ERR892MV Fichier en cours integration' AS FEEDBACK_SP;
     ELSE
 
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
@@ -264,6 +275,12 @@ BEGIN
                   WHERE status = 'INP' AND flow_id = inv_flow_id AND load_amount = '';
 
         UPDATE uac_load_mvola SET
+                reject_reason = 'RPP vide',
+                status = 'EMP',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND load_rrp = '';
+
+        UPDATE uac_load_mvola SET
                 reject_reason = 'Compte vide',
                 status = 'EMP',
                 update_date = NOW()
@@ -272,7 +289,9 @@ BEGIN
         -- Control the CRA data
         UPDATE uac_load_mvola SET
                 core_amount = CAST(load_amount AS SIGNED),
-                core_rrp = CAST(load_rrp AS SIGNED),
+                core_rrp = CAST(load_rrp AS UNSIGNED),
+                core_balance_before = CAST(load_balance_before AS UNSIGNED),
+                core_balance_after = CAST(load_before_after AS UNSIGNED),
                 core_cra_datetime = CONVERT(load_cra_date, DATETIME),
                 update_date = NOW()
                   WHERE status = 'INP' AND flow_id = inv_flow_id;
@@ -291,7 +310,26 @@ BEGIN
                 status = 'ERR',
                 update_date = NOW()
                   WHERE status = 'INP' AND flow_id = inv_flow_id AND core_cra_datetime IS NULL;
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Balance avant invalide',
+                status = 'ERR',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_balance_before = 0;
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Balance après invalide',
+                status = 'ERR',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_balance_after = 0;
 
+        -- Handle duplicate
+        SELECT IFNULL(MAX(core_cra_datetime), NOW()) INTO param_last_update
+            FROM uac_load_mvola WHERE flow_id = inv_flow_id AND core_cra_datetime IS NOT NULL;
+
+        UPDATE uac_param SET
+                par_date = CAST(param_last_update AS DATE),
+                par_time = CAST(param_last_update AS TIME),
+                last_update = NOW()
+        WHERE  key_code = 'MVOLUPD';
 
         /************************************************************************************/
         /************************************************************************************/
@@ -301,11 +339,18 @@ BEGIN
         /************************************************************************************/
 
 
+
         UPDATE uac_load_mvola SET status = 'END', update_date = NOW() WHERE flow_id = inv_flow_id AND status = 'INP';
+
+        -- nbr_new_line, nbr_dup_line, nbr_emp_line
+        SELECT COUNT(1) INTO nbr_new_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'END';
+        SELECT COUNT(1) INTO nbr_dup_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'DUP';
+        SELECT COUNT(1) INTO nbr_emp_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'EMP';
+
         -- End of the flow correctly
         UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 
-
+        SELECT 0 AS CODE_SP, CONCAT('Integration effectue avec succes. Nouvelles lignes : ', nbr_new_line, ' /Duplicats : ', nbr_dup_line, ' /Vides : ', nbr_emp_line) AS FEEDBACK_SP;
     END IF;
 
 END$$

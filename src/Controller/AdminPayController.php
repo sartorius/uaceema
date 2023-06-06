@@ -1050,13 +1050,22 @@ class AdminPayController extends AbstractController
 
                             // If we return the empty line means the course has not been found
                             if(count($resultsp) == 1){
-                                $short_err =  'ERR182MV Erreur fichier';
-                                $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR182MV Erreur chargement du CRA impossible.</span>' . '<br>'
-                                                                . 'Désolé ! Nous avons rencontré un problème de lecture du fichier : ' . $filename_to_log_in . '<br><br>'
-                                                                . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>'
-                                                                . $report_comment;
+                                if(strcmp($resultsp[0]['CODE_SP'], '0') == 0){
+                                    $short_msg =  'Code : ' . $resultsp[0]['CODE_SP'] . '/' . $resultsp[0]['FEEDBACK_SP'];
+                                    $report_comment = '<span class="ace-sm report-val"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;' . $short_msg . '.</span>' . '<br>'
+                                                                    . 'Chargement du fichier : ' . $filename_to_log_in . '<br><br>'
+                                                                    . $report_comment;
+                                }
+                                else{
+                                    $short_err =  'ERR182MV Erreur fichier - Code retour: ' . $resultsp[0]['CODE_SP'] . '/' . $resultsp[0]['FEEDBACK_SP'];
+                                    $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;' . $short_err . ' chargement du CRA impossible.</span>' . '<br>'
+                                                                    . 'Désolé ! Nous avons rencontré un problème de lecture du fichier : ' . $filename_to_log_in . '<br><br>'
+                                                                    . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>'
+                                                                    . $report_comment;
+                                }
                             }
-                            if(count($resultsp) == 0){
+                            else{
+                                //if(count($resultsp) == 0)
                                 $short_err =  'ERR187MV Erreur technique';
                                 $report_comment = '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR187MV Erreur Nous n\'arrivons pas à enregistrer le CRA, veuillez contacter le support technique.</span>' . '<br>'
                                                                 . $short_err . ' Retour Stored Procedure : ' . count($resultsp) . '<br>'
