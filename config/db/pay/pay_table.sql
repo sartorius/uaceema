@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS uac_load_mvola (
   `mvo_initiator` VARCHAR(20) NULL,
   `mvo_type` VARCHAR(35) NULL,
   `canal` VARCHAR(45) NULL,
-  `statut` VARCHAR(45) NULL,
+  `cra_statut` VARCHAR(45) NULL,
   `account` VARCHAR(45) NULL,
   `load_amount` VARCHAR(45) NULL,
   `load_rrp` VARCHAR(45) NULL,
@@ -321,8 +321,44 @@ CREATE TABLE IF NOT EXISTS uac_load_mvola (
   `core_balance_before` INT NULL,
   `core_balance_after` INT NULL,
   `core_username` VARCHAR(20) NULL,
+  `core_user_id` BIGINT NULL,
   `reject_reason` VARCHAR(45) NULL,
   `cra_filename` VARCHAR(300) NULL,
   `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
+
+DROP TABLE IF EXISTS uac_mvola;
+CREATE TABLE IF NOT EXISTS uac_mvola (
+  `id` BIGINT UNSIGNED NOT NULL COMMENT 'This unique ID will be use as PK for the core table',
+  `status` CHAR(3) NOT NULL DEFAULT 'NEW',
+  `user_id` BIGINT NULL,
+  `transac_ref` VARCHAR(20) NOT NULL COMMENT 'Unique manual creation',
+  `x_payment_id` BIGINT NULL,
+  `mvo_initiator` VARCHAR(20) NULL,
+  `mvo_type` VARCHAR(35) NULL,
+  `canal` VARCHAR(45) NULL,
+  `cra_statut` VARCHAR(45) NULL,
+  `account` VARCHAR(45) NULL,
+  `from_phone` VARCHAR(45) NULL,
+  `to_phone` VARCHAR(45) NULL,
+  `details_a` VARCHAR(45) NULL,
+  `details_b` VARCHAR(45) NULL,
+  `validator` VARCHAR(45) NULL,
+  `notif_ref` VARCHAR(45) NULL,
+  `core_cra_datetime` DATETIME NULL,
+  `core_amount` INT NULL,
+  `core_rrp` INT NULL,
+  `core_balance_before` INT NULL,
+  `core_balance_after` INT NULL,
+  `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `transac_ref_UNIQUE` (`transac_ref`));
+
+DROP TABLE IF EXISTS uac_xref_payment_mvola;
+CREATE TABLE IF NOT EXISTS uac_xref_payment_mvola (
+  `payment_id` BIGINT UNSIGNED NOT NULL,
+  `mvola_id` BIGINT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`payment_id`, `mvola_id`));

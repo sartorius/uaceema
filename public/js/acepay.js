@@ -248,7 +248,7 @@ function generateCancelPaymentDBAndPrint(){
 
 function generateHistoryPrint(){
   /**************** HISTORY *****************/
-  let doc = new jsPDF('p', 'mm', [(35 + (myRecap.length * 7)), 75]);
+  let doc = new jsPDF('p', 'mm', [(55 + (myRecap.length * 7)), 75]);
   doc.setFont("Courier");
   doc.setFontType("bold");
 

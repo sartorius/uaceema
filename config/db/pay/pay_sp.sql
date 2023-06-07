@@ -70,8 +70,8 @@ END$$
 
 -- Display EDT for Administration
 DELIMITER $$
-DROP PROCEDURE IF EXISTS CLI_VAL_PayAddValidate$$
-CREATE PROCEDURE `CLI_VAL_PayAddValidate` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10))
+DROP PROCEDURE IF EXISTS CLI_VAL_PayAddRedValidate$$
+CREATE PROCEDURE `CLI_VAL_PayAddRedValidate` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10))
 BEGIN
     DECLARE param_red_pc	TINYINT;
     DECLARE param_id_red	BIGINT;
@@ -190,6 +190,7 @@ BEGIN
     SELECT actual_full_reduction AS ACTUAL_FULL_REDUCTION;
 END$$
 -- Remove $$ for OVH
+-- CLI_VAL_PayAddRedValidate
 
 -- Display EDT for Administration
 DELIMITER $$
@@ -209,6 +210,20 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+
+
+-- Try to re-use this SP for Manual migration
+DELIMITER $$
+DROP PROCEDURE IF EXISTS SRV_PAY_CRTPayForMvola$$
+CREATE PROCEDURE `SRV_PAY_CRTPayForMvola` (IN param_mvola_id BIGINT, IN param_amount INT, IN param_comment VARCHAR(45))
+BEGIN
+    -- Identify first how much for the first available Tranche
+    -- Then loop undil all amount is given
+
+
+END$$
+
 
 
 
@@ -234,6 +249,7 @@ BEGIN
     DECLARE nbr_new_line INT;
     DECLARE nbr_dup_line INT;
     DECLARE nbr_emp_line INT;
+    DECLARE nbr_nud_line INT;
     -- nbr_new_line, nbr_dup_line, nbr_emp_line
 
     SELECT NOW() INTO param_last_update;
@@ -286,6 +302,29 @@ BEGIN
                 update_date = NOW()
                   WHERE status = 'INP' AND flow_id = inv_flow_id AND account = '';
 
+        -- Prepare the data
+        UPDATE uac_load_mvola SET
+                core_username = UPPER(TRIM(details_a)),
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+
+        UPDATE uac_load_mvola SET
+                core_username = UPPER(TRIM(details_b)),
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_username = '';
+
+        UPDATE uac_load_mvola
+          INNER JOIN v_showuser ON uac_load_mvola.core_username = v_showuser.USERNAME
+          SET uac_load_mvola.user_id = v_showuser.ID
+          WHERE status = 'INP' AND flow_id = inv_flow_id;
+
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Username user id introuvable',
+                status = 'NUD',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+
+
         -- Control the CRA data
         UPDATE uac_load_mvola SET
                 core_amount = CAST(load_amount AS SIGNED),
@@ -321,15 +360,14 @@ BEGIN
                 update_date = NOW()
                   WHERE status = 'INP' AND flow_id = inv_flow_id AND core_balance_after = 0;
 
-        -- Handle duplicate
-        SELECT IFNULL(MAX(core_cra_datetime), NOW()) INTO param_last_update
-            FROM uac_load_mvola WHERE flow_id = inv_flow_id AND core_cra_datetime IS NOT NULL;
-
-        UPDATE uac_param SET
-                par_date = CAST(param_last_update AS DATE),
-                par_time = CAST(param_last_update AS TIME),
-                last_update = NOW()
-        WHERE  key_code = 'MVOLUPD';
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Duplicat - référence déjà intégrée',
+                status = 'DUP',
+                update_date = NOW()
+                  WHERE status = 'INP' AND flow_id = inv_flow_id
+                  AND transac_ref IN (
+                    SELECT transac_ref FROM uac_mvola
+                  );
 
         /************************************************************************************/
         /************************************************************************************/
@@ -337,6 +375,61 @@ BEGIN
         /** END : LOAD CONTROL **************************************************************/
         /************************************************************************************/
         /************************************************************************************/
+
+        INSERT INTO uac_mvola (
+          id,
+          transac_ref,
+          x_payment_id,
+          mvo_initiator,
+          mvo_type,
+          canal,
+          cra_statut,
+          account,
+          from_phone,
+          to_phone,
+          details_a,
+          details_b,
+          validator,
+          notif_ref,
+          core_cra_datetime,
+          core_amount,
+          core_rrp,
+          core_balance_before,
+          core_balance_after,
+          user_id)
+        SELECT
+          id,
+          transac_ref,
+          NULL,
+          mvo_initiator,
+          mvo_type,
+          canal,
+          cra_statut,
+          account,
+          from_phone,
+          to_phone,
+          details_a,
+          details_b,
+          validator,
+          notif_ref,
+          core_cra_datetime,
+          core_amount,
+          core_rrp,
+          core_balance_before,
+          core_balance_after,
+          core_user_id
+        FROM uac_load_mvola WHERE status = 'INP' AND flow_id = inv_flow_id;
+
+
+        -- END the flow
+        SELECT IFNULL(MAX(core_cra_datetime), CURRENT_TIMESTAMP) INTO param_last_update
+            FROM uac_load_mvola WHERE flow_id = inv_flow_id AND core_cra_datetime IS NOT NULL;
+
+        UPDATE uac_param SET
+                par_date = CAST(param_last_update AS DATE),
+                par_time = CAST(param_last_update AS TIME),
+                last_update = NOW()
+        WHERE  key_code = 'MVOLUPD';
 
 
 
@@ -346,6 +439,7 @@ BEGIN
         SELECT COUNT(1) INTO nbr_new_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'END';
         SELECT COUNT(1) INTO nbr_dup_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'DUP';
         SELECT COUNT(1) INTO nbr_emp_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'EMP';
+        SELECT COUNT(1) INTO nbr_nud_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'NUD';
 
         -- End of the flow correctly
         UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;

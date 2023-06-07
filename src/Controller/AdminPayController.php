@@ -413,7 +413,7 @@ class AdminPayController extends AbstractController
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_VAL_PayAddValidate( " . $param_user_id . ", '" . $param_ticket_ref . "')";
+          $query_value = " CALL CLI_VAL_PayAddRedValidate( " . $param_user_id . ", '" . $param_ticket_ref . "')";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -791,7 +791,7 @@ class AdminPayController extends AbstractController
 
         $report_queries = '';
         $insert_lines = '';
-        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref, cra_filename) VALUES (';
+        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, cra_statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref, cra_filename) VALUES (';
 
         $insert_queries = array();
         $resultsp = array();

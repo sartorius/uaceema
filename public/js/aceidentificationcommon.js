@@ -195,7 +195,7 @@ function printReceiptPDF(tempTicketRef){
   // Document of 210mm wide and 297mm high > A4
   // new jsPDF('p', 'mm', [297, 210]);
   // Here format A7
-  let doc = new jsPDF('p', 'mm', [(35 + (myTicket.length * 7)), 75]);
+  let doc = new jsPDF('p', 'mm', [(55 + (myTicket.length * 7)), 75]);
 
   doc.setFont("Courier");
   doc.setFontType("bold");
