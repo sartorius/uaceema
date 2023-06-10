@@ -731,7 +731,17 @@ class AdminPayController extends AbstractController
     return new Response($content);
   }
 
+  // $this->cleanStrInsert($input_str)
+  private function cleanStrInsert($input_str){
+    $raw_title = ltrim($input_str,"\n");
+    $raw_title = rtrim($raw_title,"\n");
+    $raw_title = str_replace('"', "", $raw_title);
+    $raw_title = str_replace("'", "", $raw_title);
+    // print is taking only printable character
+    $raw_title = preg_replace('/[[:^print:]]/', 'x', $raw_title);
 
+    return $raw_title;
+  }
 
   public function checkandloadmvo(Environment $twig, LoggerInterface $logger)
   {
@@ -791,7 +801,8 @@ class AdminPayController extends AbstractController
 
         $report_queries = '';
         $insert_lines = '';
-        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, cra_statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref, cra_filename) VALUES (';
+        $CSV_SEPARATOR = ';';
+        $HEADER_INSERT_QUERY = 'INSERT INTO uac_load_mvola (load_cra_date, transac_ref, from_phone, to_phone, mvo_type, details_a, load_amount) VALUES (';
 
         $insert_queries = array();
         $resultsp = array();
@@ -836,11 +847,20 @@ class AdminPayController extends AbstractController
                 $i = 0;
                 $file_is_still_valid = true;
                 $report_comment = $report_comment . '<div class="ace-sm report-val">';
+                $header_msg = '';
+                $header_account = array();;
+                $header_account_phone = null;
+                $header_account_name = null;
+                $header_dates = array();
+                $header_start_date = null;
+                $header_end_date = null;
+                $header_balance_before = '';
+                $header_balance_after = '';
 
                 try {
 
 
-                        while ((($data = fgetcsv($handle, 1000, ",")) !== FALSE) && $file_is_still_valid) {
+                        while ((($data = fgetcsv($handle, 1000, $CSV_SEPARATOR)) !== FALSE) && $file_is_still_valid) {
                             // read the whole file
                             // Read Fixed valuable data
                             /*
@@ -985,25 +1005,68 @@ class AdminPayController extends AbstractController
                             */
                             // The first line is header
                             // Note that it seems the secund line is always empty
-                            if($i > 0){
-                                $my_insert_query = $HEADER_INSERT_QUERY . " '" . $data[0] . "', '"
-                                                        . $data[1] . "', '"
-                                                        . $data[2] . "', '"
-                                                        . $data[3] . "', '"
-                                                        . $data[4] . "', '"
-                                                        . $data[5] . "', '"
-                                                        . $data[6] . "', '"
-                                                        . $data[7] . "', '"
-                                                        . $data[8] . "', '"
-                                                        . $data[9] . "', '"
-                                                        . $data[10] . "', '"
-                                                        . $data[11] . "', '"
-                                                        . $data[12] . "', '"
-                                                        . $data[13] . "', '"
-                                                        . $data[14] . "', '"
-                                                        . $data[15] . "', '"
-                                                        . $data[16] . "', '"
-                                                        . $filename_to_log_in . "');";
+
+                            // (load_cra_date, transac_ref, from_phone, to_phone, mvo_type, details_a, load_amount) 
+                            if ($i == 1){
+                                if((count($data) == 2)){
+                                    $header_account = explode("-", $this->cleanStrInsert($data[1]));
+                                    
+                                    $header_account_phone = ltrim(rtrim($header_account[0]," ")," ");
+                                    $header_account_name = ltrim(rtrim($header_account[1]," ")," ");
+
+                                    $logger->debug("Header account: " . $header_account_phone . " owned: " . $header_account_name);
+                                }
+                                else{
+                                    $file_is_still_valid = false;
+                                    $header_msg = ' Erreur header ligne 1/Compte ';
+                                }
+
+                            }
+                            else if ($i == 2){
+                                if((count($data) == 2)){
+                                    $header_dates = explode("-", $this->cleanStrInsert($data[1]));
+                                    $header_start_date = date_create_from_format("j/m/Y", ltrim(rtrim($header_dates[0]," ")," "));
+                                    $header_end_date = date_create_from_format("j/m/Y", ltrim(rtrim($header_dates[1]," ")," "));
+
+                                    $logger->debug("Header date string read: " . ltrim(rtrim($header_dates[0]," ")," ") . "_to_" . ltrim(rtrim($header_dates[1]," ")," "));
+                                    $logger->debug("Header date: " . date_format($header_start_date, "Y-m-d") . "_to_" . date_format($header_end_date, "Y-m-d"));
+
+                                }
+                                else{
+                                    $file_is_still_valid = false;
+                                    $header_msg = ' Erreur header ligne 2/Dates ';
+                                }
+
+                            }
+                            else if ($i == 3){
+                                if((count($data) == 2)){
+                                    $header_balance_before = $this->cleanStrInsert($data[1]);
+                                }
+                                else{
+                                    $file_is_still_valid = false;
+                                    $header_msg = ' Erreur header ligne 2/Dates ';
+                                }
+
+                            }
+                            else if ($i == 4){
+                                if((count($data) == 2)){
+                                    $header_balance_after = $this->cleanStrInsert($data[1]);
+                                }
+                                else{
+                                    $file_is_still_valid = false;
+                                    $header_msg = ' Erreur header ligne 2/Dates ';
+                                }
+
+                            }
+                            else if(($i > 5) && (count($data) == 7)){
+                                //$logger->debug("Try to read MVOLA file: " . $data[0] . "/" . $data[1] . "/" . $data[2] . "/" . $data[3] . "/" . $data[4] . "/" . $data[5] . "/" );
+                                $my_insert_query = $HEADER_INSERT_QUERY . " '" . $this->cleanStrInsert($data[0]) . "', '"
+                                                        . $this->cleanStrInsert($data[1]) . "', '"
+                                                        . $this->cleanStrInsert($data[2]) . "', '"
+                                                        . $this->cleanStrInsert($data[3]) . "', '"
+                                                        . $this->cleanStrInsert($data[4]) . "', '"
+                                                        . $this->cleanStrInsert($data[5]) . "', '"
+                                                        . $this->cleanStrInsert($data[6]) . "'); ";
                                 array_push($insert_queries, $my_insert_query);
                             }
 
@@ -1025,9 +1088,9 @@ class AdminPayController extends AbstractController
                             for($j = 0;$j < count($insert_queries);$j++){
                                 $report_queries = $report_queries . '<br>' . '-- #' . $j . ' :<br>'  . $insert_queries[$j];
                                 $dbqueries_insert = $dbqueries_insert . ' ' . $insert_queries[$j];
+                                
                             }
-
-                            
+                            //$logger->debug("Insert query dbqueries_insert: " . $dbqueries_insert);
                             // Be carefull if you have array of array
                             $dbconnectioninst = DBConnectionManager::getInstance();
                             $result = $dbconnectioninst->query($dbqueries_insert)->fetchAll(PDO::FETCH_ASSOC);
@@ -1038,12 +1101,17 @@ class AdminPayController extends AbstractController
                             //`SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_monday_date DATE, IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_uaparcours VARCHAR(100), IN param_uagroupe VARCHAR(100))
                             //$import_query = "CALL SRV_CRT_EDT('" . $filename_to_log_in . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
                             
-
-                            $import_query = "CALL SRV_CRT_CRAMvola('" . $filename_to_log_in . "');";
+                            $import_query = "CALL SRV_CRT_CRAMvola('" . $header_account_phone . "', '"
+                                                                        . $header_account_name . "', '"
+                                                                        . date_format($header_start_date, "Y-m-d") . "', '"
+                                                                        . date_format($header_end_date, "Y-m-d") . "', "
+                                                                        . $header_balance_before . ", "
+                                                                        . $header_balance_after . ", '"
+                                                                        . $filename_to_log_in . "');";
                             $logger->debug("Here is import_query: " . $import_query);
                             $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
                             
-
+                            
 
                             $report_queries = '<br><hr><div class="ace-sm report-val"> Nombre des input: ' . count($insert_queries) . '<br><br>' . $report_queries . '<br><br><br><br>' . $import_query . '</div>';
                             $report_comment = $report_comment . '<br><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;Chargement en DB. Return count: ' . count($resultsp)  . '<br>';
@@ -1076,12 +1144,13 @@ class AdminPayController extends AbstractController
                         }
                         else{
                             // Display the error here
-                            $short_err = 'Error1927 Erreur connexion DB CRA Mvola';
+                            $short_err = 'Error1927 Erreur lecture fichier CRA Mvola ' . $header_msg;
                             $report_comment = '<br>' . $short_err . ' when load in DB.' . $report_comment;
                         }
 
                 } catch (\Exception $e) {
-                    $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1724 Erreur lecture fichier : ' . $e->getMessage() . '</span>' . '<br>'
+                    $logger->debug("Exception error: " . $e->getMessage());
+                    $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1724MVO Erreur lecture fichier : ' . $e->getMessage() . '</span>' . '<br>'
                                                         . 'Désolé ! Nous avons rencontré un problème de lecture du fichier. ' . '<br>'
                                                         . 'Il semble que le fichier ne soit pas un csv.<br>'
                                                         . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>'

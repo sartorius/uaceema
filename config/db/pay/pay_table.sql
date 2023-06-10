@@ -81,6 +81,11 @@ INSERT INTO uac_ref_frais_scolarite
 (12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 28, 950000, 'A', '2023-09-30', 'T');
 
 
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(14, 'FRMVOLA', 'Frais additionnel écolage Mvola', 'Frais additionnel écolage Mvola', 90, 10000, 'A', '2023-12-31', 'F');
+
+
 -- Cross ref table
 DROP TABLE IF EXISTS uac_xref_cohort_fsc;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_cohort_fsc` (
@@ -291,17 +296,39 @@ SELECT
 -- ***********************************************************************************
 -- ***********************************************************************************
 -- ***********************************************************************************
+DROP TABLE IF EXISTS uac_mvola_master;
+CREATE TABLE IF NOT EXISTS uac_mvola_master (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'This unique ID will be use as PK for the core table',
+  `flow_id` BIGINT NULL COMMENT 'Codification is for reference',
+  `status` CHAR(3) NOT NULL DEFAULT 'NEW',
+  `cra_filename` VARCHAR(300) NOT NULL,
+  `core_balance_before` INT NULL,
+  `core_balance_after` INT NULL,
+  `phone_account` VARCHAR(20) NOT NULL,
+  `account_name` VARCHAR(100) NULL,
+  `start_date` DATE NOT NULL,
+  `end_date` DATE NULL,
+  `empty_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `duplicate_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `new_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `not_found_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `invalid_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
 -- INSERT INTO uac_load_mvola (load_cra_date, transac_ref, mvo_initiator, mvo_type, canal, statut, account, load_amount, load_rrp, from_phone, to_phone, load_balance_before, load_before_after, details_a, details_b, validator, notif_ref)
 -- VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 DROP TABLE IF EXISTS uac_load_mvola;
 CREATE TABLE IF NOT EXISTS uac_load_mvola (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'This unique ID will be use as PK for the core table',
-  `flow_id` BIGINT NULL COMMENT 'Codification is for reference',
+  `master_id` BIGINT NULL,
   `status` CHAR(3) NOT NULL DEFAULT 'NEW',
   `load_cra_date` VARCHAR(45) NULL,
   `transac_ref` VARCHAR(20) NULL,
   `mvo_initiator` VARCHAR(20) NULL,
-  `mvo_type` VARCHAR(35) NULL,
+  `mvo_type` VARCHAR(100) NULL,
   `canal` VARCHAR(45) NULL,
   `cra_statut` VARCHAR(45) NULL,
   `account` VARCHAR(45) NULL,
@@ -323,20 +350,20 @@ CREATE TABLE IF NOT EXISTS uac_load_mvola (
   `core_username` VARCHAR(20) NULL,
   `core_user_id` BIGINT NULL,
   `reject_reason` VARCHAR(45) NULL,
-  `cra_filename` VARCHAR(300) NULL,
   `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
-DROP TABLE IF EXISTS uac_mvola;
+DROP TABLE IF EXISTS uac_mvola_line;
 CREATE TABLE IF NOT EXISTS uac_mvola (
   `id` BIGINT UNSIGNED NOT NULL COMMENT 'This unique ID will be use as PK for the core table',
+  `master_id` BIGINT NOT NULL,
   `status` CHAR(3) NOT NULL DEFAULT 'NEW',
   `user_id` BIGINT NULL,
   `transac_ref` VARCHAR(20) NOT NULL COMMENT 'Unique manual creation',
   `x_payment_id` BIGINT NULL,
   `mvo_initiator` VARCHAR(20) NULL,
-  `mvo_type` VARCHAR(35) NULL,
+  `mvo_type` VARCHAR(100) NULL,
   `canal` VARCHAR(45) NULL,
   `cra_statut` VARCHAR(45) NULL,
   `account` VARCHAR(45) NULL,
@@ -351,6 +378,7 @@ CREATE TABLE IF NOT EXISTS uac_mvola (
   `core_rrp` INT NULL,
   `core_balance_before` INT NULL,
   `core_balance_after` INT NULL,
+  `comment` VARCHAR(100) NULL,
   `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

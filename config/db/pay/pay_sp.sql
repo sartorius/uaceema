@@ -226,8 +226,17 @@ END$$
 
 
 
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- MVOLA
+-- ***********************************************************************************
+-- ***********************************************************************************
+-- ***********************************************************************************
+
 
 -- MVOLA
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MINAMOU', 'Minimum amount to pay', 100, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLOAD', 'Integration Mvola', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLUPD', 'Last update Mvola', NULL, NULL);
 -- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
@@ -237,10 +246,18 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_CRAMvola$$
-CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_filename VARCHAR(300))
+CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_account_phone VARCHAR(20),
+                                      IN param_account_name VARCHAR(100),
+                                      IN param_start_date VARCHAR(10),
+                                      IN param_end_date VARCHAR(10),
+                                      IN param_balance_before INT,
+                                      IN param_balance_after INT,
+                                      IN param_filename VARCHAR(300))
 BEGIN
     DECLARE inv_flow_code	CHAR(7);
     DECLARE inv_flow_id	BIGINT;
+    DECLARE inv_master_id	BIGINT;
+
     DECLARE concurrent_flow INT;
 
     DECLARE param_last_update DATETIME;
@@ -250,7 +267,12 @@ BEGIN
     DECLARE nbr_dup_line INT;
     DECLARE nbr_emp_line INT;
     DECLARE nbr_nud_line INT;
+    DECLARE nbr_inv_line INT;
     -- nbr_new_line, nbr_dup_line, nbr_emp_line
+
+    DECLARE uac_param_min_amount INT;
+    DECLARE uac_param_frais_mvola INT;
+
 
     SELECT NOW() INTO param_last_update;
     SELECT 'MVOLOAD' INTO inv_flow_code;
@@ -260,11 +282,35 @@ BEGIN
         -- A flow is running we input a CAN line
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update, comment) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW(), 'Concurrent flow running');
 
-        SELECT 5 AS CODE_SP, 'ERR892MV Fichier en cours integration' AS FEEDBACK_SP;
+        SELECT 5 AS CODE_SP, 'ERR892MV Fichier encore en cours integration. ' AS FEEDBACK_SP;
     ELSE
 
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
         SELECT LAST_INSERT_ID() INTO inv_flow_id;
+
+
+        INSERT INTO uac_mvola_master (
+          flow_id,
+          status,
+          cra_filename,
+          core_balance_before,
+          core_balance_after,
+          phone_account,
+          account_name,
+          start_date,
+          end_date)
+        VALUES (
+          inv_flow_id,
+          'INP',
+          param_filename,
+          param_balance_before,
+          param_balance_after,
+          param_account_phone,
+          param_account_name,
+          param_start_date,
+          param_end_date
+        );
+        SELECT LAST_INSERT_ID() INTO inv_master_id;
 
         /************************************************************************************/
         /************************************************************************************/
@@ -274,7 +320,7 @@ BEGIN
         /************************************************************************************/
 
         UPDATE uac_load_mvola SET
-                flow_id = inv_flow_id,
+                master_id = inv_master_id,
                 status = 'INP'
                   WHERE status = 'NEW';
 
@@ -282,89 +328,74 @@ BEGIN
                 reject_reason = 'Transaction reference vide',
                 status = 'EMP',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND transac_ref = '';
+                  WHERE status = 'INP' AND master_id = inv_master_id AND transac_ref = '';
 
         UPDATE uac_load_mvola SET
                 reject_reason = 'Montant vide',
                 status = 'EMP',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND load_amount = '';
+                  WHERE status = 'INP' AND master_id = inv_master_id AND load_amount = '';
 
         UPDATE uac_load_mvola SET
                 reject_reason = 'RPP vide',
                 status = 'EMP',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND load_rrp = '';
+                  WHERE status = 'INP' AND master_id = inv_master_id AND load_rrp = '';
 
         UPDATE uac_load_mvola SET
                 reject_reason = 'Compte vide',
                 status = 'EMP',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND account = '';
+                  WHERE status = 'INP' AND master_id = inv_master_id AND account = '';
 
         -- Prepare the data
         UPDATE uac_load_mvola SET
                 core_username = UPPER(TRIM(details_a)),
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+                  WHERE status = 'INP' AND master_id = inv_master_id;
 
+        -- detail b if other csv format is used
         UPDATE uac_load_mvola SET
                 core_username = UPPER(TRIM(details_b)),
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_username = '';
+                  WHERE status = 'INP' AND master_id = inv_master_id AND core_username = '';
 
         UPDATE uac_load_mvola
           INNER JOIN v_showuser ON uac_load_mvola.core_username = v_showuser.USERNAME
-          SET uac_load_mvola.user_id = v_showuser.ID
-          WHERE status = 'INP' AND flow_id = inv_flow_id;
+          SET uac_load_mvola.core_user_id = v_showuser.ID
+          WHERE status = 'INP' AND master_id = inv_master_id;
 
         UPDATE uac_load_mvola SET
                 reject_reason = 'Username user id introuvable',
                 status = 'NUD',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+                  WHERE status = 'INP' AND master_id = inv_master_id AND core_user_id IS NULL;
 
 
         -- Control the CRA data
         UPDATE uac_load_mvola SET
                 core_amount = CAST(load_amount AS SIGNED),
-                core_rrp = CAST(load_rrp AS UNSIGNED),
-                core_balance_before = CAST(load_balance_before AS UNSIGNED),
-                core_balance_after = CAST(load_before_after AS UNSIGNED),
-                core_cra_datetime = CONVERT(load_cra_date, DATETIME),
+                core_cra_datetime = STR_TO_DATE(load_cra_date,'%d/%m/%Y %H:%i:%s'),
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id;
+                  WHERE status = 'INP' AND master_id = inv_master_id;
+
         UPDATE uac_load_mvola SET
                 reject_reason = 'Credit Debit invalide',
-                status = 'ERR',
+                status = 'INV',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_amount = 0;
-        UPDATE uac_load_mvola SET
-                reject_reason = 'Montant invalide',
-                status = 'ERR',
-                update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_rrp = 0;
+                  WHERE status = 'INP' AND master_id = inv_master_id AND core_amount = 0;
+
         UPDATE uac_load_mvola SET
                 reject_reason = 'Date transaction invalide',
-                status = 'ERR',
+                status = 'INV',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_cra_datetime IS NULL;
-        UPDATE uac_load_mvola SET
-                reject_reason = 'Balance avant invalide',
-                status = 'ERR',
-                update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_balance_before = 0;
-        UPDATE uac_load_mvola SET
-                reject_reason = 'Balance après invalide',
-                status = 'ERR',
-                update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id AND core_balance_after = 0;
+                  WHERE status = 'INP' AND master_id = inv_master_id AND core_cra_datetime IS NULL;
 
         UPDATE uac_load_mvola SET
                 reject_reason = 'Duplicat - référence déjà intégrée',
                 status = 'DUP',
                 update_date = NOW()
-                  WHERE status = 'INP' AND flow_id = inv_flow_id
+                  WHERE status = 'INP' AND master_id = inv_master_id
                   AND transac_ref IN (
                     SELECT transac_ref FROM uac_mvola
                   );
@@ -376,8 +407,9 @@ BEGIN
         /************************************************************************************/
         /************************************************************************************/
 
-        INSERT INTO uac_mvola (
+        INSERT INTO uac_mvola_line (
           id,
+          master_id,
           transac_ref,
           x_payment_id,
           mvo_initiator,
@@ -399,6 +431,7 @@ BEGIN
           user_id)
         SELECT
           id,
+          inv_master_id,
           transac_ref,
           NULL,
           mvo_initiator,
@@ -418,12 +451,28 @@ BEGIN
           core_balance_before,
           core_balance_after,
           core_user_id
-        FROM uac_load_mvola WHERE status = 'INP' AND flow_id = inv_flow_id;
+        FROM uac_load_mvola WHERE status = 'INP' AND master_id = inv_master_id;
+
+        SELECT amount INTO uac_param_frais_mvola FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
+        SELECT par_int INTO uac_param_min_amount FROM uac_param WHERE code = 'MINAMOU';
+
+        UPDATE uac_mvola_line
+            SET status = 'INV',
+            comment = 'Montant insuffisant'
+            WHERE master_id = inv_master_id AND core_amount < (uac_param_frais_mvola + uac_param_min_amount);
+
+        /************************************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
+        /** END : PAYMENT *******************************************************************/
+        /************************************************************************************/
+        /************************************************************************************/
+
 
 
         -- END the flow
         SELECT IFNULL(MAX(core_cra_datetime), CURRENT_TIMESTAMP) INTO param_last_update
-            FROM uac_load_mvola WHERE flow_id = inv_flow_id AND core_cra_datetime IS NOT NULL;
+            FROM uac_load_mvola WHERE master_id = inv_master_id AND core_cra_datetime IS NOT NULL;
 
         UPDATE uac_param SET
                 par_date = CAST(param_last_update AS DATE),
@@ -431,20 +480,35 @@ BEGIN
                 last_update = NOW()
         WHERE  key_code = 'MVOLUPD';
 
+        -- All lines here are closed
+        UPDATE uac_load_mvola SET status = 'END', update_date = NOW() WHERE master_id = inv_master_id AND status = 'INP';
+
+        -- nbr_new_line, nbr_dup_line, nbr_emp_line, nbr_inv_line
+        SELECT COUNT(1) INTO nbr_new_line FROM uac_load_mvola WHERE master_id = inv_master_id AND status = 'END';
+        SELECT COUNT(1) INTO nbr_dup_line FROM uac_load_mvola WHERE master_id = inv_master_id AND status = 'DUP';
+        SELECT COUNT(1) INTO nbr_emp_line FROM uac_load_mvola WHERE master_id = inv_master_id AND status = 'EMP';
+        SELECT COUNT(1) INTO nbr_nud_line FROM uac_load_mvola WHERE master_id = inv_master_id AND status = 'NUD';
+        SELECT COUNT(1) INTO nbr_inv_line FROM uac_load_mvola WHERE master_id = inv_master_id AND status = 'INV';
 
 
-        UPDATE uac_load_mvola SET status = 'END', update_date = NOW() WHERE flow_id = inv_flow_id AND status = 'INP';
 
-        -- nbr_new_line, nbr_dup_line, nbr_emp_line
-        SELECT COUNT(1) INTO nbr_new_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'END';
-        SELECT COUNT(1) INTO nbr_dup_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'DUP';
-        SELECT COUNT(1) INTO nbr_emp_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'EMP';
-        SELECT COUNT(1) INTO nbr_nud_line FROM uac_load_mvola WHERE flow_id = inv_flow_id AND status = 'NUD';
+        -- update master
+        UPDATE
+            uac_mvola_master
+            SET status = 'END',
+            update_date = NOW(),
+            new_count = nbr_new_line,
+            duplicate_count = nbr_dup_line,
+            empty_count = nbr_emp_line,
+            not_found_count = nbr_nud_line,
+            invalid_count = nbr_inv_line
+            WHERE id = inv_master_id AND status = 'INP';
+
 
         -- End of the flow correctly
         UPDATE uac_working_flow SET status = 'END', last_update = NOW() WHERE id = inv_flow_id;
 
-        SELECT 0 AS CODE_SP, CONCAT('Integration effectue avec succes. Nouvelles lignes : ', nbr_new_line, ' /Duplicats : ', nbr_dup_line, ' /Vides : ', nbr_emp_line) AS FEEDBACK_SP;
+        SELECT 0 AS CODE_SP, CONCAT('Integration effectue avec succes. Nouvelles lignes : ', nbr_new_line, '/Invalides: ',  nbr_inv_line, '/User ID introuvables: ', nbr_nud_line, ' /Duplicats : ', nbr_dup_line, ' /Vides : ', nbr_emp_line) AS FEEDBACK_SP;
     END IF;
 
 END$$
