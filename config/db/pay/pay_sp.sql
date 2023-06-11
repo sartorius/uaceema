@@ -557,7 +557,11 @@ BEGIN
         UPDATE uac_load_mvola
             SET status = 'INV',
             reject_reason = 'Frais Mvola - montant insuffisant'
-            WHERE id IN (SELECT id FROM uac_mvola_line WHERE master_id = inv_master_id);
+            WHERE id IN (SELECT id FROM uac_mvola_line
+                          WHERE master_id = inv_master_id
+                          AND status = 'INV'
+                          AND order_direction = 'C'
+                          AND core_amount < (uac_param_frais_mvola + uac_param_min_amount));
 
 
         SELECT COUNT(1) INTO nbr_of_mvola_line
