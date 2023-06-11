@@ -39,7 +39,7 @@ class AdminPayController extends AbstractController
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
         // Get All USERNAME
-        $refpay_query = " SELECT * FROM uac_ref_frais_scolarite ORDER BY fs_order ASC; ";
+        $refpay_query = " SELECT * FROM uac_ref_frais_scolarite WHERE code NOT IN ('UNUSEDM') ORDER BY fs_order ASC; ";
 
         $logger->debug("Show me allusrn_query: " . $refpay_query);
         $dbconnectioninst = DBConnectionManager::getInstance();
