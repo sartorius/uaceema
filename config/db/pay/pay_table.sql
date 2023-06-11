@@ -85,6 +85,9 @@ INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (14, 'FRMVOLA', 'Frais additionnel écolage Mvola', 'Frais additionnel écolage Mvola', 90, 10000, 'A', '2023-12-31', 'F');
 
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(1000, 'UNUSEDM', 'Solde excedentaire Mvola', 'Solde excedentaire Mvola', 100, 0, 'A', '2023-12-31', 'F');
 
 -- Cross ref table
 DROP TABLE IF EXISTS uac_xref_cohort_fsc;
@@ -222,6 +225,8 @@ SELECT
       GROUP BY ID, USERNAME, NAME, CLASSE, CERT_SCO_AMOUNT;
 
 -- Payment view
+
+-- Without the Mvola frais and excedent
 DROP VIEW IF EXISTS v_histopayment_for_user;
 CREATE VIEW v_histopayment_for_user AS
     SELECT
@@ -252,6 +257,36 @@ CREATE VIEW v_histopayment_for_user AS
                                                       AND ref.type IN ('T', 'U')
                      LEFT JOIN uac_payment up ON up.user_id = vsh.ID
                                                     AND up.ref_fsc_id = xref.fsc_id;
+-- Only the Mvola frais and excedent
+DROP VIEW IF EXISTS v_histo_frais_for_user;
+CREATE VIEW v_histo_frais_for_user AS
+SELECT
+    	up2.id AS UP_ID,
+      vsh2.ID AS VSH_USER_ID,
+      vsh2.USERNAME AS VSH_USERNAME,
+      IFNULL(up2.status, 'N') AS UP_STATUS,
+      up2.payment_ref AS UP_PAYMENT_REF,
+      up2.facilite_id AS UP_FACILITE_ID,
+      IFNULL(up2.input_amount, 0) AS UP_INPUT_AMOUNT,
+      up2.type_of_payment AS UP_TYPE_OF_PAYMENT,
+      up2.comment AS UP_COMMENT,
+      up2.pay_date AS UP_PAY_DATE,
+      up2.create_date AS UP_CREATE_DATE,
+      up2.last_update AS UP_LAST_UPDATE,
+      ref2.id AS REF_ID,
+      ref2.code AS REF_CODE,
+      ref2.title AS REF_TITLE,
+      CASE WHEN (ref2.code = 'UNUSEDM') THEN up2.input_amount ELSE ref2.amount END AS REF_AMOUNT,
+      ref2.deadline AS REF_DEADLINE,
+      DATEDIFF(ref2.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+      ref2.type AS REF_TYPE,
+      ref2.fs_order AS REF_FS_ORDER,
+      vsh2.COHORT_ID AS COHORT_ID
+    FROM uac_payment up2 JOIN v_showuser vsh2 ON up2.user_id = vsh2.ID
+    						  JOIN uac_ref_frais_scolarite ref2 ON ref2.id = up2.ref_fsc_id
+    						  					AND ref2.type IN ('F');
+
+
 
 -- left to pay on tranche view
 -- To be used in combination with v_original_to_pay_for_user
@@ -355,7 +390,7 @@ CREATE TABLE IF NOT EXISTS uac_load_mvola (
   PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS uac_mvola_line;
-CREATE TABLE IF NOT EXISTS uac_mvola (
+CREATE TABLE IF NOT EXISTS uac_mvola_line (
   `id` BIGINT UNSIGNED NOT NULL COMMENT 'This unique ID will be use as PK for the core table',
   `master_id` BIGINT NOT NULL,
   `status` CHAR(3) NOT NULL DEFAULT 'NEW',
@@ -378,11 +413,14 @@ CREATE TABLE IF NOT EXISTS uac_mvola (
   `core_rrp` INT NULL,
   `core_balance_before` INT NULL,
   `core_balance_after` INT NULL,
+  `order_direction` CHAR(1) NOT NULL COMMENT 'It can be C for Credit or D for Debit',
+  `nbr_of_load_line` TINYINT NULL DEFAULT 1 COMMENT 'For Debit we have 2 for sum of frais',
   `comment` VARCHAR(100) NULL,
   `create_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `transac_ref_UNIQUE` (`transac_ref`));
+
 
 DROP TABLE IF EXISTS uac_xref_payment_mvola;
 CREATE TABLE IF NOT EXISTS uac_xref_payment_mvola (

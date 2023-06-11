@@ -615,6 +615,9 @@ class AdminPayController extends AbstractController
           $query_getpay = " SELECT * FROM v_histopayment_for_user vpu WHERE VSH_USERNAME = '" . $param_username . "' ORDER BY REF_FS_ORDER, UP_PAY_DATE ASC; ";
           $logger->debug("Show me query_getpay: " . $query_getpay);
 
+          $query_getfrais = " SELECT * FROM v_histo_frais_for_user vpu WHERE VSH_USERNAME = '" . $param_username . "' ORDER BY REF_FS_ORDER, UP_PAY_DATE ASC; ";
+          $logger->debug("Show me query_getfrais: " . $query_getfrais);
+
           //$query_getleftoperation = " SELECT MAX(vhu.REF_ID) AS REF_ID, vhu.ref_type AS REF_TYPE from v_histopayment_for_user vhu WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.UP_ID IS NULL GROUP BY vhu.ref_type; ";
           // This complexe query retrieve a grouping to know if we still have a T or U left (to invalidate or no the button)
           $query_getleftoperation = " SELECT t1.SUM_INPUT, t1.REF_TYPE FROM ( "
@@ -643,7 +646,16 @@ class AdminPayController extends AbstractController
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          $result = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
+          $result_pay = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
+          $result_frais = $dbconnectioninst->query($query_getfrais)->fetchAll(PDO::FETCH_ASSOC);
+          
+          $result = array();
+          if(count($result_frais) > 0){
+            $result = array_merge($result_pay, $result_frais); 
+          }
+          else{
+            $result = $result_pay;
+          }
           $resultLeftOperation = $dbconnectioninst->query($query_getleftoperation)->fetchAll(PDO::FETCH_ASSOC);
           $resultSumPerTranche = $dbconnectioninst->query($query_getsumpertranche)->fetchAll(PDO::FETCH_ASSOC);
 
