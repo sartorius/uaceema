@@ -332,7 +332,7 @@ function loadAllPAYGrid(){
           css: "cell-ref-sm"
         },
         { name: "UFP_TICKET",
-          title: "Ticket Réduction",
+          title: "Ticket",
           width: 40,
           type: "text",
           headercss: "cell-ref-sm-hd",
