@@ -89,6 +89,10 @@ INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (1000, 'UNUSEDM', 'Solde excedentaire Mvola', 'Solde excedentaire Mvola', 100, 0, 'A', '2023-12-31', 'F');
 
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(0, 'CANCELX', 'Paiement annulé', 'Paiement annulé', 100, 0, 'A', '2023-12-31', 'F');
+
 -- Cross ref table
 DROP TABLE IF EXISTS uac_xref_cohort_fsc;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_cohort_fsc` (
@@ -168,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL COMMENT 'Codification is for reference',
   `ref_fsc_id` INT NULL COMMENT 'When not null then related to ref frais de scolarite else it is a manual payment',
-  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) or R for Reversed',
+  `status` CHAR(1) NOT NULL DEFAULT 'N' COMMENT 'N as Not Paid or P as Paid or F as Filled (by manual payment)  or E for Excused (example for payment test or entretien but you are not new comer) or C for Cancelled',
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
   `input_amount` INT NOT NULL COMMENT 'Can be zero then it is engagement letter or free input then it is full manual',
@@ -428,3 +432,84 @@ CREATE TABLE IF NOT EXISTS uac_xref_payment_mvola (
   `mvola_id` BIGINT UNSIGNED NOT NULL,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`payment_id`, `mvola_id`));
+
+
+
+
+DROP VIEW IF EXISTS v_mvola_manager;
+CREATE VIEW v_mvola_manager AS
+SELECT
+	ulm.status AS STATUS_TRANSACTION,
+	ulm.transac_ref AS REF_TRANSACTION,
+	ulm.load_cra_date AS DATE_HEURE_TRANSACTION,
+	ulm.mvo_type AS TYPE_TRANSACTION,
+	ulm.load_amount AS MONTANT_TRANSACTION,
+	ulm.from_phone AS TELEPHONE_EXPEDITEUR,
+	ulm.to_phone AS TELEPHONE_DESTINATAIRE,
+	ulm.details_a AS DETAIL_A,
+	ulm.details_b AS DETAIL_B,
+	ulm.core_username AS USERNAME_LU,
+	 DATE_FORMAT(ulm.core_cra_datetime, "%d/%m/%Y %H:%i:%s") AS DATE_HEURE_TRANSACTION_LU,
+ 	 DATE_FORMAT(ulm.core_cra_datetime, "%d/%m/%Y") AS DATE_TRANSACTION_LU,
+	ulm.reject_reason AS RAISON_REJET,
+	umm.cra_filename AS NOM_FICHIER,
+	 DATE_FORMAT(umm.update_date, "%d/%m/%Y %H:%i:%s") AS DATE_HEURE_INTEGRATION,
+	 umm.core_balance_before AS SOLDE_FICHIER_AVANT,
+	 umm.core_balance_after AS SOLDE_FICHIER_APRES,
+	umm.phone_account AS TELEPHONE_COMPTE,
+	umm.account_name AS NOM_COMPTE,
+  CONCAT(
+    UPPER(IFNULL(ulm.transac_ref, '')),
+    UPPER(IFNULL(ulm.load_amount, '')),
+    UPPER(IFNULL(ulm.details_a, '')),
+    UPPER(IFNULL(ulm.details_b, '')),
+    UPPER(IFNULL(ulm.from_phone, '')),
+    UPPER(IFNULL(ulm.to_phone, ''))
+  ) AS raw_data
+FROM uac_mvola_master umm
+			JOIN uac_load_mvola ulm ON umm.id = ulm.master_id
+			ORDER BY STR_TO_DATE(ulm.load_cra_date,'%d/%m/%Y %H:%i:%s') DESC;
+
+DROP VIEW IF EXISTS v_all_pay;
+CREATE VIEW v_all_pay AS
+SELECT
+	  up.id AS UP_ID,
+	  up.payment_ref AS UP_PAYMENT_REF,
+	  UPPER(vsh.USERNAME) AS VSH_USERNAME,
+	  up.input_amount AS UP_INPUT_AMOUNT,
+	  DATE_FORMAT(up.pay_date, "%d/%m/%Y %H:%i:%s") AS UP_PAY_DATETIME,
+	  DATE_FORMAT(up.pay_date, "%d/%m/%Y") AS UP_PAY_DATE,
+	  up.status AS UP_STATUS,
+	  up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+	  up.comment AS UP_COMMENT,
+	  ref.code AS REF_CODE,
+	  ref.description AS REF_DESCRIPTION,
+	  ref.amount AS REF_AMOUNT,
+	  DATE_FORMAT(ref.deadline, "%d/%m/%Y") AS REF_DDL,
+	  vsh.SHORTCLASS AS VSH_SHORT_CLASS,
+	  vsh.FIRSTNAME AS VSH_FIRSTNAME,
+	  vsh.LASTNAME AS VSH_LASTNAME,
+	  vsh.MATRICULE AS VSH_MATRICULE,
+	  IFNULL(uml.transac_ref, '') AS MVO_TRANSACTION,
+	  IFNULL(uml.from_phone, '') AS MVO_FROM_PHONE,
+	  IFNULL(uml.details_a, '') AS MVO_DETAILS_A,
+	  IFNULL(ufp.ticket_ref, '') AS UFP_TICKET,
+	  IFNULL(ufp.red_pc, '0') AS UFP_POURCENTAGE_REDUCTION,
+	  IFNULL(ufp.status, '') AS UFP_STATUS,
+    CONCAT(
+      UPPER(IFNULL(up.payment_ref, '')),
+      UPPER(IFNULL(vsh.USERNAME, '')),
+      UPPER(IFNULL(up.input_amount, '')),
+      UPPER(IFNULL(up.type_of_payment, '')),
+      UPPER(IFNULL(ref.code, '')),
+      UPPER(IFNULL(vsh.FIRSTNAME, '')),
+      UPPER(IFNULL(vsh.LASTNAME, '')),
+      UPPER(IFNULL(vsh.SHORTCLASS, '')),
+      UPPER(IFNULL(vsh.MATRICULE, ''))
+    ) AS raw_data
+	FROM uac_payment up JOIN v_showuser vsh ON up.user_id = vsh.ID
+							 JOIN uac_ref_frais_scolarite ref ON ref.id = up.ref_fsc_id
+							 		LEFT JOIN uac_xref_payment_mvola xref ON xref.payment_id = up.id
+							 	 	LEFT JOIN uac_mvola_line uml ON uml.id = xref.mvola_id
+							 	 	LEFT JOIN uac_facilite_payment ufp ON ufp.id = up.facilite_id
+							 ORDER BY up.pay_date DESC;

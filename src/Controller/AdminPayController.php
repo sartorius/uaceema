@@ -39,7 +39,7 @@ class AdminPayController extends AbstractController
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
         // Get All USERNAME
-        $refpay_query = " SELECT * FROM uac_ref_frais_scolarite WHERE code NOT IN ('UNUSEDM') ORDER BY fs_order ASC; ";
+        $refpay_query = " SELECT * FROM uac_ref_frais_scolarite WHERE code NOT IN ('UNUSEDM', 'CANCELX') ORDER BY fs_order ASC; ";
 
         $logger->debug("Show me allusrn_query: " . $refpay_query);
         $dbconnectioninst = DBConnectionManager::getInstance();
@@ -1179,5 +1179,90 @@ class AdminPayController extends AbstractController
                     "short_err"=>$short_err);
 
     }
+
+
+  public function managermvo(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("scale_right: " . $scale_right);
+
+    if(isset($scale_right) && ($scale_right > 50)){
+
+
+        
+
+        $query_all_mvo = " SELECT * FROM v_mvola_manager; ";
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        $logger->debug("query_all_edt: " . $query_all_mvo);
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_all_mvo = $dbconnectioninst->query($query_all_mvo)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me query_all_mvo: " . count($result_all_mvo));
+
+        $content = $twig->render('Admin/PAY/managermvo.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'all_mvo' => $result_all_mvo,
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+  public function managerpay(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("scale_right: " . $scale_right);
+
+    if(isset($scale_right) && ($scale_right > 50)){
+
+
+        
+
+        $query_all_pay = " SELECT * FROM v_all_pay; ";
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        $logger->debug("query_all_edt: " . $query_all_pay);
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_all_pay = $dbconnectioninst->query($query_all_pay)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me query_all_mvo: " . count($result_all_pay));
+
+        $content = $twig->render('Admin/PAY/managerpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'all_pay' => $result_all_pay,
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
 
 }

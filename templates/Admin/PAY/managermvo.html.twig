@@ -1,11 +1,11 @@
 {% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
-{% if all_pay is defined and all_pay is not null %}
+{% if all_mvo is defined and all_mvo is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
-    let dataAllPAYToJsonArray = JSON.parse('{{ all_pay | json_encode | raw }}');
+    let dataAllMVOToJsonArray = JSON.parse('{{ all_mvo | json_encode | raw }}');
     // We init here the filter value
-	let filtereddataAllPAYToJsonArray = Array.from(dataAllPAYToJsonArray);
+	let filteredDataAllMVOToJsonArray = Array.from(dataAllMVOToJsonArray);
     // Create our number formatter.
     const formatterCurrency = new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -24,18 +24,18 @@
 {% else %}
     // Error
     <script>
-      let dataAllPAYToJsonArray = "";
+      let dataAllMVOToJsonArray = "";
     </script>
 {% endif %}
 
 
-<div id="mg-graph-identifier">man-pay</div>
+<div id="mg-graph-identifier">man-mvo</div>
 
 <div class="row">
   <div class="col-1">
   </div>
   <div class="col-10">
-    <h2>Manager Paiement Réduction</h2>
+    <h2>Manager Mvola</h2>
     <hr>
   </div>
   <div class="col-1">
@@ -46,16 +46,16 @@
   </div>
 
   <div class="col-2 fil-el">
-    <textarea class="form-control" rows="1" id="filter-all-pay" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+    <textarea class="form-control" rows="1" id="filter-all-mvo" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
   <div class="col-1 fil-el">
-    <button id="re-init-dash-pay" type="button" class="btn btn-md btn-block btn-default">
+    <button id="re-init-dash-mvo" type="button" class="btn btn-md btn-block btn-default">
       <i class="icon-refresh"></i>
     </button>
   </div>
   <div class="col-1">
     
-    <button onclick="generateAllPayCSV()" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    <button onclick="generateAllMvolaCSV()" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
     
   </div>
   <div class="col-3">
@@ -73,7 +73,7 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <div id="jsGridAllPAY">
+    <div id="jsGridAllMVO">
     </div>
   </div>
   <div class="col-1">
@@ -82,29 +82,24 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="pay-details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="mvo-details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <strong>Référence de paiement :&nbsp;</strong><i id='title-pay-details'></i>
+        <strong>Référence:&nbsp;</strong><i id='title-mvo-details'></i>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class='popup-box-details'>
-            <i class="icon-files"></i>&nbsp;Détails Paiement
-            <br><br>
-            <div id='pay-details-txt'>
-            </div>
-            <hr>
             <i class="icon-mvola"></i>&nbsp;Détails Mvola
             <br><br>
-            <div id='pay-mvo-txt'>
+            <div id='mvo-details-txt'>
             </div>
             <hr>
-            <i class="icon-scissors"></i>&nbsp;Détails Réduction
+            <i class="icon-files"></i>&nbsp;Détails Fichier
             <br><br>
-            <div id='pay-red-txt'>
+            <div id='mvo-file-txt'>
             </div>
       </div>
       <div class="modal-footer">

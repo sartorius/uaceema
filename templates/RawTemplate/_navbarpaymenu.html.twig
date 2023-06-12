@@ -10,13 +10,13 @@
                 <a class="dropdown-item" href="/addpay"><span class="icon-vallet nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Créer paiement</span></a>
             {% endif %}
                 <hr>
-                <a class="dropdown-item" href="#"><span class="icon-files nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager paiement</span></a>
+                <a class="dropdown-item" href="/managerpay"><span class="icon-files nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager paiement</span></a>
                 <a class="dropdown-item" href="#"><span class="icon-pie-chart nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Dashboard paiement</span></a>
                 <hr>
             {% if (scale_right is defined) and (scale_right is not null) and ((scale_right == 51) or (scale_right > 99)) %}
                 <a class="dropdown-item" href="/loadmvo"><span class="icon-mvola nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Chargement Mvola</span></a>
             {% endif %}
-                <a class="dropdown-item" href="/addpay"><span class="icon-page-search nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager Mvola</span></a>
+                <a class="dropdown-item" href="/managermvo"><span class="icon-page-search nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager Mvola</span></a>
           </div>
         </li>
 {% endif %}

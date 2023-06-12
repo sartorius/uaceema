@@ -54,7 +54,7 @@ download - Herinirina Ratinahirana.jpg
 
 
 
--- INSERT INTO uac_assiduite_off (working_date, reason, day_code) VALUES ('2023-05-27', 'Prob connexion', DAYOFWEEK('2023-05-27'));
+-- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2022-10-04', DAYOFWEEK('2022-10-04'));
 
 select * from uac_load_scan where scan_date = '2022-11-23'
 
@@ -97,9 +97,7 @@ select distinct flow_code from uac_working_flow order by 1 desc;
 
 SELECT * FROM uac_assiduite_off;
 
--- INSERT INTO uac_assiduite_off (working_date, day_code, reason) VALUE ('2022-11-28', 1, 'Début activité');
-
--- INSERT INTO uac_assiduite_off (working_date, day_code, reason) VALUE ('2022-11-29', 2, 'Début activité');
+-- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2023-06-12', DAYOFWEEK('2023-06-12'));
 
 
 

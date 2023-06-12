@@ -1765,6 +1765,10 @@ textarea[name=inputRef] {
   font-size: var(--jsgrid-txt-sm);
 }
 
+.cell-ref-sm-center{
+  font-size: var(--jsgrid-txt-sm);
+  text-align: center;
+}
 .cell-ref-sm-hd{
   font-size: var(--jsgrid-txt-sm);
   color: white;
@@ -1777,6 +1781,9 @@ textarea[name=inputRef] {
   font-size: var(--jsgrid-txt-sm);
 }
 
+.gray-txt{
+  color: var(--main-gray-25);
+}
 
 .recap-lat{
   color: var(--main-gray-50);
@@ -2326,4 +2333,14 @@ img.part-img{
 }
 .focusClassBackground{
   background-color: var(--light-violet-10);
+}
+
+.popup-box-details{
+  padding: 20px;
+}
+
+
+.status-ok{
+  color: #035500;
+  font-weight: 800;
 }

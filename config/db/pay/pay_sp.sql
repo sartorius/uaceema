@@ -353,7 +353,7 @@ BEGIN
                   WHERE status = 'NEW';
 
         UPDATE uac_load_mvola SET
-                reject_reason = 'Header fichier',
+                reject_reason = 'En-tete fichier',
                 status = 'INV',
                 update_date = NOW()
                   WHERE status = 'INP' AND master_id = inv_master_id AND TRIM(transac_ref) = 'REFERENCE';

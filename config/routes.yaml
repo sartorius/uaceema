@@ -118,7 +118,6 @@ provinceint:
 alumni:
     path:       /alumni
     controller: App\Controller\AdminAlumniController::main
-
 refpay:
     path:       /refpay
     controller: App\Controller\AdminPayController::refpay
@@ -155,3 +154,9 @@ generateCertificatScoDB:
 checkandloadmvo:
     path:       /checkandloadmvo
     controller: App\Controller\AdminPayController::checkandloadmvo
+managermvo:
+    path:       /managermvo
+    controller: App\Controller\AdminPayController::managermvo
+managerpay:
+    path:       /managerpay
+    controller: App\Controller\AdminPayController::managerpay
