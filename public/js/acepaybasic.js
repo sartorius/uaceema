@@ -333,13 +333,13 @@ function loadAllPAYGrid(){
         },
         { name: "UFP_TICKET",
           title: "Ticket",
-          width: 40,
+          width: 45,
           type: "text",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-mono"
         },
         { name: "UP_ID",
-          title: "Détails",
+          title: "Voir",
           width: 20,
           type: "text",
           headercss: "cell-ref-sm-hd",
@@ -347,6 +347,17 @@ function loadAllPAYGrid(){
           itemTemplate: function(value, item) {
             //return value + '%';
             return '<button onclick="getRawPaymentDetail(' + value +  ')" class="btn btn-outline-dark"><i class="icon-eye"></i></button>';
+          }
+        },
+        { name: "PAGE",
+          title: "Go",
+          width: 20,
+          type: "text",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm-center",
+          itemTemplate: function(value, item) {
+            //return value + '%';
+            return '<button onclick="goToSTUFromPayMngr(\'' + value +  '\')" class="btn btn-dark"><i class="icon-arrow-right"></i></button>';
           }
         }
     ];
@@ -365,10 +376,10 @@ function loadAllPAYGrid(){
         sorting: true,
         paging: true,
         data: filtereddataAllPAYToJsonArray,
-        fields: refPayField,
+        fields: refPayField/*,
         rowClick: function(args){
             goToSTUFromPayMngr(args.item.PAGE);
-        }
+        }*/
     });
 }
 
