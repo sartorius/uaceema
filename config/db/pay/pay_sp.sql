@@ -213,14 +213,29 @@ END$$
 
 
 
--- Try to re-use this SP for Manual migration
+-- Use this SP to get the sum up of tranche
 DELIMITER $$
-DROP PROCEDURE IF EXISTS SRV_PAY_CRTPayForMvola$$
-CREATE PROCEDURE `SRV_PAY_CRTPayForMvola` (IN param_mvola_id BIGINT, IN param_amount INT, IN param_comment VARCHAR(45))
+DROP PROCEDURE IF EXISTS CLI_PAY_GetSumUpTranche$$
+CREATE PROCEDURE `CLI_PAY_GetSumUpTranche` (IN param_username CHAR(10))
 BEGIN
-    -- Identify first how much for the first available Tranche
-    -- Then loop undil all amount is given
-
+    -- Sum Up Tranche
+    SELECT * FROM (
+      SELECT
+        vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
+        FROM v_original_to_pay_for_user vop
+        LEFT JOIN uac_payment up ON vop.REF_ID = up.ref_fsc_id
+                                AND up.user_id = vop.VSH_ID
+                                AND up.type_of_payment = 'L'
+        WHERE vop.VSH_USERNAME = param_username
+        AND vop.TRANCHE_CODE NOT IN (
+            SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu
+            WHERE tvpu.VSH_USERNAME = param_username)
+            UNION  SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
+            FROM v_left_to_pay_for_user vpu  LEFT JOIN uac_payment up ON vpu.REF_ID = up.ref_fsc_id
+                                                                      AND up.user_id = vpu.VSH_ID
+                                                                      AND up.type_of_payment = 'L'
+            WHERE VSH_USERNAME = param_username
+    ) t ORDER BY t.URF_FS_ORDER ASC;
 
 END$$
 

@@ -1,0 +1,38 @@
+<hr>
+<i id='anchor-pay'></i>
+<div class="container carte-profile">
+    <div class="pr-title"><span class="icon-file-1 nav-icon-fa nav-text"></span>&nbsp;Écolage : reste à payer</div>
+    <div  class="mgs-note-warnprof">
+        <span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>
+        &nbsp;Sur un écran plus grand : ordinateur, tablette, vous aurez plus de détails que sur téléphone. L.E. indique "Lettre d'engagement"
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="jsGridSumPerTranche">
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+    <div class="pr-title"><span class="icon-files nav-icon-fa nav-text"></span>&nbsp;Écolage : historique</div>
+    <div  class="mgs-note-warnprof">
+        <span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>
+        &nbsp;Sur un écran plus grand : ordinateur, tablette, vous aurez plus de détails que sur téléphone. L.E. indique "Lettre d'engagement"<br>
+        Attention : des frais additionnel de {{ param_frais_mvola }}Ar sont pris sur chaque paiement Mvola qui sont une participation aux frais de retrait. Pour ne pas avoir à les payer, priviligiez le paiement en cash.<br>
+        Le dernier chargement des fichiers Mvola date du {{ result_last_mvola[0]['LAST_DATE'] }} à {{ result_last_mvola[0]['LAST_TIME'] }}. Si votre paiement a été fait après, il est possible qu'il ne soit pas encore affiché.
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="jsGridHisto">
+            </div>
+        </div>
+    </div>
+    <div class="row button-bottom">
+        <div class="col-lg-9">
+        </div>
+        <div class="col-lg-2">
+            <button type="button" class="btn btn-outline-dark btn-md btn-block go-to-top"><span class="icon-arrow-up nav-text"></span>&nbsp;Remonter&nbsp;<span class="icon-arrow-up nav-text"></span></button>
+        </div>
+        <div class="col-lg-1">
+        </div>
+    </div>
+</div>

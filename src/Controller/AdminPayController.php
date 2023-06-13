@@ -632,6 +632,7 @@ class AdminPayController extends AbstractController
           $logger->debug("Show me query_getleftoperation: " . $query_getleftoperation);
 
           //We retrieve here the left to be paid and original
+          /*
           $query_getsumpertranche = " SELECT * FROM (  "
                     . " SELECT vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER FROM v_original_to_pay_for_user vop "
                     . " LEFT JOIN uac_payment up ON vop.REF_ID = up.ref_fsc_id AND up.user_id = vop.VSH_ID AND up.type_of_payment = 'L' "
@@ -640,7 +641,8 @@ class AdminPayController extends AbstractController
                     . " SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER FROM v_left_to_pay_for_user vpu "
                     . " LEFT JOIN uac_payment up ON vpu.REF_ID = up.ref_fsc_id AND up.user_id = vpu.VSH_ID AND up.type_of_payment = 'L' "
                     . " WHERE VSH_USERNAME ='". $param_username . "') t ORDER BY t.URF_FS_ORDER ASC;";
-
+          */
+          $query_getsumpertranche = " CALL CLI_PAY_GetSumUpTranche('" . $param_username . "'); ";
           $logger->debug("Show me query_getsumpertranche: " . $query_getsumpertranche);
  
           //Be carefull if you have array of array

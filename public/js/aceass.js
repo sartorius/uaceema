@@ -1,3 +1,376 @@
+
+function loadHistoPayGrid(){
+  let refHistoPayField;
+
+  if(window.screen.availWidth < 1100){
+      refHistoPayField = [
+          { name: "REF_TITLE",
+            title: "Desc.",
+            type: "text",
+            width: 65,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+                if(item.UP_STATUS == 'N'){
+                    return '<i class="recap-mis">' + value + '</i>';
+                }
+                else{
+                  return value;
+                }
+              }
+          },
+          { name: "UP_INPUT_AMOUNT",
+            title: "Payé",
+            type: "number",
+            width: 60,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return formatterCurrency.format('0').replace("MGA", "AR");
+              }
+              else{
+                return formatterCurrency.format(value).replace("MGA", "AR");
+              }
+            }
+          },
+          { name: "UP_PAY_DATE_READ",
+            title: "Date",
+            type: "text",
+            width: 60,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return 'Attente';
+              }
+              else{
+                return value;
+              }
+            }
+          }
+      ];
+  }
+  else{
+    refHistoPayField = [
+          { name: "REF_TITLE",
+            title: "Description",
+            type: "text",
+            width: 70,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs"
+          },
+          { name: "UP_PAYMENT_REF",
+            title: "Réference",
+            type: "text",
+            width: 50,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm-mono",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return 'MANQUANT';
+              }
+              else{
+                return value;
+              }
+            }
+          },
+          { 
+          name: "UP_STATUS",
+          title: "Status",
+          type: "text",
+          width: 40,
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-xs",
+          itemTemplate: function(value, item) {
+              if(value == 'P'){
+                return '<i class="status-ok">Payé</i>';
+              }
+              else if(value == 'N'){
+                  return '<i class="recap-mis">Non payé</i>';
+              }
+              else if(value == 'E'){
+                  return '<i class="recap-ok">Dispensé</i>';
+              }
+              else{
+                return '<i class="recap-mis">Annulé</i>';
+              }
+            }
+          },
+          { name: "UP_INPUT_AMOUNT",
+            title: "Déja payé",
+            type: "number",
+            width: 60,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return formatterCurrency.format('0').replace("MGA", "AR");
+              }
+              else{
+                return formatterCurrency.format(value).replace("MGA", "AR");
+              }
+            }
+          },
+          { name: "UP_PAY_DATE_READ",
+            title: "Date paiement",
+            type: "text",
+            width: 60,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return 'Attente';
+              }
+              else{
+                return value;
+              }
+            }
+          },
+          { name: "UP_TYPE_OF_PAYMENT",
+            title: "Type",
+            type: "text",
+            width: 40,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return 'NA';
+              }
+              else if(value == 'C'){
+                return 'Cash';
+              }
+              else if(value == 'H'){
+                  return 'Chèque';
+              }
+              else if(value == 'T'){
+                  return 'Virement/TPE';
+              }
+              else if(value == 'M'){
+                  return 'Mvola';
+              }
+              else if(value == 'R'){
+                  return 'Réduction';
+              }
+              else if(value == 'L'){
+                  return 'L.E.';
+              }
+              else{
+                return 'Erreur 892B';
+              }
+            }
+          },
+          { name: "REF_AMOUNT",
+            title: "À payer",
+            type: "number",
+            width: 50,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == null){
+                return formatterCurrency.format('0').replace("MGA", "AR");
+              }
+              else{
+                return formatterCurrency.format(value).replace("MGA", "AR");
+              }
+            }
+          },
+          { name: "UP_COMMENT",
+            title: "Commentaire",
+            type: "number",
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs"
+          }
+      ];
+  }
+
+  $("#jsGridHisto").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucun paiement disponible ERR893PS",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: dataHistoPayToJsonArray,
+      fields: refHistoPayField 
+  });
+}
+
+
+function loadSumUpGrid(){
+  let refSumUpField;
+
+  if(window.screen.availWidth < 1100){
+        refSumUpField = [
+          { name: "DESCRIPTION",
+            title: "Tranche",
+            type: "text",
+            width: 65,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm"
+          },
+          { name: "REST_TO_PAY",
+            title: "Reste à payer",
+            type: "number",
+            width: 50,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          },
+          { name: "NEGATIVE_IS_LATE",
+            title: "Status",
+            type: "text",
+            width: 40,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              if(parseInt(value) < 0){
+                return '<i class="recap-mis">Retard</i>';
+              }
+              else{
+                return '<i class="status-ok">Attente</i>';
+              }
+            }
+          }
+      ];
+
+  }
+  else{
+        refSumUpField = [
+          { name: "DESCRIPTION",
+            title: "Tranche",
+            type: "text",
+            width: 65,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm"
+          },
+          { name: "TRANCHE_CODE",
+            title: "Code",
+            type: "text",
+            width: 35,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm-mono"
+          },
+          { name: "TRANCHE_AMOUNT",
+            title: "Montant",
+            type: "number",
+            width: 50,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          },
+          { name: "ALREADY_PAID",
+            title: "Déjà payé",
+            type: "number",
+            width: 50,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          },
+          { name: "REST_TO_PAY",
+            title: "Reste à payer",
+            type: "number",
+            width: 50,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          },
+          { name: "TRANCHE_DDL",
+            title: "Limite",
+            type: "text",
+            width: 40,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm"
+          },
+          { name: "NEGATIVE_IS_LATE",
+            title: "Status",
+            type: "text",
+            width: 40,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              if(parseInt(item.REST_TO_PAY) > 0){
+                  if(parseInt(value) < 0){
+                    return '<i class="recap-mis">en retard</i>';
+                  }
+                  else{
+                    return '<i class="status-ok">En attente</i>';
+                  }
+              }
+              else{
+                return '<i class="status-ok">Payé</i>';
+              }
+            }
+          },
+          { name: "COMMITMENT_LETTER",
+            title: "L.E.",
+            type: "text",
+            width: 30,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-sm",
+            itemTemplate: function(value, item) {
+              if(parseInt(item.REST_TO_PAY) > 0){
+                    if((parseInt(item.NEGATIVE_IS_LATE) < 0) && (value != 'N')){
+                      return '<i class="status-ok">Oui</i>';
+                    }
+                    else if (parseInt(item.NEGATIVE_IS_LATE) < 0){
+                      return '<i class="recap-mis">Non</i>';
+                    }
+                    else{
+                      return '';
+                    }
+              }
+              else{
+                return 'NA';
+              }
+            }
+          }
+      ];
+  }
+
+  $("#jsGridSumPerTranche").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucun paiement disponible ERR893PS",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: dataSumPerTrancheToJsonArray,
+      fields: refSumUpField 
+  });
+}
+
+
+
+
 function basicEncodeACE(str){
   return '' + str;
 }
@@ -1060,6 +1433,7 @@ function runStat(){
   }
 }
 
+// goToSTUFromDashAssiduite(args.item.PAGE);
 function goToSTUFromDashAssiduite(page){
   $("#read-stu-page").val(page);
   $("#mg-stu-page-form").submit();
@@ -1240,12 +1614,39 @@ $(document).ready(function() {
     });
 
     $("#scmenu-edt").click(function() {
-      console.log('You click on scmenu-edt');
+      //console.log('You click on scmenu-edt');
 
       document.getElementById('anchor-edt').scrollIntoView({
         behavior: 'smooth'
       });
     });
+    /****************************************************/
+    /****************************************************/
+    /****************** START : PAYMENT *****************/
+    /****************************************************/
+    /****************************************************/
+    if(PARAM_DOES_PAY_DISPLAY == 'Y'){
+      $("#scmenu-pay").click(function() {
+        document.getElementById('anchor-pay').scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+      loadSumUpGrid();
+      loadHistoPayGrid();
+
+      $(".go-to-top").click(function() {
+        document.getElementById('anchor-top').scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+      
+
+    }
+    /****************************************************/
+    /****************************************************/
+    /******************  END  : PAYMENT *****************/
+    /****************************************************/
+    /****************************************************/
   }
   else if($('#mg-graph-identifier').text() == 'dash-ass'){
     // Do nothing dash-ass

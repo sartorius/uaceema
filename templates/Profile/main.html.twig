@@ -1,6 +1,6 @@
 {% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
 {% set free_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
-
+<i id='anchor-top'></i>
 {% if recap_assiduites is defined and recap_assiduites is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
@@ -32,6 +32,17 @@
 {% if sp_result is defined and sp_result is not null %}
     <script>
       const modeIsJQ = "{{ modeIsJQ }}";
+      const PARAM_DOES_PAY_DISPLAY = "{{ param_does_pay_display }}";
+
+      const formatterCurrency = new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'MGA',
+
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+      });
+
       {% if modeIsJQ == 'Y' %}
           let dataLoadToJsonArray = JSON.parse('{{ sp_result | json_encode | raw }}');
           let myEDTArray = new Array();
@@ -52,6 +63,15 @@
           let dateArray = new Array();
           let techDateArray = new Array();
       {% endif %}
+
+      {% if param_does_pay_display == 'Y' %}
+          let dataSumPerTrancheToJsonArray = JSON.parse('{{ resultSumPerTranche | json_encode | raw }}');
+          let dataHistoPayToJsonArray = JSON.parse('{{ result_histo_pay | json_encode | raw }}');
+      {% else %}
+          let dataSumPerTrancheToJsonArray = new Array();
+          let dataHistoPayToJsonArray = new Array();
+      {% endif %}
+
     </script>
 {% else %}
     <script>
@@ -62,32 +82,28 @@
 
 <div id="mg-graph-identifier">ua-profile</div>
 
+<div class="row">
 {% if from_admin != 'N' %}
-      <div class="row">
         <div class="col-1">
         </div>
+        {# N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard - P : Payment Manager #}
         <div class="col-2">
           {% if from_admin == 'S' %}
               <a class="btn btn-outline-dark btn-sm btn-block" href="/managerstu" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;<span class="icon-user nav-text"></span>&nbsp;Dashboard étudiant</a>
-          {% endif %}
-          {% if from_admin == 'A' %}
+          {% elseif from_admin == 'A' %}
               <a class="btn btn-outline-dark btn-sm btn-block" href="/dashboardass" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;<span class="icon-user nav-text"></span>&nbsp;Dashboard assiduité</a>
+          {% else %}
+            {# Must be P #}
+              <a class="btn btn-outline-dark btn-sm btn-block" href="/managerpay" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;<span class="icon-user nav-text"></span>&nbsp;Manager paiement</a>
           {% endif %}
-
         </div>
-        {% include 'Profile/_profilemenubutton.html.twig' %}
-        <div class="col-8">
-        </div>
-      </div>
 {% else %}
-<div class="row">
-  <div class="col-sm-1">
-  </div>
-  {% include 'Profile/_profilemenubutton.html.twig' %}
-  <div class="col-sm-10">
-  </div>
-</div>
+        <div class="col-3">
+        </div>
 {% endif %}
+  {# Display here the shortcut to the page here #}
+  {% include 'Profile/_profilemenubutton.html.twig' %}
+</div>
 
 {# ************************************ used to be class="container" ************************************ #}
 <div class="container">
@@ -351,6 +367,12 @@
           {% include 'Profile/_navigationbutton.html.twig' %}
       {% endif %}
 {% endif %}
+
+
+{% if param_does_pay_display == 'Y' %}
+      {% include 'Profile/_paymentblock.html.twig' %}
+{% endif %}
+
 
 
 {% include 'RawTemplate/SPE/_footeredtpublic.html.twig' %}

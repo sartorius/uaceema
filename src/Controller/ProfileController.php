@@ -40,13 +40,23 @@ class ProfileController extends AbstractController
           // Dashboard Assiduite
           $from_admin = 'A';
     }
+    else if(isset($_POST["postfrompaymngr_page"])){
+          // Coming from payment manager
+          $page = $_POST["postfrompaymngr_page"];
+          // Coming from payment manager
+          $from_admin = 'P';
+    }
+    else{
+      //Do nothing
+    }
 
     $logger->debug("See from_admin: " . $from_admin);
-    // N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard
+    // N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard - P : Payment Manager
 
 
     if(strlen($page) < 11){
       // Error Code 404
+      $logger->debug("Went here (strlen(page) < 11) ");
       $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     else{
@@ -180,6 +190,77 @@ class ProfileController extends AbstractController
 
             }
 
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /******************************************************************  START PAYMENT  ************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+
+            $does_pay_display = " SELECT par_code FROM uac_param WHERE key_code = 'PAYDSHV'; ";
+            $result_does_pay_display = $dbconnectioninst->query($does_pay_display)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show does_pay_display: " . $result_does_pay_display[0]['par_code']);
+    
+            $param_does_pay_display = $result_does_pay_display[0]['par_code'];
+            if($param_does_pay_display == 'Y'){
+
+                // Get frais mvola
+                $param_frais_mvola = 0;
+                $frais_mvola = " SELECT amount AS FRAIS_RETRAIT_MVOLA FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA'; ";
+                $result_frais_mvola = $dbconnectioninst->query($frais_mvola)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show result_frais_mvola: " . $result_frais_mvola[0]['FRAIS_RETRAIT_MVOLA']);
+        
+                $param_frais_mvola = $result_frais_mvola[0]['FRAIS_RETRAIT_MVOLA'];
+
+                $last_mvola = " SELECT DATE_FORMAT(par_date, '%d/%m/%Y') AS LAST_DATE, par_time AS LAST_TIME FROM uac_param WHERE key_code = 'MVOLUPD'; ";
+                $result_last_mvola = $dbconnectioninst->query($last_mvola)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show result_last_mvola: " . $result_last_mvola[0]['LAST_DATE']);
+
+
+                $query_getpay = " SELECT * FROM v_histopayment_for_user vpu WHERE VSH_USERNAME = '" . $param_username . "' AND CONCAT(vpu.REF_TYPE, IFNULL(vpu.UP_PAYMENT_REF, '')) NOT IN ('T') ORDER BY REF_FS_ORDER, UP_PAY_DATE ASC; ";
+                $logger->debug("Show me query_getpay: " . $query_getpay);
+      
+                $query_getfrais = " SELECT * FROM v_histo_frais_for_user vpu WHERE VSH_USERNAME = '" . $param_username . "' ORDER BY REF_FS_ORDER, UP_PAY_DATE ASC; ";
+                $logger->debug("Show me query_getfrais: " . $query_getfrais);
+      
+                $query_getsumpertranche = " CALL CLI_PAY_GetSumUpTranche('" . $param_username . "'); ";
+                $logger->debug("Show me query_getsumpertranche: " . $query_getsumpertranche);
+      
+                //Be carefull if you have array of array
+                $dbconnectioninst = DBConnectionManager::getInstance();
+      
+                $result_pay = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
+                $result_frais = $dbconnectioninst->query($query_getfrais)->fetchAll(PDO::FETCH_ASSOC);
+                
+                $result_histo_pay = array();
+                if(count($result_frais) > 0){
+                  $result_histo_pay = array_merge($result_pay, $result_frais); 
+                }
+                else{
+                  $result_histo_pay = $result_pay;
+                }
+                $resultSumPerTranche = $dbconnectioninst->query($query_getsumpertranche)->fetchAll(PDO::FETCH_ASSOC);
+      
+                $logger->debug("Show me count result_histo_pay: " . count($result_histo_pay));
+                $logger->debug("Show me count resultSumPerTranche: " . count($resultSumPerTranche));
+            }
+            else{
+                $result_histo_pay = array();
+                $resultSumPerTranche = array();
+            }
+
+
+
+
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /******************************************************************   END PAYMENT   ************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
@@ -190,8 +271,13 @@ class ProfileController extends AbstractController
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
                                       "result_query_msg_ass"=>$result_query_msg_ass,
-                                      "result_list_bdaymonth"=>$result_list_bdaymonth/*,
+                                      "result_list_bdaymonth"=>$result_list_bdaymonth,/*,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two */
+                                      "param_does_pay_display"=>$param_does_pay_display,
+                                      "result_histo_pay"=>$result_histo_pay,
+                                      "resultSumPerTranche"=>$resultSumPerTranche,
+                                      "param_frais_mvola"=>$param_frais_mvola,
+                                      "result_last_mvola"=>$result_last_mvola
                                     ]);
       }
     }

@@ -170,7 +170,7 @@ function showPopUpPay(param){
     let detailsRed = '';
     $('#title-pay-details').html(param.UP_PAYMENT_REF);
     detailsMsg = detailsMsg + '<strong>Username &nbsp;:&nbsp;</strong>' + param.VSH_USERNAME + '<br>';
-    detailsMsg = detailsMsg + '<strong>Date heure paiement &nbsp;:&nbsp;</strong>' + param.UP_PAY_DATE + '<br>';
+    detailsMsg = detailsMsg + '<strong>Date heure paiement &nbsp;:&nbsp;</strong>' + param.UP_PAY_DATETIME + '<br>';
     detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.UP_INPUT_AMOUNT).replace("MGA", "AR") + '<br>';
     detailsMsg = detailsMsg + '<strong>Status &nbsp;:&nbsp;</strong>' + verboseStatusOfPayment(param.UP_STATUS) + '<br>';
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + verboseTypeOfPayment(param.UP_TYPE_OF_PAYMENT) + '<br>';
@@ -253,7 +253,7 @@ function verboseStatusOfPayment(value){
 
 function loadAllPAYGrid(){
 
-    refMvoField = [
+    refPayField = [
         { name: "UP_PAYMENT_REF",
           title: "Référence",
           type: "text",
@@ -280,7 +280,7 @@ function loadAllPAYGrid(){
           }
         },
         { name: "UP_PAY_DATE",
-          title: "Date Heure",
+          title: "Date",
           type: "text",
           width: 50,
           headercss: "cell-ref-sm-hd",
@@ -354,7 +354,7 @@ function loadAllPAYGrid(){
     $("#jsGridAllPAY").jsGrid({
         height: "auto",
         width: "100%",
-        noDataContent: "Aucun Mvola disponible",
+        noDataContent: "Aucun paiement disponible",
         pageIndex: 1,
         pageSize: 50,
         pagePrevText: "Prec",
@@ -365,14 +365,18 @@ function loadAllPAYGrid(){
         sorting: true,
         paging: true,
         data: filtereddataAllPAYToJsonArray,
-        fields: refMvoField,
+        fields: refPayField,
         rowClick: function(args){
-              //showPopUpMvola(args.item);
+            goToSTUFromPayMngr(args.item.PAGE);
         }
     });
 }
 
-
+// goToSTUFromDashAssiduite(args.item.PAGE);
+function goToSTUFromPayMngr(page){
+    $("#read-stu-page").val(page);
+    $("#mg-stu-page-form").submit();
+  }
 
 
 /***********************************************************************************************************/
