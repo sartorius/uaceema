@@ -144,7 +144,7 @@ function initAllPAYGrid(){
 */
 function getAllPAYToJsonArrayId(val){
     for(let i=0; i<dataAllPAYToJsonArray.length; i++){
-        if(dataAllPAYToJsonArray[i].UP_ID === val){
+        if(dataAllPAYToJsonArray[i].UP_ID == val){
             return i;
         }
     }
