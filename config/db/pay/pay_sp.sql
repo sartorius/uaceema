@@ -461,7 +461,7 @@ BEGIN
         /************************************************************************************/
         -- We need to handle debit and frais
         -- Unique Credit here
-        INSERT INTO uac_mvola_line (
+        INSERT IGNORE INTO uac_mvola_line (
           id,
           status,
           master_id,
