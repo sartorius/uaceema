@@ -253,7 +253,7 @@ h2 {
   color: var(--main-ace-color);
   padding-right: 40px;
   padding-bottom: 10px;
-  font-size: 1.0em;
+  font-size: 1em;
   font-weight: bold;
 }
 
@@ -287,7 +287,7 @@ h2 {
   margin-top: 30px;
   text-align: justify;
   color: #3C3C3C;
-  font-size: 1.0em;
+  font-size: 1em;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -2221,7 +2221,7 @@ img.part-img{
 }
 
 .pay-part-btn-txt{
-  font-size: 1.0em;
+  font-size: 1em;
 }
 .sm-btn-txt{
   font-size: 0.6em;
