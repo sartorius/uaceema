@@ -356,7 +356,6 @@ function loadAllPAYGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-center",
           itemTemplate: function(value, item) {
-            //return value + '%';
             return '<button onclick="goToSTUFromPayMngr(\'' + value +  '\')" class="btn btn-dark"><i class="icon-arrow-right"></i></button>';
           }
         }
