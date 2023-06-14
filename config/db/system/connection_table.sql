@@ -125,3 +125,13 @@ SELECT
 FROM mdl_user mu JOIN uac_studashboard_log usl ON usl.user_id = mu.id
                  LEFT JOIN mdl_user muadmin ON usl.admin_id = muadmin.id
 ORDER BY usl.create_date DESC;
+
+
+DROP VIEW IF EXISTS v_showadmin;
+CREATE VIEW v_showadmin AS
+SELECT mu.id AS mu_id,
+		mu.username,
+		mu.firstname,
+		mu.lastname,
+		ua.*
+FROM mdl_user mu JOIN uac_admin ua on mu.id = ua.id;

@@ -20,6 +20,7 @@ class AdminPayController extends AbstractController
 {
 
   private static $my_exact_access_right = 51;
+  private static $my_minimum_access_right = 49;
   // self::$my_exact_access_right
 
   public function refpay(Environment $twig, LoggerInterface $logger)
@@ -77,7 +78,7 @@ class AdminPayController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
-    // Must be exactly 21 or more than 99
+    // Must be exactly 21 or more than 99 
     if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
 
 
@@ -1194,7 +1195,7 @@ class AdminPayController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
-    if(isset($scale_right) && ($scale_right > 50)){
+    if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
 
 
         
@@ -1236,7 +1237,7 @@ class AdminPayController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
-    if(isset($scale_right) && ($scale_right > 50)){
+    if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
 
 
         
