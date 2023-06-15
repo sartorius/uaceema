@@ -570,7 +570,7 @@ GROUP BY
 DROP VIEW IF EXISTS v_dash_all_reduction;
 CREATE VIEW v_dash_all_reduction AS
 SELECT up.payment_ref AS UP_PAY_REF,
-		UPPER(vsh.USERNAME) AS VSH_USERNAME,
+		UPPER(VSH.USERNAME) AS VSH_USERNAME,
 		up.input_amount AS UP_AMOUNT,
 		up.type_of_payment AS UP_TYPE_OF_PAYMENT,
 		DATE_FORMAT(up.pay_date, "%d/%m/%Y") AS UP_PAY_DATE,
@@ -581,7 +581,7 @@ SELECT up.payment_ref AS UP_PAY_REF,
 		ufp.ticket_ref AS UFP_TICKET,
 		ufp.red_pc AS REDUCTION_PC
 		FROM uac_payment up
-JOIN v_showuser vsh ON vsh.ID = up.user_id
+JOIN v_showuser VSH ON VSH.ID = up.user_id
 JOIN uac_facilite_payment ufp ON ufp.id = up.facilite_id
 WHERE up.type_of_payment IN ('R', 'L') ORDER BY up.pay_date DESC;
 
@@ -600,5 +600,5 @@ SELECT
 	 vts.TRANCHE_CODE,
 	 vts.TRANCHE_DDL,
 	 vts.NEGATIVE_IS_LATE
-FROM v_dash_tech_sum_up_tranche vts JOIN v_showuser vsh ON vsh.ID = vts.VSH_ID
+FROM v_dash_tech_sum_up_tranche vts JOIN v_showuser VSH ON VSH.ID = vts.VSH_ID
 ORDER BY TRANCHE_DDL ASC
