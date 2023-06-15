@@ -1317,7 +1317,20 @@ class AdminPayController extends AbstractController
 
 
         $count_tranche_grid = " SELECT * FROM v_dash_sum_up_tranche_grid; ";
+        $logger->debug("Show count_tranche_grid: " . $count_tranche_grid);
         $result_count_tranche_grid = $dbconnectioninst->query($count_tranche_grid)->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $today_pv = " SELECT SUM(up.input_amount) AS TOD_AMOUNT, up.type_of_payment AS TOD_TYPE_OF_PAYMENT FROM uac_payment up WHERE up.type_of_payment NOT IN ('L', 'M') "
+                    . " AND up.pay_date > CURRENT_DATE GROUP BY up.type_of_payment; ";
+        $logger->debug("Show today_pv: " . $today_pv);
+        $result_today_pv = $dbconnectioninst->query($today_pv)->fetchAll(PDO::FETCH_ASSOC);
+
+        $today_nbr_check_pv = " SELECT COUNT(1) AS TOD_NBR_OF_CHECK FROM uac_payment up WHERE up.type_of_payment IN ('H') "
+                    . " AND up.pay_date > CURRENT_DATE GROUP BY up.type_of_payment; ";
+        $logger->debug("Show today_nbr_check_pv: " . $today_nbr_check_pv);
+        $result_today_nbr_check_pv = $dbconnectioninst->query($today_nbr_check_pv)->fetchAll(PDO::FETCH_ASSOC);
+        
 
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -1331,7 +1344,10 @@ class AdminPayController extends AbstractController
                                                                 "result_count_tranche_three"=>$result_count_tranche_three,
                                                                 "result_count_tranche_grid"=>$result_count_tranche_grid,
                                                                 "result_last_master_mvola"=>$result_last_master_mvola,
+                                                                "result_today_pv"=>$result_today_pv,
+                                                                "result_today_nbr_check_pv"=>$result_today_nbr_check_pv,
                                                                 'errtype' => '']);
+                                                                
 
     }
     else{

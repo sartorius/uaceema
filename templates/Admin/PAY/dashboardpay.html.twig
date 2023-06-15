@@ -58,6 +58,26 @@
     </script>
 {% endif %}
 
+{% if result_today_pv is defined and result_today_pv is not null %}
+  <script>
+    let dataTodayPVJsonArray =JSON.parse('{{ result_today_pv | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataTodayPVJsonArray = new Array();
+    </script>
+{% endif %}
+
+{% if result_today_nbr_check_pv is defined and result_today_nbr_check_pv is not null %}
+  <script>
+    let dataTodayNbrCheckPVJsonArray =JSON.parse('{{ result_today_nbr_check_pv | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataTodayNbrCheckPVJsonArray = new Array();
+    </script>
+{% endif %}
+
 
 
 <div id="mg-graph-identifier">dash-pay</div>
@@ -68,13 +88,45 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
-    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-secondary"><i class="icon-invoice"></i>&nbsp;Mvola</button>
-    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
+    <button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
+    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Tranche</button>
+    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-outline-dark"><i class="icon-invoice"></i>&nbsp;Mvola</button>
+    &nbsp;<button type="button" id="uac-ass-glb-csv" class="btn btn-outline-dark"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
   </div>
   <div class="col-1">
   </div>
 </div>
+
+<div class="row split-box">
+  <div class="col-1">
+  </div>
+  <div class="col-2 hd-1-pv">
+  Aujourd'hui :
+  </div>
+  <div class="col-2 cell-1-pv">
+    Réduction :<br>
+    Transfert/TPE :<br>
+    Solde Mvola :<br>
+  </div>
+  <div class="col-2 cell-1-pv">
+    <i id="disp-pv-red" class="line-pv-res">na</i><br>
+    <i id="disp-pv-ttp" class="line-pv-res">na</i><br>
+    <i id="disp-pv-smv" class="line-pv-res">na</i><br>
+  </div>
+  <div class="col-2 cell-1-pv">
+    Cash :<br>
+    <i id="disp-pv-nbr-chq">0</i>&nbsp;Chèque(s) :<br>
+    <strong>Total :</strong><br>
+  </div>
+  <div class="col-2 cell-1-pv">
+    <i id="disp-pv-csh" class="line-pv-res">na</i><br>
+    <i id="disp-pv-chq" class="line-pv-res">na</i><br>
+    <i id="disp-pv-tot">na</i><br>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
 <div class="row">
     <div class="col-1">
     </div>
@@ -85,7 +137,7 @@
         </div>
     </div>
     <div class="col-4">
-        <h2>Solde Mvola :&nbsp;&nbsp;&nbsp;&nbsp;<i id='solde-mvola'></i></h2>
+        <h2>Mvola</h2>
         <hr>
         <div id="jsGridMvola">
         </div>
@@ -115,6 +167,7 @@
   </div>
 </div>
 
+{#
 <div class="row">
   <div class="col-1">
   </div>
@@ -132,6 +185,7 @@
   <div class="col-1">
   </div>
 </div>
+#}
 
 
 {% include 'RawTemplate/SPE/_footer.dashpay.w.jsgrid.mgchart.html.twig' %}

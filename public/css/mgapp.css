@@ -2366,3 +2366,23 @@ img.part-img{
   margin-left: 2em;
   margin-right: 2em;
 }
+
+.hd-1-pv{
+  text-align: right;
+  font-size: 2em;
+  color: var(--light-violet-80);
+}
+.cell-1-pv{
+  text-align: right;
+}
+
+.split-box{
+  border: solid var(--light-violet-80);
+  border-width: 0 0 1px 0;
+  padding-bottom: 1.5em;
+  margin-bottom: 2.5em;
+}
+
+.line-pv-res{
+  color: #0000d3;
+}

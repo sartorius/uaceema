@@ -247,7 +247,6 @@ function runStatDashboardPay(){
 
     //Corlor
     let backgroundColorRefAlt2 = [
-        '#eeccff',
         '#e6b3ff',
         '#dd99ff',
         '#e6ffcc',
@@ -270,7 +269,6 @@ function runStatDashboardPay(){
         '#ffffcc'
     ];
     let borderColorRefAlt2 = [
-        '#660099',
         '#550080',
         '#440066',
         '#408000',
@@ -385,10 +383,41 @@ $(document).ready(function() {
     if($('#mg-graph-identifier').text() == 'dash-pay'){
       // Do something
       console.log('in dash-pay');
-      $('#solde-mvola').html(formatterCurrency.format(SOLDE_MVOLA).replace("MGA", "AR"));
+      $('#disp-pv-smv').html(formatterCurrency.format(SOLDE_MVOLA).replace("MGA", "AR"));
       loadConcatMvola();
       loadConcatTranche();
       runStatDashboardPay();
+
+      let totalCashCheck = 0;
+
+      // dataTodayNbrCheckPVJsonArray dataTodayPVJsonArray
+      for(let i=0; i<dataTodayPVJsonArray.length ; i++){
+        if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'C'){
+            $('#disp-pv-csh').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+        }
+        else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'H'){
+            $('#disp-pv-chq').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+        }
+        else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'R'){
+            $('#disp-pv-red').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+        }
+        else{
+            // Else it must be T
+            $('#disp-pv-ttp').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+        }
+      }
+
+      if(totalCashCheck > 0){
+        $('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
+      }
+
+      if(dataTodayNbrCheckPVJsonArray.length == 1){
+        $('#disp-pv-nbr-chq').html(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK);
+      }
+      
+
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){
       // Do something
