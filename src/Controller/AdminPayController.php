@@ -1268,4 +1268,77 @@ class AdminPayController extends AbstractController
     return new Response($content);
   }
 
+  public function dashboardpay(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+
+    $logger->debug("scale_right: " . $scale_right);
+
+    if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+
+        
+
+        $logger->debug("Firstname: " . $_SESSION["firstname"]);
+        $query_concat_mvola = " SELECT * FROM v_dash_concat_mvola; ";
+
+        $logger->debug("query_all_edt: " . $query_concat_mvola);
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_concat_mvola = $dbconnectioninst->query($query_concat_mvola)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_concat_mvola: " . count($result_concat_mvola));
+
+        $last_mvola = " SELECT DATE_FORMAT(par_date, '%d/%m/%Y') AS LAST_DATE, par_time AS LAST_TIME FROM uac_param WHERE key_code = 'MVOLUPD'; ";
+        $result_last_mvola = $dbconnectioninst->query($last_mvola)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show result_last_mvola: " . $result_last_mvola[0]['LAST_DATE']);
+
+        $last_master_mvola = " SELECT * FROM uac_mvola_master ORDER BY id DESC LIMIT 1; ";
+        $logger->debug("Show last_master_mvola: " . $last_master_mvola);
+        $result_last_master_mvola = $dbconnectioninst->query($last_master_mvola)->fetchAll(PDO::FETCH_ASSOC);
+
+        $count_tranche_one = " SELECT * FROM v_dash_sum_up_tranche_grid WHERE TRANCHE = 'Tranche 1'; ";
+        $logger->debug("Show count_tranche_one: " . $count_tranche_one);
+        $result_count_tranche_one = $dbconnectioninst->query($count_tranche_one)->fetchAll(PDO::FETCH_ASSOC);
+
+        $count_tranche_two = " SELECT * FROM v_dash_sum_up_tranche_grid WHERE TRANCHE = 'Tranche 2'; ";
+        $logger->debug("Show count_tranche_two: " . $count_tranche_two);
+        $result_count_tranche_two = $dbconnectioninst->query($count_tranche_two)->fetchAll(PDO::FETCH_ASSOC);
+
+        $count_tranche_three = " SELECT * FROM v_dash_sum_up_tranche_grid WHERE TRANCHE = 'Tranche 3'; ";
+        $logger->debug("Show count_tranche_three: " . $count_tranche_three);
+        $result_count_tranche_three = $dbconnectioninst->query($count_tranche_three)->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+        $count_tranche_grid = " SELECT * FROM v_dash_sum_up_tranche_grid; ";
+        $result_count_tranche_grid = $dbconnectioninst->query($count_tranche_grid)->fetchAll(PDO::FETCH_ASSOC);
+
+        $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'result_concat_mvola' => $result_concat_mvola,
+                                                                "result_last_mvola"=>$result_last_mvola,
+                                                                "result_count_tranche_one"=>$result_count_tranche_one,
+                                                                "result_count_tranche_two"=>$result_count_tranche_two,
+                                                                "result_count_tranche_three"=>$result_count_tranche_three,
+                                                                "result_count_tranche_grid"=>$result_count_tranche_grid,
+                                                                "result_last_master_mvola"=>$result_last_master_mvola,
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
 }

@@ -70,7 +70,7 @@ function generateAllPayCSV(){
 
     link.href =  csvUrl;
     link.style = "visibility:hidden";
-    link.download = 'RapportGlobalMvola.csv';
+    link.download = 'RapportGlobalPaiement.csv';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

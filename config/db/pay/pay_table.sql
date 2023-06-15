@@ -517,3 +517,52 @@ SELECT
 							 	 	LEFT JOIN uac_mvola_line uml ON uml.id = xref.mvola_id
 							 	 	LEFT JOIN uac_facilite_payment ufp ON ufp.id = up.facilite_id
 							 ORDER BY up.pay_date DESC;
+
+
+/**************************************************************************************************/
+/**************************************************************************************************/
+/**************************************************************************************************/
+/*********************************         DASHBOARD        ***************************************/
+/**************************************************************************************************/
+/**************************************************************************************************/
+/**************************************************************************************************/
+
+DROP VIEW IF EXISTS v_dash_concat_mvola;
+CREATE VIEW v_dash_concat_mvola AS
+  SELECT SUM(core_amount) AS MVO_AMOUNT, to_phone AS TO_PHONE, order_direction AS ORDER_DIRECTION
+  FROM uac_mvola_line
+  GROUP BY to_phone, order_direction
+  ORDER BY SUM(core_amount) DESC;
+
+DROP VIEW IF EXISTS v_dash_tech_sum_up_tranche;
+CREATE VIEW v_dash_tech_sum_up_tranche AS
+SELECT * FROM (
+    SELECT
+      vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
+      FROM v_original_to_pay_for_user vop
+      LEFT JOIN uac_payment up ON vop.REF_ID = up.ref_fsc_id
+                              AND up.user_id = vop.VSH_ID
+                              AND up.type_of_payment = 'L'
+      WHERE CONCAT(vop.TRANCHE_CODE, vop.VSH_ID) NOT IN (
+          SELECT CONCAT(tvpu.TRANCHE_CODE, tvpu.VSH_ID) FROM v_left_to_pay_for_user tvpu
+          )
+          UNION  SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
+          FROM v_left_to_pay_for_user vpu  LEFT JOIN uac_payment up ON vpu.REF_ID = up.ref_fsc_id
+                                                                    AND up.user_id = vpu.VSH_ID
+                                                                    AND up.type_of_payment = 'L'
+  ) t ORDER BY t.URF_FS_ORDER ASC;
+
+DROP VIEW IF EXISTS v_dash_sum_up_tranche_grid;
+CREATE VIEW v_dash_sum_up_tranche_grid AS
+SELECT COUNT(1) AS COUNT_PART, SUM(vdt.REST_TO_PAY) AS TOTAL_AMOUNT,
+	CASE WHEN vdt.REST_TO_PAY = 0 THEN 'TOUT' WHEN vdt.REST_TO_PAY = vdt.TRANCHE_AMOUNT THEN 'RIEN' ELSE 'UNE PARTIE' END AS CATEGORY,
+	CASE WHEN vdt.TRANCHE_CODE IN ('L1T1XXX', 'L2L3T1X', 'M1M2T1X') THEN 'Tranche 1'
+			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche 2'
+			ELSE 'Tranche 3' END  AS TRANCHE
+	FROM v_dash_tech_sum_up_tranche vdt
+GROUP BY
+	CASE WHEN vdt.REST_TO_PAY = 0 THEN 'TOUT' WHEN vdt.REST_TO_PAY = vdt.TRANCHE_AMOUNT THEN 'RIEN' ELSE 'UNE PARTIE' END,
+	CASE WHEN vdt.TRANCHE_CODE IN ('L1T1XXX', 'L2L3T1X', 'M1M2T1X') THEN 'Tranche 1'
+			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche 2'
+			ELSE 'Tranche 3' END
+			ORDER BY TRANCHE, CATEGORY;

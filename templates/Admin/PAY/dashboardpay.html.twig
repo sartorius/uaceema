@@ -1,0 +1,137 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_concat_mvola is defined and result_concat_mvola is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataConcatMvolaJsonArray =JSON.parse('{{ result_concat_mvola | json_encode | raw }}');
+    // Create our number formatter.
+    const formatterCurrency = new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'MGA'
+    });
+    const SOLDE_MVOLA = "{{ result_last_master_mvola[0]['core_balance_after'] }}";
+
+  </script>
+{% else %}
+    <script>
+      let dataConcatMvolaJsonArray = "";
+    </script>
+{% endif %}
+
+
+{% if result_count_tranche_one is defined and result_count_tranche_one is not null %}
+  <script>
+    let dataCountTrancheOneJsonArray =JSON.parse('{{ result_count_tranche_one | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataCountTrancheOneJsonArray = "";
+    </script>
+{% endif %}
+{% if result_count_tranche_two is defined and result_count_tranche_two is not null %}
+  <script>
+    let dataCountTrancheTwoJsonArray =JSON.parse('{{ result_count_tranche_two | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataCountTrancheTwoJsonArray = "";
+    </script>
+{% endif %}
+{% if result_count_tranche_three is defined and result_count_tranche_three is not null %}
+  <script>
+    let dataCountTrancheThreeJsonArray =JSON.parse('{{ result_count_tranche_three | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataCountTrancheThreeJsonArray = "";
+    </script>
+{% endif %}
+
+
+{% if result_count_tranche_grid is defined and result_count_tranche_grid is not null %}
+  <script>
+    let dataCountTrancheGridJsonArray =JSON.parse('{{ result_count_tranche_grid | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataCountTrancheGridJsonArray = "";
+    </script>
+{% endif %}
+
+
+
+<div id="mg-graph-identifier">dash-pay</div>
+
+{# Message here if necessary #}
+<br>
+<div class="row report-banner">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <button type="button" id="uac-ass-glb-csv" class="btn btn-secondary"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
+    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-secondary"><i class="icon-invoice"></i>&nbsp;Mvola</button>
+    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+    <div class="col-1">
+    </div>
+    <div class="col-6">
+        <h2>Tranche</h2>
+        <hr>
+        <div id="jsGridTranche">
+        </div>
+    </div>
+    <div class="col-4">
+        <h2>Solde Mvola :&nbsp;&nbsp;&nbsp;&nbsp;<i id='solde-mvola'></i></h2>
+        <hr>
+        <div id="jsGridMvola">
+        </div>
+        <br><div class="mgs-note"><strong>Dernier chargement Mvola : </strong>{{ result_last_mvola[0]['LAST_DATE'] }} à {{ result_last_mvola[0]['LAST_TIME'] }}</div>
+    </div>
+    <div class="col-1">
+    </div>
+</div>
+<br><br>
+
+
+<div class="row count-tranche">
+  <div class="col-4">
+    <h2>Tranche 1 : a déjà payé</h2>
+    <hr>
+    <canvas id="trancheOne"></canvas>
+  </div>
+  <div class="col-4">
+    <h2>Tranche 2 : a déjà payé</h2>
+    <hr>
+    <canvas id="trancheTwo"></canvas>
+  </div>
+  <div class="col-4">
+    <h2>Tranche 3 : a déjà payé</h2>
+    <hr>
+    <canvas id="trancheThree"></canvas>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-5">
+    <h2>Réduction XXX</h2>
+    <hr>
+    <canvas id="statPieLate"></canvas>
+  </div>
+  <div class="col-5">
+    <h2>Lorem Ipsum</h2>
+    <hr>
+    <canvas id="statBarNoExit"></canvas>
+    <br><div class="mgs-note"><strong>Note</strong> xxx </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+{% include 'RawTemplate/SPE/_footer.dashpay.w.jsgrid.mgchart.html.twig' %}

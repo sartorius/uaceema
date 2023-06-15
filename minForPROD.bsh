@@ -7,6 +7,7 @@
 yui-compressor public/js/acestu.js > public/js/acestu.min.js;
 yui-compressor public/js/aceass.js > public/js/aceass.min.js;
 yui-compressor public/js/acepaybasic.js > public/js/acepaybasic.min.js;
+yui-compressor public/js/acedashpay.js > public/js/acedashpay.min.js;
 yui-compressor public/js/aceidentificationcommon.js > public/js/aceidentificationcommon.min.js;
 yui-compressor public/js/acepay.js > public/js/acepay.min.js;
 yui-compressor public/js/aceedt.js > public/js/aceedt.min.js;

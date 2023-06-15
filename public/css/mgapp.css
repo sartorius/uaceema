@@ -1814,6 +1814,10 @@ textarea[name=inputRef] {
   font-weight: 800;
 }
 
+.cell-warn{
+  color: #0000d3;
+}
+
 .cell-trace-hd{
   font-size: 14px;
   color: white;
@@ -2355,4 +2359,10 @@ img.part-img{
   padding-right: 10px;
   margin-left: 20px;
   margin-bottom: 10px;
+}
+
+.count-tranche{
+  margin-bottom: 2.5em;
+  margin-left: 2em;
+  margin-right: 2em;
 }

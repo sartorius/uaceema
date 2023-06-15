@@ -160,3 +160,6 @@ managermvo:
 managerpay:
     path:       /managerpay
     controller: App\Controller\AdminPayController::managerpay
+dashboardpay:
+    path:       /dashboardpay
+    controller: App\Controller\AdminPayController::dashboardpay
