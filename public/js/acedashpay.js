@@ -78,7 +78,9 @@ function printCloseOfBusinessPDF(title, paramArray){
   
     doc.save(filename);
   
-    $('#msg-alert').html('Le ticket .pdf a bien été généré');
+    $('#msg-alert').html('Le ticket ' + filename + '.pdf a bien été généré');
+    $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+    $('#ace-alert-msg').show(100);
 }
 
 
