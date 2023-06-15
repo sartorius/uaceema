@@ -1,4 +1,6 @@
 {% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
+
 {% if result_concat_mvola is defined and result_concat_mvola is not null %}
   <script>
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
@@ -10,6 +12,30 @@
       currency: 'MGA'
     });
     const SOLDE_MVOLA = "{{ result_last_master_mvola[0]['core_balance_after'] }}";
+
+
+    const paddChar = '.';
+    const maxLgTicket = 45;
+    const maxLgRecap = 18;
+    const maxPadLeft = 7;
+
+    let cobCashOfTheDay = 0;
+    let cobCheqOfTheDay = 0;
+    let cobVirmTpeOfTheDay = 0;
+    let cobReductionOfTheDay = 0;
+    let cobTotalOfTheDay = 0;
+
+    let cobNbrCheqOfTheDay = 0;
+
+    let cobArray = new Array();
+
+
+    let cobBenefitOfTheYear = 0;
+    let cobReductionOfTheYear = 0;
+
+    let cobSoldeMvola = 0;
+
+    let mvolaArray = new Array();
 
   </script>
 {% else %}
@@ -119,8 +145,8 @@
   <div class="col-10">
     <button type="button"  onclick="generateAllReductionCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
     &nbsp;<button type="button" onclick="generateAllTrancheCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Tranche</button>
-    &nbsp;<button type="button" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Mvola</button>
-    &nbsp;<button type="button" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
+    &nbsp;<button type="button" onclick="printCloseOfBusinessPDF('MVOLAXX', mvolaArray)" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Mvola</button>
+    &nbsp;<button type="button" onclick="printCloseOfBusinessPDF('CLOTURE', cobArray)" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Clôture journée</button>
   </div>
   <div class="col-1">
   </div>
@@ -160,7 +186,7 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row cell-bd-li">
     <div class="col-1">
     </div>
     <div class="col-6">
@@ -199,7 +225,7 @@
     <canvas id="trancheThree"></canvas>
   </div>
 </div>
-
+<img id="logo-carte" src="{{ path('main') }}img/logotext_black600x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >
 {#
 <div class="row">
   <div class="col-1">

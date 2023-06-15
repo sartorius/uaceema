@@ -2376,6 +2376,10 @@ img.part-img{
   text-align: right;
 }
 
+.cell-bd-li{
+  margin-bottom: 2.5em;
+}
+
 .split-box{
   border: solid var(--light-violet-80);
   border-width: 0 0 1px 0;

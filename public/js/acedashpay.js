@@ -1,3 +1,89 @@
+
+    /*
+      
+    let cobCashOfTheDay = 0;
+    let cobCheqOfTheDay = 0;
+    let cobVirmTpeOfTheDay = 0;
+    let cobReductionOfTheDay = 0;
+    let cobTotalOfTheDay = 0;
+
+
+    let cobBenefitOfTheYear = 0;
+    let cobReductionOfTheYear = 0;
+    let cobNbrCheqOfTheDay = 0;
+    let cobSoldeMvola = 0;
+      
+    */
+
+function renderAmount(param){
+    var len = param.toString().length;
+    var result = '';
+    var k = 0;
+    for(let i=0;i<len+1;i++){
+        result = param.toString().substr(len-i,1) + result;
+        if(k == 3){
+            result = '.' + result;
+            k = 0;
+        }
+        k++;
+    }
+    return result + '.AR';
+}
+
+function printCloseOfBusinessPDF(title, paramArray){
+
+    // Document of 210mm wide and 297mm high > A4
+    // new jsPDF('p', 'mm', [297, 210]);
+    // Here format A7
+    let doc = new jsPDF('p', 'mm', [(55 + (paramArray.length * 7)), 75]);
+  
+    doc.setFont("Courier");
+    doc.setFontType("bold");
+    doc.setTextColor(0, 0, 0);
+  
+  
+    doc.addImage(document.getElementById('logo-carte'), //img src
+                  'PNG', //format
+                  11, //x oddOffsetX is to define if position 1 or 2
+                  10, //y
+                  50, //Width
+                  16, null, 'FAST'); //Height // Fast is to get less big files
+
+
+    let today = new Date();
+    let tdate = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0');
+    let date = today.getDate().toString().padStart(2, '0')+'/'+(today.getMonth()+1).toString().padStart(2, '0')+'/'+today.getFullYear();
+    let time = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0') + ":" + today.getSeconds().toString().padStart(2, '0');
+    let ttime = today.getHours().toString().padStart(2, '0') + today.getMinutes().toString().padStart(2, '0') + today.getSeconds().toString().padStart(2, '0');
+    let dateTime = date+' à '+time;
+  
+    doc.setFontSize(10);
+    doc.text(7, 35, title + ' ' + dateTime);
+  
+    doc.setFontSize(7);
+    doc.setFontType("normal");
+    //doc.text(18, 25, "REDUCTION 50%");
+    let margTop = 59;
+    let contentHeight = 0;
+    doc.setFontSize(8);
+    for(let i=0; i<paramArray.length; i++){
+      contentHeight = margTop + (i*5);
+      doc.text(maxPadLeft, contentHeight, paramArray[i]);
+    }
+  
+    contentHeight = contentHeight + 40;
+    doc.setFontSize(5);
+    let filename = 'COB_' + title + '_' + tdate + ttime;
+    doc.text(5, contentHeight, "REF_Fich_" + filename + "_FRAIS");
+  
+    doc.save(filename);
+  
+    $('#msg-alert').html('Le ticket .pdf a bien été généré');
+}
+
+
+
+
 function generateAllTrancheCSV(){
     const csvContentType = "data:text/csv;charset=utf-8,";
     let csvContent = "";
@@ -500,26 +586,33 @@ $(document).ready(function() {
         if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'C'){
             $('#disp-pv-csh').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+            cobCashOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'H'){
             $('#disp-pv-chq').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+            cobCheqOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'R'){
             $('#disp-pv-red').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            cobReductionOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else{
             // Else it must be T
             $('#disp-pv-ttp').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+            cobVirmTpeOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
       }
 
       for(let i=0; i<dataYearRecapJsonArray.length; i++){
         if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'P'){
             $('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            cobBenefitOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
         else{
             $('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
       }
       
@@ -527,6 +620,7 @@ $(document).ready(function() {
 
       if(totalCashCheck > 0){
         $('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
+        cobTotalOfTheDay = parseInt(totalCashCheck);
       }
 
       if(dataTodayNbrCheckPVJsonArray.length == 1){
@@ -534,7 +628,31 @@ $(document).ready(function() {
         if(parseInt(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK) > 1){
             $('#orth-pv-nbr-chq').html('s');
         }
+        cobNbrCheqOfTheDay = parseInt(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK);
       }
+
+      cobArray.push('RECETTE.ANNEE....' + (renderAmount(cobBenefitOfTheYear.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('REDUCTION.ANNEE..' + (renderAmount(cobReductionOfTheYear.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('SOLDE.MVOLA......' + (renderAmount(SOLDE_MVOLA.toString())).padStart(maxLgRecap, paddChar));
+
+      cobArray.push('REDUCTION.AUJ....' + (renderAmount(cobReductionOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('CASH.AUJ.........' + (renderAmount(cobCashOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('CHEQUE.AUJ.......' + (renderAmount(cobCheqOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('NBR.CHEQUE.AUJ...' + (renderAmount(cobNbrCheqOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('VIR/TPE.AUJ......' + (renderAmount(cobVirmTpeOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('TOTAL.AUJ........' + (renderAmount(totalCashCheck.toString())).padStart(maxLgRecap, paddChar));
+
+
+      for(let i=0; i<dataConcatMvolaJsonArray.length; i++){
+        mvolaArray.push(dataConcatMvolaJsonArray[i].ORDER_DIRECTION + '....' + dataConcatMvolaJsonArray[i].TO_PHONE.padStart(10, '.') + '...' + renderAmount(dataConcatMvolaJsonArray[i].MVO_AMOUNT).padStart(maxLgRecap, paddChar));
+      }
+
+    /*  
+    for(let i=0; i<mvolaArray.length; i++){
+    console.log('Show: ' + mvolaArray[i]);
+    }
+    */
+      
       
 
     }
