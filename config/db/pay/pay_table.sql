@@ -566,3 +566,39 @@ GROUP BY
 			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche 2'
 			ELSE 'Tranche 3' END
 			ORDER BY TRANCHE, CATEGORY;
+
+DROP VIEW IF EXISTS v_dash_all_reduction;
+CREATE VIEW v_dash_all_reduction AS
+SELECT up.payment_ref AS UP_PAY_REF,
+		UPPER(vsh.USERNAME) AS VSH_USERNAME,
+		up.input_amount AS UP_AMOUNT,
+		up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+		DATE_FORMAT(up.pay_date, "%d/%m/%Y") AS UP_PAY_DATE,
+		VSH.FIRSTNAME AS VSH_FIRSTNAME,
+		VSH.LASTNAME AS VSH_LASTNAME,
+    VSH.MATRICULE AS VSH_MATRICULE,
+		VSH.SHORTCLASS AS VSH_SHORTCLASS,
+		ufp.ticket_ref AS UFP_TICKET,
+		ufp.red_pc AS REDUCTION_PC
+		FROM uac_payment up
+JOIN v_showuser vsh ON vsh.ID = up.user_id
+JOIN uac_facilite_payment ufp ON ufp.id = up.facilite_id
+WHERE up.type_of_payment IN ('R', 'L') ORDER BY up.pay_date DESC;
+
+DROP VIEW IF EXISTS v_dash_all_tranche;
+CREATE VIEW v_dash_all_tranche AS
+SELECT
+	VSH.FIRSTNAME AS VSH_FIRSTNAME,
+	VSH.LASTNAME AS VSH_LASTNAME,
+    VSH.MATRICULE AS VSH_MATRICULE,
+	VSH.SHORTCLASS AS VSH_SHORTCLASS,
+	 UPPER(VSH.USERNAME) AS VSH_USERNAME,
+	vts.ALREADY_PAID,
+	 vts.REST_TO_PAY,
+	 vts.DESCRIPTION,
+	 vts.TRANCHE_AMOUNT,
+	 vts.TRANCHE_CODE,
+	 vts.TRANCHE_DDL,
+	 vts.NEGATIVE_IS_LATE
+FROM v_dash_tech_sum_up_tranche vts JOIN v_showuser vsh ON vsh.ID = vts.VSH_ID
+ORDER BY TRANCHE_DDL ASC

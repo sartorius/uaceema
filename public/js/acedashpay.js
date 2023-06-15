@@ -1,3 +1,108 @@
+function generateAllTrancheCSV(){
+    const csvContentType = "data:text/csv;charset=utf-8,";
+    let csvContent = "";
+    let involvedArray = dataRepAllTrancheJsonArray;
+    const SEP_ = ";"
+
+	let dataString = "Username" + SEP_ 
+                    + "Matricule" + SEP_ 
+                    + "Prénom" + SEP_ 
+                    + "Nom" + SEP_ 
+                    + "Classe" + SEP_ 
+                    + "Description" + SEP_ 
+                    + "Code" + SEP_ 
+                    + "Déjà payé" + SEP_ 
+                    + "Reste à payer" + SEP_ 
+                    + "Montant tranche" + SEP_ 
+                    + "Date limite" + SEP_ 
+                    + "Jours de retard" + SEP_ + "\n";
+	csvContent += dataString;
+	for(let i=0; i<involvedArray.length; i++){
+
+            dataString = involvedArray[i].VSH_USERNAME + SEP_ 
+                + involvedArray[i].VSH_MATRICULE + SEP_ 
+                + involvedArray[i].VSH_FIRSTNAME + SEP_ 
+                + involvedArray[i].VSH_LASTNAME + SEP_ 
+                + involvedArray[i].VSH_SHORTCLASS + SEP_ 
+                + involvedArray[i].DESCRIPTION + SEP_ 
+                + involvedArray[i].TRANCHE_CODE + SEP_ 
+                + involvedArray[i].ALREADY_PAID + SEP_ 
+                + involvedArray[i].REST_TO_PAY + SEP_ 
+                + involvedArray[i].TRANCHE_AMOUNT + SEP_ 
+                + involvedArray[i].TRANCHE_DDL + SEP_ 
+                + involvedArray[i].NEGATIVE_IS_LATE + SEP_ ;
+            // easy close here
+            csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
+	}
+
+    //console.log('Click on csv');
+    let encodedUri = encodeURI(csvContent);
+    let csvData = new Blob([csvContent], { type: csvContentType });
+
+        let link = document.createElement("a");
+    let csvUrl = URL.createObjectURL(csvData);
+
+    link.href =  csvUrl;
+    link.style = "visibility:hidden";
+    link.download = 'RapportGlobalTrancheEtudiant.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+}
+
+function generateAllReductionCSV(){
+    const csvContentType = "data:text/csv;charset=utf-8,";
+    let csvContent = "";
+    let involvedArray = dataRepAllReductionJsonArray;
+    const SEP_ = ";"
+
+	let dataString = "Référence" + SEP_ 
+                    + "Username" + SEP_ 
+                    + "Montant" + SEP_ 
+                    + "Date de paiement" + SEP_ 
+                    + "Type de réduction" + SEP_ 
+                    + "Matricule" + SEP_ 
+                    + "Prénom" + SEP_ 
+                    + "Nom" + SEP_ 
+                    + "Classe" + SEP_ 
+                    + "Ticket" + SEP_ 
+                    + "Pourcentage réduction" + SEP_ + "\n";
+	csvContent += dataString;
+	for(let i=0; i<involvedArray.length; i++){
+
+            dataString = involvedArray[i].UP_PAY_REF + SEP_ 
+                + involvedArray[i].VSH_USERNAME + SEP_ 
+                + involvedArray[i].UP_AMOUNT + SEP_ 
+                + involvedArray[i].UP_PAY_DATE + SEP_ 
+                + (involvedArray[i].UP_TYPE_OF_PAYMENT == 'L' ? "Lettre engagement" : "Reduction") + SEP_ 
+                + involvedArray[i].VSH_MATRICULE + SEP_ 
+                + involvedArray[i].VSH_FIRSTNAME + SEP_ 
+                + involvedArray[i].VSH_LASTNAME + SEP_ 
+                + involvedArray[i].VSH_SHORTCLASS + SEP_ 
+                + involvedArray[i].UFP_TICKET + SEP_ 
+                + involvedArray[i].REDUCTION_PC + SEP_ ;
+            // easy close here
+            csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
+	}
+
+    //console.log('Click on csv');
+    let encodedUri = encodeURI(csvContent);
+    let csvData = new Blob([csvContent], { type: csvContentType });
+
+        let link = document.createElement("a");
+    let csvUrl = URL.createObjectURL(csvData);
+
+    link.href =  csvUrl;
+    link.style = "visibility:hidden";
+    link.download = 'RapportGlobalReduction.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+
 function loadConcatTranche(){
 
     let refConcatTrancheField = [
@@ -409,12 +514,26 @@ $(document).ready(function() {
         }
       }
 
+      for(let i=0; i<dataYearRecapJsonArray.length; i++){
+        if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'P'){
+            $('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+        }
+        else{
+            $('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+        }
+      }
+      
+
+
       if(totalCashCheck > 0){
         $('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
       }
 
       if(dataTodayNbrCheckPVJsonArray.length == 1){
         $('#disp-pv-nbr-chq').html(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK);
+        if(parseInt(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK) > 1){
+            $('#orth-pv-nbr-chq').html('s');
+        }
       }
       
 

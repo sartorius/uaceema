@@ -78,6 +78,35 @@
     </script>
 {% endif %}
 
+{% if result_rep_year_recap is defined and result_rep_year_recap is not null %}
+  <script>
+    let dataYearRecapJsonArray =JSON.parse('{{ result_rep_year_recap | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataYearRecapJsonArray = new Array();
+    </script>
+{% endif %}
+
+{% if result_rep_all_red is defined and result_rep_all_red is not null %}
+  <script>
+    let dataRepAllReductionJsonArray =JSON.parse('{{ result_rep_all_red | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataRepAllReductionJsonArray = new Array();
+    </script>
+{% endif %}
+
+{% if result_rep_all_tranche is defined and result_rep_all_tranche is not null %}
+  <script>
+    let dataRepAllTrancheJsonArray =JSON.parse('{{ result_rep_all_tranche | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataRepAllTrancheJsonArray = new Array();
+    </script>
+{% endif %}
 
 
 <div id="mg-graph-identifier">dash-pay</div>
@@ -88,10 +117,10 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
-    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-secondary"><i class="icon-file-text-o"></i>&nbsp;Tranche</button>
-    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-outline-dark"><i class="icon-invoice"></i>&nbsp;Mvola</button>
-    &nbsp;<button type="button" id="uac-ass-glb-csv" class="btn btn-outline-dark"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
+    <button type="button"  onclick="generateAllReductionCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
+    &nbsp;<button type="button" onclick="generateAllTrancheCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Tranche</button>
+    &nbsp;<button type="button" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Mvola</button>
+    &nbsp;<button type="button" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Recette journée</button>
   </div>
   <div class="col-1">
   </div>
@@ -100,28 +129,32 @@
 <div class="row split-box">
   <div class="col-1">
   </div>
-  <div class="col-2 hd-1-pv">
+  <div class="col-4 hd-1-pv">
   Aujourd'hui :
   </div>
   <div class="col-2 cell-1-pv">
-    Réduction :<br>
-    Transfert/TPE :<br>
-    Solde Mvola :<br>
+    Recette sur l'année :<br>
+    Réduction sur l'année :<br>
+    Réduction aujourd'hui :<br>
+    Compte courant Mvola :<br>
   </div>
-  <div class="col-2 cell-1-pv">
+  <div class="col-1 cell-1-pv">
+    <i id="disp-py-ben">na</i><br>
+    <i id="disp-py-red">na</i><br>
     <i id="disp-pv-red" class="line-pv-res">na</i><br>
-    <i id="disp-pv-ttp" class="line-pv-res">na</i><br>
-    <i id="disp-pv-smv" class="line-pv-res">na</i><br>
+    <i id="disp-pv-smv">na</i><br>
   </div>
   <div class="col-2 cell-1-pv">
     Cash :<br>
-    <i id="disp-pv-nbr-chq">0</i>&nbsp;Chèque(s) :<br>
+    <i id="disp-pv-nbr-chq">0</i>&nbsp;Chèque<i id="orth-pv-nbr-chq"></i> :<br>
+    Transfert/TPE :<br>
     <strong>Total :</strong><br>
   </div>
-  <div class="col-2 cell-1-pv">
+  <div class="col-1 cell-1-pv">
     <i id="disp-pv-csh" class="line-pv-res">na</i><br>
     <i id="disp-pv-chq" class="line-pv-res">na</i><br>
-    <i id="disp-pv-tot">na</i><br>
+    <i id="disp-pv-ttp" class="line-pv-res">na</i><br>
+    <i id="disp-pv-tot" class="line-pv-res">na</i><br>
   </div>
   <div class="col-1">
   </div>

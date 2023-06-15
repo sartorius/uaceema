@@ -1330,7 +1330,20 @@ class AdminPayController extends AbstractController
                     . " AND up.pay_date > CURRENT_DATE GROUP BY up.type_of_payment; ";
         $logger->debug("Show today_nbr_check_pv: " . $today_nbr_check_pv);
         $result_today_nbr_check_pv = $dbconnectioninst->query($today_nbr_check_pv)->fetchAll(PDO::FETCH_ASSOC);
+
+        $rep_year_recap = " SELECT SUM(up.input_amount) AS UP_AMOUNT, CASE WHEN up.type_of_payment = 'R' THEN 'R' ELSE 'P' END AS UP_TYPE_OF_PAYMENT FROM uac_payment up GROUP BY CASE WHEN up.type_of_payment = 'R' THEN 'R' ELSE 'P' END; ";
+        $logger->debug("Show rep_year_recap: " . $rep_year_recap);
+        $result_rep_year_recap = $dbconnectioninst->query($rep_year_recap)->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $rep_all_red = " SELECT * FROM v_dash_all_reduction; ";
+        $logger->debug("Show rep_all_red: " . $rep_all_red);
+        $result_rep_all_red = $dbconnectioninst->query($rep_all_red)->fetchAll(PDO::FETCH_ASSOC);
         
+        
+        $rep_all_tranche = " SELECT * FROM v_dash_all_tranche; ";
+        $logger->debug("Show rep_all_tranche: " . $rep_all_tranche);
+        $result_rep_all_tranche = $dbconnectioninst->query($rep_all_tranche)->fetchAll(PDO::FETCH_ASSOC);
 
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -1346,6 +1359,9 @@ class AdminPayController extends AbstractController
                                                                 "result_last_master_mvola"=>$result_last_master_mvola,
                                                                 "result_today_pv"=>$result_today_pv,
                                                                 "result_today_nbr_check_pv"=>$result_today_nbr_check_pv,
+                                                                "result_rep_all_red"=>$result_rep_all_red,
+                                                                "result_rep_year_recap"=>$result_rep_year_recap,
+                                                                "result_rep_all_tranche"=>$result_rep_all_tranche,
                                                                 'errtype' => '']);
                                                                 
 
