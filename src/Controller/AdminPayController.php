@@ -1302,6 +1302,11 @@ class AdminPayController extends AbstractController
         $logger->debug("Show last_master_mvola: " . $last_master_mvola);
         $result_last_master_mvola = $dbconnectioninst->query($last_master_mvola)->fetchAll(PDO::FETCH_ASSOC);
 
+        $get_solde_mvola = 0;
+        if(count($result_last_master_mvola) == 1){
+            $get_solde_mvola = $result_last_master_mvola[0]['core_balance_after'];
+        }
+
         $count_tranche_one = " SELECT * FROM v_dash_sum_up_tranche_grid WHERE TRANCHE = 'Tranche 1'; ";
         $logger->debug("Show count_tranche_one: " . $count_tranche_one);
         $result_count_tranche_one = $dbconnectioninst->query($count_tranche_one)->fetchAll(PDO::FETCH_ASSOC);
@@ -1356,7 +1361,7 @@ class AdminPayController extends AbstractController
                                                                 "result_count_tranche_two"=>$result_count_tranche_two,
                                                                 "result_count_tranche_three"=>$result_count_tranche_three,
                                                                 "result_count_tranche_grid"=>$result_count_tranche_grid,
-                                                                "result_last_master_mvola"=>$result_last_master_mvola,
+                                                                "get_solde_mvola"=>$get_solde_mvola,
                                                                 "result_today_pv"=>$result_today_pv,
                                                                 "result_today_nbr_check_pv"=>$result_today_nbr_check_pv,
                                                                 "result_rep_all_red"=>$result_rep_all_red,

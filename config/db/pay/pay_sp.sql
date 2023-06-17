@@ -259,7 +259,9 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
 
 
-
+-- This SP will pay the amount from MVOLA
+-- It will take first the Frai Mvola then pay Frais fixe
+-- Then pay Tranche 1, 2 and 3
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_CRAMvola$$
 CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_account_phone VARCHAR(20),
@@ -648,6 +650,7 @@ BEGIN
 
             -- ****************************************
             -- Perform the loop here for payment U here
+            -- xxx
             -- ****************************************
             SET i_u = 0;
                         WHILE (i_u < nbr_of_unpaid_u)

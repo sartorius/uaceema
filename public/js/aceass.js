@@ -62,7 +62,7 @@ function loadHistoPayGrid(){
             css: "cell-ref-xs"
           },
           { name: "UP_PAYMENT_REF",
-            title: "Réference",
+            title: "Ticket",
             type: "text",
             width: 50,
             headercss: "cell-ref-sm-hd",
@@ -163,7 +163,7 @@ function loadHistoPayGrid(){
             }
           },
           { name: "REF_AMOUNT",
-            title: "À payer",
+            title: "Ref.",
             type: "number",
             width: 50,
             align: "right",
