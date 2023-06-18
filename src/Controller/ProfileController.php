@@ -203,6 +203,14 @@ class ProfileController extends AbstractController
             $logger->debug("Show does_pay_display: " . $result_does_pay_display[0]['par_code']);
     
             $param_does_pay_display = $result_does_pay_display[0]['par_code'];
+
+            $does_pay_public = " SELECT par_code FROM uac_param WHERE key_code = 'PAYPUBL'; ";
+            $result_does_pay_public = $dbconnectioninst->query($does_pay_public)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show does_pay_public: " . $result_does_pay_public[0]['par_code']);
+    
+            $param_does_pay_public = $result_does_pay_public[0]['par_code'];
+
+
             if($param_does_pay_display == 'Y'){
 
                 // Get frais mvola
@@ -274,6 +282,7 @@ class ProfileController extends AbstractController
                                       "result_list_bdaymonth"=>$result_list_bdaymonth,/*,
                                       "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two */
                                       "param_does_pay_display"=>$param_does_pay_display,
+                                      "param_does_pay_public"=>$param_does_pay_public,
                                       "result_histo_pay"=>$result_histo_pay,
                                       "resultSumPerTranche"=>$resultSumPerTranche,
                                       "param_frais_mvola"=>$param_frais_mvola,

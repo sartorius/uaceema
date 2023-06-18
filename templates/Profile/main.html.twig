@@ -33,6 +33,8 @@
     <script>
       const modeIsJQ = "{{ modeIsJQ }}";
       const PARAM_DOES_PAY_DISPLAY = "{{ param_does_pay_display }}";
+      const PARAM_DOES_PAY_PUBLIC = "{{ param_does_pay_public }}";
+      const FROM_ADMIN = "{{ from_admin }}";
 
       const formatterCurrency = new Intl.NumberFormat('fr-FR', {
         style: 'currency',
@@ -369,10 +371,20 @@
 {% endif %}
 
 
+
+{# param_does_pay_public #}
+
+
 {% if param_does_pay_display == 'Y' %}
-      {% include 'Profile/_paymentblock.html.twig' %}
+            {% if from_admin != 'N' %}
+                    {# We are not public dashboard so we check if module is available #}
+                    {% include 'Profile/_paymentblock.html.twig' %}
+            {% else %}
+                    {# We are public dashboard so we have to check several value #}
+                    {% if param_does_pay_public == 'Y' %}
+                              {% include 'Profile/_paymentblock.html.twig' %}
+                    {% endif %}
+            {% endif %}
 {% endif %}
-
-
 
 {% include 'RawTemplate/SPE/_footeredtpublic.html.twig' %}

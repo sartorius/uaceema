@@ -67,6 +67,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 -- Payment
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite dashboard visible Y oui N non', NULL, 'Y');
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYPUBL', 'Frais de scolarite visible etudiant Y oui N non', NULL, 'Y');
 
 -- Daily Token for the Payment Date
 INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKPAYD', 'Token daily for payement TOKDAND Current Date');

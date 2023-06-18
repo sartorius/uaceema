@@ -51,7 +51,10 @@ download - Herinirina Ratinahirana.jpg
 - le Coordonnateur Général des Etudes (à lier à ionintsoa.rakotoniaina@gmail.com)
 - le Responsable du Développement des Partenariats, M. Jean Claude Rabarijaona (à lier à jeanclaude.brj@gmail.com)
 
-
+Vérifié que deleted
+id
+2	1	NUD	03/04/2023 14:58:05	1526014530	NULL	Transfert d argent	NULL	NULL	NULL	859000	NULL	0343132587	0344960000	NULL	NULL	1	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	1	NULL	Username user id introuvable	2023-04-18 02:05:54	2023-06-18 02:06:07
+3	1	NUD	03/04/2023 15:56:57	1527925135	NULL	Transfert d argent	NULL	NULL	NULL	859000	NULL	0345794807	0344960000	NULL	NULL	annissa	NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL	ANNISSA	NULL	Username user id introuvable	2023-04-18 02:05:54	2023-06-18 02:06:07
 
 
 -- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2022-10-04', DAYOFWEEK('2022-10-04'));

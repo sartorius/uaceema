@@ -1626,20 +1626,34 @@ $(document).ready(function() {
     /****************************************************/
     /****************************************************/
     if(PARAM_DOES_PAY_DISPLAY == 'Y'){
-      $("#scmenu-pay").click(function() {
-        document.getElementById('anchor-pay').scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
-      loadSumUpGrid();
-      loadHistoPayGrid();
+      let displayPayBlock = 'N';
+      if(FROM_ADMIN != 'N'){
+        // We display because we are from admin
+        displayPayBlock = 'Y';
+      }
+      else if(PARAM_DOES_PAY_PUBLIC == 'Y'){
+        // So in this case we are not admin but the block is public
+        displayPayBlock = 'Y';
+      }
+      else{
+        displayPayBlock = 'N';
+      };
 
-      $(".go-to-top").click(function() {
-        document.getElementById('anchor-top').scrollIntoView({
-          behavior: 'smooth'
+      if(displayPayBlock == 'Y'){
+        $("#scmenu-pay").click(function() {
+          document.getElementById('anchor-pay').scrollIntoView({
+            behavior: 'smooth'
+          });
         });
-      });
-      
+        loadSumUpGrid();
+        loadHistoPayGrid();
+  
+        $(".go-to-top").click(function() {
+          document.getElementById('anchor-top').scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      }
 
     }
     /****************************************************/
