@@ -36,6 +36,9 @@ partner:
 letsgetitstarted:
     path:       /letsgetitstarted
     controller: App\Controller\TutorialController::letsgetitstarted
+helpfraisdescolarite:
+    path:       /helpfraisdescolarite
+    controller: App\Controller\TutorialController::helpfraisdescolarite
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login

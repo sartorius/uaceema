@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
 
 class TutorialController extends AbstractController
 {
-
+  
   public function letsgetitstarted(Environment $twig)
   {
 
@@ -25,6 +25,18 @@ class TutorialController extends AbstractController
     //MailManager::sendSimpleEmail();
 
     $content = $twig->render('Tutorial/letsgetitstarted.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+  public function helpfraisdescolarite(Environment $twig)
+  {
+
+    $debug_session = "Pass variable to check";
+
+    // This email works !!
+    //MailManager::sendSimpleEmail();
+
+    $content = $twig->render('Tutorial/helpfraisdescolarite.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
 
     return new Response($content);
   }
