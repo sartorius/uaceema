@@ -4,6 +4,7 @@
 # mgapp plus utilise
 # yui-compressor public/js/mgapp.js > mgapp.min.js;
 
+yui-compressor public/js/acenecessary.js > public/js/acenecessary.min.js;
 yui-compressor public/js/acestu.js > public/js/acestu.min.js;
 yui-compressor public/js/aceass.js > public/js/aceass.min.js;
 yui-compressor public/js/acepaybasic.js > public/js/acepaybasic.min.js;
