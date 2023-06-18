@@ -1,4 +1,127 @@
 -- Use this SP to get the sum up of tranche
+-- Run in DEV : 166 sec // 2 min 46 sec
+DELIMITER $$
+DROP PROCEDURE IF EXISTS MAN_MIG_PrepareData$$
+CREATE PROCEDURE `MAN_MIG_PrepareData` ()
+BEGIN
+      -- INSERT INTO uac_load_eco_mig (load_line, load_matricule, load_name, load_t1, load_t2, load_t3, load_c4,load_niveau, temp_matricule_nbr, temp_matricule_mention) VALUES ();
+
+      /*
+      INSERT INTO uac_load_eco_mig (load_line, load_matricule, load_name, load_t1, load_t2, load_t3, load_c4, load_niveau, temp_matricule_nbr, temp_matricule_mention) VALUES ('1','1813/GE/IèA','RABEMANANTSOA Nomenjanahary Ronaldino','','','','2500000','L1','1813','GE');
+      select * from uac_load_eco_mig mig
+      where mig.load_matricule IN (
+      	select matricule from mdl_user
+      );
+      */
+
+      -- Retrieve the inset line in https://docs.google.com/spreadsheets/d/1yefDhp_5Gqk5r11iuHc1U1WL5yf314lk44vKI5ku7fc/edit?usp=sharing
+
+      UPDATE uac_load_eco_mig mig JOIN mdl_user mu ON mu.matricule = mig.load_matricule
+      		SET mig.core_user_id = mu.id,
+              mig.core_username =  mu.username,
+      				mig.status = 'FND'
+      		WHERE mig.status = 'NEW';
+
+
+      UPDATE uac_load_eco_mig mig JOIN mdl_user mu ON CONCAT(mig.temp_matricule_nbr, '/', mig.temp_matricule_mention) = substring_index(mu.matricule, '/', 2)
+      		SET mig.core_user_id = mu.id,
+              mig.core_username =  mu.username,
+      				mig.status = 'FND'
+      		WHERE mig.status = 'NEW';
+
+      -- Do the test again for the RID
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'RI'
+        WHERE mig.temp_matricule_mention = 'RID' AND mig.status = 'NEW';
+
+
+      -- Do the test again for the COM
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'CO'
+        WHERE mig.temp_matricule_mention = 'COM' AND mig.status = 'NEW';
+
+
+      -- Do the test again for the COM
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'DT'
+        WHERE mig.temp_matricule_mention = 'DTIV' AND mig.status = 'NEW';
+
+      -- Do the test again for the COM
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'DT', mig.temp_matricule_nbr = '1436'
+      WHERE mig.temp_matricule_nbr = '1436DT' AND mig.status = 'NEW';
+
+      -- Do the test again for the COM
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'GE', mig.temp_matricule_nbr = '2286'
+      WHERE mig.temp_matricule_nbr = '2286GE' AND mig.status = 'NEW';
+
+      -- Do the test again for the COM
+      UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'DT'
+        WHERE mig.temp_matricule_mention = 'DTV' AND mig.status = 'NEW';
+
+        -- Do the test again for the COM
+        UPDATE uac_load_eco_mig mig SET mig.temp_matricule_mention = 'DT'
+          WHERE mig.temp_matricule_mention = 'DTD' AND mig.status = 'NEW';
+
+
+      UPDATE uac_load_eco_mig mig JOIN mdl_user mu ON CONCAT(mig.temp_matricule_nbr, '/', mig.temp_matricule_mention) = substring_index(mu.matricule, '/', 2)
+      		SET mig.core_user_id = mu.id,
+              mig.core_username =  mu.username,
+      				mig.status = 'FND'
+      		WHERE mig.status = 'NEW';
+
+
+      -- UPDATE `table` SET `col_name` = REPLACE(`col_name`, ' ', '')
+      -- select field from table where field REGEXP '^-?[0-9]+$';
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************            READ THE AMOUNT            *********************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*****************************************************************************************************/
+      /*
+      -- RESET
+      UPDATE uac_load_eco_mig mig SET mig.core_t1 = NULL, mig.core_t2 = NULL, mig.core_t3 = NULL, mig.status = 'FND'
+      WHERE mig.status NOT IN ('NEW');
+
+      */
+
+
+      UPDATE uac_load_eco_mig mig SET mig.core_t1 = CAST(REPLACE(mig.load_t1, ' ', '') AS UNSIGNED), mig.status = 'AM1'
+      WHERE REPLACE(mig.load_t1, ' ', '') REGEXP '^-?[0-9]+$'
+      AND mig.load_t1 like '%00'
+      AND mig.status = 'FND';
+
+      UPDATE uac_load_eco_mig mig SET mig.core_t2 = CAST(REPLACE(mig.load_t2, ' ', '') AS UNSIGNED), mig.status = 'AM2'
+      WHERE REPLACE(mig.load_t2, ' ', '') REGEXP '^-?[0-9]+$'
+      AND mig.load_t2 like '%00'
+      AND mig.status IN ('AM1');
+
+      UPDATE uac_load_eco_mig mig SET mig.core_t3 = CAST(REPLACE(mig.load_t3, ' ', '') AS UNSIGNED), mig.status = 'AM3'
+      WHERE REPLACE(mig.load_t3, ' ', '') REGEXP '^-?[0-9]+$'
+      AND mig.load_t3 like '%00'
+      AND mig.status IN ('AM2');
+
+      UPDATE uac_load_eco_mig mig SET mig.status = 'TXT'
+      WHERE mig.status = 'FND';
+
+
+      -- We want to remove duplicate
+      UPDATE uac_load_eco_mig mig JOIN (
+        SELECT core_user_id FROM uac_load_eco_mig mig
+        WHERE core_user_id IS NOT NULL
+        GROUP BY core_user_id
+        HAVING COUNT(1) > 1
+      ) AS t2 ON mig.core_user_id = t2.core_user_id
+        SET mig.comment = CONCAT('Duplicat ', mig.status),
+        mig.status = 'DUP'
+        WHERE mig.status IN ('AM1', 'AM2', 'AM3');
+
+
+END$$
+
+
+-- Use this SP to get the sum up of tranche
 DELIMITER $$
 DROP PROCEDURE IF EXISTS MAN_MIG_GenPayTranche$$
 CREATE PROCEDURE `MAN_MIG_GenPayTranche` (IN param_mig_id BIGINT, IN param_amount_tag CHAR(3), IN param_amount INT)
@@ -165,7 +288,7 @@ END$$
 -- Run in DEV : 166 sec // 2 min 46 sec
 DELIMITER $$
 DROP PROCEDURE IF EXISTS MAN_MIG_LoopEcolageFile$$
-CREATE PROCEDURE `MAN_MIG_LoopEcolageFile` ()
+CREATE PROCEDURE `MAN_MIG_LoopEcolageFile` (IN param_limit INT)
 BEGIN
 
 
@@ -181,10 +304,10 @@ BEGIN
         DECLARE in_loop_amount      INT;
 
         SET i_e = 0;
-        SELECT COUNT(1) INTO nbr_of_line FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+        SELECT COUNT(1) INTO nbr_of_line FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3') AND id < param_limit;
 
         WHILE (i_e < nbr_of_line) DO
-          SELECT MIN(id) INTO param_mig_id FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+          SELECT MIN(id) INTO param_mig_id FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3') AND id < param_limit;
           -- Do the stuff here !
           -- CALL MAN_MIG_GenPayTranche (261, 'AM1', 1400000);
 

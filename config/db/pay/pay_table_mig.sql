@@ -24,6 +24,22 @@ CREATE TABLE IF NOT EXISTS uac_load_eco_mig (
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
+
+
+CALL MAN_MIG_PrepareData();
+SELECT MIN(id) FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+-- 3
+SELECT MAX(id) FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+-- 1211
+
+SELECT COUNT(1) FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+-- 781
+
+CALL MAN_MIG_LoopEcolageFile(100);
+-- 100
+
+
+
 -- INSERT INTO uac_load_eco_mig (load_line, load_matricule, load_name, load_t1, load_t2, load_t3, load_c4,load_niveau, temp_matricule_nbr, temp_matricule_mention) VALUES ();
 
 /*
@@ -140,7 +156,9 @@ UPDATE uac_load_eco_mig mig JOIN (
 
   SELECT * FROM uac_load_eco_mig mig where mig.status = 'DUP';
 
--- Then CALL MAN_MIG_LoopEcolageFile()
+CALL MAN_MIG_PrepareData();
+SELECT MAX(id) FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
+-- CALL MAN_MIG_LoopEcolageFile(XXX)
 
 SELECT * FROM uac_load_eco_mig WHERE status = 'TXT';
 SELECT * FROM uac_load_eco_mig WHERE status = 'EN1' AND load_t2 NOT IN ('');
