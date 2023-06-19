@@ -540,12 +540,12 @@ function showPopUpMvola(param){
     let detailsMsg = '';
     let detailsFile = '';
     $('#title-mvo-details').html(param.REF_TRANSACTION);
-    detailsMsg = detailsMsg + '<strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '<br>';
-    detailsMsg = detailsMsg + '<strong>Date heure de transaction lu &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION_LU + '<br>';
+    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '</i><br>';
+    detailsMsg = detailsMsg + '<strong>Date heure de transaction lu &nbsp;:&nbsp;</strong>' + (param.DATE_HEURE_TRANSACTION_LU == null ? 'NA' : param.DATE_HEURE_TRANSACTION_LU) + '<br>';
     detailsMsg = detailsMsg + '<strong>Status &nbsp;:&nbsp;</strong>' + verboseStatus(param.STATUS_TRANSACTION) + '<br>';
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + param.TYPE_TRANSACTION + '<br>';
-    detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '<br>';
-    detailsMsg = detailsMsg + '<strong>Expéditeur &nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '<br>';
+    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '</i><br>';
+    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '</i><br>';
     detailsMsg = detailsMsg + '<strong>Destinataire &nbsp;:&nbsp;</strong>' + param.TELEPHONE_DESTINATAIRE + '<br>';
     detailsMsg = detailsMsg + '<strong>Libellé envoi &nbsp;:&nbsp;</strong>' + param.DETAIL_A + '<br>';
     detailsMsg = detailsMsg + '<strong>Username lu &nbsp;:&nbsp;</strong>' + (param.USERNAME_LU == null ? 'NA' : param.USERNAME_LU) + '<br>';
@@ -559,6 +559,15 @@ function showPopUpMvola(param){
     $('#mvo-details-txt').html(detailsMsg);
     $('#mvo-file-txt').html(detailsFile + "<br><br>");
     
+    //Check here if we can attribuer the payment
+    if((param.STATUS_TRANSACTION ==  'NUD') && (parseInt(param.MONTANT_TRANSACTION) > 0 )){
+      $('#assign-mvo').show(100);
+    }
+    else{
+      //We do nothing as we cannot attribuer the mvola
+      $('#assign-mvo').hide(100);
+    }
+
     $('#mvo-details-modal').modal('show');
 }
 
@@ -657,10 +666,97 @@ function loadAllMVOGrid(){
         data: filteredDataAllMVOToJsonArray,
         fields: refMvoField,
         rowClick: function(args){
+              foundMvolaId = args.item.ULM_ID;
               showPopUpMvola(args.item);
         }
     });
 }
+
+function resetMvoAttribuer(){
+      $('#addpay-ace').val('');
+      $('#scan-mvo-input').show(100);
+      $('#ctrl-name').html('');
+      $('#last-read-bc').html('');
+      $("#btn-attmvo").hide(100);
+      $("#btn-canattmvo").hide(100);
+}
+
+function mngMvoPayUserExists(val){
+  for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
+    if (dataAllUSRNToJsonArray[i].USERNAME === val){
+      foundUserName = dataAllUSRNToJsonArray[i].USERNAME;
+
+      $('#addpay-ace').val('');
+      $('#scan-mvo-input').hide(100);
+      $('#ctrl-name').html('&nbspConfirmez : ' + dataAllUSRNToJsonArray[i].VSH_NAME + ' - ' + dataAllUSRNToJsonArray[i].CLASS);
+      $("#btn-attmvo").show(100);
+      $("#btn-canattmvo").show(100);
+      return true;
+    }
+  }
+  resetMvoAttribuer();
+  return false;
+}
+
+function verifyMvoContentScan(){
+
+  $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+  $('#ace-alert-msg').hide(100);
+  
+
+
+  if ($('#addpay-ace').val().length == 10){
+
+    let originalRedInput = $('#addpay-ace').val();
+    let readInput = $('#addpay-ace').val().replace(/[^a-z0-9]/gi,'').toUpperCase();
+    //console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
+
+    if(readInput.length < 10){
+      // We are on the wrong keyboard config as it must be 10
+      readInput = convertWordAZERTY(originalRedInput).replace(/[^a-z0-9]/gi,'').toUpperCase();
+    }
+
+    let scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;ERR91Format&nbsp;</i>';
+    // Here we check the format
+    if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
+      // Only if the read is clean
+
+      if(mngMvoPayUserExists(readInput)){
+        /********************************************************** FOUND **********************************************************/
+        scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
+        //Allow button enabled
+
+      }
+      else{
+        /******************************************************** NOT FOUND ********************************************************/
+        scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;Étudiant introuvable&nbsp;</i>';
+      }
+    }
+    else{
+        // If we are on the pay screen we need to do somthing
+        // We do not match a username
+    }
+
+    //console.log('We have read: ' + $('#addpay-ace').val());
+    $('#last-read-bc').html(readInput + scanValidToDisplay);
+
+    // Save for any internet issue here
+    //$("#btn-load-bc").show();
+
+
+
+  }
+  else if($('#addpay-ace').val().length > 10) {
+    // Great length
+    $('#addpay-ace').val('');
+    resetMvoAttribuer();
+
+  }
+  else {
+    //Do nothing
+  }
+}
+
 
 /***********************************************************************************************************/
 
@@ -672,6 +768,11 @@ $(document).ready(function() {
       console.log('in man-mvo');
       loadAllMVOGrid();
       initAllMVOGrid();
+      
+      // Do something
+      $( "#addpay-ace" ).keyup(function() {
+        verifyMvoContentScan();
+      });
     }
     else if($('#mg-graph-identifier').text() == 'man-pay'){
       // Do something

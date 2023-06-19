@@ -2400,7 +2400,7 @@ img.part-img{
 }
 
 .popup-box-details{
-  padding: 20px;
+  padding: 30px;
 }
 
 .status-ok{
@@ -2443,4 +2443,21 @@ img.part-img{
 
 .line-pv-res{
   color: #0000d3;
+}
+
+#assign-mvo{
+  margin-top: 2em;
+  margin-bottom: 2.5em;
+  display: none;
+}
+.pop-up-title{
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+#scan-mvo-btn{
+  margin-top: 20px;
+}
+#btn-attmvo,
+#btn-canattmvo{
+  display: none;
 }

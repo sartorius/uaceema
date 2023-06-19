@@ -66,7 +66,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('QUEASSI', 'Queue Assiduite', NULL, NULL);
 
 -- Payment
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite dashboard visible Y oui N non', NULL, 'Y');
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYDSHV', 'Frais de scolarite module visible Y oui N non', NULL, 'Y');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('PAYPUBL', 'Frais de scolarite visible etudiant Y oui N non', NULL, 'Y');
 
 -- Daily Token for the Payment Date
@@ -80,6 +80,13 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 -- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
 -- PROD
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
+
+
+
+
+-- Grade
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRADSHV', 'Notes module visible Y oui N non', NULL, 'Y');
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRAPUBL', 'Notes dashboard visible etudiant Y oui N non', NULL, 'Y');
 
 
 DROP TABLE IF EXISTS uac_working_flow;

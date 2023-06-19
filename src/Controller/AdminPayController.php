@@ -1195,10 +1195,10 @@ class AdminPayController extends AbstractController
 
     $logger->debug("scale_right: " . $scale_right);
 
-    if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+    if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
 
 
-        
+        $result_get_token = $this->getDailyTokenPayStr($logger);
 
         $query_all_mvo = " SELECT * FROM v_mvola_manager; ";
 
@@ -1210,12 +1210,19 @@ class AdminPayController extends AbstractController
         $result_all_mvo = $dbconnectioninst->query($query_all_mvo)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me query_all_mvo: " . count($result_all_mvo));
 
+        $allusrn_query = " SELECT vsh.ID AS ID, UPPER(vsh.USERNAME) AS USERNAME, CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME) AS VSH_NAME, vsh.SHORTCLASS AS CLASS FROM v_showuser vsh; ";
+        $logger->debug("Show me allusrn_query: " . $allusrn_query);
+        $result_all_usrn = $dbconnectioninst->query($allusrn_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_all_usrn: " . count($result_all_usrn));
+
         $content = $twig->render('Admin/PAY/managermvo.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'result_get_token'=>$result_get_token,
                                                                 'all_mvo' => $result_all_mvo,
+                                                                'result_all_usrn' => $result_all_usrn,
                                                                 'errtype' => '']);
 
     }

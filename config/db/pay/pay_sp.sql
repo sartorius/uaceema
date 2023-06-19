@@ -416,6 +416,19 @@ BEGIN
           SET uac_load_mvola.core_user_id = v_showuser.ID
           WHERE status = 'INP' AND master_id = inv_master_id;
 
+        -- We do not get here another introuvable for the same reference to avoid the user to create 2 lines
+        UPDATE uac_load_mvola ulmnew JOIN uac_load_mvola ulmold ON
+                                          ulmnew.transac_ref = ulmold.transac_ref
+                                          AND ulmnew.status = 'INP'
+                                          AND ulmnew.master_id = inv_master_id
+                                          AND ulmold.master_id NOT IN (inv_master_id)
+                                          AND ulmold.status = 'NUD'
+                SET
+                ulmnew.reject_reason = 'Duplicat - utilisateur introuvable',
+                ulmnew.status = 'DUP',
+                ulmnew.update_date = NOW()
+                  WHERE ulmnew.status = 'INP' AND ulmnew.master_id = inv_master_id;
+
         UPDATE uac_load_mvola SET
                 reject_reason = 'Username user id introuvable',
                 status = 'NUD',

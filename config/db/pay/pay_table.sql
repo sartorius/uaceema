@@ -441,7 +441,8 @@ CREATE TABLE IF NOT EXISTS uac_xref_payment_mvola (
 DROP VIEW IF EXISTS v_mvola_manager;
 CREATE VIEW v_mvola_manager AS
 SELECT
-	ulm.status AS STATUS_TRANSACTION,
+  ulm.id AS ULM_ID,
+  ulm.status AS STATUS_TRANSACTION,
 	ulm.transac_ref AS REF_TRANSACTION,
 	ulm.load_cra_date AS DATE_HEURE_TRANSACTION,
 	ulm.mvo_type AS TYPE_TRANSACTION,
