@@ -290,7 +290,7 @@ SELECT
       vsh2.COHORT_ID AS COHORT_ID
     FROM uac_payment up2 JOIN v_showuser vsh2 ON up2.user_id = vsh2.ID
     						  JOIN uac_ref_frais_scolarite ref2 ON ref2.id = up2.ref_fsc_id
-    						  					AND ref2.type IN ('F');
+    						  					AND ref2.type IN ('F', 'M') ORDER BY up2.pay_date ASC;
 
 
 
