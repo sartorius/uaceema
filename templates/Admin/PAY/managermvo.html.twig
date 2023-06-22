@@ -104,15 +104,15 @@
             <div id='assign-mvo'>
             <hr>
                 <div class='pop-up-title'><i class="icon-map-signs"></i>&nbsp;Attribuer ce paiement à un étudiant</div>
-                Confirmez les informations en bleu avant d'attribuer le Mvola. Rappelez-lui que des frais additionnels Mvola vont être prélevés automatiquement.
+                <i class="recap-mis"><span class="icon-exclamation-triangle nav-icon-fa nav-text"></span></i>&nbsp;Confirmez bien les informations en bleu avant d'attribuer le Mvola. Rappelez à l'étudiant que des frais additionnels Mvola vont être prélevés automatiquement.
                 <br>
                 <span class="icon-person nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-bc" class="mgs-addpay-lg"></i><br>
-                <i id='ctrl-name'></i>
+                
                 <div id='scan-mvo-input'>
                     <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
                 </div>
                 <div id='scan-mvo-btn'>
-                    <button onclick="do()" id='btn-attmvo' class="btn btn-lg btn-default btn-block">Attribuer</button>
+                    <button onclick="do()" id='btn-attmvo' class="btn btn-lg btn-default btn-block">Attribuer à <i id='ctrl-name'></i></button>
                     <button onclick="resetMvoAttribuer()" id='btn-canattmvo' class="btn btn-md btn-outline-dark btn-block">Annuler</button>
                 </div>
             </div>

@@ -145,6 +145,9 @@ generateDeleteRedDB:
 generatepaymentDB:
     path:       /generatepaymentDB
     controller: App\Controller\AdminPayController::generatepaymentDB
+generateattribuerMvoDB:
+    path:       /generateattribuerMvoDB
+    controller: App\Controller\AdminPayController::generateattribuerMvoDB
 getPaymentDetailsDB:
     path:       /getPaymentDetailsDB
     controller: App\Controller\AdminPayController::getPaymentDetailsDB

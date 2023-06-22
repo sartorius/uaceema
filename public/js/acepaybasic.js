@@ -1,4 +1,27 @@
 
+function generateAttribuerMvo(){
+
+
+  $.ajax('/generateattribuerMvoDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUsername: foundUsername,
+        mvoId: mvoId,
+        token: getToken
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(tempTicketRef);
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR785:" + tempTicketRef + " enregistrement du paiement impossible, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
+
 /***********************************************************************************************************/
 /***********************************************************************************************************/
 // PAYMENT 
@@ -526,10 +549,10 @@ function verboseStatus(paramValue){
         return "Transaction valide";
       }
       else if(paramValue == 'NUD'){
-        return 'Username introuvable. Vérifier que le username envoyé par Mvola est valide.';
+        return 'Username introuvable';
       }
       else if(paramValue == 'DUP'){
-        return 'Doublon - référence déjà intégrée';
+        return 'Doublon';
       }
       else{
         return 'Ligne invalide';
@@ -540,12 +563,24 @@ function showPopUpMvola(param){
     let detailsMsg = '';
     let detailsFile = '';
     $('#title-mvo-details').html(param.REF_TRANSACTION);
-    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '</i><br>';
+    if(param.STATUS_TRANSACTION == 'NUD'){
+      detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '</i><br>';
+    }
+    else{
+      detailsMsg = detailsMsg + '<strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '<br>';
+    };
+    
     detailsMsg = detailsMsg + '<strong>Date heure de transaction lu &nbsp;:&nbsp;</strong>' + (param.DATE_HEURE_TRANSACTION_LU == null ? 'NA' : param.DATE_HEURE_TRANSACTION_LU) + '<br>';
     detailsMsg = detailsMsg + '<strong>Status &nbsp;:&nbsp;</strong>' + verboseStatus(param.STATUS_TRANSACTION) + '<br>';
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + param.TYPE_TRANSACTION + '<br>';
-    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '</i><br>';
-    detailsMsg = detailsMsg + '<i class="line-pv-res"><strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '</i><br>';
+    if(param.STATUS_TRANSACTION == 'NUD'){
+      detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '</i><br>';
+      detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong> ' + param.TELEPHONE_EXPEDITEUR.replace(/\D+/g, '').replace(/(\d{3})(\d{2})(\d{2})(\d{3})/, '$1 $2 $3 $4') + ' </i><br>';
+    }
+    else{
+      detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '<br>';
+      detailsMsg = detailsMsg + '<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '<br>';
+    };
     detailsMsg = detailsMsg + '<strong>Destinataire &nbsp;:&nbsp;</strong>' + param.TELEPHONE_DESTINATAIRE + '<br>';
     detailsMsg = detailsMsg + '<strong>Libellé envoi &nbsp;:&nbsp;</strong>' + param.DETAIL_A + '<br>';
     detailsMsg = detailsMsg + '<strong>Username lu &nbsp;:&nbsp;</strong>' + (param.USERNAME_LU == null ? 'NA' : param.USERNAME_LU) + '<br>';
@@ -566,7 +601,8 @@ function showPopUpMvola(param){
     else{
       //We do nothing as we cannot attribuer the mvola
       $('#assign-mvo').hide(100);
-    }
+    };
+    resetMvoAttribuer();
 
     $('#mvo-details-modal').modal('show');
 }
@@ -688,7 +724,7 @@ function mngMvoPayUserExists(val){
 
       $('#addpay-ace').val('');
       $('#scan-mvo-input').hide(100);
-      $('#ctrl-name').html('&nbspConfirmez : ' + dataAllUSRNToJsonArray[i].VSH_NAME + ' - ' + dataAllUSRNToJsonArray[i].CLASS);
+      $('#ctrl-name').html(dataAllUSRNToJsonArray[i].VSH_NAME + ' - ' + dataAllUSRNToJsonArray[i].CLASS);
       $("#btn-attmvo").show(100);
       $("#btn-canattmvo").show(100);
       return true;
