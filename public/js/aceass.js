@@ -157,8 +157,11 @@ function loadHistoPayGrid(){
               else if(value == 'L'){
                   return 'L.E.';
               }
+              else if(value == 'E'){
+                  return 'Exemption';
+              }
               else{
-                return 'Erreur 892B';
+                return 'Erreur 862B';
               }
             }
           },

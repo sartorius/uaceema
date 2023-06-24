@@ -64,8 +64,8 @@
     // F for Facilite or P for Payment
     let invOperation = 'F';
 
-    const TYPE_OF_PAYMENT_CODE_ARRAY = ["h", "c", "t", "m"];
-    const TYPE_OF_PAYMENT_LBL_ARRAY = ["CHEQUE", "CASH", "VIRM/TPE", "MVOLA"];
+    const TYPE_OF_PAYMENT_CODE_ARRAY = ["h", "c", "t", "e"];
+    const TYPE_OF_PAYMENT_LBL_ARRAY = ["CHEQUE", "CASH", "VIRM/TPE", "EXEMPTION"];
 
     // If we are Reduction (R) or Payment (P)
     let currentTicketMode = 'P';
@@ -239,9 +239,9 @@
               <br>VIREMENT/TPE&nbsp;
               <i class="icon-credit-card nav-text"></i><br>
             </div>
-            <div id="btn-type-m" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v">
-              <br>MVOLA&nbsp;
-              <i class="icon-mobile nav-text"></i><br>
+            <div id="btn-type-e" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v">
+              <br>EXEMPTION&nbsp;
+              <i class="icon-puzzle-piece nav-text"></i><br>
             </div>
 
       </div>

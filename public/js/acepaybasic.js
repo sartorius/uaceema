@@ -274,8 +274,11 @@ function verboseTypeOfPayment(value){
       else if(value == 'L'){
           return 'Lettre engagement';
       }
+      else if(value == 'E'){
+          return 'Exemption';
+      }
       else{
-        return 'Erreur 892B';
+        return 'Erreur 892C';
       }
 }
 

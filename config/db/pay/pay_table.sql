@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_payment` (
   `payment_ref` CHAR(10) NULL COMMENT 'Reference generated for Payment or reduction reference or empty because not yet paid',
   `facilite_id` BIGINT NULL,
   `input_amount` INT NOT NULL COMMENT 'Can be zero then it is engagement letter or free input then it is full manual',
-  `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction, L for Engagement Letter',
+  `type_of_payment` CHAR(1) NULL COMMENT 'C is for Cash, H for Check, M for Mvola, T for Transfert, R is for reduction, L for Engagement Letter, E for Exemption',
   `pay_date` DATETIME NULL,
   `comment` VARCHAR(45) NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -602,4 +602,4 @@ SELECT
 	 vts.TRANCHE_DDL,
 	 vts.NEGATIVE_IS_LATE
 FROM v_dash_tech_sum_up_tranche vts JOIN v_showuser VSH ON VSH.ID = vts.VSH_ID
-ORDER BY TRANCHE_DDL ASC
+ORDER BY TRANCHE_DDL ASC;

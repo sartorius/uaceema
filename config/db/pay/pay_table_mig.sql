@@ -37,7 +37,7 @@ SELECT COUNT(1) FROM uac_load_eco_mig WHERE status IN ('AM1', 'AM2', 'AM3');
 
 CALL MAN_MIG_LoopEcolageFile(100);
 -- 100
-
+-- Then +200 per +200
 
 
 -- INSERT INTO uac_load_eco_mig (load_line, load_matricule, load_name, load_t1, load_t2, load_t3, load_c4,load_niveau, temp_matricule_nbr, temp_matricule_mention) VALUES ();
@@ -51,7 +51,7 @@ where mig.load_matricule IN (
 */
 
 -- Retrieve the inset line in https://docs.google.com/spreadsheets/d/1yefDhp_5Gqk5r11iuHc1U1WL5yf314lk44vKI5ku7fc/edit?usp=sharing
-
+/*
 UPDATE uac_load_eco_mig mig JOIN mdl_user mu ON mu.matricule = mig.load_matricule
 		SET mig.core_user_id = mu.id,
         mig.core_username =  mu.username,
@@ -115,14 +115,13 @@ UPDATE uac_load_eco_mig mig JOIN mdl_user mu ON CONCAT(mig.temp_matricule_nbr, '
 /*****************************************************************************************************/
 /*****************************************************************************************************/
 /*****************************************************************************************************/
-/*
+
 -- RESET
-UPDATE uac_load_eco_mig mig SET mig.core_t1 = NULL, mig.core_t2 = NULL, mig.core_t3 = NULL, mig.status = 'FND'
-WHERE mig.status NOT IN ('NEW');
-
-*/
+-- UPDATE uac_load_eco_mig mig SET mig.core_t1 = NULL, mig.core_t2 = NULL, mig.core_t3 = NULL, mig.status = 'FND'
+-- WHERE mig.status NOT IN ('NEW');
 
 
+/*
 UPDATE uac_load_eco_mig mig SET mig.core_t1 = CAST(REPLACE(mig.load_t1, ' ', '') AS UNSIGNED), mig.status = 'AM1'
 WHERE REPLACE(mig.load_t1, ' ', '') REGEXP '^-?[0-9]+$'
 AND mig.load_t1 like '%00'

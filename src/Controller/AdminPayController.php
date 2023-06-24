@@ -1402,7 +1402,7 @@ class AdminPayController extends AbstractController
         $logger->debug("Show today_nbr_check_pv: " . $today_nbr_check_pv);
         $result_today_nbr_check_pv = $dbconnectioninst->query($today_nbr_check_pv)->fetchAll(PDO::FETCH_ASSOC);
 
-        $rep_year_recap = " SELECT SUM(up.input_amount) AS UP_AMOUNT, CASE WHEN up.type_of_payment = 'R' THEN 'R' ELSE 'P' END AS UP_TYPE_OF_PAYMENT FROM uac_payment up GROUP BY CASE WHEN up.type_of_payment = 'R' THEN 'R' ELSE 'P' END; ";
+        $rep_year_recap = " SELECT SUM(up.input_amount) AS UP_AMOUNT, CASE WHEN up.type_of_payment IN ('R', 'E') THEN 'R' ELSE 'P' END AS UP_TYPE_OF_PAYMENT FROM uac_payment up GROUP BY CASE WHEN up.type_of_payment IN ('R', 'E') THEN 'R' ELSE 'P' END; ";
         $logger->debug("Show rep_year_recap: " . $rep_year_recap);
         $result_rep_year_recap = $dbconnectioninst->query($rep_year_recap)->fetchAll(PDO::FETCH_ASSOC);
 
