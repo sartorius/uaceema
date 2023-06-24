@@ -266,7 +266,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 -- Use this SP to get the sum up of tranche
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_LineAttribuerMvola$$
-CREATE PROCEDURE `CLI_CRT_LineAttribuerMvola` (IN param_username CHAR(10), IN param_mvola_id BIGINT)
+CREATE PROCEDURE `CLI_CRT_LineAttribuerMvola` (IN param_username CHAR(10), IN param_mvola_id BIGINT, IN param_attribution CHAR(1))
 BEGIN
 
       -- Loop variable
@@ -280,6 +280,10 @@ BEGIN
 
       DECLARE uac_param_min_amount INT;
       DECLARE uac_param_frais_mvola INT;
+
+      -- Paiement tranche avec Mvola
+      -- Attribution tranche avec Mvola
+      DECLARE inv_description     VARCHAR(12);
 
 
 
@@ -301,6 +305,48 @@ BEGIN
       -- Update these set up as they are necessary
       SELECT amount INTO uac_param_frais_mvola FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
       SELECT par_int INTO uac_param_min_amount FROM uac_param WHERE key_code = 'MINAMOU';
+
+        -- We need to create the mvola line
+        IF (param_attribution = 'Y') THEN
+          SET inv_description = 'Attribution ';
+          SELECT ID INTO in_loop_user_id FROM v_showuser WHERE USERNAME = param_username;
+          -- Unique Credit here
+          INSERT IGNORE INTO uac_mvola_line (
+            id,
+            status,
+            master_id,
+            transac_ref,
+            mvo_type,
+            from_phone,
+            to_phone,
+            core_cra_datetime,
+            core_amount,
+            user_id,
+            order_direction,
+            nbr_of_load_line,
+            comment
+            )
+          SELECT
+          	 id,
+             'NEW',
+          	 master_id,
+          	 transac_ref,
+          	 mvo_type,
+          	 from_phone,
+          	 to_phone,
+          	 STR_TO_DATE(load_cra_date,'%d/%m/%Y %H:%i:%s'),
+          	 CAST(load_amount AS SIGNED),
+          	 in_loop_user_id,
+          	 'C',
+          	 1,
+             ''
+          	 FROM uac_load_mvola
+          WHERE id = param_mvola_id;
+
+        ELSE
+          SET inv_description = 'Paiement ';
+
+        END IF;
 
         -- Update the line on which we are working on
         UPDATE uac_mvola_line uml
@@ -405,7 +451,7 @@ BEGIN
                                   in_loop_u_amount,
                                   'M',
                                   in_loop_paydate,
-                                  'Paiement frais fixe avec Mvola'
+                                  CONCAT(inv_description, ' frais fixe avec Mvola')
                                 );
                                 SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
                                 -- Update the xref
@@ -513,7 +559,7 @@ BEGIN
                                 CASE WHEN (in_loop_amount > in_loop_t_amount) THEN in_loop_t_amount ELSE in_loop_amount END,
                                 'M',
                                 in_loop_paydate,
-                                'Paiement tranche avec Mvola'
+                                CONCAT(inv_description, ' frais fixe avec Mvola')
                               );
                               SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
                               -- Update the xref
@@ -561,9 +607,25 @@ BEGIN
                   END IF;
 
         -- END the line
-        UPDATE uac_mvola_line uml
-          SET uml.status = 'END'
-          WHERE uml.id = param_mvola_id AND status = 'INP';
+        IF (param_attribution = 'N') THEN
+            UPDATE uac_mvola_line uml
+              SET uml.status = 'END',
+              uml.update_date = CURRENT_TIMESTAMP
+              WHERE uml.id = param_mvola_id AND status = 'INP';
+        ELSE
+            UPDATE uac_mvola_line uml
+              SET uml.status = 'ATT',
+              uml.comment = CONCAT('Attribution ', param_username, ' ', uml.comment),
+              uml.update_date = CURRENT_TIMESTAMP
+              WHERE uml.id = param_mvola_id AND status = 'INP';
+
+            UPDATE uac_load_mvola ulm
+              SET ulm.status = 'ATT',
+              ulm.core_user_id = in_loop_user_id,
+              ulm.core_username = param_username,
+              ulm.reject_reason = CONCAT('Attrb + ', ulm.reject_reason)
+            WHERE ulm.id = param_mvola_id AND ulm.status = 'NUD';
+        END IF;
 
 END$$
 
@@ -921,7 +983,7 @@ BEGIN
 
           -- We call here the main operation !
           -- Line by line we will loop
-          CALL CLI_CRT_LineAttribuerMvola(in_loop_username, inv_working_mvola_id);
+          CALL CLI_CRT_LineAttribuerMvola(in_loop_username, inv_working_mvola_id, 'N');
 
           /*
 

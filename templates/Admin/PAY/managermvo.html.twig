@@ -19,9 +19,6 @@
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     const getToken = '{{ result_get_token }}';
 
-    let foundUserName = '';
-    let foundMvolaId = 0;
-
 
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
@@ -112,7 +109,7 @@
                     <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
                 </div>
                 <div id='scan-mvo-btn'>
-                    <button onclick="do()" id='btn-attmvo' class="btn btn-lg btn-default btn-block">Attribuer à <i id='ctrl-name'></i></button>
+                    <button onclick="generateAttribuerMvo()" id='btn-attmvo' class="btn btn-lg btn-default btn-block">Attribuer à <i id='ctrl-name'></i></button>
                     <button onclick="resetMvoAttribuer()" id='btn-canattmvo' class="btn btn-md btn-outline-dark btn-block">Annuler</button>
                 </div>
             </div>
@@ -128,5 +125,9 @@
     </div>
   </div>
 </div>
+
+
+<i id="fnd-usrn" class="raw-element"></i>
+<i id="fnd-mvoid" class="raw-element"></i>
 
 {% include 'RawTemplate/SPE/_footer.w.paybasic.jsgrid.mgchart.html.twig' %}

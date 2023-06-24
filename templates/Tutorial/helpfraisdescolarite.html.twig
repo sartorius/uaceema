@@ -46,13 +46,21 @@
         <h3>La particularité Mvola</h3>
         Si vous payez vos frais par Mvola, le système va ponctionner automatiquement les frais de retrait additionnel Mvola. 
         Prenons un exemple : vous devez payer une tranche de 500 000 Ar et le montant des frais de retrait Mvola est 10 000 Ar (le prix des frais actualisé est affiché dans votre dashboard).<br>
-        Vous allez envoyer 500 000 Ar + 10 000 Ar + (frais d'envoi si vous envoyez depuis un téléphone). Le téléphone de l'ACEEM se verra créditer de 510 000 Ar et retirera automatiquement les frais de retrait additionnel. Dans ce cas, le système considère que vous vous êtes acquité de votre paiement de tranche.
+        Vous devez envoyer 500 000 Ar + 10 000 Ar + (frais d'envoi si vous envoyez depuis un téléphone). Le téléphone de l'ACEEM se verra créditer de 510 000 Ar et retirera automatiquement les frais de retrait additionnel. Dans ce cas, le système considère que vous vous êtes acquité de votre paiement de tranche.
         Si par contre vous n'envoyez que 500 000 Ar, le système retirera les 10 000 Ar et vous n'aurez payé que 490 000 Ar de votre tranche. Il restera 10 000 Ar à régler de la manière que vous souhaitez.<br>
+        Quand vous payez avec Mvola, le système va d'abord retirer les frais additionnels Mvola ensuite il va vérifier si vous avez payé les frais fixes (concours/entretien, inscription et frais généraux) et enfin il va payer dans l'ordre les tranches 1, 2 et 3.<br>
         Si vous voulez éviter de payer les frais additionnels, nous vous prions de privilégier le cash ou le chèque.
         <br><br>
         <ul>
             <li>Les paiements Mvola ne sont pas traités immediatement</li>
             <li>Sur votre dashboard est indiqué la date du dernier chargement Mvola. Si votre paiement Mvola a été fait après c'est qu'il n'a pas encore été traité. Si votre paiement a été fait avant, veuillez vous rapprocher de la caisse pour investigation</li>
+            <li>Si vous envoyez votre paiement Mvola part transfert, vous devez indiquer en libellé votre USERNAME (seulement votre USERNAME, le matricule ne sera pas accepté) pour que votre paiement soit traité automatiquement</li>
+            <li>Si vous faîtes un dépot Cash Point ou si vous faîtes erreur sur votre USERNAME, il va falloir venir en caisse pour reconnaître et attribuer le paiement. Dans ce cas, vous devez venir avec les informations suivantes :</li>
+            <ul>
+                <li>La date et l'heure du dépot/transfert</li>
+                <li>Le numéro de téléphone de l'expéditeur ou du Cash Point</li>
+                <li>Le montant</li>
+            </ul>
         </ul>
 
         <h3>La particularité virement bancaire</h3>
@@ -66,13 +74,13 @@
         En #1, vous voyez le recapitulatif de vos tranches. On y affiche les dates limites et le montant qu'il vous reste à régler.
         <img src="{{ path('main') }}img/help/dashboard_fds_2.png"
                   title="BannerPay" alt="Banner Pay Image" class="md-banner-img">
-        En #2, vous voyez l'historique de vos frais fixes. En #3 vous avez affiché les paiements de tranches. Par exemple, si vous payez la tranche 1 en plusieurs paiements différents, ils apparaissent tous ici.
+        En #2, vous voyez l'historique de vos frais fixes. En #3 vous avez affiché les paiements de tranches. Par exemple, si vous payez la tranche 1 en plusieurs paiements différents, ils apparaissent tous ici. Les Mvola qui ont été affecté manuellement seront affichés comme des attribution.
         <br> Notez que les frais additionnels Mvola sont affichés en gras.
     </div>
     <hr>
     <div class="blk-main-help">
         <h2><span class="icon-chain-broken nav-text"></span>&nbsp;Problèmes connus</h2>
-        Les problèmes connus qui peuvent survenir sont malheureusement : un délestage ou une panne internet du fournisseur fibre. Si un de ces problèmes devait se produire, malheureusement l'étudiant est obligé de repasser plus tard ou le lendemain à la caisse pour effectuer son paiement.
+        Les problèmes connus qui peuvent survenir sont malheureusement : un délestage ou une panne internet du fournisseur fibre. Si un de ces problèmes devait se produire, malheureusement l'étudiant est obligé de repasser plus tard ou le lendemain à la caisse pour effectuer son paiement ou son attribution.
     </div>
   </div>
   <div class="col-lg-3 mgs-mainblk-txt">

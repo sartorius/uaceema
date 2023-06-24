@@ -321,6 +321,7 @@ h3 {
 }
 
 .mgs-note-warnprof{
+    margin-top: 20px;
     text-align: justify;
     color: var(--light-violet-80);
     padding-right: 40px;
@@ -1863,6 +1864,12 @@ textarea[name=inputRef] {
   font-weight: 800;
 }
 
+
+.recap-val{
+  color: #007e2e;
+  font-weight: 800;
+}
+
 .recap-qui{
   color: #6600B1;
   font-weight: 800;
@@ -2443,6 +2450,11 @@ img.part-img{
 
 .line-pv-res{
   color: #0000d3;
+}
+
+.lin-war{
+  color: #bb6400;
+  font-weight: 800;
 }
 
 #assign-mvo{

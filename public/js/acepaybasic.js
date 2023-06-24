@@ -1,23 +1,43 @@
 
 function generateAttribuerMvo(){
 
+  // Put loading for the call DB
+  $('#mvo-details-modal').modal('toggle');
+  $('#loading').show(50);
+  let foundUsername = $('#fnd-usrn').html();
+  let foundMvolaId = $('#fnd-mvoid').html();
+  console.log("foundUsername: " + foundUsername);
 
   $.ajax('/generateattribuerMvoDB', {
       type: 'POST',  // http method
       data: {
-        foundUsername: foundUsername,
-        mvoId: mvoId,
+        paramFoundUsername: foundUsername,
+        paramMvoId: foundMvolaId,
         token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
-          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
-          printReceiptPDF(tempTicketRef);
+
+          let i = getAllMvoToJsonArrayId(parseInt(foundMvolaId));
+          if(i>-1){
+              //We found it
+              // Do some changes first in the array
+              dataAllMVOToJsonArray[i].USERNAME_LU = foundUsername;
+              dataAllMVOToJsonArray[i].STATUS_TRANSACTION = 'ATT';
+              showPopUpMvola(dataAllMVOToJsonArray[i], 'Y');
+          }
+          else{
+              //We did not found it
+              console.log('Err : getRawPaymentDetail ' + param + '/' + i);
+          };
+          clearDataAllMVO();
+          $('#loading').hide(50);
       },
       error: function (jqXhr, textStatus, errorMessage) {
-        $('#msg-alert').html("ERR785:" + tempTicketRef + " enregistrement du paiement impossible, contactez le support. ");
+        $('#loading').hide(50);
+        $('#msg-alert').html("ERRM034:" + foundUsername + " attribution du paiement impossible, contactez le support. ");
         $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
         $('#ace-alert-msg').show(100);
-        addPayClear();
+        clearDataAllMVO();
       }
   });
 }
@@ -186,7 +206,7 @@ function getRawPaymentDetail(param){
         console.log('Err : getRawPaymentDetail ' + param + '/' + i);
     }
 }
-
+ 
 function showPopUpPay(param){
     let detailsMsg = '';
     let detailsMvo = '';
@@ -544,9 +564,22 @@ function generateAllMvolaCSV(){
 
 /***********************************************************************************************************/
 
+function getAllMvoToJsonArrayId(val){
+  for(let i=0; i<dataAllMVOToJsonArray.length; i++){
+      if(dataAllMVOToJsonArray[i].ULM_ID == val){
+          return i;
+      }
+  }
+  return -1;
+}
+
+
 function verboseStatus(paramValue){
     if(paramValue == 'END'){
         return "Transaction valide";
+      }
+      else if(paramValue == 'ATT'){
+        return 'Transaction attribuée';
       }
       else if(paramValue == 'NUD'){
         return 'Username introuvable';
@@ -559,10 +592,11 @@ function verboseStatus(paramValue){
       }
 }
 
-function showPopUpMvola(param){
+function showPopUpMvola(param, paramAjaxFeedback){
     let detailsMsg = '';
     let detailsFile = '';
-    $('#title-mvo-details').html(param.REF_TRANSACTION);
+    $('#title-mvo-details').html(param.REF_TRANSACTION + ' #' + param.ULM_ID);
+    
     if(param.STATUS_TRANSACTION == 'NUD'){
       detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Date heure de transaction &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_TRANSACTION + '</i><br>';
     }
@@ -583,7 +617,12 @@ function showPopUpMvola(param){
     };
     detailsMsg = detailsMsg + '<strong>Destinataire &nbsp;:&nbsp;</strong>' + param.TELEPHONE_DESTINATAIRE + '<br>';
     detailsMsg = detailsMsg + '<strong>Libellé envoi &nbsp;:&nbsp;</strong>' + param.DETAIL_A + '<br>';
-    detailsMsg = detailsMsg + '<strong>Username lu &nbsp;:&nbsp;</strong>' + (param.USERNAME_LU == null ? 'NA' : param.USERNAME_LU) + '<br>';
+    if(paramAjaxFeedback == 'N'){
+        detailsMsg = detailsMsg + '<strong>Username lu &nbsp;:&nbsp;</strong>' + (param.USERNAME_LU == null ? 'NA' : param.USERNAME_LU) + '<br>';
+    }
+    else{
+      detailsMsg = detailsMsg + '<i class="recap-val"><span class="icon-check-square nav-icon-fa nav-text"></span>&nbsp;<strong>Username lu &nbsp;:&nbsp;</strong>' + (param.USERNAME_LU == null ? 'NA' : param.USERNAME_LU) + '</i><br>';
+    }
     detailsMsg = detailsMsg + '<strong>Raison du rejet &nbsp;:&nbsp;</strong>' + (param.RAISON_REJET == null ? 'NA' : param.RAISON_REJET) + '<br>';
 
     detailsFile = detailsFile + '<strong>Fichier CSV &nbsp;:&nbsp;</strong>' + param.NOM_FICHIER + '<br>';
@@ -639,6 +678,9 @@ function loadAllMVOGrid(){
             }
             else if(value == 'DUP'){
               return '<i class="recap-qui">Doublon</i>';
+            }
+            else if(value == 'ATT'){
+              return '<i class="lin-war">Attribué</i>';
             }
             else{
               return '<i class="recap-mis">Invalide</i>';
@@ -702,8 +744,9 @@ function loadAllMVOGrid(){
         data: filteredDataAllMVOToJsonArray,
         fields: refMvoField,
         rowClick: function(args){
-              foundMvolaId = args.item.ULM_ID;
-              showPopUpMvola(args.item);
+              //fnd-usrn fnd-mvoid
+              $('#fnd-mvoid').html(args.item.ULM_ID);
+              showPopUpMvola(args.item, 'N');
         }
     });
 }
@@ -720,7 +763,7 @@ function resetMvoAttribuer(){
 function mngMvoPayUserExists(val){
   for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
     if (dataAllUSRNToJsonArray[i].USERNAME === val){
-      foundUserName = dataAllUSRNToJsonArray[i].USERNAME;
+      $('#fnd-usrn').html(dataAllUSRNToJsonArray[i].USERNAME);
 
       $('#addpay-ace').val('');
       $('#scan-mvo-input').hide(100);

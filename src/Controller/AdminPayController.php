@@ -611,15 +611,15 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
-          $param_username = $request->request->get('foundUsername');
-          $param_mvo_id = $request->request->get('mvoId');
+          $param_username = $request->request->get('paramFoundUsername');
+          $param_mvo_id = $request->request->get('paramMvoId');
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
+          $query_value = " CALL CLI_CRT_LineAttribuerMvola( '" . $param_username . "', " . $param_mvo_id . ", 'Y'); ";
           $logger->debug("Show me query_value: " . $query_value);
           $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -629,7 +629,7 @@ class AdminPayController extends AbstractController
           // Send all this back to client
           return new JsonResponse(array(
               'status' => 'OK',
-              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+              'message' => 'Paiement Mvola attribue : ' . $param_username . ' : ' . $param_mvo_id),
           200);
       }
 
