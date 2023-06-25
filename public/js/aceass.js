@@ -836,6 +836,85 @@ function loadAssRecapGrid(){
       fields: responsivefieldsTrace
   });
 
+  responsivefieldsStat = [
+      { name: "ASS_STATUS",
+        title: 'Categorie',
+        type: "text",
+        align: "right",
+        css: "cell-recap",
+        headercss: "cell-recap-hd",
+        itemTemplate: function(value, item) {
+          let val = '';
+          if(value == 'LAT'){
+            val = '<i class="recap-lat">Retard</i>';
+          }
+          else if(value == 'VLA'){
+            val = '<i class="recap-vla">Très en retard</i>';
+          }
+          else if(value == 'ABS'){
+            val = '<i class="recap-mis">Absent(e)</i>';
+          }
+          else if(value == 'QUI'){
+            val = '<i class="recap-qui">Quitté</i>';
+          }
+          else if(value == 'NEX'){
+            val = '<i class="recap-nex"><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Sortie</i>';
+          }
+          else if(value == 'JUS'){
+            val = 'Justifié';
+          }
+          else{
+            val = '<strong>ERR1283S<strong>';
+          }
+          return val;
+        }
+      },
+      //Default width is auto
+      { name: "STU_COUNT",
+        title: "Étudiant",
+        type: "text",
+        width: 70,
+        align: "center",
+        headercss: "cell-recap-hd",
+        css: "cell-recap"
+      },
+      //Default width is auto
+      { name: "ASS_AVG",
+        title: 'Moyenne classe',
+        type: "text",
+        width: 75,
+        align: "center",
+        headercss: "cell-recap-hd",
+        css: "cell-recap"
+      },
+      //Default width is auto
+      { name: "CLS_COUNT",
+        title: "Nombre étudiant",
+        type: "text",
+        width: 75,
+        align: "center",
+        headercss: "cell-recap-hd",
+        css: "cell-recap"
+      }
+  ];
+
+  $("#jsGridStatAss").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucune statistique",
+      pageIndex: 1,
+      pageSize: 5,
+      pagerFormat: "Pages: {first} {prev} {pages} {next} {last}    {pageIndex} sur {pageCount}",
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+      sorting: true,
+      paging: true,
+      data: dataTagToJsonArrayStat,
+      fields: responsivefieldsStat
+  });
+
 
 
 }

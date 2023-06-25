@@ -145,6 +145,9 @@ class ProfileController extends AbstractController
             $logger->debug("Query query_list_bdaymonth: " . $query_list_bdaymonth);
             $result_list_bdaymonth = $dbconnectioninst->query($query_list_bdaymonth)->fetchAll(PDO::FETCH_ASSOC);
 
+            $query_stat_ass = " CALL CLI_ASS_GetAssStatPerStu(" . $result[0]['ID'] . ");";
+            $logger->debug("Query query_stat_ass: " . $query_stat_ass);
+            $result_query_stat_ass = $dbconnectioninst->query($query_stat_ass)->fetchAll(PDO::FETCH_ASSOC);
 
             // End of assiduité
             $prec_maxweek = $_ENV['PRECMAXWEEK'];
@@ -286,7 +289,8 @@ class ProfileController extends AbstractController
                                       "result_histo_pay"=>$result_histo_pay,
                                       "resultSumPerTranche"=>$resultSumPerTranche,
                                       "param_frais_mvola"=>$param_frais_mvola,
-                                      "result_last_mvola"=>$result_last_mvola
+                                      "result_last_mvola"=>$result_last_mvola,
+                                      "result_query_stat_ass"=>$result_query_stat_ass
                                     ]);
       }
     }

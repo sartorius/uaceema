@@ -28,6 +28,23 @@
     </script>
 {% endif %}
 
+
+{% if result_query_stat_ass is defined and result_query_stat_ass is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataTagToJsonArrayStat =JSON.parse('{{ result_query_stat_ass | json_encode | raw }}');
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayStat = "";
+    </script>
+{% endif %}
+
+
+
 {# We handle here the JQ EDT #}
 {% if sp_result is defined and sp_result is not null %}
     <script>
@@ -189,6 +206,19 @@
           <div id="blc-trace-in-out">
             <br>
               <div id="jsGridTrace">
+              </div>
+
+
+          </div>
+          <br>
+          <div class="pr-title"><span class="icon-bar-chart nav-icon-fa nav-text"></span>&nbsp;Assiduité : statistiques</div>
+          <div  class="mgs-note-warnprof">
+            <span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Les statistiques se font par rapport à votre classe à partir de votre date d'inscription.
+            On montre absence, retard, très en retard, quitté et quitté sans scan de sortie. Si la catégorie est absente, c'est que vous n'en avez aucune.
+          </div>
+          <div id="blc-ass-stt">
+            <br>
+              <div id="jsGridStatAss">
               </div>
 
 
