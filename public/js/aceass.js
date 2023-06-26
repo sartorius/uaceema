@@ -879,11 +879,11 @@ function loadAssRecapGrid(){
         css: "cell-recap",
         itemTemplate: function(value, item){
           let val = '';
-          if(parseFloat(value) < parseFloat(item.ASS_AVG)){
-            val = '<i class="recap-val">' + value + '</i>';
+          if(parseFloat(value) > parseFloat(item.ASS_AVG)){
+            val = '<i class="recap-mis">' + value + '</i>';
           }
           else{
-            val = '<i class="recap-mis">' + value + '</i>';
+            val = '<i class="recap-val">' + value + '</i>';
           }
           return val;
         }
