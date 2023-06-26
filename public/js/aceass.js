@@ -840,7 +840,7 @@ function loadAssRecapGrid(){
       { name: "ASS_STATUS",
         title: 'Categorie',
         type: "text",
-        align: "right",
+        align: "center",
         css: "cell-recap",
         headercss: "cell-recap-hd",
         itemTemplate: function(value, item) {
@@ -873,7 +873,7 @@ function loadAssRecapGrid(){
       { name: "STU_COUNT",
         title: "Étudiant",
         type: "text",
-        width: 70,
+        width: 80,
         align: "center",
         headercss: "cell-recap-hd",
         css: "cell-recap"
@@ -882,16 +882,7 @@ function loadAssRecapGrid(){
       { name: "ASS_AVG",
         title: 'Moyenne classe',
         type: "text",
-        width: 75,
-        align: "center",
-        headercss: "cell-recap-hd",
-        css: "cell-recap"
-      },
-      //Default width is auto
-      { name: "CLS_COUNT",
-        title: "Nombre étudiant",
-        type: "text",
-        width: 75,
+        width: 85,
         align: "center",
         headercss: "cell-recap-hd",
         css: "cell-recap"
