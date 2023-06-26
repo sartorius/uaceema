@@ -876,7 +876,17 @@ function loadAssRecapGrid(){
         width: 80,
         align: "center",
         headercss: "cell-recap-hd",
-        css: "cell-recap"
+        css: "cell-recap",
+        itemTemplate: function(value, item){
+          let val = '';
+          if(parseFloat(value) < parseFloat(item.ASS_AVG)){
+            val = '<i class="recap-val">' + value + '</i>';
+          }
+          else{
+            val = '<i class="recap-mis">' + value + '</i>';
+          }
+          return val;
+        }
       },
       //Default width is auto
       { name: "ASS_AVG",
