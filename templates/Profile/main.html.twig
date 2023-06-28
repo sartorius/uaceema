@@ -212,13 +212,14 @@
           </div>
           <br>
           <div class="pr-title"><span class="icon-bar-chart nav-icon-fa nav-text"></span>&nbsp;Assiduité : statistiques</div>
+          
           <div  class="mgs-note-warnprof">
             <span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Les statistiques se font par rapport à votre classe à partir de votre date d'inscription.
-            On montre absence/retard/très en retard/quitté/quitté sans scan de sortie. Si la catégorie est absente, c'est que vous n'en avez aucune.
             {% if result_query_stat_ass|length > 0 %}
               &nbsp;Nombre d'étudiants dans la classe : {{ result_query_stat_ass[0]['CLS_COUNT'] }}.
             {% endif %}
           </div>
+          <br><span class="mgs-ace-note"><a href="/reglassiduite">Voir le rappel sur l'assiduité</a>.</span><br><br>
           <div id="blc-ass-stt">
             <br>
               <div id="jsGridStatAss">
