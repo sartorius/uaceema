@@ -17,24 +17,38 @@ function generateAttribuerMvo(){
       },  // data to submit
       success: function (data, status, xhr) {
 
-          let i = getAllMvoToJsonArrayId(parseInt(foundMvolaId));
-          if(i>-1){
-              //We found it
-              // Do some changes first in the array
-              dataAllMVOToJsonArray[i].USERNAME_LU = foundUsername;
-              dataAllMVOToJsonArray[i].STATUS_TRANSACTION = 'ATT';
-              showPopUpMvola(dataAllMVOToJsonArray[i], 'Y');
+          if(data['status'] == 'NL'){
+            $('#loading').hide(50);
+            $('#msg-alert').html("ERRFM55: " + foundUsername + " attribution du Mvola impossible, cet étudiant a déjà TOUT PAYÉ. Il ne lui reste rien à régler. Veuillez vérifier. ");
+            $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+            $('#ace-alert-msg').show(100);
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+            clearDataAllMVO();
           }
           else{
-              //We did not found it
-              console.log('Err : getRawPaymentDetail ' + param + '/' + i);
-          };
-          clearDataAllMVO();
-          $('#loading').hide(50);
+              let i = getAllMvoToJsonArrayId(parseInt(foundMvolaId));
+              if(i>-1){
+                  //We found it
+                  // Do some changes first in the array
+                  dataAllMVOToJsonArray[i].USERNAME_LU = foundUsername;
+                  dataAllMVOToJsonArray[i].STATUS_TRANSACTION = 'ATT';
+                  showPopUpMvola(dataAllMVOToJsonArray[i], 'Y');
+              }
+              else{
+                  //We did not found it
+                  console.log('Err : getRawPaymentDetail ' + param + '/' + i);
+              };
+              $('#msg-alert').html("Attribution: " + foundUsername + " réalisée avec succés. Vous pouvez vérifier dans le dashboard.");
+              $('#type-alert').removeClass('alert-danger').addClass('alert-primary');
+              $('#ace-alert-msg').show(100);
+              document.body.scrollTop = document.documentElement.scrollTop = 0;
+              clearDataAllMVO();
+              $('#loading').hide(50);
+          }
       },
       error: function (jqXhr, textStatus, errorMessage) {
         $('#loading').hide(50);
-        $('#msg-alert').html("ERRM034:" + foundUsername + " attribution du paiement impossible, contactez le support. ");
+        $('#msg-alert').html("ERRM034:" + foundUsername + " attribution du Mvola impossible, contactez le support. ");
         $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
         $('#ace-alert-msg').show(100);
         clearDataAllMVO();

@@ -617,26 +617,49 @@ class AdminPayController extends AbstractController
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          //echo $param_jsondata[0]['username'];
-          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_LineAttribuerMvola( '" . $param_username . "', " . $param_mvo_id . ", 'Y'); ";
-          $logger->debug("Show me query_value: " . $query_value);
-          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          $query_getleftoperation = " SELECT t1.SUM_INPUT, t1.REF_TYPE FROM ( "
+                                . " SELECT SUM(vhu.UP_INPUT_AMOUNT) AS SUM_INPUT, vhu.ref_type AS REF_TYPE FROM v_histopayment_for_user vhu "
+                                . " WHERE vhu.VSH_USERNAME = '" . $param_username . "' AND vhu.ref_type IN ('T', 'U') "
+                                . " GROUP BY vhu.ref_type "
+                                . " ) t1 WHERE (t1.SUM_INPUT, t1.REF_TYPE) NOT IN ( "
+                                . " SELECT SUM(ref.amount), ref.type "
+                                . " FROM uac_xref_cohort_fsc xref JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id "
+                                . " JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id AND ref.type IN ('T', 'U') "
+                                . " AND vsh.USERNAME = '" . $param_username . "' GROUP BY ref.type ) ";
+          $logger->debug("Show me query_getleftoperation: " . $query_getleftoperation);
+          $resultQueryGetLeftOperation = $dbconnectioninst->query($query_getleftoperation)->fetchAll(PDO::FETCH_ASSOC);
 
-          $logger->debug("Show me count: " . count($result));
+          $feedbackMsg = 'OK';
+          $feedbackLongMsg = '';
+          if(count($resultQueryGetLeftOperation) == 0){
+            // We are in a case there is nothing more to pay !
+            // So we need to reject the payment and say to the user there is nothing to pay
+            // There is nothing left
+            $feedbackMsg = 'NL';
+          }
+          else{
+                //echo $param_jsondata[0]['username'];
+                //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+                $query_value = " CALL CLI_CRT_LineAttribuerMvola( '" . $param_username . "', " . $param_mvo_id . ", 'Y'); ";
+                $logger->debug("Show me query_value: " . $query_value);
+                $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+    
+                $logger->debug("Show me count: " . count($result));
+                $feedbackLongMsg = 'Paiement Mvola attribue : ' . $param_username . ' : ' . $param_mvo_id;
+          }
 
 
           // Send all this back to client
           return new JsonResponse(array(
-              'status' => 'OK',
-              'message' => 'Paiement Mvola attribue : ' . $param_username . ' : ' . $param_mvo_id),
+              'status' => $feedbackMsg,
+              'message' => $feedbackLongMsg),
           200);
       }
 
       // If we reach this point, it means that something went wrong
       return new JsonResponse(array(
           'status' => 'Error',
-          'message' => 'Error generation ticket facilité DB'),
+          'message' => 'Error attribution Mvola DB'),
       400);
   }
 

@@ -169,3 +169,6 @@ managerpay:
 dashboardpay:
     path:       /dashboardpay
     controller: App\Controller\AdminPayController::dashboardpay
+addgradetoexam:
+    path:       /addgradetoexam
+    controller: App\Controller\AdminGradeController::addgradetoexam

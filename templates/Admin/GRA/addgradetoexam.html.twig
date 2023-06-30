@@ -1,0 +1,45 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+{% include 'Admin/GRA/_addgradetoexamstyle.html.twig' %}
+
+{% if result_all_usr is defined and result_all_usr is not null %}
+  <script>
+
+    let dataAllUSRToJsonArray = JSON.parse('{{ result_all_usr | json_encode | raw }}');
+    
+
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllUSRToJsonArray = "";
+    </script>
+{% endif %}
+
+
+
+<div id="mg-graph-identifier">gra-aex</div>
+<div class="container">
+    <div class="row btn-banner">
+        <button onclick="grow()" class="btn btn-outline-dark btn-md btn-blk-export">Test</button>
+        <button onclick="left('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-left nav-text"></i></button>
+        <button onclick="left('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-right nav-text"></i></button>
+        <button onclick="itop('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-up nav-text"></i></button>
+        <button onclick="itop('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-down nav-text"></i></button>
+
+
+        <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-circle-left nav-text"></i></button>
+        <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-circle-right nav-text"></i></button>
+    </div>
+    <div class="row">
+            <div id="gra-ex" class="col-lg-6">
+                {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
+                <img id="ex-1" src="{{ path('main') }}img/ace_gra/ex3.jpg" width="100%" alt="Girl">
+            </div>
+            <div id="gra-gr" class="col-lg-6">
+                
+            </div>
+    </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footergratoexam.html.twig' %}

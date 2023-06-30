@@ -2066,3 +2066,12 @@
 .icon-wallet:before {
   content: "\e1e4";
 }
+.icon-mvola-file:before {
+  content: "\e1e5";
+}
+.icon-clock-wise:before {
+  content: "\e247";
+}
+.icon-clock-wise-anti:before {
+  content: "\e248";
+}

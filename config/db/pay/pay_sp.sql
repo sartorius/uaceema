@@ -559,7 +559,7 @@ BEGIN
                                 CASE WHEN (in_loop_amount > in_loop_t_amount) THEN in_loop_t_amount ELSE in_loop_amount END,
                                 'M',
                                 in_loop_paydate,
-                                CONCAT(inv_description, ' frais fixe avec Mvola')
+                                CONCAT(inv_description, ' frais tranche avec Mvola')
                               );
                               SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
                               -- Update the xref
