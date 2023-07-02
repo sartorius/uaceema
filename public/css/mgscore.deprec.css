@@ -1,0 +1,194 @@
+
+/******************* RTTIME *******************/
+.mg-timer-utils{
+    visibility: hidden;
+  }
+  
+  .mg-pagename-utils{
+    visibility: hidden;
+  }
+  
+/******************* CUSTOM CHECKBOX START *******************/
+/* Customize the label (the container) */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    /* cursor: pointer; */
+    font-size: 15px;
+    /*
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; */
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #33006A;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 15px;
+    border: solid white;
+    border-width: 0px 3px 3px 0px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  /******************** CUSTOM CHECKBOX END ********************/
+  
+  /******************* CUSTOM CHECKBOX RESULT START *******************/
+  /* Customize the label (the container) */
+  .container-result {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .container-result input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark-result {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .container-result input:checked ~ .checkmark-result {
+    background-color: #33006A;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark-result:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .container-result input:checked ~ .checkmark-result:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .container-result .checkmark-result:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 15px;
+    border: solid white;
+    border-width: 0px 3px 3px 0px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  .mg-false{
+    color: #950000;
+  }
+  
+  .mg-right{
+    color: #079500;
+  }
+  
+  .mg-final-score{
+    color: #542261;
+    font-size: 1em;
+  }
+  
+  .mg-final-mark{
+    color: #542261;
+    font-size: 9em;
+  }
+  .mg-final-mark-note{
+    color: #542261;
+    font-size: 3em;
+  }
+  
+  .mg-main-color{
+    color: #542261;
+  }
+  
+  .mg-advert-note-block{
+    padding-top: 7em;
+  }
+  
+  
+  .mg-advert-subtotal-mark{
+    color: #908AA7;
+    font-size: 0.7em;
+  }
+  
+  .mg-advert-final-mark{
+    font-size: 7em;
+  }
+  .mg-advert-final-mark-note{
+    font-size: 2em;
+  }
+  
+  .mg-ref-std{
+    font-size: 2em;
+  }
+  
+  /******************** CUSTOM CHECKBOX RESULT END ********************/

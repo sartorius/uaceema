@@ -32,7 +32,7 @@ class AdminGradeController extends AbstractController{
 
             $result_get_token = $this->getDailyTokenGRAStr($logger);
 
-            $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME FROM v_showuser vsh where vsh.cohort_id = 26; ";
+            $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME FROM v_showuser vsh where vsh.cohort_id = 26 ORDER BY VSH_FIRSTNAME ASC; ";
             $logger->debug("Show me allusr_query: " . $allusr_query);
 
             $dbconnectioninst = DBConnectionManager::getInstance();

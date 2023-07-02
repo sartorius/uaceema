@@ -6,6 +6,7 @@
 
     let dataAllUSRToJsonArray = JSON.parse('{{ result_all_usr | json_encode | raw }}');
     
+    let invPower = 1;
 
 
   </script>
@@ -18,23 +19,143 @@
 
 
 
-<div id="mg-graph-identifier">gra-aex</div>
-<div class="container">
-    <div class="row btn-banner">
-        <button onclick="grow()" class="btn btn-outline-dark btn-md btn-blk-export">Test</button>
-        <button onclick="left('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-left nav-text"></i></button>
-        <button onclick="left('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-right nav-text"></i></button>
-        <button onclick="itop('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-up nav-text"></i></button>
-        <button onclick="itop('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-arrow-down nav-text"></i></button>
+<div id="mg-graph-identifier" class="disap">gra-aex</div>
 
-
-        <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-circle-left nav-text"></i></button>
-        <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-circle-right nav-text"></i></button>
+<div class="row  btn-banner btn-layer">
+    <div class="col-1">
     </div>
+    <div class="col-2 menu-dropdown">
+        <a class="btn btn-outline-dark btn-sm btn-up-menu" href="#" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
+    </div>
+    <div class="col-8">
+
+    </div>
+</div>
+
+<div class="white-ajax-wait">
+  <img id="waiting-ajax-gif" src="{{ path('main') }}img/waiting-1.gif" style="width:400px; opacity: 1;" title="Patientez" alt="Patientez" class="uac-img-center img-profile">
+</div>
+
+
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ---------------------------------------------------------------  MAIN BANNER  ----------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+{# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+<div class="container">
+
+    <div class="row btn-layer">
+        <div class="col-lg-12  info-cartouche">
+            <div id="cartouche-edt">
+
+                <div class="menu-dropdown">
+
+                    <div class="dropdown btn-ace-menu">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="drp-select">Mention</i>
+                        </button>
+                        <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                        </div>
+                    </div>
+
+                    <div class="dropdown btn-ace-menu">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="selected-class">Classe</i>
+                        </button>
+                        <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Sélectionnez une mention</a>
+                        </div>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-pencil-square-o nav-text"></i>&nbsp;<i id="sel-pst-qty">0</i>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-square-o nav-text"></i>&nbsp;<i id="sel-mis-qty">0</i>
+                    </div>
+
+
+                </div>
+                <div class="menu-dropdown">
+                    <div class="dropdown btn-ace-menu">
+                        <input class="pickdate" type="date" id='exam-day' value="2017-06-01" />
+                    </div>
+                    <div class="dropdown btn-ace-menu">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="cou-select">Matière</i>
+                        </button>
+                        <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="row btn-banner btn-layer">
+        
+        <div id="gra-magnify" class="gra-btn-bar">
+            <button onclick="grow('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-search-minus nav-text"></i></button>
+            <button onclick="grow('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-search-plus nav-text"></i></button>
+        </div>
+        <div id="gra-move" class="gra-btn-bar">
+            <button onclick="left('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-left nav-text"></i></button>
+            <button onclick="left('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-right nav-text"></i></button>
+            <button onclick="itop('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-up nav-text"></i></button>
+            <button onclick="itop('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-down nav-text"></i></button>
+        </div>
+        &nbsp;
+        <div class="btn-group gra-btn-bar" role="group" aria-label="Basic example">
+            <button id="pow-1" type="button" class="btn pow-group btn-dark active">1</button>
+            <button id="pow-2" type="button" class="btn pow-group btn-dark unsel-grp">2</button>
+            <button id="pow-3" type="button" class="btn pow-group btn-dark unsel-grp">3</button>
+            <button id="pow-4" type="button" class="btn pow-group btn-dark unsel-grp">4</button>
+            <button id="pow-5" type="button" class="btn pow-group btn-dark unsel-grp">5</button>
+            <button id="pow-6" type="button" class="btn pow-group btn-dark unsel-grp">6</button>
+            <button id="pow-7" type="button" class="btn pow-group btn-dark unsel-grp">7</button>
+        </div>
+        <div id="gra-rotate" class="gra-btn-bar">
+            <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-up nav-text"></i></button>
+            <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-down nav-text"></i></button>
+        </div>
+        <div id="gra-app" class="gra-btn-bar">
+            <button onclick="applyCrossBookmark('1463.95/-780px/-210px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
+            <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-floppy-disk nav-text"></i></button>
+        </div>
+    </div>
+
+
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ---------------------------------------------------------------   MAIN PAGE   ----------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+    {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
+
+
     <div class="row">
             <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
-                <img id="ex-1" src="{{ path('main') }}img/ace_gra/ex3.jpg" width="100%" alt="Girl">
+                <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" width="100%" alt="Girl">
             </div>
             <div id="gra-gr" class="col-lg-6">
                 

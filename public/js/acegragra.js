@@ -13,8 +13,12 @@ function fillStudent(){
     $("#gra-gr").html(strTable);
 }
 
-function grow(){
-    let currentW = parseInt($('#ex-1').width())*1.1;
+function grow(param){
+    let growValue = 1.05;
+    if (param == 'A'){
+        growValue = 0.95;
+    }
+    let currentW = parseInt($('#ex-1').width())*growValue;
     $('#ex-1').width(currentW);
 }
 
@@ -23,6 +27,8 @@ function left(param){
     if (param == 'A'){
         direction = -1;
     }
+    // Set the power value here
+    direction =  direction * invPower;
     let currentLeft = $("#ex-1").css("left");
     currentLeft = currentLeft.substring(0, currentLeft.length-2);
     document.getElementById("ex-1").style.left = parseInt(currentLeft) + (5 * direction) + "px";
@@ -33,6 +39,8 @@ function itop(param){
     if (param == 'A'){
         direction = -1;
     }
+    // Set the power value here
+    direction =  direction * invPower;
     let currentTop = $("#ex-1").css("top");
     currentTop = currentTop.substring(0, currentTop.length-2);
     document.getElementById("ex-1").style.top = parseInt(currentTop) + (5 * direction) + "px";
@@ -67,9 +75,33 @@ function clockW(param){
         direction = -1;
     }
     let rotated = document.getElementById('ex-1');
-    let currentR = parseInt(getRotationAngle(rotated)) + (2*direction);
+    let currentR = parseInt(getRotationAngle(rotated)) + (1*direction);
     // Rotate element by 90 degrees clockwise
     rotated.style.transform = 'rotate(' + currentR + 'deg)';
+}
+
+// Width/Left/Top/Rotation
+// 1463.95/-780px/-210px/0
+function applyCrossBookmark(savedParam){
+    let savedParamArray = savedParam.split('/');
+    if(savedParamArray.length == 4){
+        $('#ex-1').width(savedParamArray[0]);
+        document.getElementById("ex-1").style.left = savedParamArray[1];
+        document.getElementById("ex-1").style.top = savedParamArray[2];
+        document.getElementById('ex-1').style.transform = 'rotate(' + savedParamArray[3]  +'deg)';
+    }
+    else{
+        console.log('Error read: ' + applyCrossBookmark);        
+    }
+}
+
+function updatePower(activeId){
+    $('.pow-group').removeClass('active');  // Remove any existing active classes
+    $('.pow-group').addClass('unsel-grp');  // Remove any existing active classes
+    
+    $('#' + activeId).addClass('active').removeClass('unsel-grp'); // Add the class to the nth element
+
+    invPower = parseInt(activeId.split('-')[1]);
 }
 
 
@@ -78,6 +110,10 @@ $(document).ready(function() {
     if($('#mg-graph-identifier').text() == 'gra-aex'){
       // Do something
       fillStudent();
+      updatePower('pow-1')
+      $( ".pow-group" ).click(function() {
+        updatePower(this.id);
+      });
     }
     else{
       //Do nothing

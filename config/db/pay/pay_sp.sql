@@ -197,6 +197,35 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CAN_PayCanPaymentPerRef$$
 CREATE PROCEDURE `CLI_CAN_PayCanPaymentPerRef` (IN param_ticket_ref CHAR(10))
 BEGIN
+    DECLARE is_mvola      SMALLINT UNSIGNED;
+    DECLARE inv_mvola_id  BIGINT;
+
+    SET is_mvola = 0;
+    -- Check first the Mvola Case
+    SELECT COUNT(1) INTO is_mvola FROM uac_xref_payment_mvola x WHERE x.payment_id IN (
+      SELECT id FROM uac_payment WHERE payment_ref = param_ticket_ref
+    );
+
+    IF (is_mvola > 0) THEN
+      -- We are in Mvol Case
+      SELECT MAX(x.mvola_id) INTO inv_mvola_id FROM uac_xref_payment_mvola x WHERE x.payment_id IN (
+        SELECT id FROM uac_payment WHERE payment_ref = param_ticket_ref
+      );
+
+      UPDATE uac_load_mvola ulm
+        SET ulm.status = 'NUD',
+        ulm.reject_reason = CONCAT('Cancel Attr ', ulm.core_username),
+        ulm.core_user_id = NULL,
+        ulm.core_username = NULL,
+        ulm.update_date = CURRENT_TIMESTAMP
+      WHERE ulm.id = inv_mvola_id AND ulm.status = 'ATT';
+
+      -- We delete from uac_mvola because we have the same lines
+      DELETE FROM uac_mvola_line WHERE id = inv_mvola_id;
+      -- We delete uac_xref_payment_mvola
+      DELETE FROM uac_xref_payment_mvola WHERE mvola_id = inv_mvola_id;
+
+    END IF;
 
     UPDATE uac_payment up SET
       up.status = 'C',
