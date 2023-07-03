@@ -2303,9 +2303,16 @@ img.part-img{
   z-index: 3;
 }
 
+.up-line-gra{
+  position: relative;
+  z-index: 4;
+}
+
 .btn-banner{
   padding-bottom: 20px;
   padding-top: 20px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 .gra-btn-bar{
@@ -2321,6 +2328,37 @@ img.part-img{
 }
 
 .pickdate{
-  font-size: 1.6em;
+  font-size: 1.5em;
   padding-left: 5px;
+}
+
+#teacher-blk-gra{
+  margin-bottom: 20px;
+  display: none;
+}
+
+#teach-sel-gra{
+  font-size: 21px;
+  width: 170%;
+  padding-left: 10px;
+}
+
+.disp-mis-qty{
+  color:#af1d00;
+}
+
+#ctrl-ban{
+  visibility: hidden;
+}
+
+#main-gra{
+  opacity: 0.2;
+}
+
+.gra-ta-in{
+  visibility: hidden;
+}
+
+#gra-val-btn{
+  display: none;
 }

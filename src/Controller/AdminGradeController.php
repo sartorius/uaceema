@@ -40,11 +40,33 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me: " . count($result_all_usr));
 
 
+            
+            $mention_query = " SELECT * FROM uac_ref_mention; ";
+            $logger->debug("Show me mention_query: " . $mention_query);
+            $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            $allclass_query = " SELECT * FROM v_class_cohort; ";
+            $logger->debug("Show me allclass_query: " . $allclass_query);
+            $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
+            $logger->debug("Show me count_stu_query: " . $count_stu_query);
+            $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
+
+            $teacher_query = " SELECT urt.id, xm.mention_code, urt.name FROM uac_ref_teacher urt JOIN uac_xref_teacher_mention xm ON xm.teach_id = urt.id;";
+            $logger->debug("Show me usedroom_query: " . $teacher_query);
+            $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
+
+
             $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'result_get_token' => $result_get_token,
+                                                                'result_mention_query'=>$result_mention_query,
+                                                                'result_allclass_query'=>$result_allclass_query,
+                                                                'result_count_stu_query'=>$result_count_stu_query,
+                                                                "result_teacher_query"=>$result_teacher_query,
                                                                 'result_all_usr' => $result_all_usr,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);

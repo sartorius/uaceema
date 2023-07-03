@@ -5,8 +5,20 @@
   <script>
 
     let dataAllUSRToJsonArray = JSON.parse('{{ result_all_usr | json_encode | raw }}');
-    
+
+    let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
+    let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
+    let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
+    let dataTeacherToJsonArray = JSON.parse('{{ result_teacher_query | json_encode | raw }}');
+    let filteredTeacherList = new Array();
+
+
     let invPower = 1;
+    let tempMention = '';
+    let tempMentionCode = '';
+    let tempClasse = '';
+    let tempClasseID = 0; // <> CourseID !!!
+    let tempCountStu = 0;
 
 
   </script>
@@ -51,7 +63,7 @@
 <div class="container">
 
     <div class="row btn-layer">
-        <div class="col-lg-12  info-cartouche">
+        <div class="col-lg-12  info-cartouche up-line-gra">
             <div id="cartouche-edt">
 
                 <div class="menu-dropdown">
@@ -82,35 +94,57 @@
                     <i class="icon-pencil-square-o nav-text"></i>&nbsp;<i id="sel-pst-qty">0</i>
                     </div>
 
-                    <div class="btn-ace-menu disp-class-qty">
+                    <div class="btn-ace-menu disp-class-qty disp-mis-qty">
                     <i class="icon-square-o nav-text"></i>&nbsp;<i id="sel-mis-qty">0</i>
                     </div>
 
 
                 </div>
                 <div class="menu-dropdown">
+                    <div class="btn-ace-menu btn-ace-menu disp-class-qty">
+                        Date examen
+                    </div>
                     <div class="dropdown btn-ace-menu">
-                        <input class="pickdate" type="date" id='exam-day' value="2017-06-01" />
+                        <input class="pickdate" type="date" id='exam-day' placeholder="MM/DD/YYYY" />
                     </div>
                     <div class="dropdown btn-ace-menu">
                         <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i id="cou-select">Matière</i>
                         </button>
-                        <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
+                            <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         </div>
                     </div>
+
+                    <div id="teacher-blk-gra" class="menu-dropdown">
+                    <input id="teach-sel-gra" list="teach-list" placeholder="Enseignant responsable">
+                        <datalist id="teach-list">
+                        {# <option>Russia</option> #}
+                        </datalist>
+                    </div>
+
                 </div>
             </div>
         </div>
         
     </div>
 
-    <div class="row btn-banner btn-layer">
+    <div class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-8">
+            <div class="menu-dropdown">
+                <button id="gra-val-btn" onclick="x()" class="btn btn-dark btn-lg btn-block">Valider</button>
+            </div>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div id="ctrl-ban" class="row btn-banner btn-layer">
         
         <div id="gra-magnify" class="gra-btn-bar">
-            <button onclick="grow('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-search-minus nav-text"></i></button>
-            <button onclick="grow('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-search-plus nav-text"></i></button>
+            <button onclick="grow('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-search-minus nav-text"></i></button>
+            <button onclick="grow('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-search-plus nav-text"></i></button>
         </div>
         <div id="gra-move" class="gra-btn-bar">
             <button onclick="left('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-left nav-text"></i></button>
@@ -152,7 +186,7 @@
     {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
 
 
-    <div class="row">
+    <div id="main-gra" class="row">
             <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
                 <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" width="100%" alt="Girl">

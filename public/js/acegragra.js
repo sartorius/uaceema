@@ -2,7 +2,7 @@ function fillStudent(){
     let strTable = '<table>';
     for(let i=0; i<dataAllUSRToJsonArray.length; i++){
         strTable = strTable + '<tr>'
-                    + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" cols="3" placeholder="0"></textarea></td>'
+                    + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-ta-in" cols="3" placeholder="0"></textarea></td>'
                     + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME + '</td>'
                     + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME + '</td>'
                     + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>'
@@ -14,9 +14,9 @@ function fillStudent(){
 }
 
 function grow(param){
-    let growValue = 1.05;
+    let growValue = 1 + (0.01*invPower);
     if (param == 'A'){
-        growValue = 0.95;
+        growValue = 1 - (0.01*invPower);
     }
     let currentW = parseInt($('#ex-1').width())*growValue;
     $('#ex-1').width(currentW);
@@ -104,16 +104,163 @@ function updatePower(activeId){
     invPower = parseInt(activeId.split('-')[1]);
 }
 
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+/*********************************                   Fill set up                   *********************************/
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+/*******************************************************************************************************************/
+
+
+function fillCartoucheMention(){
+    let listMention = '';
+    for(let i=0; i<dataMentionToJsonArray.length; i++){
+        listMention = listMention + '<a class="dropdown-item" onclick="selectMention(\'' + dataMentionToJsonArray[i].par_code + '\', \'' + dataMentionToJsonArray[i].title + '\')"  href="#">' + dataMentionToJsonArray[i].title + '</a>';
+    }
+    $('#dpmention-opt').html(listMention);
+}
+
+function selectMention(str, strTitle){
+    tempMentionCode = str;
+    tempMention = strTitle;
+    $('#drp-select').html(strTitle);
+    //console.log('You have just click on: ' + str);
+    // We reset the dropdown
+    selectClasse(0, 'Classe');
+    fillCartoucheClasse();
+    fillModalTeacher();
+    $('#teach-sel-gra').val('');
+    $('#teacher-blk-gra').show(100);
+    $('#exam-day').val('');
+
+    // TODO Reinitialize Matiere
+}
+
+function selectClasse(classeId, str){
+  tempClasseID = classeId;
+  tempClasse = str;
+
+  $("#selected-class").html(str);
+  tempCountStu = getQtyStu(classeId);
+  $("#sel-stu-qty").html(tempCountStu);
+  verifyExamMetadata();
+}
+
+function getQtyStu(classeId){
+    for(let i=0; i<dataCountStuToJsonArray.length; i++){
+      if(dataCountStuToJsonArray[i].COHORT_ID == classeId){
+        return dataCountStuToJsonArray[i].CPT_STU;
+      }
+    }
+    return 0;
+}
+
+function fillCartoucheClasse(){
+    let listClasse = '';
+    for(let i=0; i<dataAllClassToJsonArray.length; i++){
+      if(dataAllClassToJsonArray[i].mention_code == tempMentionCode){
+        listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasse(' + dataAllClassToJsonArray[i].id + ', \'' + dataAllClassToJsonArray[i].short_classe + '\', 1)"  href="#">' + dataAllClassToJsonArray[i].short_classe + '</a>';
+      }
+    }
+    $('#dpclasse-opt').html(listClasse);
+}
+  
+  
+function fillModalTeacher(){
+    let teacherList = "";
+    filteredTeacherList = new Array();
+    for(let i=0; i<dataTeacherToJsonArray.length; i++){
+      if(dataTeacherToJsonArray[i].mention_code == tempMentionCode){
+        //teacherList = teacherList + '<option value="' + dataTeacherToJsonArray[i].id + '" >' + dataTeacherToJsonArray[i].name + '</option>';
+        teacherList = teacherList + '<option data-id="' + dataTeacherToJsonArray[i].id + '">' + dataTeacherToJsonArray[i].name + '</option>';
+        // Input in the list
+        filteredTeacherList.push(dataTeacherToJsonArray[i].name);
+      }
+      else{
+        // do nothing
+      }
+    }
+    $('#teach-list').html(teacherList);
+}
+
+function verifyExamMetadata(){
+    let areMetaDataFilled = 'N';
+
+    // Check Classe
+    if($('#selected-class').html() != 'Classe'){
+        areMetaDataFilled = 'Y';
+    }
+    else{
+        areMetaDataFilled = 'N';
+    }
+
+    // Check Date
+    if(($('#exam-day').val() != '') && (areMetaDataFilled == 'Y')){
+        areMetaDataFilled = 'Y';
+    }
+    else{
+        areMetaDataFilled = 'N';
+    }
+
+    // TODO Check Matiere
+    // TBD
+
+    // Check Teacher
+    if(($('#teach-sel-gra').val() != '') && (areMetaDataFilled == 'Y')){
+        areMetaDataFilled = 'Y';
+    }
+    else{
+        areMetaDataFilled = 'N';
+    }
+
+    if(areMetaDataFilled == 'N'){
+        console.log('Not all meta are filled');
+    }
+    else{
+        console.log('All meta are filled');
+    }
+}
+
+function initializePage(){
+
+    // Fill the data
+    fillCartoucheMention();
+
+    // No need to catch change for the Classe because it is inside the select function
+
+    // catch the change of the date
+    let examDate = document.getElementById('exam-day')
+    examDate.addEventListener('change',(e)=>{
+        verifyExamMetadata();
+    })
+
+    // TODO catch the change of the matiere
+
+    // catch the change of the teacher
+    $(document).on('change', 'input', function() {
+        verifyExamMetadata();
+    });
+}
+
+
 
 $(document).ready(function() {
     console.log('We are in gra gra');
     if($('#mg-graph-identifier').text() == 'gra-aex'){
       // Do something
       fillStudent();
+      //document.getElementById('exam-day').valueAsDate = new Date();
       updatePower('pow-1')
       $( ".pow-group" ).click(function() {
         updatePower(this.id);
       });
+
+
+      initializePage();
+
     }
     else{
       //Do nothing
