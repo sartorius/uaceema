@@ -91,7 +91,7 @@ function applyCrossBookmark(savedParam){
         document.getElementById('ex-1').style.transform = 'rotate(' + savedParamArray[3]  +'deg)';
     }
     else{
-        console.log('Error read: ' + applyCrossBookmark);        
+        console.log('Error read: applyCrossBookmark');        
     }
 }
 
@@ -238,10 +238,10 @@ function initializePage(){
     // No need to catch change for the Classe because it is inside the select function
 
     // catch the change of the date
-    let examDate = document.getElementById('exam-day')
+    let examDate = document.getElementById('exam-day');
     examDate.addEventListener('change',(e)=>{
         verifyExamMetadata();
-    })
+    });
 
     // TODO catch the change of the matiere
 
