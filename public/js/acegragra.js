@@ -8,8 +8,8 @@ function fillStudent(){
                     + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>'
                     + '<td>' + (parseInt(i) + 1) + '</td>'
                     + '</tr>';
-    }
-    strTable = strTable + '</table>'
+    };
+    strTable = strTable + '</table>';
     $("#gra-gr").html(strTable);
 }
 
