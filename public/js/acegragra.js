@@ -115,7 +115,7 @@ function updatePower(activeId){
 /*******************************************************************************************************************/
 /*******************************************************************************************************************/
 /*******************************************************************************************************************/
-/*
+
 
 function fillCartoucheMention(){
     let listMention = '';
@@ -187,7 +187,7 @@ function fillModalTeacher(){
     }
     $('#teach-list').html(teacherList);
 }
-*/
+/*
 function verifyExamMetadata(){
     let areMetaDataFilled = 'N';
 
@@ -231,7 +231,7 @@ function verifyExamMetadata(){
         console.log('All meta are filled');
     }
 }
-
+*/
 function initializePage(){
 
     // Fill the data
