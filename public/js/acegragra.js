@@ -192,17 +192,21 @@ function verifyExamMetadata(){
     // Check Classe
     if($('#selected-class').html() != 'Classe'){
         areMetaDataFilled = 'Y';
+        $('#selected-class').removeClass('ctrl-mis');
     }
     else{
         areMetaDataFilled = 'N';
+        $('#selected-class').addClass('ctrl-mis');
     }
 
     // Check Date
     if(($('#exam-day').val() != '') && (areMetaDataFilled == 'Y')){
         areMetaDataFilled = 'Y';
+        $('#exam-day').removeClass('ctrl-mis');
     }
     else{
         areMetaDataFilled = 'N';
+        $('#exam-day').addClass('ctrl-mis');
     }
 
     // TODO Check Matiere
@@ -211,9 +215,11 @@ function verifyExamMetadata(){
     // Check Teacher
     if(($('#teach-sel-gra').val() != '') && (areMetaDataFilled == 'Y')){
         areMetaDataFilled = 'Y';
+        $('#teach-sel-gra').removeClass('ctrl-mis');
     }
     else{
         areMetaDataFilled = 'N';
+        $('#teach-sel-gra').addClass('ctrl-mis');
     }
 
     if(areMetaDataFilled == 'N'){

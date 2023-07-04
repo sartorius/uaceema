@@ -2344,7 +2344,12 @@ img.part-img{
 }
 
 .disp-mis-qty{
-  color:#af1d00;
+  color: var(--light-violet-80);
+}
+
+.ctrl-mis{
+  color: var(--deep-ace-blue);
+  border-color: var(--deep-ace-blue);
 }
 
 #ctrl-ban{
