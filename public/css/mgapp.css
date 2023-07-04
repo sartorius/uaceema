@@ -2299,13 +2299,11 @@ img.part-img{
 
 .btn-layer{
   background-color: white;
-  position: relative;
-  z-index: 3;
 }
 
-.up-line-gra{
+.back-z{
   position: relative;
-  z-index: 4;
+  z-index: -5;
 }
 
 .btn-banner{
@@ -2339,7 +2337,7 @@ img.part-img{
 
 #teach-sel-gra{
   font-size: 21px;
-  width: 170%;
+  width: 180%;
   padding-left: 10px;
 }
 
@@ -2348,15 +2346,14 @@ img.part-img{
 }
 
 .ctrl-mis{
-  color: var(--deep-ace-blue);
-  border-color: var(--deep-ace-blue);
+  background-color: #ffffde;
 }
 
 #ctrl-ban{
   visibility: hidden;
 }
 
-#main-gra{
+.mask-pg{
   opacity: 0.2;
 }
 
@@ -2366,4 +2363,13 @@ img.part-img{
 
 #gra-val-btn{
   display: none;
+}
+
+.disp-midpg{
+  color: var(--main-ace-color);
+  font-size: 2.3em;
+}
+
+.title-part{
+  width: 100%;
 }

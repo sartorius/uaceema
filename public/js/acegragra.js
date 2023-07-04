@@ -3,7 +3,7 @@ function fillStudent(){
     let strTable = '<table>';
     for(let i=0; i<dataAllUSRToJsonArray.length; i++){
         strTable = strTable + '<tr>' ;
-        strTable = strTable + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-ta-in" cols="3" placeholder="0"></textarea></td>';
+        strTable = strTable + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-txta gra-ta-in" cols="3" placeholder="0"></textarea></td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>';
@@ -188,6 +188,20 @@ function fillModalTeacher(){
     $('#teach-list').html(teacherList);
 }
 
+function allowBannerAndMainPage(param){
+    if(param == 'Y'){
+        $('.gra-txta').removeClass('gra-ta-in');
+        $('#main-gra').removeClass('mask-pg');
+        document.getElementById("ctrl-ban").style.visibility = "visible";
+    }
+    else{
+        $('.gra-txta').addClass('gra-ta-in');
+        $('#main-gra').addClass('mask-pg');
+        document.getElementById("ctrl-ban").style.visibility = "hidden";
+    }
+}
+
+
 function verifyExamMetadata(){
     let areMetaDataFilled = 'N';
 
@@ -225,10 +239,12 @@ function verifyExamMetadata(){
     }
 
     if(areMetaDataFilled == 'N'){
-        console.log('Not all meta are filled');
+        allowBannerAndMainPage('N');
+        //console.log('Not all meta are filled');
     }
     else{
-        console.log('All meta are filled');
+        allowBannerAndMainPage('Y');
+        //console.log('All meta are filled');
     }
 }
 

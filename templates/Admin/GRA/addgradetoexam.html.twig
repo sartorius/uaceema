@@ -63,7 +63,7 @@
 <div class="container">
 
     <div class="row btn-layer">
-        <div class="col-lg-12  info-cartouche up-line-gra">
+        <div class="col-lg-12  info-cartouche">
             <div id="cartouche-edt">
 
                 <div class="menu-dropdown">
@@ -86,6 +86,14 @@
                         </div>
                     </div>
 
+                    <div class="dropdown btn-ace-menu">
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="cou-select">Matière</i>
+                        </button>
+                            <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        </div>
+                    </div>
+
                     <div class="btn-ace-menu disp-class-qty">
                     <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
                     </div>
@@ -101,18 +109,11 @@
 
                 </div>
                 <div class="menu-dropdown">
-                    <div class="btn-ace-menu btn-ace-menu disp-class-qty">
+                    <div class="btn-ace-menu disp-class-qty">
                         Date examen
                     </div>
                     <div class="dropdown btn-ace-menu">
                         <input class="pickdate" type="date" id='exam-day' placeholder="MM/DD/YYYY" />
-                    </div>
-                    <div class="dropdown btn-ace-menu">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="cou-select">Matière</i>
-                        </button>
-                            <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        </div>
                     </div>
 
                     <div id="teacher-blk-gra" class="menu-dropdown">
@@ -122,6 +123,11 @@
                         </datalist>
                     </div>
 
+                </div>
+                <div class="menu-dropdown">
+                    <div class="title-part center disp-midpg">
+                        Page&nbsp;1/2
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,7 +192,7 @@
     {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
 
 
-    <div id="main-gra" class="row">
+    <div id="main-gra" class="row mask-pg back-z">
             <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
                 <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" width="100%" alt="Girl">
