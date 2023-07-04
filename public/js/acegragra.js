@@ -187,7 +187,7 @@ function fillModalTeacher(){
     }
     $('#teach-list').html(teacherList);
 }
-
+*/
 function verifyExamMetadata(){
     let areMetaDataFilled = 'N';
 
@@ -254,7 +254,7 @@ function initializePage(){
 }
 
 
-*/
+
 $(document).ready(function() {
     console.log('We are in gra gra');
     if($('#mg-graph-identifier').text() == 'gra-aex'){
