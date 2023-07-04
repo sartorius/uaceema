@@ -231,7 +231,7 @@ function verifyExamMetadata(){
         console.log('All meta are filled');
     }
 }
-/*
+
 function initializePage(){
 
     // Fill the data
@@ -241,7 +241,7 @@ function initializePage(){
 
     // catch the change of the date
     let examDate = document.getElementById('exam-day');
-    examDate.addEventListener('change',(e)=>{
+    examDate.addEventListener('change', function(e){
         verifyExamMetadata();
     });
 
@@ -252,7 +252,7 @@ function initializePage(){
         verifyExamMetadata();
     });
 }
-*/
+
 
 
 $(document).ready(function() {
