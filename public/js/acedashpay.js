@@ -97,6 +97,8 @@ function generateAllTrancheCSV(){
                     + "Prénom" + SEP_ 
                     + "Nom" + SEP_ 
                     + "Classe" + SEP_ 
+                    + "Téléphone" + SEP_ 
+                    + "Téléphone parent" + SEP_ 
                     + "Description" + SEP_ 
                     + "Code" + SEP_ 
                     + "Déjà payé" + SEP_ 
@@ -112,6 +114,8 @@ function generateAllTrancheCSV(){
                 + involvedArray[i].VSH_FIRSTNAME + SEP_ 
                 + involvedArray[i].VSH_LASTNAME + SEP_ 
                 + involvedArray[i].VSH_SHORTCLASS + SEP_ 
+                + involvedArray[i].VSH_PHONE + SEP_ 
+                + involvedArray[i].VSH_PARENT_PHONE + SEP_ 
                 + involvedArray[i].DESCRIPTION + SEP_ 
                 + involvedArray[i].TRANCHE_CODE + SEP_ 
                 + involvedArray[i].ALREADY_PAID + SEP_ 
