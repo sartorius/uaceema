@@ -1,13 +1,13 @@
 function fillStudent(){
     let strTable = '<table>';
     for(let i=0; i<dataAllUSRToJsonArray.length; i++){
-        strTable = strTable + '<tr>'
-                    + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-ta-in" cols="3" placeholder="0"></textarea></td>'
-                    + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME + '</td>'
-                    + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME + '</td>'
-                    + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>'
-                    + '<td>' + (parseInt(i) + 1) + '</td>'
-                    + '</tr>';
+        strTable = strTable + '<tr>' ;
+        strTable = strTable + '<td><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-ta-in" cols="3" placeholder="0"></textarea></td>';
+        strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME + '</td>';
+        strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME + '</td>';
+        strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>';
+        strTable = strTable + '<td>' + (parseInt(i) + 1) + '</td>';
+        strTable = strTable + '</tr>';
     };
     strTable = strTable + '</table>';
     $("#gra-gr").html(strTable);
