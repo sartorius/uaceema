@@ -191,11 +191,13 @@ function fillModalTeacher(){
 function allowBannerAndMainPage(param){
     if(param == 'Y'){
         $('.gra-txta').removeClass('gra-ta-in');
+        //$('.gra-ta-in').show(100);
         $('#main-gra').removeClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "visible";
     }
     else{
         $('.gra-txta').addClass('gra-ta-in');
+        //$('.gra-ta-in').hide(100);
         $('#main-gra').addClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "hidden";
     }
