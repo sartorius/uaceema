@@ -207,9 +207,9 @@ function loadConcatTranche(){
           css: "cell-ref-sm"
         },
         { name: "CATEGORY",
-          title: "A déjà payé",
+          title: "Paiement effectué",
           type: "text",
-          width: 30,
+          width: 60,
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm"
         },
@@ -221,7 +221,7 @@ function loadConcatTranche(){
           css: "cell-ref-sm"
         },
         { name: "TOTAL_AMOUNT",
-          title: "Montant en attente",
+          title: "Montant",
           type: "number",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
@@ -273,7 +273,7 @@ function loadConcatMvola(){
                 return formatterCurrency.format(value).replace("MGA", "AR");
             }
           }
-        },
+        },/*
         { name: "TO_PHONE",
           title: "Bénéficiaire",
           type: "text",
@@ -289,7 +289,7 @@ function loadConcatMvola(){
                 return value;
             }
           }
-        },
+        },*/
         { name: "ORDER_DIRECTION",
           title: "Code",
           type: "text",
