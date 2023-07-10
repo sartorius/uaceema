@@ -117,7 +117,7 @@ BEGIN
       			WHERE xref.cohort_id = param_cohort_id;
 
 
-
+          -- Set to zero
           SET inc_leftover_amount_to_reduce = 0;
           SET split_amount_to_reduce = 0;
           SET actual_full_reduction = 0;
@@ -127,7 +127,10 @@ BEGIN
           -- split_amount_to_reduce
           SELECT TRUNCATE(param_total_amount_to_reduce/nbr_of_part, 0) INTO split_amount_to_reduce;
           -- ROUND with the MODULO
-          SET split_amount_to_reduce = split_amount_to_reduce + (param_modulo - MOD(split_amount_to_reduce, param_modulo));
+          SET split_amount_to_reduce = split_amount_to_reduce - MOD(split_amount_to_reduce, param_modulo);
+
+          -- This is to round the first value when possible
+          SELECT TRUNCATE(ABS(param_total_amount_to_reduce - (split_amount_to_reduce * nbr_of_part)), 0) INTO inc_leftover_amount_to_reduce;
           -- ********************************************
           -- ********************************************
           -- ****************** START *******************

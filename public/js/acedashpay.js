@@ -603,11 +603,14 @@ $(document).ready(function() {
             $('#disp-pv-red').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
             cobReductionOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
-        else{
+        else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'T'){
             // Else it must be T
             $('#disp-pv-ttp').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
             cobVirmTpeOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
+        }
+        else{
+            //We do nothing yet as Exemptions i not displayed at all
         }
       }
 
