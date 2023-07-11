@@ -273,7 +273,7 @@ function loadConcatMvola(){
                 return formatterCurrency.format(value).replace("MGA", "AR");
             }
           }
-        },/*
+        },
         { name: "TO_PHONE",
           title: "Bénéficiaire",
           type: "text",
@@ -289,11 +289,11 @@ function loadConcatMvola(){
                 return value;
             }
           }
-        },*/
+        },
         { name: "ORDER_DIRECTION",
           title: "Code",
           type: "text",
-          width: 35,
+          width: 30,
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
