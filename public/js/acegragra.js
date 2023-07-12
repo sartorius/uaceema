@@ -32,7 +32,7 @@ function left(param){
     direction =  direction * invPower;
     let currentLeft = $("#ex-1").css("left");
     currentLeft = currentLeft.substring(0, currentLeft.length-2);
-    document.getElementById("ex-1").style.left = parseInt(currentLeft) + (5 * direction) + "px";
+    document.getElementById("ex-1").style.left = parseInt(currentLeft) + (PAD_POWER * direction) + "px";
 }
 
 function itop(param){
@@ -44,7 +44,7 @@ function itop(param){
     direction =  direction * invPower;
     let currentTop = $("#ex-1").css("top");
     currentTop = currentTop.substring(0, currentTop.length-2);
-    document.getElementById("ex-1").style.top = parseInt(currentTop) + (5 * direction) + "px";
+    document.getElementById("ex-1").style.top = parseInt(currentTop) + (PAD_POWER * direction) + "px";
 }
 
 
@@ -81,10 +81,25 @@ function clockW(param){
     rotated.style.transform = 'rotate(' + currentR + 'deg)';
 }
 
+
+function snapshotCurrentParamImg(){
+    return ($('#ex-1').width()).toString() + '/' + ($("#ex-1").css("left")).toString() + '/' + ($("#ex-1").css("top")).toString() + '/' + (parseInt(getRotationAngle(document.getElementById('ex-1')))).toString();
+}
+
+function initInitialPosition(){
+    initialPosition = snapshotCurrentParamImg();
+}
+
 // Width/Left/Top/Rotation
 // 1463.95/-780px/-210px/0
 function applyCrossBookmark(savedParam){
-    let savedParamArray = savedParam.split('/');
+    let savedParamArray;
+    if(savedParam == 'R'){
+        savedParamArray = initialPosition.split('/');
+    }
+    else{
+        savedParamArray = savedParam.split('/');
+    }
     if(savedParamArray.length == 4){
         $('#ex-1').width(savedParamArray[0]);
         document.getElementById("ex-1").style.left = savedParamArray[1];
@@ -103,6 +118,16 @@ function updatePower(activeId){
     $('#' + activeId).addClass('active').removeClass('unsel-grp'); // Add the class to the nth element
 
     invPower = parseInt(activeId.split('-')[1]);
+    // Exponential
+    if(invPower > 5){
+        invPower = invPower*4;
+    }
+    else if(invPower > 3){
+        invPower = invPower*1;
+    }
+    else{
+        // Do nothing;
+    };
 }
 
 
@@ -126,6 +151,7 @@ function fillCartoucheMention(){
 }
 
 function selectMention(str, strTitle){
+    applyCrossBookmark('R');
     tempMentionCode = str;
     tempMention = strTitle;
     $('#drp-select').html(strTitle);
@@ -190,14 +216,16 @@ function fillModalTeacher(){
 
 function allowBannerAndMainPage(param){
     if(param == 'Y'){
+        // This is to show input on each grade
         $('.gra-txta').removeClass('gra-ta-in');
-        //$('.gra-ta-in').show(100);
+
         $('#main-gra').removeClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "visible";
     }
     else{
+        // This is to hide input on each grade
         $('.gra-txta').addClass('gra-ta-in');
-        //$('.gra-ta-in').hide(100);
+        
         $('#main-gra').addClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "hidden";
     }
@@ -240,14 +268,7 @@ function verifyExamMetadata(){
         $('#teach-sel-gra').addClass('ctrl-mis');
     }
 
-    if(areMetaDataFilled == 'N'){
-        allowBannerAndMainPage('N');
-        //console.log('Not all meta are filled');
-    }
-    else{
-        allowBannerAndMainPage('Y');
-        //console.log('All meta are filled');
-    }
+    allowBannerAndMainPage(areMetaDataFilled);
 }
 
 function initializePage(){
@@ -276,6 +297,7 @@ function initializePage(){
 $(document).ready(function() {
     console.log('We are in gra gra');
     if($('#mg-graph-identifier').text() == 'gra-aex'){
+      initInitialPosition();
       // Do something
       fillStudent();
       //document.getElementById('exam-day').valueAsDate = new Date();

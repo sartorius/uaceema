@@ -20,6 +20,10 @@
     let tempClasseID = 0; // <> CourseID !!!
     let tempCountStu = 0;
 
+    let initialPosition = '';
+
+    const PAD_POWER = 1;
+
 
   </script>
 {% else %}
@@ -122,6 +126,9 @@
                         {# <option>Russia</option> #}
                         </datalist>
                     </div>
+                    <div class="dropdown btn-ace-menu">
+                        <button id="gra-val-hea" onclick="x()" class="btn btn-dark btn-md btn-blk-menu">Valider</button>
+                    </div>
 
                 </div>
                 <div class="menu-dropdown">
@@ -132,18 +139,6 @@
             </div>
         </div>
         
-    </div>
-
-    <div class="row">
-        <div class="col-lg-2">
-        </div>
-        <div class="col-lg-8">
-            <div class="menu-dropdown">
-                <button id="gra-val-btn" onclick="x()" class="btn btn-dark btn-lg btn-block">Valider</button>
-            </div>
-        </div>
-        <div class="col-lg-2">
-        </div>
     </div>
 
     <div id="ctrl-ban" class="row btn-banner btn-layer">
@@ -174,6 +169,7 @@
         </div>
         <div id="gra-app" class="gra-btn-bar">
             <button onclick="applyCrossBookmark('1463.95/-780px/-210px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
+            <button onclick="applyCrossBookmark('R')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-times nav-text"></i></button>
             <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-floppy-disk nav-text"></i></button>
         </div>
     </div>
@@ -193,9 +189,9 @@
 
 
     <div id="main-gra" class="row mask-pg">
-            <div id="gra-ex" class="col-lg-6 back-z">
+            <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
-                <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" width="100%" alt="Girl">
+                <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" class="back-z" width="100%" alt="Girl">
             </div>
             <div id="gra-gr" class="col-lg-6">
                 

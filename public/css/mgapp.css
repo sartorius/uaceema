@@ -2284,10 +2284,6 @@ img.part-img{
   display: none;
 }
 
-#gra-ex{
-  background-color: #ededed;
-}
-
 #gra-gr{
   background-color: #f3f6ff;
 }
@@ -2335,9 +2331,13 @@ img.part-img{
   display: none;
 }
 
+#gra-val-hea{
+  width: 100px;
+}
+
 #teach-sel-gra{
   font-size: 21px;
-  width: 180%;
+  width: 500px;
   padding-left: 10px;
 }
 
