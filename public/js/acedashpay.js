@@ -221,7 +221,7 @@ function loadConcatTranche(){
           css: "cell-ref-sm"
         },
         { name: "TOTAL_AMOUNT",
-          title: "Montant",
+          title: "Montant reste à payer",
           type: "number",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
