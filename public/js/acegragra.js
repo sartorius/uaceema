@@ -119,11 +119,11 @@ function updatePower(activeId){
 
     invPower = parseInt(activeId.split('-')[1]);
     // Exponential
-    if(invPower > 5){
-        invPower = invPower*4;
+    if(invPower > 3){
+        invPower = invPower*8;
     }
-    else if(invPower > 3){
-        invPower = invPower*1;
+    else if(invPower == 3){
+        invPower = invPower*2;
     }
     else{
         // Do nothing;

@@ -110,6 +110,7 @@
                     <i class="icon-square-o nav-text"></i>&nbsp;<i id="sel-mis-qty">0</i>
                     </div>
 
+                    <input type="range" class="form-range" id="customRange1">
 
                 </div>
                 <div class="menu-dropdown">
@@ -160,8 +161,10 @@
             <button id="pow-3" type="button" class="btn pow-group btn-dark unsel-grp">3</button>
             <button id="pow-4" type="button" class="btn pow-group btn-dark unsel-grp">4</button>
             <button id="pow-5" type="button" class="btn pow-group btn-dark unsel-grp">5</button>
+            {#
             <button id="pow-6" type="button" class="btn pow-group btn-dark unsel-grp">6</button>
             <button id="pow-7" type="button" class="btn pow-group btn-dark unsel-grp">7</button>
+            #}
         </div>
         <div id="gra-rotate" class="gra-btn-bar">
             <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-up nav-text"></i></button>
@@ -170,7 +173,10 @@
         <div id="gra-app" class="gra-btn-bar">
             <button onclick="applyCrossBookmark('1463.95/-780px/-210px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
             <button onclick="applyCrossBookmark('R')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-times nav-text"></i></button>
-            <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-floppy-disk nav-text"></i></button>
+        </div>
+        <div id="gra-app-pers" class="gra-btn-bar">
+            <button onclick="applyCrossBookmark('1463.95/-780px/-210px/0')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
+            <button onclick="clockW('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-floppy-disk nav-text"></i></button>
         </div>
     </div>
 
