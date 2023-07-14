@@ -172,3 +172,6 @@ dashboardpay:
 addgradetoexam:
     path:       /addgradetoexam
     controller: App\Controller\AdminGradeController::addgradetoexam
+loadgrascan:
+    path:       /loadgrascan
+    controller: App\Controller\AdminGradeController::loadgrascan

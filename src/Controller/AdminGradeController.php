@@ -90,6 +90,48 @@ class AdminGradeController extends AbstractController{
     }
 
 
+    public function loadgrascan(Environment $twig, LoggerInterface $logger){
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+    
+        $scale_right = ConnectionManager::whatScaleRight();
+        // Must be exactly 8 or more than 99
+        if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+            $logger->debug("Firstname: " . $_SESSION["firstname"]);
+            $logger->debug("****************************************************************");
+
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            $param_limit_jpg_query = " SELECT par_int AS JPG_LIMIT FROM uac_param WHERE key_code = 'GRAJPGL'; ";
+            $logger->debug("Show me param_limit_page_query: " . $param_limit_jpg_query);
+            $result_param_limit_jpg_query = $dbconnectioninst->query($param_limit_jpg_query)->fetchAll(PDO::FETCH_ASSOC);
+            //$logger->debug("Show me param_limit_page_query: " . $result_param_limit_jpg_query[0]['JPG_LIMIT']);
+
+            $param_limit_page_query = " SELECT par_int AS PG_LIMIT FROM uac_param WHERE key_code = 'GRASTUL'; ";
+            $logger->debug("Show me param_limit_page_query: " . $param_limit_page_query);
+            $result_param_limit_page = $dbconnectioninst->query($param_limit_page_query)->fetchAll(PDO::FETCH_ASSOC);
+            //$logger->debug("Show me result_param_limit_page: " . $result_param_limit_page[0]['PG_LIMIT']);
+
+
+
+
+            $content = $twig->render('Admin/GRA/loadgrascan.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'jpg_limit' => $result_param_limit_jpg_query[0]['JPG_LIMIT'],
+                                                                'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'errtype' => '']);
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
+
     public function exampleFunction(Environment $twig, LoggerInterface $logger){
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
