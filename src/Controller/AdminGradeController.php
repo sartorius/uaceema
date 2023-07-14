@@ -32,7 +32,7 @@ class AdminGradeController extends AbstractController{
 
             $result_get_token = $this->getDailyTokenGRAStr($logger);
 
-            $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME FROM v_showuser vsh where vsh.cohort_id = 26 ORDER BY VSH_FIRSTNAME ASC; ";
+            $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'E' AS HID_GRA FROM v_showuser vsh where vsh.cohort_id = 26 ORDER BY VSH_FIRSTNAME ASC; ";
             $logger->debug("Show me allusr_query: " . $allusr_query);
 
             $dbconnectioninst = DBConnectionManager::getInstance();
@@ -40,6 +40,10 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me: " . count($result_all_usr));
 
 
+            $param_limit_page_query = " SELECT par_int AS PG_LIMIT FROM uac_param WHERE key_code = 'GRASTUL'; ";
+            $logger->debug("Show me param_limit_page_query: " . $param_limit_page_query);
+            $result_param_limit_page = $dbconnectioninst->query($param_limit_page_query)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_param_limit_page: " . $result_param_limit_page[0]['PG_LIMIT']);
             
             $mention_query = " SELECT * FROM uac_ref_mention; ";
             $logger->debug("Show me mention_query: " . $mention_query);
@@ -57,6 +61,11 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me usedroom_query: " . $teacher_query);
             $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
 
+            $page_maximum = intval(count($result_all_usr) / $result_param_limit_page[0]['PG_LIMIT']);
+            if((count($result_all_usr) % $result_param_limit_page[0]['PG_LIMIT']) > 0){
+                $page_maximum = $page_maximum + 1;
+            }
+
 
             $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -68,6 +77,8 @@ class AdminGradeController extends AbstractController{
                                                                 'result_count_stu_query'=>$result_count_stu_query,
                                                                 "result_teacher_query"=>$result_teacher_query,
                                                                 'result_all_usr' => $result_all_usr,
+                                                                'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
+                                                                'page_maximum' => $page_maximum,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
         }

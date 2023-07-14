@@ -2285,7 +2285,8 @@ img.part-img{
 }
 
 #gra-gr{
-  background-color: #f3f6ff;
+  background-color: #fefff0;
+  padding-left: 0px !important;
 }
 
 #ex-1{
@@ -2294,7 +2295,7 @@ img.part-img{
 }
 
 .btn-layer{
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 }
 
 .back-z{
@@ -2308,9 +2309,11 @@ img.part-img{
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-
+#gra-magnify{
+  margin-left: 50px;
+}
 .gra-btn-bar{
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 .unsel-grp{
@@ -2332,7 +2335,7 @@ img.part-img{
 }
 
 #gra-val-hea{
-  width: 100px;
+  width: 120px;
 }
 
 #teach-sel-gra{
@@ -2344,17 +2347,31 @@ img.part-img{
 .disp-mis-qty{
   color: var(--light-violet-80);
 }
-
+.c-t1{
+  padding: 0px;
+}
 .ctrl-mis{
   background-color: #ffffde;
 }
-
-#ctrl-ban{
-  visibility: hidden;
+.edit-sel-color{
+  color: var(--light-violet-80);
 }
 
+#ctrl-ban,
+#pg-nav,
+#pg-btn-save{
+  visibility: hidden;
+}
 .mask-pg{
   opacity: 0.2;
+}
+
+.err-txtar{
+  background-color: red;
+  color: white;
+}
+.ok-txtar{
+  background-color: #e0ffe8;
 }
 
 .gra-ta-in{
@@ -2372,4 +2389,9 @@ img.part-img{
 
 .title-part{
   width: 100%;
+}
+
+.gra-footer{
+  margin-top: 50px;
+  padding-top: 20px;
 }
