@@ -77,7 +77,7 @@ function validateInputGra(line){
         if($('#gr'+line).val() != ''){
             $('#gr'+line).addClass('ok-txtar');
         }
-        dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val();
+        dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
