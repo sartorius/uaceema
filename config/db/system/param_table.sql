@@ -326,3 +326,18 @@ SELECT 	uc.id AS id, urm.title AS mention, urm.par_code AS mention_code, uc.nive
               					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
               					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
               					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id;
+
+
+DROP TABLE IF EXISTS tech_number;
+CREATE TABLE IF NOT EXISTS `ACEA`.`tech_number` (
+  `id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`));
+INSERT IGNORE INTO tech_number (id) VALUES (1);
+INSERT IGNORE INTO tech_number (id) VALUES (2);
+INSERT IGNORE INTO tech_number (id) VALUES (3);
+INSERT IGNORE INTO tech_number (id) VALUES (4);
+INSERT IGNORE INTO tech_number (id) VALUES (5);
+INSERT IGNORE INTO tech_number (id) VALUES (6);
+INSERT IGNORE INTO tech_number (id) VALUES (7);
+
+-- ----------------------------------------------------------------------------------------------------------------------------

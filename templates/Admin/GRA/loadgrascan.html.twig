@@ -1,5 +1,48 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 
+{% if result_mention_query is defined and result_mention_query is not null %}
+  <script>
+
+    let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
+    let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
+    let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
+    let dataTeacherToJsonArray = JSON.parse('{{ result_teacher_query | json_encode | raw }}');
+    let filteredTeacherList = new Array();
+
+
+    // result_nivsemester_query result_title_per_niv_query result_class_per_subject_query result_nbr_of_stu_mod_query
+    let dataNivSemesterToJsonArray = JSON.parse('{{ result_nivsemester_query | json_encode | raw }}');
+    let dataTitlePerNivToJsonArray = JSON.parse('{{ result_title_per_niv_query | json_encode | raw }}');
+    let dataClassPerSubjectToJsonArray = JSON.parse('{{ result_class_per_subject_query | json_encode | raw }}');
+    let dataNbrOfStuModToJsonArray = JSON.parse('{{ result_nbr_of_stu_mod_query | json_encode | raw }}');
+
+    let tempMention = '';
+    let tempMentionCode = '';
+    let tempClasse = '';
+    let tempClasseID = 0; // <> CourseID !!!
+    let tempPageNbr = 0;
+    let tempCountStu = 0;
+
+    let initialPosition = '';
+
+    let editMode = 'N';
+    let pageLimit = {{ page_limit }};
+
+
+    let currentPage = 1;
+
+
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataMentionToJsonArray = "";
+    </script>
+{% endif %}
+
+
+
 <div id="mg-graph-identifier">load-gra</div>
 
 {% if validated is defined %}
@@ -81,16 +124,9 @@
                     <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
                     </div>
 
-                    {#
-
                     <div class="btn-ace-menu disp-class-qty">
-                    <i class="icon-pencil-square-o nav-text"></i>&nbsp;<i id="sel-pst-qty">0</i>
+                    <i class="icon-files nav-text"></i>&nbsp;<i id="sel-pag-qty">0</i>
                     </div>
-
-                    <div class="btn-ace-menu disp-class-qty disp-mis-qty">
-                    <i class="icon-square-o nav-text"></i>&nbsp;<i id="sel-mis-qty">0</i>
-                    </div>
-                    #}
                     
 
                 </div>

@@ -16,7 +16,7 @@ function fillStudent(paramPage, ableToEdit){
         let existingInputGra = '';
         let highlightClassExisting = '';
         if((dataAllUSRToJsonArray[i].HID_GRA != '') &&
-            (dataAllUSRToJsonArray[i].HID_GRA != 'E')){
+            (dataAllUSRToJsonArray[i].HID_GRA != 'x')){
                 existingInputGra = dataAllUSRToJsonArray[i].HID_GRA;
                 highlightClassExisting = 'ok-txtar';
         }
@@ -46,7 +46,7 @@ function fillStudent(paramPage, ableToEdit){
 }
 
 function testRegexGrade(param){
-    const RE = /^[1-2]?[0-9][\.|,]?[0-9]?[0-9]?$|^[a|A]{1}$/;
+    const RE = /^[1-2]?[0-9][\.|,]?[0-9]?[0-9]?$|^[a|A]{1}$|^[e|E]{1}$/;
     if(param.length == 0){
         return true;
     }
@@ -55,8 +55,11 @@ function testRegexGrade(param){
             // This is for missing/absent
             return true;
         }
+        else if(param.toString().toUpperCase() == 'E'){
+            // This is for exempté/Redoublant
+            return true;
+        }
         else if(parseFloat(param.replace(',', '.')) < 20.01){
-            // This is for missing/absent
             return true;
         }
         else{
@@ -81,7 +84,7 @@ function validateInputGra(line){
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
-        dataAllUSRToJsonArray[line].HID_GRA = 'E';
+        dataAllUSRToJsonArray[line].HID_GRA = 'x';
     }
 }
 
@@ -107,7 +110,7 @@ function checkAllExam(){dataAllUSRToJsonArray
         if(dataAllUSRToJsonArray[i].HID_GRA == ''){
             return i;
         }
-        else if(dataAllUSRToJsonArray[i].HID_GRA == 'E'){
+        else if(dataAllUSRToJsonArray[i].HID_GRA == 'x'){
             return i;
         }
         else{
@@ -422,6 +425,30 @@ function verifyExamMetadata(){
     }
 }
 
+
+function initializePage(){
+
+    // Fill the data
+    fillCartoucheMention();
+
+    // No need to catch change for the Classe because it is inside the select function
+
+    // catch the change of the date
+    let examDate = document.getElementById('exam-day');
+    examDate.addEventListener('change', function(e){
+        verifyExamMetadata();
+    });
+
+    // TODO catch the change of the matiere
+
+    // catch the change of the teacher
+    $(document).on('change', 'input', function() {
+        verifyExamMetadata();
+    });
+}
+
+
+
 function resetNavFooterBtn(){
     if(editMode == 'N'){
         document.getElementById("pg-btn-prec").style.visibility = "hidden";
@@ -471,26 +498,6 @@ function updatePageNav(activeId){
 }
 
 
-function initializePage(){
-
-    // Fill the data
-    fillCartoucheMention();
-
-    // No need to catch change for the Classe because it is inside the select function
-
-    // catch the change of the date
-    let examDate = document.getElementById('exam-day');
-    examDate.addEventListener('change', function(e){
-        verifyExamMetadata();
-    });
-
-    // TODO catch the change of the matiere
-
-    // catch the change of the teacher
-    $(document).on('change', 'input', function() {
-        verifyExamMetadata();
-    });
-}
 
 
 
