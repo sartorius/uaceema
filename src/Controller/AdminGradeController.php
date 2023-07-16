@@ -129,7 +129,13 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me usedroom_query: " . $teacher_query);
             $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            // Manage the subject selection *********** * *********** * *********** * *********** * ***********
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
+            // Manage the subject selection *********** * *********** * *********** * *********** * ************
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
+            // * *********** * *********** * *********** * *********** * *********** * *********** * ***********
 
             $nivsemester_query = " SELECT DISTINCT urs.mention_code AS URS_MENTION_CODE, CONCAT(urs.niveau_code, '/', urs.semester) AS URS_NIVSEM FROM uac_ref_subject urs ORDER BY 1, 2; ";
             $logger->debug("Show me nivsemester_query: " . $nivsemester_query);

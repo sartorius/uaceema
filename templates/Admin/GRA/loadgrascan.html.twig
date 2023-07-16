@@ -20,6 +20,12 @@
     let tempMentionCode = '';
     let tempClasse = '';
     let tempClasseID = 0; // <> CourseID !!!
+
+    let tempNiveau = '';
+    let tempNiveauID = 0;
+    let tempSubject = '';
+    let tempSubjectID = 0;
+
     let tempPageNbr = 0;
     let tempCountStu = 0;
 
@@ -104,19 +110,20 @@
                     </div>
 
                     <div class="dropdown btn-ace-menu tag-edit">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="selected-class" class="tag-color-edit">Classe</i>
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownNiveau" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="selected-niv" class="tag-color-edit">Niveau</i>
                         </button>
-                        <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Sélectionnez une mention</a>
+                        <div id="dpniv-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Sélectionnez une mention</a>
                         </div>
                     </div>
 
                     <div class="dropdown btn-ace-menu tag-edit">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="cou-select" class="tag-color-edit">Matière</i>
+                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownSubject" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="selected-subj" class="tag-color-edit">Matière</i>
                         </button>
-                            <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div id="dpsubj-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Sélectionnez un niveau</a>
                         </div>
                     </div>
 
@@ -126,6 +133,10 @@
 
                     <div class="btn-ace-menu disp-class-qty">
                     <i class="icon-files nav-text"></i>&nbsp;<i id="sel-pag-qty">0</i>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-graduation-cap nav-text"></i>&nbsp;<i id="sel-credit-qty">0</i>
                     </div>
                     
 

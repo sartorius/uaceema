@@ -24,8 +24,8 @@ function selectMention(str, strTitle){
     $('#drp-select').html(strTitle);
     //console.log('You have just click on: ' + str);
     // We reset the dropdown
-    selectClasse(0, 'Classe');
-    fillCartoucheClasse();
+    selectNiveau(0, 'Niveau');
+    fillCartoucheNiveau();
     fillModalTeacher();
     $('#teach-sel-gra').val('');
     $('#teacher-blk-gra').show(100);
@@ -34,21 +34,33 @@ function selectMention(str, strTitle){
     // TODO Reinitialize Matiere
 }
 
-function selectClasse(classeId, str){
-  tempClasseID = classeId;
-  tempClasse = str;
+function selectNiveau(niveauId, str){
+  tempNiveauID = niveauId;
+  tempNiveau = str;
 
-  $("#selected-class").html(str);
-  let getTempCountStu = getQtyStu(classeId);
-  tempCountStu = parseInt(getTempCountStu[0]);
-  tempPageNbr = parseInt(Math.floor(tempCountStu / pageLimit));
-  if(getTempCountStu[1] > 0){
-    tempPageNbr = tempPageNbr + 1;
-  }
-  $("#sel-stu-qty").html(tempCountStu);
-  $("#sel-pag-qty").html(tempPageNbr);
+  $("#selected-niv").html(str);
+  selectSubject(0, 'Matière');
+  fillCartoucheSubject();
   verifyExamMetadata();
 }
+
+function selectSubject(subjectId, str){
+    tempSubjectID = subjectId;
+    tempSubject = str;
+  
+    $("#selected-subj").html(str);
+    /*
+    let getTempCountStu = getQtyStu(classeId);
+    tempCountStu = parseInt(getTempCountStu[0]);
+    tempPageNbr = parseInt(Math.floor(tempCountStu / pageLimit));
+    if(getTempCountStu[1] > 0){
+      tempPageNbr = tempPageNbr + 1;
+    }
+    $("#sel-stu-qty").html(tempCountStu);
+    $("#sel-pag-qty").html(tempPageNbr);
+    */
+    verifyExamMetadata();
+  }
 
 function getQtyStu(classeId){
     for(let i=0; i<dataCountStuToJsonArray.length; i++){
@@ -59,14 +71,24 @@ function getQtyStu(classeId){
     return 0;
 }
 
-function fillCartoucheClasse(){
-    let listClasse = '';
-    for(let i=0; i<dataAllClassToJsonArray.length; i++){
-      if(dataAllClassToJsonArray[i].mention_code == tempMentionCode){
-        listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasse(' + dataAllClassToJsonArray[i].id + ', \'' + dataAllClassToJsonArray[i].short_classe + '\', 1)"  href="#">' + dataAllClassToJsonArray[i].short_classe + '</a>';
+function fillCartoucheNiveau(){
+    let listNiveau = '';
+    for(let i=0; i<dataNivSemesterToJsonArray.length; i++){
+      if(dataNivSemesterToJsonArray[i].URS_MENTION_CODE == tempMentionCode){
+        listNiveau = listNiveau + '<a class="dropdown-item" onclick="selectNiveau(' + i + ', \'' + dataNivSemesterToJsonArray[i].URS_NIVSEM + '\')"  href="#">' + dataNivSemesterToJsonArray[i].URS_NIVSEM + '</a>';
       }
     }
-    $('#dpclasse-opt').html(listClasse);
+    $('#dpniv-opt').html(listNiveau);
+}
+
+function fillCartoucheSubject(){
+    let listSubject = '';
+    for(let i=0; i<dataTitlePerNivToJsonArray.length; i++){
+      if((dataTitlePerNivToJsonArray[i].URS_MENTION_CODE == tempMentionCode) && (dataTitlePerNivToJsonArray[i].URS_NIVSEM == tempNiveau)){
+        listSubject = listSubject + '<a class="dropdown-item" onclick="selectSubject(' + dataTitlePerNivToJsonArray[i].URS_ID + ', \'' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '\')"  href="#">' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '</a>';
+      }
+    }
+    $('#dpsubj-opt').html(listSubject);
 }
   
   
@@ -139,13 +161,13 @@ function verifyExamMetadata(){
     let areMetaDataFilled = 'N';
 
     // Check Classe
-    if($('#selected-class').html() != 'Classe'){
+    if($('#selected-niv').html() != 'Niveau'){
         areMetaDataFilled = 'Y';
-        $('#selected-class').removeClass('ctrl-mis');
+        $('#selected-niv').removeClass('ctrl-mis');
     }
     else{
         areMetaDataFilled = 'N';
-        $('#selected-class').addClass('ctrl-mis');
+        $('#selected-niv').addClass('ctrl-mis');
     }
 
     // Check Date
