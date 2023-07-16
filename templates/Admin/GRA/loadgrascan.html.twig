@@ -29,6 +29,9 @@
     let tempPageNbr = 0;
     let tempCountStu = 0;
 
+    let tempCredit = 0;
+    let tempInvClass = 'na';
+
     let initialPosition = '';
 
     let editMode = 'N';
@@ -141,8 +144,11 @@
                     
 
                 </div>
+                <div id="disp-all-classes">
+
+                </div>
                 <div class="menu-dropdown">
-                    <div class="btn-ace-menu disp-class-qty">
+                    <div class="btn-ace-menu disp-class-sm">
                         Date examen
                     </div>
                     <div class="dropdown btn-ace-menu tag-edit">
@@ -152,8 +158,11 @@
                     <div id="teacher-blk-gra" class="menu-dropdown tag-edit">
                     <input id="teach-sel-gra" list="teach-list" class="tag-color-edit" placeholder="Enseignant responsable">
                         <datalist id="teach-list">
-                        {# <option>Russia</option> #}
+                        {#  <option>Russia</option>  #}
                         </datalist>
+                    </div>
+                    <div class="dropdown btn-ace-menu">
+                        <button id="gra-gen-pres" onclick="x()" class="btn btn-dark btn-md btn-blk-menu" disabled>Générer&nbsp;<i class="icon-files nav-text"></i></button>
                     </div>
                 </div>
             </div>

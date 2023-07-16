@@ -146,7 +146,7 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me title_per_niv_query: " . $title_per_niv_query);
             $result_title_per_niv_query = $dbconnectioninst->query($title_per_niv_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS FROM uac_ref_subject urs  "
+            $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe ORDER BY vcc.id ASC SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS FROM uac_ref_subject urs  "
                                         . " JOIN uac_xref_subject_cohort xref ON urs.id = xref.subject_id "
                                         . " JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id GROUP BY urs.id; ";
             $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);

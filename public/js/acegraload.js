@@ -18,10 +18,26 @@ function fillCartoucheMention(){
     $('#dpmention-opt').html(listMention);
 }
 
+function clearCartouche(){
+    // reset the rest
+    tempSubjectID = 0;
+    tempSubject = '';
+    tempCredit = 0;
+    tempInvClass = 'na';
+    tempCountStu = 0;
+    tempPageNbr = 0;
+    $("#sel-stu-qty").html(tempCountStu);
+    $("#sel-pag-qty").html(tempPageNbr);
+    $("#disp-all-classes").html(tempInvClass);
+    $("#sel-credit-qty").html(parseInt(tempCredit));
+}
+
 function selectMention(str, strTitle){
     tempMentionCode = str;
     tempMention = strTitle;
+
     $('#drp-select').html(strTitle);
+
     //console.log('You have just click on: ' + str);
     // We reset the dropdown
     selectNiveau(0, 'Niveau');
@@ -39,36 +55,57 @@ function selectNiveau(niveauId, str){
   tempNiveau = str;
 
   $("#selected-niv").html(str);
-  selectSubject(0, 'Matière');
+  selectSubject(0, 'Matière', 0);
   fillCartoucheSubject();
   verifyExamMetadata();
+  if(niveauId == 0){
+    clearCartouche();
+  }
 }
 
-function selectSubject(subjectId, str){
-    tempSubjectID = subjectId;
-    tempSubject = str;
-  
+function selectSubject(subjectId, str, credit){
+
     $("#selected-subj").html(str);
-    /*
-    let getTempCountStu = getQtyStu(classeId);
-    tempCountStu = parseInt(getTempCountStu[0]);
-    tempPageNbr = parseInt(Math.floor(tempCountStu / pageLimit));
-    if(getTempCountStu[1] > 0){
-      tempPageNbr = tempPageNbr + 1;
+    if(subjectId == 0){
+        clearCartouche();
     }
-    $("#sel-stu-qty").html(tempCountStu);
-    $("#sel-pag-qty").html(tempPageNbr);
-    */
+    else{
+        tempSubjectID = subjectId;
+        tempSubject = str;
+        tempCredit = credit;
+        tempInvClass = getInvolvedClasses();
+        $("#disp-all-classes").html(tempInvClass);
+    
+        let getTempCountStu = getQtyStu();
+        tempCountStu = parseInt(getTempCountStu[0]);
+        tempPageNbr = parseInt(Math.floor(tempCountStu / pageLimit));
+        if(parseInt(getTempCountStu[1]) > 0){
+          tempPageNbr = tempPageNbr + 1;
+        }
+        $("#sel-stu-qty").html(tempCountStu);
+        $("#sel-pag-qty").html(tempPageNbr);
+        
+        $("#sel-credit-qty").html(parseInt(tempCredit)/10);
+    }
     verifyExamMetadata();
   }
 
-function getQtyStu(classeId){
-    for(let i=0; i<dataCountStuToJsonArray.length; i++){
-      if(dataCountStuToJsonArray[i].COHORT_ID == classeId){
-        return [dataCountStuToJsonArray[i].CPT_STU, dataCountStuToJsonArray[i].CPT_MODULO];
+function getQtyStu(){
+    for(let i=0; i<dataNbrOfStuModToJsonArray.length; i++){
+      if(dataNbrOfStuModToJsonArray[i].URS_ID == tempSubjectID){
+        return [dataNbrOfStuModToJsonArray[i].CPT_STU, dataNbrOfStuModToJsonArray[i].CPT_MODULO];
       }
     }
     return 0;
+}
+
+function getInvolvedClasses(){
+    for(let i=0; i<dataClassPerSubjectToJsonArray.length; i++){
+      if(dataClassPerSubjectToJsonArray[i].URS_ID == tempSubjectID){
+        return dataClassPerSubjectToJsonArray[i].GRP_VCC_SHORT_CLASS;
+      }
+    }
+    return 'na';
 }
 
 function fillCartoucheNiveau(){
@@ -85,7 +122,7 @@ function fillCartoucheSubject(){
     let listSubject = '';
     for(let i=0; i<dataTitlePerNivToJsonArray.length; i++){
       if((dataTitlePerNivToJsonArray[i].URS_MENTION_CODE == tempMentionCode) && (dataTitlePerNivToJsonArray[i].URS_NIVSEM == tempNiveau)){
-        listSubject = listSubject + '<a class="dropdown-item" onclick="selectSubject(' + dataTitlePerNivToJsonArray[i].URS_ID + ', \'' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '\')"  href="#">' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '</a>';
+        listSubject = listSubject + '<a class="dropdown-item" onclick="selectSubject(' + dataTitlePerNivToJsonArray[i].URS_ID + ', \'' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '\'' + ', ' + dataTitlePerNivToJsonArray[i].URS_CREDIT + ')"  href="#">' + dataTitlePerNivToJsonArray[i].URS_SUBJECT_TITLE + '</a>';
       }
     }
     $('#dpsubj-opt').html(listSubject);
@@ -170,6 +207,16 @@ function verifyExamMetadata(){
         $('#selected-niv').addClass('ctrl-mis');
     }
 
+    // TODO Check Matiere
+    if($('#selected-subj').html() != 'Matière'){
+        areMetaDataFilled = 'Y';
+        $('#selected-subj').removeClass('ctrl-mis');
+    }
+    else{
+        areMetaDataFilled = 'N';
+        $('#selected-subj').addClass('ctrl-mis');
+    }
+
     // Check Date
     if(($('#exam-day').val() != '') && (areMetaDataFilled == 'Y')){
         areMetaDataFilled = 'Y';
@@ -180,8 +227,7 @@ function verifyExamMetadata(){
         $('#exam-day').addClass('ctrl-mis');
     }
 
-    // TODO Check Matiere
-    // TBD
+    
 
     // Check Teacher
     if(($('#teach-sel-gra').val() != '') && (areMetaDataFilled == 'Y')){

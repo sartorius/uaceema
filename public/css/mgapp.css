@@ -1487,6 +1487,11 @@ textarea[name=inputRef] {
   font-size: 2em;
 }
 
+.disp-class-sm{
+  color: var(--main-gray-50);
+  font-size: 1.4em;
+}
+
 #past-msg-edt,
 #exist-msg-edt{
   display: none;
@@ -2395,7 +2400,11 @@ img.part-img{
   margin-top: 50px;
   padding-top: 20px;
 }
-
+#disp-all-classes{
+  color: rgb(106, 76, 131);
+  font-size: 1em;
+  margin-bottom: 20px;
+}
 .load-gra-hdr{
   margin-top: 40px;
 }
