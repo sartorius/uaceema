@@ -2364,7 +2364,8 @@ img.part-img{
 
 #ctrl-ban,
 #pg-nav,
-#pg-btn-save{
+#pg-btn-save,
+#file-upl-loader-gra{
   visibility: hidden;
 }
 .mask-pg{

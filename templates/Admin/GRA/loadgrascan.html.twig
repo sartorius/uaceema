@@ -1,11 +1,10 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
+{% include 'Dirty/dirtyjspdf.html.twig' %}
 
 {% if result_mention_query is defined and result_mention_query is not null %}
   <script>
 
     let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
-    let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
-    let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
     let dataTeacherToJsonArray = JSON.parse('{{ result_teacher_query | json_encode | raw }}');
     let filteredTeacherList = new Array();
 
@@ -15,6 +14,8 @@
     let dataTitlePerNivToJsonArray = JSON.parse('{{ result_title_per_niv_query | json_encode | raw }}');
     let dataClassPerSubjectToJsonArray = JSON.parse('{{ result_class_per_subject_query | json_encode | raw }}');
     let dataNbrOfStuModToJsonArray = JSON.parse('{{ result_nbr_of_stu_mod_query | json_encode | raw }}');
+
+    let dataAllStuToJsonArray = JSON.parse('{{ result_allstu_query | json_encode | raw }}');
 
     let tempMention = '';
     let tempMentionCode = '';
@@ -31,6 +32,8 @@
 
     let tempCredit = 0;
     let tempInvClass = 'na';
+    let tempArrayClass = new Array();
+    let maxLengthTable = 17;
 
     let initialPosition = '';
 
@@ -162,7 +165,7 @@
                         </datalist>
                     </div>
                     <div class="dropdown btn-ace-menu">
-                        <button id="gra-gen-pres" onclick="x()" class="btn btn-dark btn-md btn-blk-menu" disabled>Générer&nbsp;<i class="icon-files nav-text"></i></button>
+                        <button id="gra-gen-prs" onclick="genInvPresenceSheet()" class="btn btn-dark btn-md btn-blk-menu" disabled>Générer&nbsp;<i class="icon-files nav-text"></i></button>
                     </div>
                 </div>
             </div>
@@ -195,7 +198,7 @@
                     Choisissez un fichier en .zip &nbsp;
                     <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
 
-                    <input type="submit" value="Uploader le fichier" name="submit" id="file-upl-loader-sub" class="btn btn-default btn-lg btn-print btn-block">
+                    <input type="submit" value="Uploader le fichier" name="submit" id="file-upl-loader-gra" class="btn btn-default btn-lg btn-print btn-block">
                     </form>
                 </div>
                 <br>

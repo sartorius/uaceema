@@ -1,4 +1,142 @@
 
+function printPresenceSheet(limit, maxIs){
+
+    console.log('Click on printBatchStudentCard');
+  
+    // Here format A4
+    let doc = new jsPDF('p','mm',[297, 210]);
+  
+    doc.setFont("Courier");
+    doc.setFontType("bold");
+    doc.setFontSize(9);
+    doc.setTextColor(175,180,187);
+  
+    let rowSeter = 0;
+    let columnSeter = 0;
+    let itemPageCount = 10;
+    const cardWidth = 105;
+    const cardHeight = 59;
+  
+  
+    for(let i=0; i<limit; i++){
+          /************************/
+  
+          columnSeter = (i % 2);
+  
+          /************************/
+  
+  
+          //
+          doc.addImage(document.getElementById('pf-'+ i), //img src
+                        'JPG', //format
+                        3 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+                        14 + rowSeter * cardHeight, //y
+                        31, //Width
+                        31, null, 'FAST'); //Height // Fast is to get less big files
+  
+          //getBase64Image('/img/mdl_data/' + filteredDataAllSTUToJsonArray[i].USERNAME.toLowerCase() + '.jpg', 'can-'+ i, doc);
+  
+  
+          doc.addImage(document.getElementById('bg-'+ i), //img src
+                        'PNG', //format
+                        0 + columnSeter*(cardWidth),//x oddOffsetX is to define if position 1 or 2
+                        0 + rowSeter * cardHeight, //y
+                        cardWidth, //Width
+                        cardHeight, null, 'FAST'); //Height // Fast is to get less big files
+  
+  
+  
+          doc.addImage(document.getElementById("item-bc-" + i).src, //img src
+                        'PNG', //format
+                        38 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+                        25 + rowSeter * cardHeight, //y
+                        50, //Width
+                        25, null, 'FAST'); //Height // Fast is to get less big files
+  
+          doc.setTextColor('#242424');
+          doc.setFont('Helvetica');
+          doc.setFontStyle('normal');
+          doc.setFontSize(12);
+          doc.text(
+            40 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+            20 + rowSeter * cardHeight, //y
+            filteredDataAllSTUToJsonArray[i].LASTNAME.substr(0, 20));
+  
+          doc.setFontSize(12);
+          doc.text(
+            40 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+            25 + rowSeter * cardHeight, //y
+            filteredDataAllSTUToJsonArray[i].FIRSTNAME.substr(0, 18));
+  
+            //$('#prt-pnom-'+ i).html(filteredDataAllSTUToJsonArray[i].FIRSTNAME.substr(0, 28));
+  
+  
+          doc.setTextColor(48,91,159);
+          doc.setFontSize(14);
+          doc.addImage(document.getElementById('logo-carte'), //img src
+                        'PNG', //format
+                        77 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+                        4 + rowSeter * cardHeight, //y
+                        25, //Width
+                        8, null, 'FAST'); //Height // Fast is to get less big files
+  
+          doc.setTextColor('#ADC2D2');
+          doc.setFontSize(6);
+          doc.text(
+            15 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
+            57 + rowSeter * cardHeight, //y
+            'uaceem.com - aceemgroupe.com - PRVO 26B Manakambahiny Antananarivo 101');
+  
+  
+           // We have reach the 2nd column so we need to carriege return
+           if(columnSeter == 1){
+             rowSeter++;
+           }
+  
+  
+           if(itemPageCount == 1){
+             doc.addPage();
+             rowSeter = 0;
+             itemPageCount = 10;
+             if(i == (maxIs - 1)){
+               doc.setTextColor('#242424');
+               doc.setFont('Helvetica');
+               doc.setFontStyle('normal');
+               doc.setFontSize(15);
+               doc.text(
+                 10, //x oddOffsetX is to define if position 1 or 2
+                 30, //y
+                 'Le nombre de carte imprimable est limité à : ' + maxIs);
+               doc.setTextColor('#242424');
+               doc.setFont('Helvetica');
+               doc.setFontStyle('normal');
+               doc.setFontSize(12);
+               doc.text(
+                 10, //x oddOffsetX is to define if position 1 or 2
+                 40, //y
+                 'Pensez à utiliser le filtre du Manager étudiant pour imprimer des cartes en particulier.');
+             }
+           }
+           else{
+             itemPageCount = itemPageCount - 1;
+           }
+  
+  
+    }
+  
+    // Release the screen
+    // We don't go at the end of the loop to avoid
+    $("#waiting-blc").hide(500);
+    $("#grid-all-blc").show(500);
+    $("#grid-crit-blc").show(500);
+  
+    doc.save('BatchCartEtudiantUACEEM_Print');
+  
+}
+
+function genInvPresenceSheet(){
+
+}
 /*******************************************************************************************************************/
 /*******************************************************************************************************************/
 /*******************************************************************************************************************/
@@ -24,6 +162,7 @@ function clearCartouche(){
     tempSubject = '';
     tempCredit = 0;
     tempInvClass = 'na';
+    tempArrayClass = new Array();
     tempCountStu = 0;
     tempPageNbr = 0;
     $("#sel-stu-qty").html(tempCountStu);
@@ -73,7 +212,9 @@ function selectSubject(subjectId, str, credit){
         tempSubjectID = subjectId;
         tempSubject = str;
         tempCredit = credit;
-        tempInvClass = getInvolvedClasses();
+        let iTempInvClass = getInvolvedClasses();
+        tempInvClass = iTempInvClass[0];
+        tempArrayClass = (iTempInvClass[1]).toString().split('|');
         $("#disp-all-classes").html(tempInvClass);
     
         let getTempCountStu = getQtyStu();
@@ -102,10 +243,10 @@ function getQtyStu(){
 function getInvolvedClasses(){
     for(let i=0; i<dataClassPerSubjectToJsonArray.length; i++){
       if(dataClassPerSubjectToJsonArray[i].URS_ID == tempSubjectID){
-        return dataClassPerSubjectToJsonArray[i].GRP_VCC_SHORT_CLASS;
+        return [dataClassPerSubjectToJsonArray[i].GRP_VCC_SHORT_CLASS, dataClassPerSubjectToJsonArray[i].GRP_VCC_ID];
       }
     }
-    return 'na';
+    return ['na', 'na'];
 }
 
 function fillCartoucheNiveau(){
@@ -146,7 +287,7 @@ function fillModalTeacher(){
     $('#teach-list').html(teacherList);
 }
 
-
+/*
 function startStopGraEdit(){
     if(editMode == 'N'){
       // We start edit here
@@ -169,27 +310,21 @@ function startStopGraEdit(){
       allowBannerAndMainPage(editMode);
       resetNavFooterBtn();
     }
-}
+} */
 
-
-function allowBannerAndMainPage(param){
+function allowGenerateAndMainPage(param){
     if(param == 'Y'){
         // This is to show input on each grade
-        $('.gra-txta').removeClass('gra-ta-in');
-
         $('#main-gra').removeClass('mask-pg');
-        document.getElementById("ctrl-ban").style.visibility = "visible";
-        document.getElementById("pg-nav").style.visibility = "visible";
+        $("#gra-gen-prs").prop("disabled", false);
+        document.getElementById("file-upl-loader-gra").style.visibility = "visible";
         
     }
     else{
         // This is to hide input on each grade
-        applyCrossBookmark('R');
-        $('.gra-txta').addClass('gra-ta-in');
-        
         $('#main-gra').addClass('mask-pg');
-        document.getElementById("ctrl-ban").style.visibility = "hidden";
-        document.getElementById("pg-nav").style.visibility = "hidden";
+        $("#gra-gen-prs").prop("disabled", true);
+        document.getElementById("file-upl-loader-gra").style.visibility = "hidden";
     }
 }
 
@@ -240,11 +375,7 @@ function verifyExamMetadata(){
     }
 
     //allowBannerAndMainPage(areMetaDataFilled);
-    if(areMetaDataFilled == 'Y'){
-        $("#gra-val-hea").prop("disabled", false);
-    }else{
-        $("#gra-val-hea").prop("disabled", true);
-    }
+    allowGenerateAndMainPage(areMetaDataFilled);
 }
 
 

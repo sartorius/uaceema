@@ -117,14 +117,6 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me mention_query: " . $mention_query);
             $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            $allclass_query = " SELECT * FROM v_class_cohort; ";
-            $logger->debug("Show me allclass_query: " . $allclass_query);
-            $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
-
-            $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU, MOD(COUNT(1), " . $result_param_limit_page[0]['PG_LIMIT'] . ") AS CPT_MODULO FROM v_showuser GROUP BY COHORT_ID; ";
-            $logger->debug("Show me count_stu_query: " . $count_stu_query);
-            $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
-
             $teacher_query = " SELECT urt.id, xm.mention_code, urt.name FROM uac_ref_teacher urt JOIN uac_xref_teacher_mention xm ON xm.teach_id = urt.id;";
             $logger->debug("Show me usedroom_query: " . $teacher_query);
             $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -146,7 +138,7 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me title_per_niv_query: " . $title_per_niv_query);
             $result_title_per_niv_query = $dbconnectioninst->query($title_per_niv_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe ORDER BY vcc.id ASC SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS FROM uac_ref_subject urs  "
+            $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe ORDER BY vcc.id ASC SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS, GROUP_CONCAT(vcc.ID SEPARATOR '|') AS GRP_VCC_ID FROM uac_ref_subject urs  "
                                         . " JOIN uac_xref_subject_cohort xref ON urs.id = xref.subject_id "
                                         . " JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id GROUP BY urs.id; ";
             $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);
@@ -158,6 +150,12 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me nbr_of_stu_mod_query: " . $nbr_of_stu_mod_query);
             $result_nbr_of_stu_mod_query = $dbconnectioninst->query($nbr_of_stu_mod_query)->fetchAll(PDO::FETCH_ASSOC);
 
+            $allstu_query = " SELECT UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, vsh.COHORT_ID AS VSH_COHORT_ID from v_showuser vsh ORDER BY vsh.ID ASC; ";
+            $logger->debug("Show me allstu_query: " . $allstu_query);
+            $result_allstu_query = $dbconnectioninst->query($allstu_query)->fetchAll(PDO::FETCH_ASSOC);
+
+
+
             $content = $twig->render('Admin/GRA/loadgrascan.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
@@ -165,14 +163,13 @@ class AdminGradeController extends AbstractController{
                                                                 'jpg_limit' => $result_param_limit_jpg_query[0]['JPG_LIMIT'],
                                                                 'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
                                                                 'result_mention_query'=>$result_mention_query,
-                                                                'result_allclass_query'=>$result_allclass_query,
-                                                                'result_count_stu_query'=>$result_count_stu_query,
                                                                 "result_teacher_query"=>$result_teacher_query,
                                                                 // Subject selection are starting here
                                                                 "result_nivsemester_query"=>$result_nivsemester_query,
                                                                 "result_title_per_niv_query"=>$result_title_per_niv_query,
                                                                 "result_class_per_subject_query"=>$result_class_per_subject_query,
                                                                 "result_nbr_of_stu_mod_query"=>$result_nbr_of_stu_mod_query,
+                                                                "result_allstu_query"=>$result_allstu_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
         }
