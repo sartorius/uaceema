@@ -37,13 +37,19 @@ function generateRecetteJourneeCSV(){
   let involvedArray = dataRepRecetteJourneeJsonArray;
   const SEP_ = ";"
 
+  let today = new Date();
+    let date = today.getDate().toString().padStart(2, '0')+'/'+(today.getMonth()+1).toString().padStart(2, '0')+'/'+today.getFullYear();
+    let time = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0') + ":" + today.getSeconds().toString().padStart(2, '0');
+    let dateTime = date+' à '+time;
 
-let dataString = "Référence" + SEP_ 
+let dataString;
+
+dataString = "Référence" + SEP_ 
                   + "Matricule" + SEP_ 
-                  + "Reference de Paiement" + SEP_ 
+                  + "Réference de Paiement" + SEP_ 
                   + "Code de référence" + SEP_ 
                   + "Nom" + SEP_ 
-                  + "Prenom" + SEP_
+                  + "Prénom" + SEP_
                   + "Type" + SEP_
                   + "Recette INFORMATIQUE ELECTRONIQUE" + SEP_ 
                   + "Recette GESTION" + SEP_ 
@@ -138,6 +144,14 @@ csvContent += dataString + "\n" ;
 dataString = SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ ;
 dataString = dataString + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + 'Total journée' + SEP_ + (computeTotalRIDXX + computeTotalECONO + computeTotalMBSXX + computeTotalSIENS + computeTotalDROIT + computeTotalCOMMU + computeTotalGESTI + computeTotalDIVERS) + SEP_ + SEP_+ SEP_;
 csvContent += dataString + "\n" ;
+
+dataString = SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ ;
+dataString = dataString + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + 'Total hier (à remplir)' + SEP_ + SEP_ + SEP_+ SEP_;
+csvContent += dataString + "\n" ;
+
+dataString = "Date de pointage" + SEP_ + dateTime + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ ;
+dataString = dataString + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_+ SEP_;
+csvContent += dataString + "\n";
 
   //console.log('Click on csv');
   let encodedUri = encodeURI(csvContent);
