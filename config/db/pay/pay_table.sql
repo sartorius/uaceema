@@ -605,3 +605,33 @@ SELECT
 	 vts.NEGATIVE_IS_LATE
 FROM v_dash_tech_sum_up_tranche vts JOIN v_showuser VSH ON VSH.ID = vts.VSH_ID
 ORDER BY TRANCHE_DDL ASC;
+
+
+
+DROP VIEW IF EXISTS v_recette_journee;
+CREATE VIEW v_recette_journee AS
+SELECT
+	  up.id AS UP_ID,
+	  up.payment_ref AS UP_PAYMENT_REF,
+	  UPPER(vsh.USERNAME) AS VSH_USERNAME,
+	  up.input_amount AS UP_INPUT_AMOUNT,
+	  DATE_FORMAT(up.pay_date, "%d/%m/%Y %H:%i:%s") AS UP_PAY_DATETIME,
+	  DATE_FORMAT(up.pay_date, "%d/%m/%Y") AS UP_PAY_DATE,
+	  up.pay_date AS TECH_DATE,
+	  up.status AS UP_STATUS,
+	  up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+	  up.comment AS UP_COMMENT,
+	  ref.code AS REF_CODE,
+	  ref.description AS REF_DESCRIPTION,
+	  vsh.SHORTCLASS AS VSH_SHORT_CLASS,
+	  vsh.FIRSTNAME AS VSH_FIRSTNAME,
+	  vsh.LASTNAME AS VSH_LASTNAME,
+	  vsh.MATRICULE AS VSH_MATRICULE,
+	  vcc.mention_code AS VCC_MENTION_CODE,
+	  vcc.mention AS VCC_MENTION
+	FROM uac_payment up JOIN v_showuser vsh ON up.user_id = vsh.ID
+								   JOIN v_class_cohort vcc ON vcc.id = vsh.COHORT_ID
+							 JOIN uac_ref_frais_scolarite ref ON ref.id = up.ref_fsc_id
+	WHERE up.type_of_payment NOT IN ('R', 'M', 'E')
+	AND up.pay_date > CURRENT_DATE
+							 ORDER BY up.pay_date DESC;

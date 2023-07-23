@@ -1439,6 +1439,10 @@ class AdminPayController extends AbstractController
         $logger->debug("Show rep_all_tranche: " . $rep_all_tranche);
         $result_rep_all_tranche = $dbconnectioninst->query($rep_all_tranche)->fetchAll(PDO::FETCH_ASSOC);
 
+        $rep_rec_journee = " SELECT * FROM v_recette_journee; ";
+        $logger->debug("Show rep_rec_journee: " . $rep_rec_journee);
+        $result_rep_rec_journee = $dbconnectioninst->query($rep_rec_journee)->fetchAll(PDO::FETCH_ASSOC);
+
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
@@ -1456,6 +1460,7 @@ class AdminPayController extends AbstractController
                                                                 "result_rep_all_red"=>$result_rep_all_red,
                                                                 "result_rep_year_recap"=>$result_rep_year_recap,
                                                                 "result_rep_all_tranche"=>$result_rep_all_tranche,
+                                                                "result_rep_rec_journee"=>$result_rep_rec_journee,
                                                                 'errtype' => '']);
                                                                 
 

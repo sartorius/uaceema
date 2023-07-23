@@ -134,6 +134,16 @@
     </script>
 {% endif %}
 
+{% if result_rep_rec_journee is defined and result_rep_rec_journee is not null %}
+  <script>
+    let dataRepRecetteJourneeJsonArray =JSON.parse('{{ result_rep_rec_journee | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataRepRecetteJourneeJsonArray = new Array();
+    </script>
+{% endif %}
+
 
 <div id="mg-graph-identifier">dash-pay</div>
 
@@ -145,6 +155,7 @@
   <div class="col-10">
     <button type="button"  onclick="generateAllReductionCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Réduction</button>
     &nbsp;<button type="button" onclick="generateAllTrancheCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Tranche</button>
+    &nbsp;<button type="button" onclick="generateRecetteJourneeCSV()" class="btn btn-dark btn-md"><i class="icon-file-text-o"></i>&nbsp;Recette journée</button>
     &nbsp;<button type="button" onclick="printCloseOfBusinessPDF('MVOLAXX', mvolaArray)" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Mvola</button>
     &nbsp;<button type="button" onclick="printCloseOfBusinessPDF('CLOTURE', cobArray)" class="btn btn-outline-dark btn-md"><i class="icon-invoice"></i>&nbsp;Clôture journée</button>
   </div>

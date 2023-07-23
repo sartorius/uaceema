@@ -267,7 +267,7 @@ function showPopUpPay(param){
     $('#pay-details-modal').modal('show');
 }
 
-
+/*
 
 function verboseTypeOfPayment(value){
     if(value == 'C'){
@@ -310,6 +310,7 @@ function verboseStatusOfPayment(value){
         return 'Annulé';
       }
 }
+*/
 
 function loadAllPAYGrid(){
 

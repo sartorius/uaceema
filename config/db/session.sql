@@ -364,3 +364,14 @@ select * from v_studashboard_log;
 
 SELECT mu.id AS ID, UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, uas.secret AS SECRET, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, fCapitalizeStr(REPLACE(UPPER(mu.firstname), "'", " ")) AS FIRSTNAME, REPLACE(UPPER(mu.lastname), "'", " ") AS LASTNAME, mu.genre AS GENRE, mu.situation_matrimoniale AS SITM, mu.email AS EMAIL, vaco.id AS CLASS_ID, vaco.mention AS CLASS_MENTION, vaco.niveau AS CLASS_NIVEAU, vaco.parcours AS CLASS_PARCOURS, vaco.groupe AS CLASS_GROUPE, mu.phone1 AS PHONE, mu.address AS ADRESSE, mu.city AS QUARTIER, DATE_FORMAT(mu.datedenaissance, '%d/%m/%Y') AS DATEDENAISSANCE, fEscapeStr(UPPER(ifnull(mu.lieu_de_naissance, 'na'))) AS LIEUDN, DATE_FORMAT(mu.create_date, '%d/%m/%Y') AS INSCDATE, ifnull(mu.compte_fb, 'na') AS FB, fEscapeStr(mu.etablissement_origine) AS ORIGINE, mu.serie_bac AS SERIE_BAC, mu.annee_bac AS ANNEE_BAC, ifnull(mu.numero_cin, 'na') AS NUMCIN, ifnull(DATE_FORMAT(mu.date_cin, '%d/%m/%Y'), 'na') AS DATECIN, fEscapeStr(ifnull(mu.lieu_cin, 'na')) AS LIEU_CIN, fEscapeStr(ifnull(mu.nom_pnom_par1, 'na')) AS NOMPNOMP1, ifnull(mu.phone_par1, 'na') AS PHONEPAR1, fEscapeStr(ifnull(mu.profession_par1, 'na')) AS PROFPAR1, fEscapeStr(ifnull(mu.adresse_par1, 'na')) AS ADDRPAR1, fEscapeStr(ifnull(mu.city_par1, 'na')) AS CITYPAR1, fEscapeStr(ifnull(mu.nom_pnom_par2, 'na')) AS NOMPNOMP2, fEscapeStr(ifnull(mu.profession_par2, 'na')) AS PROFPAR2, ifnull(mu.phone_par2, 'na') AS PHONEPAR2, fEscapeStr(ifnull(mu.centres_interets, 'na')) AS CENTINT, REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe, vaco.short_classe, mu.matricule)), "'", " ") AS raw_data
 FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC;
+
+
+-- ADD new user
+
+INSERT INTO mdl_user (id, username, last_update, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets)
+VALUES
+	(1198, 'genense177', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ENSEIGNANT', 'enseignant177@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1198, MD5('ladansemagiqueverte'), NULL, 5, 'Gen enseignant', 0);

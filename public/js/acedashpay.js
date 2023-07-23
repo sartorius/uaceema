@@ -30,6 +30,131 @@ function renderAmount(param){
     return result + '.AR';
 }
 
+
+function generateRecetteJourneeCSV(){
+  const csvContentType = "data:text/csv;charset=utf-8,";
+  let csvContent = "";
+  let involvedArray = dataRepRecetteJourneeJsonArray;
+  const SEP_ = ";"
+
+
+let dataString = "Référence" + SEP_ 
+                  + "Matricule" + SEP_ 
+                  + "Reference de Paiement" + SEP_ 
+                  + "Code de référence" + SEP_ 
+                  + "Nom" + SEP_ 
+                  + "Prenom" + SEP_
+                  + "Type" + SEP_
+                  + "Recette INFORMATIQUE ELECTRONIQUE" + SEP_ 
+                  + "Recette GESTION" + SEP_ 
+                  + "Recette COMMUNICATION" + SEP_ 
+                  + "Recette DROIT" + SEP_ 
+                  + "Recette SCIENCES DE LA SANTE" + SEP_ 
+                  + "Recette MBS" + SEP_ 
+                  + "Recette ECONOMIE" + SEP_ 
+                  + "Recette RELATIONS INTERNATIONALES DIPLOMATIQUES" + SEP_ 
+                  + "Recette DIVERS" + SEP_ 
+                  + "Commentaire" + SEP_ + "\n";
+csvContent += dataString;
+
+let computeTotalINFOE = 0;
+let computeTotalGESTI = 0;
+let computeTotalCOMMU = 0;
+let computeTotalDROIT = 0;
+let computeTotalSIENS = 0;
+let computeTotalMBSXX = 0;
+let computeTotalECONO = 0;
+let computeTotalRIDXX = 0;
+let computeTotalDIVERS = 0;
+
+for(let i=0; i<involvedArray.length; i++){
+
+          dataString = involvedArray[i].UP_PAYMENT_REF + SEP_ 
+              + isNullMvo(involvedArray[i].VSH_MATRICULE) + SEP_ 
+              + isNullMvo(involvedArray[i].REF_DESCRIPTION) + SEP_ 
+              + isNullMvo(involvedArray[i].REF_CODE) + SEP_ 
+              + isNullMvo(involvedArray[i].VSH_LASTNAME) + SEP_ 
+              + isNullMvo(involvedArray[i].VSH_FIRSTNAME) + SEP_ 
+              + verboseTypeOfPayment(involvedArray[i].UP_TYPE_OF_PAYMENT) + SEP_ ;
+
+          if(involvedArray[i].REF_CODE == 'CERTSCO'){
+            dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+            computeTotalDIVERS = computeTotalDIVERS + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+          }
+          else{
+            switch(involvedArray[i].VCC_MENTION_CODE) {
+                  case 'INFOE':
+                    // code block
+                    dataString = dataString + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalINFOE = computeTotalINFOE + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'GESTI':
+                    // code block
+                    dataString = dataString + SEP_  + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalGESTI = computeTotalGESTI + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'COMMU':
+                    // code block
+                    dataString = dataString + SEP_  + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalCOMMU = computeTotalCOMMU + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'DROIT':
+                    // code block
+                    dataString = dataString + SEP_  + SEP_ + SEP_  + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalDROIT = computeTotalDROIT + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'SIENS':
+                    // code block
+                    dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalSIENS = computeTotalSIENS + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'MBSXX':
+                    // code block
+                    dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalMBSXX = computeTotalMBSXX + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  case 'ECONO':
+                    // code block
+                    dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalECONO = computeTotalECONO + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                  default:
+                    // code block
+                    // RIDXX
+                    dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
+                    computeTotalRIDXX = computeTotalRIDXX + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
+                    break;
+                };
+          }
+
+          // easy close here
+          csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
+}
+
+dataString = SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + 'Total par mention' + SEP_ ;
+dataString = dataString + computeTotalINFOE + SEP_ + computeTotalGESTI + SEP_ + computeTotalCOMMU + SEP_ + computeTotalDROIT + SEP_ + computeTotalSIENS + SEP_ + computeTotalMBSXX + SEP_ + computeTotalECONO + SEP_ + computeTotalRIDXX + SEP_ + computeTotalDIVERS + SEP_+ SEP_;
+csvContent += dataString + "\n" ;
+
+dataString = SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ ;
+dataString = dataString + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + 'Total journée' + SEP_ + (computeTotalRIDXX + computeTotalECONO + computeTotalMBSXX + computeTotalSIENS + computeTotalDROIT + computeTotalCOMMU + computeTotalGESTI + computeTotalDIVERS) + SEP_ + SEP_+ SEP_;
+csvContent += dataString + "\n" ;
+
+  //console.log('Click on csv');
+  let encodedUri = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
+
+      let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'RapportRecetteJournee.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
 function printCloseOfBusinessPDF(title, paramArray){
 
     // Document of 210mm wide and 297mm high > A4
