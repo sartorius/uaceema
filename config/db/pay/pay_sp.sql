@@ -77,7 +77,7 @@ CREATE PROCEDURE `CLI_CRT_PayAddOpeMulti` (IN param_user_id BIGINT, IN param_tic
 BEGIN
     DECLARE inv_fsc_id	INT;
     DECLARE inv_amount	INT;
-    DECLARE inv_code	CHAR(7);
+    DECLARE inv_code	  CHAR(7);
     -- END OF DECLARE
 
     IF (param_type_of_operation = 'A') THEN

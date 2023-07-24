@@ -83,7 +83,7 @@ for(let i=0; i<involvedArray.length; i++){
               + isNullMvo(involvedArray[i].VSH_FIRSTNAME) + SEP_ 
               + verboseTypeOfPayment(involvedArray[i].UP_TYPE_OF_PAYMENT) + SEP_ ;
 
-          if(involvedArray[i].REF_CODE == 'CERTSCO'){
+          if((involvedArray[i].REF_CODE == 'CERTSCO') || (involvedArray[i].REF_CODE == 'CARTEET') || (involvedArray[i].REF_CODE == 'CERTIFC')){
             dataString = dataString + SEP_  + SEP_ + SEP_  + SEP_ + SEP_ + SEP_ + SEP_ + SEP_ + isNullMvo(involvedArray[i].UP_INPUT_AMOUNT) + SEP_ + isNullMvo(involvedArray[i].UP_COMMENT) + SEP_;
             computeTotalDIVERS = computeTotalDIVERS + parseInt(involvedArray[i].UP_INPUT_AMOUNT);
           }
