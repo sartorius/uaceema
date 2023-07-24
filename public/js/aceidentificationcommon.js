@@ -280,7 +280,7 @@ function clearFoundUser(){
 }
 
 function addPayUserExists(val){
-  for (var i = 0; i < dataAllUSRNToJsonArray.length; i++) {
+  for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
     if (dataAllUSRNToJsonArray[i].USERNAME === val){
       foundiInJson = i;
       foundUserName = dataAllUSRNToJsonArray[i].USERNAME;
@@ -289,8 +289,24 @@ function addPayUserExists(val){
       foundClasse = dataAllUSRNToJsonArray[i].CLASSE;
       foundUserId = dataAllUSRNToJsonArray[i].ID;
       foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
-      //Display the price of the Certificat de scolarité here
-      $("#cert-sco-am").html(renderAmount(dataAllUSRNToJsonArray[i].CERT_SCO_AMOUNT));
+      //Display the price of the different operation here
+      for(let j=0; j < dataAllOPEToJsonArray.length; j++){
+        switch(dataAllOPEToJsonArray[j].code) {
+          case 'CERTSCO':
+            // code block
+            $("#cert-sco-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
+            break;
+          case 'CERTIFC':
+            // code block
+            $("#cert-cer-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
+            break;
+          default:
+            $("#cart-etu-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
+            // code block
+        }
+      }
+
+
 
       $("#btn-clear-addpay").prop("disabled", false);
 
@@ -382,6 +398,8 @@ function addPayClear(){
   $('#pay-recap').show(100);
   $("#addp-canpay").hide(100);
   $("#cert-sco-am").html('AMTC AR');
+  $("#cert-cer-am").html('AMTC AR');
+  $("#cart-etu-am").html('AMTC AR'); 
   lblDate = '';
   invAmountToPay = 0;
   invFscId = 0;

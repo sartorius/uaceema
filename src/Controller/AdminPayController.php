@@ -99,6 +99,11 @@ class AdminPayController extends AbstractController
         $result_all_reduc = $dbconnectioninst->query($allreduc_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_all_usrn));
 
+        $allope_query = " SELECT * FROM uac_ref_frais_scolarite WHERE code NOT IN ('UNUSEDM', 'CANCELX') and type = 'M' ORDER BY fs_order ASC; ";
+        $logger->debug("Show me allope_query: " . $allope_query);
+        $result_allope_query = $dbconnectioninst->query($allope_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($result_allope_query));
+
 
 
         $content = $twig->render('Admin/PAY/addpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -107,6 +112,7 @@ class AdminPayController extends AbstractController
                                                                 'id' => $_SESSION["id"],
                                                                 'result_all_usrn'=>$result_all_usrn,
                                                                 'result_all_reduc'=>$result_all_reduc,
+                                                                'result_allope_query'=>$result_allope_query,
                                                                 'result_get_token'=>$result_get_token,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);

@@ -42,7 +42,7 @@ INSERT INTO uac_ref_frais_scolarite
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(13, 'CERTSCO', 'Certificat Scolarité', 'Certificat Scolarité', 4, 5000, 'A', '2023-12-31', 'M');
+(13, 'CERTSCO', 'Certificat Scolarité', 'Certificat Scolarité', 4, 600, 'A', '2023-12-31', 'M');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
@@ -92,6 +92,19 @@ INSERT INTO uac_ref_frais_scolarite
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (0, 'CANCELX', 'Paiement annulé', 'Paiement annulé', 100, 0, 'A', '2023-12-31', 'F');
+
+--
+
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(15, 'CERTIFC', 'Certification', 'Certification', 50, 200, 'A', '2023-12-31', 'M');
+
+
+INSERT INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(16, 'CARTEET', 'Carte étudiant', 'Carte étudiant', 50, 1000, 'A', '2023-12-31', 'M');
+
+
 
 -- Cross ref table
 DROP TABLE IF EXISTS uac_xref_cohort_fsc;

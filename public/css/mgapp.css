@@ -2139,6 +2139,9 @@ img.part-img{
 .red-opt-btn-com{
   background-color: #0e0012;
 }
+.red-opt-btn-ope{
+  background-color: #003c0e;
+}
 .red-opt-btn-2{
   background-color: #66496E;
 }
@@ -2171,7 +2174,8 @@ img.part-img{
 .pay-opt-btn-t-late:hover,
 .red-opt-btn-1:hover,
 .pay-man-btn-subm:hover,
-.red-opt-btn-com:hover{
+.red-opt-btn-com:hover,
+.red-opt-btn-ope:hover{
   background-color: #DCDCDC;
 }
 

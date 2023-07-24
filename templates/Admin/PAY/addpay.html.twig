@@ -9,6 +9,8 @@
 
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let dataAllREDUCToJsonArray = JSON.parse('{{ result_all_reduc | json_encode | raw }}');
+    let dataAllOPEToJsonArray = JSON.parse('{{ result_allope_query | json_encode | raw }}');
+    
     
     let myTicket = new Array();
     let myRecap = new Array();
@@ -137,13 +139,26 @@
             <div id="btn-addcut-com" class="red-big-btn pay-big-btn-txt red-opt-btn-com init-deactive deactive-btn">
               <br>Lettre<br>d'engagement &nbsp;<i class="icon-file-1 nav-text"></i><br>
             </div>
-            <div id="btn-cert-sco" class="red-big-btn pay-big-btn-txt red-opt-btn-com">
-              <br>Certificat<br>de scolarité &nbsp;<i class="icon-graduation-cap nav-text"></i><br>
+            <hr>
+            <div id="btn-cert-sco" class="pay-big-btn pay-big-btn-txt red-opt-btn-ope">
+              <br>Certificat de<br>scolarité &nbsp;<i class="icon-graduation-cap nav-text"></i><br>
               <i class="med-btn-txt btn-amt-col"><i id="cert-sco-am">AMTC AR</i></i>
             </div>
+            <div id="btn-cert-cer" class="pay-big-btn pay-big-btn-txt red-opt-btn-ope">
+              <br>Certification<br>Document &nbsp;<i class="icon-certificate nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="cert-cer-am">AMTC AR</i></i>
+            </div>
+            <div id="btn-cart-etu" class="pay-big-btn pay-big-btn-txt red-opt-btn-ope">
+              <br>Nouvelle carte<br>étudiant &nbsp;<i class="icon-id-card nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="cart-etu-am">AMTC AR</i></i>
+            </div>
+            <br><br><br>
+            {#
+            // This is here only to fill the space
             <div class="red-big-btn pay-big-btn-txt">
               <br><br><br>
             </div>
+            #}
       </div>
 
       {# Cut box #}
