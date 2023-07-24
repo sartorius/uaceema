@@ -157,6 +157,9 @@ generateCancelPaymentDB:
 generateCertificatScoDB:
     path:       /generateCertificatScoDB
     controller: App\Controller\AdminPayController::generateCertificatScoDB
+generateOpeMultiDB:
+    path:       /generateOpeMultiDB
+    controller: App\Controller\AdminPayController::generateOpeMultiDB
 checkandloadmvo:
     path:       /checkandloadmvo
     controller: App\Controller\AdminPayController::checkandloadmvo

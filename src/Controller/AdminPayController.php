@@ -258,6 +258,72 @@ class AdminPayController extends AbstractController
       400);
   }
 
+  public function generateOpeMultiDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_user_id = $request->request->get('foundUserId');
+          $param_type_of_payment = $request->request->get('invTypeOfPayment');
+          $param_ticket_ref = $request->request->get('ticketRef');
+          $param_type_of_operation = $request->request->get('typeOfOperation');
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " CALL CLI_CRT_PayAddOpeMulti(" . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_type_of_payment . "', '" . $param_type_of_operation . "'); ";
+
+          $logger->debug("Show me query_value: " . $query_value);
+
+
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count: " . count($result));
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'paramTicketRef' => $param_ticket_ref,
+              'message' => 'Tout est OK: ' . $param_ticket_ref . ' : ' . $query_value),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket facilité DB'),
+      400);
+  }
+
   public function generateDeleteRedDB(Request $request, LoggerInterface $logger)
   {
 

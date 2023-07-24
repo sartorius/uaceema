@@ -69,6 +69,40 @@ END$$
 
 
 -- Display EDT for Administration
+-- A is for Carte Etudiant
+-- T is for Certification
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_CRT_PayAddOpeMulti$$
+CREATE PROCEDURE `CLI_CRT_PayAddOpeMulti` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_type_payment CHAR(1), IN param_type_of_operation CHAR(1))
+BEGIN
+    DECLARE inv_fsc_id	INT;
+    DECLARE inv_amount	INT;
+    DECLARE inv_code	CHAR(7);
+    -- END OF DECLARE
+
+    IF (param_type_of_operation = 'A') THEN
+      -- Carte etudiant
+      SET inv_code = 'CARTEET';
+    ELSE
+      -- Certification
+      SET inv_code = 'CERTIFC';
+    END IF;
+
+    SELECT ref.id, ref.amount INTO inv_fsc_id, inv_amount
+    FROM v_showuser vsh JOIN uac_xref_cohort_fsc xref ON xref.cohort_id = vsh.COHORT_ID
+                          JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id
+                                                           AND ref.code = inv_code
+                                                           WHERE vsh.ID = param_user_id;
+
+    -- Set the correct status value
+    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
+        VALUES (param_user_id, inv_fsc_id, 'P', param_ticket_ref, inv_amount, param_type_payment, CURRENT_TIMESTAMP);
+
+END$$
+-- Remove $$ for OVH
+
+
+-- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_VAL_PayAddRedValidate$$
 CREATE PROCEDURE `CLI_VAL_PayAddRedValidate` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10))

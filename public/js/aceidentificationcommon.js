@@ -290,6 +290,7 @@ function addPayUserExists(val){
       foundUserId = dataAllUSRNToJsonArray[i].ID;
       foundExisting_Facilite = dataAllUSRNToJsonArray[i].EXISTING_FACILITE;
       //Display the price of the different operation here
+      // btn-cert-sco btn-cert-cer btn-cart-etu
       for(let j=0; j < dataAllOPEToJsonArray.length; j++){
         switch(dataAllOPEToJsonArray[j].code) {
           case 'CERTSCO':

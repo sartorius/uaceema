@@ -160,6 +160,12 @@ INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 12, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 
 
+INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 15, id FROM v_class_cohort vcc;
+
+INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 16, id FROM v_class_cohort vcc;
+
 -- REDUCTION FACILITE PAYMENT
 DROP TABLE IF EXISTS uac_facilite_payment;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_facilite_payment` (

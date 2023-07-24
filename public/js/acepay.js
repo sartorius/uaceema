@@ -62,6 +62,34 @@ function generateCertificatScoDBAndPrint(){
       }
   });
 }
+
+function generateOpeMultiDBAndPrint(param){
+  let tempTicketRef = ticketRef + ticketType;
+
+
+  $.ajax('/generateOpeMultiDB', {
+      type: 'POST',  // http method
+      data: {
+        foundUserId: foundUserId,
+        invTypeOfPayment: invTypeOfPayment,
+        ticketRef: tempTicketRef,
+        token: getToken,
+        typeOfOperation: param
+      },  // data to submit
+      success: function (data, status, xhr) {
+          dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          printReceiptPDF(tempTicketRef);
+          //We have to locally create the reduction in case of re-scan
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR792:" + tempTicketRef + " erreur operation, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        addPayClear();
+      }
+  });
+}
 function generateValidateRedDBAndPrint(){
 
   $.ajax('/generateValidateRedDB', {
@@ -643,6 +671,42 @@ $(document).ready(function() {
         $("#addp-type-pay").show(300);
   
       });
+
+      // CREATE CERTIFICATION
+      $( "#btn-cert-cer" ).click(function() {
+        //console.log("#btn-cert-sco");
+        invOperation = 'T';
+        updateTicketType('T');
+        //Reset the ticket
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay('*** CERTIFICATION DOCUMENT ***');
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay(MSG_FOOTER_CSCO);
+  
+        $("#addp-mainop").hide(100);
+        $("#addp-type-pay").show(300);
+  
+      });
+
+      // CARTE D ETUDIANT
+      $( "#btn-cart-etu" ).click(function() {
+        //console.log("#btn-cert-sco");
+        invOperation = 'A';
+        updateTicketType('A');
+        //Reset the ticket
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay('*** CARTE ETUDIANT ***');
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay(MSG_FOOTER_CSCO);
+  
+        $("#addp-mainop").hide(100);
+        $("#addp-type-pay").show(300);
+  
+      });
   
       // STAIRS 2 **********************************************************************************************************************************
       // Reduction button
@@ -779,6 +843,16 @@ $(document).ready(function() {
         else if(invOperation == 'S'){
           //Delete and print
           generateCertificatScoDBAndPrint();
+        }
+        else if(invOperation == 'A'){
+          // Delete and print
+          // Carte étudiant
+          generateOpeMultiDBAndPrint(invOperation);
+        }
+        else if(invOperation == 'T'){
+          // Delete and print
+          // Certification
+          generateOpeMultiDBAndPrint(invOperation);
         }
         else{
           generatePayDBAndPrint();

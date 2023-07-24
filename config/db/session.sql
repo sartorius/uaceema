@@ -388,3 +388,9 @@ INSERT INTO uac_ref_frais_scolarite
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (16, 'CARTEET', 'Carte étudiant', 'Carte étudiant', 50, 1000, 'A', '2023-12-31', 'M');
+
+INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 15, id FROM v_class_cohort vcc;
+
+INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 16, id FROM v_class_cohort vcc;
