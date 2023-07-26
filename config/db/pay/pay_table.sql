@@ -83,7 +83,7 @@ INSERT INTO uac_ref_frais_scolarite
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(14, 'FRMVOLA', 'Frais additionnel écolage Mvola', 'Frais additionnel écolage Mvola', 90, 10000, 'A', '2023-12-31', 'F');
+(14, 'FRMVOLA', 'Frais additionnel écolage Mvola', 'Frais additionnel écolage Mvola', 90, 9000, 'A', '2023-12-31', 'F');
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
