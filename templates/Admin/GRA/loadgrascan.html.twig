@@ -44,6 +44,7 @@
     let currentPage = 1;
 
     const formatterDateFR = new Intl.DateTimeFormat('fr-FR');
+    const SUB_TOKEN = '{{ result_get_token }}';
 
 
   </script>
@@ -195,17 +196,21 @@
             <div class="col-lg-6"><hr>
                 Chargez votre fichier de notes&nbsp;<span class="icon-upload nav-icon-fa nav-text"></span><br><br>
                 <div id="loader-block">
-                    <form action="/checkandloadmvo" method="post" enctype="multipart/form-data">
+                    <form action="/checkandloadgra" method="post" enctype="multipart/form-data">
                     Choisissez un fichier en .zip &nbsp;
                     <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
+
+                    
+                    <input type="text" class="input-gra" name="fPageNbr" id="fPageNbr" value="">
+                    <input type="text" class="input-gra" name="fSubToken" id="fSubToken" value="">
 
                     <input type="submit" value="Uploader le fichier" name="submit" id="file-upl-loader-gra" class="btn btn-default btn-lg btn-print btn-block">
                     </form>
                 </div>
                 <br>
-                <span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Taille maximale d'un fichier jpg : {{ jpg_limit }}ko<br>
+                <span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Taille maximale d'un fichier jpg dans le zip : {{ jpg_limit }}ko<br>
                 <hr>
-                Le système ne reconnait que le fichier .jpg ou plusieurs .jpg dans un même zip. Un fichier zip doit contenir toutes les feuilles de notes d'un même examen.
+                Le système ne reconnait que le fichier .jpg ou plusieurs .jpg dans un même zip. Un fichier zip doit contenir toutes les pages de notes d'un même examen. S'il manque une page, le fichier zip ne sera pas reconnu.
             </div>
             <div class="col-lg-3">
                 

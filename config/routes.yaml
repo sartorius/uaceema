@@ -178,3 +178,6 @@ addgradetoexam:
 loadgrascan:
     path:       /loadgrascan
     controller: App\Controller\AdminGradeController::loadgrascan
+checkandloadgra:
+    path:       /checkandloadgra
+    controller: App\Controller\AdminGradeController::checkandloadgra

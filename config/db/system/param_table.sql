@@ -75,6 +75,9 @@ INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKPAYD', 'Token d
 -- Daily Token for EDT
 INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKEDTD', 'Token daily for EDT TOKEDTD Current Date');
 
+-- Daily Token Generic
+INSERT IGNORE INTO uac_param (key_code, description) VALUES ('TOKEGEN', 'Token daily generic operation Current Date');
+
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLOAD', 'Integration Mvola', NULL, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLUPD', 'Last update Mvola', NULL, NULL);
 -- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
