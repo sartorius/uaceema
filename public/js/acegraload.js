@@ -1,8 +1,17 @@
 
-function printPresenceSheet(limit, maxIs){
+function printPresenceSheet(){
 
-    console.log('Click on printBatchStudentCard');
+    console.log('Click on printPresenceSheet');
   
+    // Initiate list of student
+    let presenceList = new Array();
+    for(let i=0; i<dataAllStuToJsonArray.length; i++){
+        if(tempArrayClass.includes((dataAllStuToJsonArray[i].VSH_COHORT_ID).toString())){
+            presenceList.push(i);
+        }
+    }
+    //console.log('presenceList: ' + presenceList.length);
+
     // Here format A4
     let doc = new jsPDF('p','mm',[297, 210]);
   
@@ -11,19 +20,111 @@ function printPresenceSheet(limit, maxIs){
     doc.setFontSize(9);
     doc.setTextColor(175,180,187);
   
+    const rawHeight = 8.35;
+    const maxStrS = 10;
+    const maxStrM = 15;
+    const maxStrL1 = 17;
+    const maxStrL2 = 23;
+    const maxStrL3 = 35;
+    const maxStr = 20;
+    //str.substr(0, maxStr);
+    let limit = tempCountStu;
+    let maxIs = 0;
+
     let rowSeter = 0;
     let columnSeter = 0;
     let itemPageCount = 10;
     const cardWidth = 105;
     const cardHeight = 59;
-  
-  
+    
+    doc.addImage(document.getElementById('bg-tmpl'), //img src
+                        'PNG', //format
+                        0,//x oddOffsetX is to define if position 1 or 2
+                        0, //y
+                        210, //Width
+                        297, null, 'FAST'); //Height // Fast is to get less big files
+    //pageLimit
+    let pgCount = 0;
+    let pgNbr = 1;
+    let AllPage = Math.floor(tempCountStu/pageLimit) + 1;
+    let refDate = new Date(Date.parse($('#exam-day').val()));
+
+    // DO THE LOOP !
+    for(let i=0; i<tempCountStu; i++){
+
+        
+
+        
+        if(pgCount == 0){
+            //Write header
+            doc.setFont('Helvetica');
+            doc.setFontStyle('normal');
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(10);
+            doc.text(
+                20, //x oddOffsetX is to define if position 1 or 2
+                8, //y
+                '[' + $('#drp-select').html().substr(0, maxStrM) + ']  *** Matière : ' + $('#selected-subj').html().substr(0, maxStrL3)
+                );
+            doc.text(
+                50, //x oddOffsetX is to define if position 1 or 2
+                23 + pageLimit*rawHeight, //y
+                'P' + pgNbr + ' sur ' + AllPage + ' Date : ' + formatterDateFR.format(refDate) + ' - ' + $('#teach-sel-gra').val().substr(0, maxStrL3)
+                );
+            doc.text(
+                54, //x oddOffsetX is to define if position 1 or 2
+                15, //y
+                tempInvClass
+                );
+        }
+
+        doc.setFont('Courier');
+        doc.setFontStyle('normal');
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(11);
+        doc.text(
+            7, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            (i+1).toString()
+            );
+        doc.text(
+            55.5, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            //VSH_LASTNAME VSH_FIRSTNAME
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_USERNAME
+            );
+        doc.text(
+            85.5, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_FIRSTNAME.substr(0, maxStrL1)
+            );
+        doc.text(
+            127, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_LASTNAME.substr(0, maxStrL2)
+            );
+
+        
+        if(pgCount<pageLimit-1){
+            pgCount = pgCount +1;
+        }
+        else{
+            pgCount = 0;
+            pgNbr = pgNbr + 1;
+            doc.addPage();
+            doc.addImage(document.getElementById('bg-tmpl'), //img src
+                        'PNG', //format
+                        0,//x oddOffsetX is to define if position 1 or 2
+                        0, //y
+                        210, //Width
+                        297, null, 'FAST'); //Height // Fast is to get less big files
+        }
+    }
+    /*
     for(let i=0; i<limit; i++){
-          /************************/
   
           columnSeter = (i % 2);
   
-          /************************/
   
   
           //
@@ -123,6 +224,7 @@ function printPresenceSheet(limit, maxIs){
   
   
     }
+    */
   
     // Release the screen
     // We don't go at the end of the loop to avoid
@@ -130,7 +232,7 @@ function printPresenceSheet(limit, maxIs){
     $("#grid-all-blc").show(500);
     $("#grid-crit-blc").show(500);
   
-    doc.save('BatchCartEtudiantUACEEM_Print');
+    doc.save('Exam_' + getACEDateStr('S') + '_Print');
   
 }
 

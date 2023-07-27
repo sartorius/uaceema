@@ -2413,3 +2413,7 @@ img.part-img{
 .load-gra-hdr{
   margin-top: 40px;
 }
+
+#hid-img-blc{
+  display: none;
+}

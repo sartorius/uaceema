@@ -1,5 +1,26 @@
 /***********************************************************************************************************/
 
+// param can be : F for French /T for Technical/S for String Technical
+function getACEDateStr(param){
+  let today = new Date();
+  let tdate = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2, '0')+'-'+today.getDate().toString().padStart(2, '0');
+  let date = today.getDate().toString().padStart(2, '0')+'/'+(today.getMonth()+1).toString().padStart(2, '0')+'/'+today.getFullYear();
+  let time = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0') + ":" + today.getSeconds().toString().padStart(2, '0');
+  let dateTime = date+' à '+time;
+  let tdateTime = tdate+' '+time;
+
+  if(param ==  'F'){
+    // return '27/07/2023 à 12:34:43'
+    return dateTime;
+  }
+  else if(param == 'T'){
+    // return '2023-07-27 12:35:01'
+    return tdateTime;
+  }else{
+    return tdateTime.replaceAll(':', '').replaceAll('-', '').replaceAll(' ', '_');
+  }
+}
+
 function isNullMvo(param){
   return (param ==  null ? '' : param);
 }
