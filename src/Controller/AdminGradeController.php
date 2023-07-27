@@ -234,8 +234,17 @@ class AdminGradeController extends AbstractController{
                 $max_file_size =  $result_get_max_file_query[0]["GRAMAX_SIZE"];
             }
             $logger->debug("*** GRA max_file_size: " . $max_file_size);
-            $logger->debug("*** GRA full_error_msg: " . $full_error_msg);
+            $logger->debug("*** GRA file size: " . filesize($_FILES['fileToUpload']['tmp_name']));
 
+            // If it is an unique file .jpg we check the size
+            if (($is_still_valid) 
+                    && (filesize($_FILES['fileToUpload']['tmp_name']) > $max_file_size*1000)
+                    && (str_ends_with($_FILES['fileToUpload']['name'], '.jpg'))){
+                        $is_still_valid = false;
+                        $full_error_msg = $full_error_msg . 'Error731G - Le fichier ' . $_FILES['fileToUpload']['name'] . ' dépasse la taille de ' . $max_file_size . 'ko.<br>';
+            }
+            $logger->debug("*** GRA full_error_msg: " . $full_error_msg);
+            
             // TODO : Keep going on file verification and loading
             
             /*
