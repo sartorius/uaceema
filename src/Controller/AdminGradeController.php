@@ -19,6 +19,10 @@ class AdminGradeController extends AbstractController{
     private static $my_exact_access_right = 41;
     private static $my_minimum_access_right = 39;
 
+    private static $my_gra_repository = "/img/ace_gra/";
+
+    
+
     public function addgradetoexam(Environment $twig, LoggerInterface $logger){
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -213,6 +217,7 @@ class AdminGradeController extends AbstractController{
             $logger->debug("*** GRA fSubToken: " . $_POST["fSubToken"]);
 
             $nbr_page = intval($_POST["fPageNbr"]);
+            $mention_code = $_POST["fMentionCode"];
 
             if($_POST["fSubToken"] != $this->getDailyTokenGRAStr($logger)){
                 $is_still_valid = false;
@@ -291,6 +296,11 @@ class AdminGradeController extends AbstractController{
                                 ){
                                         $count_csv = $count_csv + 1;
                                         $list_of_files_read = $list_of_files_read . '<br>' . basename( $stat['name']);
+
+                                        // ***********************************************************************
+                                        // ***********************************************************************
+                                        // ***********************************************************************
+
                                         // Check the page name here
                                         // We expect to get for each page _1 _2 _3 and _4 if 4 pages are ncessary
                                         if((str_ends_with(basename( $stat['name']), '.jpg'))){
@@ -313,6 +323,11 @@ class AdminGradeController extends AbstractController{
                                             $logger->debug("*** in log: " . count($zip_counter_check_page) . ' >>> ' . $j . ' +++ ' . $found);
                                         endwhile;
                                         array_splice($zip_counter_check_page, $j, 1);
+
+                                        // ***********************************************************************
+                                        // ***********************************************************************
+                                        // ***********************************************************************
+                                        
                                     }
                         }
                         $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments . '<br>' . $list_of_files_read;
@@ -322,7 +337,7 @@ class AdminGradeController extends AbstractController{
                         }
                         if($count_csv != $nbr_page){
                             $is_still_valid = false;
-                            $full_error_msg = $full_error_msg . 'Error735G - Le nombre de pages attendue est ' . $nbr_page . ' alors que nous ne trouvons seulement que ' . $count_csv . ' pages dans le fichier: ' . $_FILES['fileToUpload']['name'];
+                            $full_error_msg = $full_error_msg . 'Error735G - Le nombre de pages attendue est ' . $nbr_page . ' alors que nous trouvons ' . $count_csv . ' pages dans le fichier: ' . $_FILES['fileToUpload']['name'];
                         }
                         if(count($zip_counter_check_page) > 0){
                             $is_still_valid = false;
@@ -338,6 +353,26 @@ class AdminGradeController extends AbstractController{
                     }
             }
 
+            $logger->debug("*** pwd: " . getcwd());
+            // /Users/ratinahirana/Sites/localhost/uaceema/public
+
+            // From here if we are valid, then we need to start the work
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            if($is_still_valid){
+                if ((str_ends_with($_FILES['fileToUpload']['name'], '.jpg')) || (str_ends_with($_FILES['fileToUpload']['name'], '.jpeg'))){
+                    // Do something for jpeg
+                    $this->saveFileUnitary('xy', $mention_code, $_FILES, $logger, $scale_right);
+                }
+                else{
+                    // Do something for zip
+                }
+            }
+            // Else we do nothing
             // TODO : Keep going on file verification and loading
             
             /*
@@ -468,6 +503,7 @@ class AdminGradeController extends AbstractController{
                                                                                 );
             }
             else{
+                $full_error_msg = '<span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Erreur intégration fichier<br>' . $full_error_msg;
                 $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                     'firstname' => $_SESSION["firstname"],
                                                                                     'lastname' => $_SESSION["lastname"],
@@ -536,6 +572,31 @@ class AdminGradeController extends AbstractController{
         $logger->debug("result_get_token: " . $result_get_token[0]["TOKEN"]);
     
         return $result_get_token[0]["TOKEN"];
+    }
+
+    // $result_for_one_file = $this->saveFileUnitary($prefix, $param_file, LoggerInterface $logger, $scale_right)
+    public function saveFileUnitary($prefix, $mention, $param_file, LoggerInterface $logger, $scale_right){
+        if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+            $logger->debug("*** pwd: " . getcwd());
+                    
+            // Where the file is going to be stored
+            $target_dir = getcwd() . self::$my_gra_repository;
+            $file = $param_file['fileToUpload']['name'];
+            $path = pathinfo($file);
+            $filename = $path['filename'];
+            $ext = $path['extension'];
+            $temp_name = $param_file['fileToUpload']['tmp_name'];
+            $path_filename_ext = $target_dir . "/" . $mention . "/" . $prefix . $filename . "." . $ext;
+                
+            // Check if file already exists
+            if (file_exists($path_filename_ext)) {
+                $logger->debug("*** err: saveFileUnitary file already exists.");
+            }
+            else{
+                move_uploaded_file($temp_name, $path_filename_ext);
+                $logger->debug("*** succ: saveFileUnitary File Uploaded Successfully.");
+            }
+        }
     }
 
 

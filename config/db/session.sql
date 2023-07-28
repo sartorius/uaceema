@@ -379,6 +379,18 @@ VALUES
 
 -- Session Gestion frais de scolarité to delete
 
+mkdir COMMU
+mkdir DROIT
+mkdir ECONO
+mkdir GESTI
+mkdir INFOE
+mkdir MBSXX
+mkdir RIDXX
+mkdir SIENS
+
+chmod 777 COMMU DROIT ECONO GESTI INFOE MBSXX RIDXX SIENS
+ln -s /var/www/aceemintranet_data/grade ace_gra
+ln -s /var/www/aceemintranet_data/grade ace_gra
 
 INSERT INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES

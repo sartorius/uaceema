@@ -172,7 +172,11 @@ function selectMention(str, strTitle){
     tempMentionCode = str;
     tempMention = strTitle;
 
+
+    
     $('#drp-select').html(strTitle);
+    // Necessary to save the file
+    $("#fMentionCode").val(tempMentionCode);
 
     //console.log('You have just click on: ' + str);
     // We reset the dropdown
