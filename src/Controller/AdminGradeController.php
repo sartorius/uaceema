@@ -189,6 +189,7 @@ class AdminGradeController extends AbstractController{
     {
         $is_still_valid = true;
         $full_error_msg = '';
+        $full_feedback_msg = '';
         $max_file_size = 0;
 
         if (session_status() == PHP_SESSION_NONE) {
@@ -211,11 +212,13 @@ class AdminGradeController extends AbstractController{
             $logger->debug("*** GRA fPageNbr: " . $_POST["fPageNbr"]);
             $logger->debug("*** GRA fSubToken: " . $_POST["fSubToken"]);
 
+            $nbr_page = intval($_POST["fPageNbr"]);
+
             if($_POST["fSubToken"] != $this->getDailyTokenGRAStr($logger)){
                 $is_still_valid = false;
                 $full_error_msg = $full_error_msg . 'Error728G - Contactez le support technique.<br>';
             }
-            if ((!str_ends_with($_FILES['fileToUpload']['name'], '.zip')) && (!str_ends_with($_FILES['fileToUpload']['name'], '.jpg'))){
+            if ((!str_ends_with($_FILES['fileToUpload']['name'], '.zip')) && (!str_ends_with($_FILES['fileToUpload']['name'], '.jpg')) && (!str_ends_with($_FILES['fileToUpload']['name'], '.jpeg'))){
                 $is_still_valid = false;
                 $full_error_msg = $full_error_msg . 'Error729G - Seuls les fichiers .zip ou .jpg sont supportés.<br>';
             }
@@ -239,12 +242,102 @@ class AdminGradeController extends AbstractController{
             // If it is an unique file .jpg we check the size
             if (($is_still_valid) 
                     && (filesize($_FILES['fileToUpload']['tmp_name']) > $max_file_size*1000)
-                    && (str_ends_with($_FILES['fileToUpload']['name'], '.jpg'))){
+                    && ((str_ends_with($_FILES['fileToUpload']['name'], '.jpg')) || (str_ends_with($_FILES['fileToUpload']['name'], '.jpeg')))
+                    ){
                         $is_still_valid = false;
-                        $full_error_msg = $full_error_msg . 'Error731G - Le fichier ' . $_FILES['fileToUpload']['name'] . ' dépasse la taille de ' . $max_file_size . 'ko.<br>';
+                        $full_error_msg = $full_error_msg . 'Error731G - Le fichier ' . $_FILES['fileToUpload']['name'] . ' dépasse la taille de ' . $max_file_size . 'ko.&nbsp;<br>';
             }
             $logger->debug("*** GRA full_error_msg: " . $full_error_msg);
             
+            if(($nbr_page ==  1) 
+                    && ((str_ends_with($_FILES['fileToUpload']['name'], '.zip')))){
+                        $is_still_valid = false;
+                        $full_error_msg = $full_error_msg . 'Error732G - Le nombre de page attendu est 1. Vous devez charger un unique .jpg et pas un zip. Fichier reçu : ' . $_FILES['fileToUpload']['name'];
+            }
+
+            if(($nbr_page >  1) 
+                    && ((str_ends_with($_FILES['fileToUpload']['name'], '.jpg')) || (str_ends_with($_FILES['fileToUpload']['name'], '.jpeg')))){
+                        $is_still_valid = false;
+                        $full_error_msg = $full_error_msg . 'Error733G - Plusieurs pages sont attendues. Vous devez charger un unique .zip et pas un jpg. Fichier reçu : ' . $_FILES['fileToUpload']['name'];
+            }
+
+            // Now read the zip if we are in a zip case
+            // We check the name
+            if(($is_still_valid)
+                && ((str_ends_with($_FILES['fileToUpload']['name'], '.zip')))){
+                    // We are in zip mode
+                    // Work on the zip
+                    $zip = new ZipArchive;
+                    $zip_rawfilename_loaded = $_FILES["fileToUpload"]["tmp_name"];
+                    $list_of_files_read = "";
+                    $temp_end_file = "";
+                    $list_of_page_missing = "";
+                    $zip_counter_check_page = array();
+                    for($i = 1; $i <= $nbr_page; $i++){
+                        array_push($zip_counter_check_page, '_' . $i);
+                    }
+                    $previsualisation_line_counter = 1;
+                    if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE)){
+                        $logger->debug("*** We have opened the file ");
+                        $logger->debug("*** Number of file: " . $zip->numFiles);
+                        $count_csv = 0;
+
+                        for($i = 0; $i < $zip->numFiles; $i++){
+                            $stat = $zip->statIndex($i);
+                            if(!(str_starts_with(basename( $stat['name']), '.')) &&
+                                    ((str_ends_with(basename( $stat['name']), '.jpg'))
+                                            || (str_ends_with(basename( $stat['name']), '.jpeg'))
+                                    )
+                                ){
+                                        $count_csv = $count_csv + 1;
+                                        $list_of_files_read = $list_of_files_read . '<br>' . basename( $stat['name']);
+                                        // Check the page name here
+                                        // We expect to get for each page _1 _2 _3 and _4 if 4 pages are ncessary
+                                        if((str_ends_with(basename( $stat['name']), '.jpg'))){
+                                            $temp_end_file = ".jpg";
+                                        }
+                                        else{
+                                            $temp_end_file = ".jpeg";
+                                        }
+                                        $j = 0;
+                                        $found = 'N';
+                                        $logger->debug("*** Before log: " . count($zip_counter_check_page) . ' >>> ' . $j . ' +++ ' . $found);
+                                        while (($j < count($zip_counter_check_page)) && ($found == 'N')):
+                                            if(str_ends_with(basename( $stat['name']), $zip_counter_check_page[$j] . $temp_end_file)){
+                                                $found = 'Y';
+                                            }
+                                            else{
+                                                $found = 'N';
+                                                $j++;
+                                            }
+                                            $logger->debug("*** in log: " . count($zip_counter_check_page) . ' >>> ' . $j . ' +++ ' . $found);
+                                        endwhile;
+                                        array_splice($zip_counter_check_page, $j, 1);
+                                    }
+                        }
+                        $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments . '<br>' . $list_of_files_read;
+                        if($count_csv > $_ENV['ZIP_LIMIT']){
+                            $is_still_valid = false;
+                            $full_error_msg = $full_error_msg . 'Error734G - Le fichier zip est limité à ' . $_ENV['ZIP_LIMIT'] . ' fichiers intérieurs. Vérifiez : ' . $_FILES['fileToUpload']['name'];
+                        }
+                        if($count_csv != $nbr_page){
+                            $is_still_valid = false;
+                            $full_error_msg = $full_error_msg . 'Error735G - Le nombre de pages attendue est ' . $nbr_page . ' alors que nous ne trouvons seulement que ' . $count_csv . ' pages dans le fichier: ' . $_FILES['fileToUpload']['name'];
+                        }
+                        if(count($zip_counter_check_page) > 0){
+                            $is_still_valid = false;
+                            for($i = 0; $i < count($zip_counter_check_page); $i++){
+                                $list_of_page_missing = $list_of_page_missing . $zip_counter_check_page[$i] . '/';
+                            }
+                            $full_error_msg = $full_error_msg . 'Error736G - Les pages suivantes sont manquantes dans le zip : ' . $list_of_page_missing . '<br> Vérifiez le fichier: ' . $_FILES['fileToUpload']['name'];
+                        }
+                    }
+                    else{
+                        $is_still_valid = false;
+                        $full_error_msg = $full_error_msg . 'Error737G - Erreur dans extraction du fichier zip. Contactez le support et partagez leur le fichier: ' . $_FILES['fileToUpload']['name'];
+                    }
+            }
+
             // TODO : Keep going on file verification and loading
             
             /*
@@ -362,8 +455,28 @@ class AdminGradeController extends AbstractController{
                                                                                 );
             }
             */
-
-
+            $full_feedback_msg = $zip_comments;
+            $full_error_msg = '<div class="err">' . $full_error_msg . '</div>';
+            if($is_still_valid) {
+                $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                                    'firstname' => $_SESSION["firstname"],
+                                                                                    'lastname' => $_SESSION["lastname"],
+                                                                                    'id' => $_SESSION["id"],
+                                                                                    'full_error_msg' => $full_error_msg,
+                                                                                    'full_feedback_msg' => $full_feedback_msg,
+                                                                                    'scale_right' => ConnectionManager::whatScaleRight()]
+                                                                                );
+            }
+            else{
+                $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                                    'firstname' => $_SESSION["firstname"],
+                                                                                    'lastname' => $_SESSION["lastname"],
+                                                                                    'id' => $_SESSION["id"],
+                                                                                    'full_error_msg' => $full_error_msg,
+                                                                                    'full_feedback_msg' => $full_feedback_msg,
+                                                                                    'scale_right' => ConnectionManager::whatScaleRight()]
+                                                                                );
+            }
 
 
 
