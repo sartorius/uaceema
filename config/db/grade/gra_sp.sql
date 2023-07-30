@@ -42,3 +42,18 @@ BEGIN
     END IF;
 END$$
 -- Remove $$ for OVH
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_END_GraFlowMaster$$
+CREATE PROCEDURE `CLI_END_GraFlowMaster` (IN param_master_id BIGINT)
+BEGIN
+    DECLARE inv_flow_id	BIGINT;
+
+    SELECT flow_id INTO inv_flow_id FROM uac_gra_master WHERE id = param_master_id AND status = 'NEW';
+    UPDATE uac_load_gra SET flow_id = inv_flow_id, status = 'END' WHERE master_id = param_master_id AND status = 'NEW';
+    UPDATE uac_working_flow SET status = 'END' WHERE flow_code = 'GRALOAD' AND status = 'NEW' AND id = inv_flow_id;
+    -- WIN is Waiting for Input
+    UPDATE uac_gra_master SET status = 'WIN' WHERE id = param_master_id AND status = 'NEW';
+
+END$$
+-- Remove $$ for OVH

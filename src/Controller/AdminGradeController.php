@@ -427,6 +427,7 @@ class AdminGradeController extends AbstractController{
                     $this->saveFileUnitary($master_id . '_' . $param_subject_id . '_', $mention_code, $_FILES, $logger, $scale_right);
                     // As jpg, we save the file page 1 on 1
                     $this->generateLoadGra($master_id, '/' . $mention_code . '/', $master_id . '_' . $param_subject_id . '_' . $_FILES['fileToUpload']['name'], 1, $param_browser, $nbr_page, $logger);
+                    $this->closeFlowAndWINMasterId($master_id, $logger);
                 }
                 else{
                     // Do something for zip
@@ -444,7 +445,9 @@ class AdminGradeController extends AbstractController{
                     }
                     foreach ($zip_list_of_files as $in_zip_file) {
                         rename($path_filename_repo . '/' . $in_zip_file, $path_filename_repo . '/' . $master_id . '_' . $param_subject_id . '_' . $in_zip_file);
+                        $this->generateLoadGra($master_id, '/' . $mention_code . '/', $master_id . '_' . $param_subject_id . '_' . $in_zip_file, str_replace('_', '', $page_i_array[$in_zip_file]), $param_browser, $nbr_page, $logger);
                     }
+                    $this->closeFlowAndWINMasterId($master_id, $logger);
 
                     /*
                     
@@ -696,6 +699,14 @@ class AdminGradeController extends AbstractController{
         $logger->debug("Show me get_generate_load_gra_query: " . $get_generate_load_gra_query);
         $dbconnectioninst = DBConnectionManager::getInstance();
         $dbconnectioninst->query($get_generate_load_gra_query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function closeFlowAndWINMasterId($param_master_id, LoggerInterface $logger){
+        // Get me the token !
+        $get_close_master_query = "CALL CLI_END_GraFlowMaster(" . $param_master_id . ");";
+        $logger->debug("Show me get_close_master_query: " . $get_close_master_query);
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $dbconnectioninst->query($get_close_master_query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // $result_for_one_file = $this->saveFileUnitary($prefix, $param_file, LoggerInterface $logger, $scale_right)
