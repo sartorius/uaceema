@@ -19,7 +19,7 @@ class AdminGradeController extends AbstractController{
     private static $my_exact_access_right = 41;
     private static $my_minimum_access_right = 39;
 
-    private static $my_gra_repository = "/img/ace_gra/";
+    private static $my_gra_repository = "/img/ace_gra";
 
     
 
@@ -206,9 +206,8 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
             $maxziplimit = $_ENV['ZIP_LIMIT'];
-            $zip_results = array();
+            $zip_list_of_files = array();
             $zip_comments = '';
-            $zip_all_master_id_inq = '0'; // looks like 0, 12, 13, 16, 16
 
 
 
@@ -218,6 +217,25 @@ class AdminGradeController extends AbstractController{
 
             $nbr_page = intval($_POST["fPageNbr"]);
             $mention_code = $_POST["fMentionCode"];
+            // fTeacherId fCustTeacherName fSubjectId fExamDate
+
+
+            $param_teacher_id = $_POST["fTeacherId"];
+            $param_cust_teacher_name = $_POST["fCustTeacherName"];
+            $param_subject_id = $_POST["fSubjectId"];
+            $param_exam_date = $_POST["fExamDate"];
+            $param_browser = $_POST["fBrowser"];
+            $param_niveau = $_POST["fNiveau"];
+            $param_subject = $_POST["fSubject"];
+
+            $trace_report = "<div class='trac-rep'><strong>Paramètres lus:</strong> <br>Mention: " . $mention_code . '<br>Niveau: ' . $param_niveau . '<br>Sujet: ' . $param_subject . '<br>Date technique: ' . $param_exam_date . '<br>Navigateur web: ' . $param_browser . '<br>Sujet ID: ' . $param_subject_id . '</div>';
+
+            $master_id = '0';
+            // Contains couple 'originale filename' => _i
+            // Provides: <body text='black'>
+            // $bodytag = str_replace("%body%", "black", "<body text='%body%'>");
+            $page_i_array = array();
+            // param_teacher_id param_cust_teacher_name param_subject_id param_exam_date
 
             if($_POST["fSubToken"] != $this->getDailyTokenGRAStr($logger)){
                 $is_still_valid = false;
@@ -239,7 +257,7 @@ class AdminGradeController extends AbstractController{
                 $result_get_max_file_query = $dbconnectioninst->query($get_max_file_query)->fetchAll(PDO::FETCH_ASSOC);
                 //$logger->debug("result_get_token: " . $result_get_max_file_query[0]["GRAMAX_SIZE"]);
             
-                $max_file_size =  $result_get_max_file_query[0]["GRAMAX_SIZE"];
+                $max_file_size =  intval($result_get_max_file_query[0]["GRAMAX_SIZE"]);
             }
             $logger->debug("*** GRA max_file_size: " . $max_file_size);
             $logger->debug("*** GRA file size: " . filesize($_FILES['fileToUpload']['tmp_name']));
@@ -278,10 +296,11 @@ class AdminGradeController extends AbstractController{
                     $temp_end_file = "";
                     $list_of_page_missing = "";
                     $zip_counter_check_page = array();
+                    $is_too_heavy = false;
+                    $report_filename_too_heavy = "";
                     for($i = 1; $i <= $nbr_page; $i++){
                         array_push($zip_counter_check_page, '_' . $i);
                     }
-                    $previsualisation_line_counter = 1;
                     if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE)){
                         $logger->debug("*** We have opened the file ");
                         $logger->debug("*** Number of file: " . $zip->numFiles);
@@ -296,7 +315,7 @@ class AdminGradeController extends AbstractController{
                                 ){
                                         $count_csv = $count_csv + 1;
                                         $list_of_files_read = $list_of_files_read . '<br>' . basename( $stat['name']);
-
+                                        array_push($zip_list_of_files, basename( $stat['name']));
                                         // ***********************************************************************
                                         // ***********************************************************************
                                         // ***********************************************************************
@@ -311,6 +330,13 @@ class AdminGradeController extends AbstractController{
                                         }
                                         $j = 0;
                                         $found = 'N';
+                                        // Check the size of the file to avoid loop first
+                                        if(intval($stat['size']) > $max_file_size*1000){
+                                            $is_too_heavy = true;
+                                            $report_filename_too_heavy = basename( $stat['name']);
+                                            $found = 'Y';
+                                            $logger->debug("*** Heavy: " . $is_too_heavy . ' set found: ' . $found);
+                                        }
                                         $logger->debug("*** Before log: " . count($zip_counter_check_page) . ' >>> ' . $j . ' +++ ' . $found);
                                         while (($j < count($zip_counter_check_page)) && ($found == 'N')):
                                             if(str_ends_with(basename( $stat['name']), $zip_counter_check_page[$j] . $temp_end_file)){
@@ -322,7 +348,14 @@ class AdminGradeController extends AbstractController{
                                             }
                                             $logger->debug("*** in log: " . count($zip_counter_check_page) . ' >>> ' . $j . ' +++ ' . $found);
                                         endwhile;
-                                        array_splice($zip_counter_check_page, $j, 1);
+
+                                        // We are on a valid case so we can move on
+                                        if(($found == 'Y') && (!$is_too_heavy)){
+                                            // Save the page number
+                                            $new_array = array(basename( $stat['name'])=>$zip_counter_check_page[$j]);
+                                            $page_i_array = array_merge($page_i_array, $new_array);
+                                            array_splice($zip_counter_check_page, $j, 1);
+                                        }
 
                                         // ***********************************************************************
                                         // ***********************************************************************
@@ -331,6 +364,10 @@ class AdminGradeController extends AbstractController{
                                     }
                         }
                         $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments . '<br>' . $list_of_files_read;
+                        if($is_too_heavy){
+                            $is_still_valid = false;
+                            $full_error_msg = $full_error_msg . 'Error730H - Un des fichiers du zip dépasse la taille maximale de ' . $max_file_size . 'ko - Vérifiez : zip/' . $report_filename_too_heavy;
+                        }
                         if($count_csv > $_ENV['ZIP_LIMIT']){
                             $is_still_valid = false;
                             $full_error_msg = $full_error_msg . 'Error734G - Le fichier zip est limité à ' . $_ENV['ZIP_LIMIT'] . ' fichiers intérieurs. Vérifiez : ' . $_FILES['fileToUpload']['name'];
@@ -351,25 +388,93 @@ class AdminGradeController extends AbstractController{
                         $is_still_valid = false;
                         $full_error_msg = $full_error_msg . 'Error737G - Erreur dans extraction du fichier zip. Contactez le support et partagez leur le fichier: ' . $_FILES['fileToUpload']['name'];
                     }
+                    $zip->close();
             }
 
             $logger->debug("*** pwd: " . getcwd());
             // /Users/ratinahirana/Sites/localhost/uaceema/public
 
-            // From here if we are valid, then we need to start the work
+
             // ***********************************************************************
             // ***********************************************************************
             // ***********************************************************************
             // ***********************************************************************
             // ***********************************************************************
             // ***********************************************************************
+            // From here if we are valid, then we need to start the work *************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            // ***********************************************************************
+            $master_id = 0;
             if($is_still_valid){
+                $master_id = $this->getMasterIdAndStartFlow($_SESSION['id'], $param_exam_date, $param_subject_id, $param_teacher_id, $nbr_page, $param_cust_teacher_name, $logger);
+                if($master_id == '0'){
+                    //There is an issue here
+                    $is_still_valid = false;
+                    $full_error_msg = $full_error_msg . "Error738G - Un chargement est en cours de traitement ou alors le dernier ne s'est pas terminé correctement.<br>Veuillez reessayer plus tard et si le problème persiste, contactez le support technique.";
+                }
+            }
+            //We have a valid Master ID
+            if($is_still_valid){
+                // We have to retrieve the master_id
+
                 if ((str_ends_with($_FILES['fileToUpload']['name'], '.jpg')) || (str_ends_with($_FILES['fileToUpload']['name'], '.jpeg'))){
                     // Do something for jpeg
-                    $this->saveFileUnitary('xy', $mention_code, $_FILES, $logger, $scale_right);
+                    // We are good we need to save
+                    $this->saveFileUnitary($master_id . '_' . $param_subject_id . '_', $mention_code, $_FILES, $logger, $scale_right);
+                    // As jpg, we save the file page 1 on 1
+                    $this->generateLoadGra($master_id, '/' . $mention_code . '/', $master_id . '_' . $param_subject_id . '_' . $_FILES['fileToUpload']['name'], 1, $param_browser, $nbr_page, $logger);
                 }
                 else{
                     // Do something for zip
+                    // We have to loop in the zip
+                    $zip = new ZipArchive;
+                    $target_dir = getcwd() . self::$my_gra_repository;
+                    $path_filename_repo = $target_dir . "/" . $mention_code . "/";
+                    $zip_rawfilename_loaded = $_FILES["fileToUpload"]["tmp_name"];
+                    if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE)) {
+                        $zip->extractTo($path_filename_repo, $zip_list_of_files);
+                        $zip->close();
+                        $logger->debug("*** Master - File unzipped ");
+                    } else {
+                        $logger->debug("*** Master - Error File unzipped ");
+                    }
+                    foreach ($zip_list_of_files as $in_zip_file) {
+                        rename($path_filename_repo . '/' . $in_zip_file, $path_filename_repo . '/' . $master_id . '_' . $param_subject_id . '_' . $in_zip_file);
+                    }
+
+                    /*
+                    
+                    if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE)){
+                        $logger->debug("*** Master - We have opened the file ");
+                        $logger->debug("*** Master - Number of file: " . $zip->numFiles);
+                        $count_csv = 0;
+
+                        for($i = 0; $i < $zip->numFiles; $i++){
+                            $stat = $zip->statIndex($i);
+                            if(!(str_starts_with(basename( $stat['name']), '.')) &&
+                                    ((str_ends_with(basename( $stat['name']), '.jpg'))
+                                            || (str_ends_with(basename( $stat['name']), '.jpeg'))
+                                    )
+                                ){
+                                        $count_csv = $count_csv + 1;
+                                        // Do the file operation here : basename( $stat['name'])
+                                        $this->saveFileUnitary($master_id . '_' . $param_subject_id . '_', $mention_code, $stat, $logger, $scale_right);
+                                        // As jpg, we save the file page 1 on 1
+                                        $this->generateLoadGra($master_id, '/' . $mention_code . '/', $master_id . '_' . $param_subject_id . '_' . basename( $stat['name']), 1, $param_browser, $nbr_page, $logger);
+                                }
+                        }
+                    }
+                    else{
+                        $is_still_valid = false;
+                        $full_error_msg = $full_error_msg . 'Error739G - Erreur dans extraction pour enregistrement du fichier zip. Contactez le support et partagez leur le fichier: ' . $_FILES['fileToUpload']['name'];
+                    }
+                    $zip->close();
+                    */
+                    
                 }
             }
             // Else we do nothing
@@ -503,7 +608,7 @@ class AdminGradeController extends AbstractController{
                                                                                 );
             }
             else{
-                $full_error_msg = '<span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Erreur intégration fichier<br>' . $full_error_msg;
+                $full_error_msg = '<span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Erreur intégration fichier<br>' . $full_error_msg . $trace_report;
                 $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                     'firstname' => $_SESSION["firstname"],
                                                                                     'lastname' => $_SESSION["lastname"],
@@ -574,7 +679,27 @@ class AdminGradeController extends AbstractController{
         return $result_get_token[0]["TOKEN"];
     }
 
+    private function getMasterIdAndStartFlow($param_session_id, $param_exam_date, $param_subject_id, $param_teacher_id, $nbr_page, $param_cust_teacher_name, LoggerInterface $logger){
+        // Get me the token !
+        $get_start_master_query = "CALL CLI_START_GraFlowMaster('" . $_FILES['fileToUpload']['name'] . "', '". $param_session_id . "', ' " . $param_exam_date . "', " . $param_subject_id . ", " . $param_teacher_id . ", " . $nbr_page . ", '" . $param_cust_teacher_name . "');";
+        $logger->debug("Show me get_start_master_query: " . $get_start_master_query);
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $result_get_start_master_query = $dbconnectioninst->query($get_start_master_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("result_get_token: " . $result_get_start_master_query[0]["INV_GRA_MASTER_ID"]);
+    
+        return $result_get_start_master_query[0]["INV_GRA_MASTER_ID"];
+    }
+
+    private function generateLoadGra($param_master_id, $param_path, $param_filename, $param_page_i, $browser, $nbr_page, LoggerInterface $logger){
+        // Get me the token !
+        $get_generate_load_gra_query = " INSERT INTO uac_load_gra (master_id, gra_path, gra_filename, page_i, browser, nbr_of_page) VALUES (" . $param_master_id . ", '" . $param_path . "', '" . $param_filename . "', " . $param_page_i . ", '" . $browser . "', " . $nbr_page . "); ";
+        $logger->debug("Show me get_generate_load_gra_query: " . $get_generate_load_gra_query);
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $dbconnectioninst->query($get_generate_load_gra_query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // $result_for_one_file = $this->saveFileUnitary($prefix, $param_file, LoggerInterface $logger, $scale_right)
+    // u is for unique (jpg and jpeg) and m is for multiple (zip)
     public function saveFileUnitary($prefix, $mention, $param_file, LoggerInterface $logger, $scale_right){
         if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
             $logger->debug("*** pwd: " . getcwd());

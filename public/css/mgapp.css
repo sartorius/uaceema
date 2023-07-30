@@ -2419,3 +2419,9 @@ img.part-img{
 .input-gra{
   display: none;
 }
+
+.trac-rep{
+  margin-top: 20px;
+  color: #240056;
+  font-size: 0.9em;
+}

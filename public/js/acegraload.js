@@ -26,16 +26,6 @@ function printPresenceSheet(){
     const maxStrL1 = 17;
     const maxStrL2 = 23;
     const maxStrL3 = 35;
-    const maxStr = 20;
-    //str.substr(0, maxStr);
-    let limit = tempCountStu;
-    let maxIs = 0;
-
-    let rowSeter = 0;
-    let columnSeter = 0;
-    let itemPageCount = 10;
-    const cardWidth = 105;
-    const cardHeight = 59;
     
     doc.addImage(document.getElementById('bg-tmpl'), //img src
                         'PNG', //format
@@ -290,30 +280,21 @@ function fillModalTeacher(){
     $('#teach-list').html(teacherList);
 }
 
-/*
-function startStopGraEdit(){
-    if(editMode == 'N'){
-      // We start edit here
-      editMode = 'Y';
-      $('.tag-edit').addClass('edit-sel-off');
-      $('.tag-color-edit').addClass('edit-sel-color');
-      
-      $("#btn-valid-name").html("Modifier");
-      allowBannerAndMainPage(editMode);
-      resetNavFooterBtn();
+function setAndGetTeacherId(){
+    // fTeacherId fCustTeacherName fSubjectId fExamDate
+    let selectedTeacherId = $('#teach-list option').filter(function() {
+                                return this.value === $('#teach-sel-gra').val();
+                            }).data("id");
+    if(selectedTeacherId == undefined){
+                tempTeacherId = 0;
     }
     else{
-      // If we are here then the button has change and we must edit
-      // We block Edit here
-      editMode = 'N';
-      $('.tag-edit').removeClass('edit-sel-off');
-      $('.tag-color-edit').removeClass('edit-sel-color');
-
-      $("#btn-valid-name").html("Valider");
-      allowBannerAndMainPage(editMode);
-      resetNavFooterBtn();
+                tempTeacherId = selectedTeacherId;
     }
-} */
+    tempTeacherName = $('#teach-sel-gra').val();
+    return selectedTeacherId;
+}
+
 
 function allowGenerateAndMainPage(param){
     if(param == 'Y'){
@@ -322,6 +303,15 @@ function allowGenerateAndMainPage(param){
         $("#gra-gen-prs").prop("disabled", false);
         document.getElementById("file-upl-loader-gra").style.visibility = "visible";
         document.getElementById("loader-block").style.visibility = "visible";
+
+        
+        $("#fTeacherId").val(setAndGetTeacherId());
+        $("#fCustTeacherName").val($('#teach-sel-gra').val());
+        $("#fSubjectId").val(tempSubjectID);
+        $("#fExamDate").val($('#exam-day').val());
+        $("#fBrowser").val(getBrowserId());
+        $("#fNiveau").val($('#selected-niv').html());
+        $("#fSubject").val($('#selected-subj').html());
         
     }
     else{
