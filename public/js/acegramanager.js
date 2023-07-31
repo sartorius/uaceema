@@ -1,3 +1,57 @@
+function generateAllExamCSV(){
+    const csvContentType = "data:text/csv;charset=utf-8,";
+    let csvContent = "";
+    let involvedArray = filtereddataAllExamToJsonArray;
+    const SEP_ = ";"
+
+	let dataString = "Référence" + SEP_ 
+                    + "Status" + SEP_ 
+                    + "Mention" + SEP_ 
+                    + "Niveau" + SEP_ 
+                    + "Semestre" + SEP_ 
+                    + "Date examen" + SEP_
+                    + "Sujet" + SEP_ 
+                    + "Fichier" + SEP_ 
+                    + "Nombre de page(s)" + SEP_ 
+                    + "Crédit" + SEP_ 
+                    + "Enseignant" + SEP_
+                    + "Dernière action" + SEP_ 
+                    + "Date dernière action" + SEP_ + "\n";
+	csvContent += dataString;
+	for(let i=0; i<involvedArray.length; i++){
+
+            dataString = involvedArray[i].UGM_ID + SEP_ 
+                + getVerboseExamStatus(involvedArray[i].UGM_STATUS) + SEP_ 
+                + isNullMvo(involvedArray[i].URM_MENTION_TITLE) + SEP_ 
+                + isNullMvo(involvedArray[i].URS_NIVEAU_CODE) + SEP_ 
+                + isNullMvo(involvedArray[i].URS_SEMESTER) + SEP_ 
+                + isNullMvo(involvedArray[i].UGM_DATE) + SEP_ 
+                + isNullMvo(involvedArray[i].URS_TITLE) + SEP_ 
+                + isNullMvo(involvedArray[i].UGM_FILENAME) + SEP_ 
+                + isNullMvo(involvedArray[i].UGM_NBR_OF_PAGE) + SEP_ 
+                + involvedArray[i].URS_CREDIT/10 + SEP_ 
+                + isNullMvo(involvedArray[i].UGM_TEACHER_NAME) + SEP_ 
+                + isNullMvo(involvedArray[i].LAST_AGENT_USERNAME.toUpperCase()) + SEP_ 
+                + isNullMvo(involvedArray[i].UGM_LAST_UPDATE) + SEP_ ;
+            // easy close here
+            csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
+	}
+
+    //console.log('Click on csv');
+    let encodedUri = encodeURI(csvContent);
+    let csvData = new Blob([csvContent], { type: csvContentType });
+
+        let link = document.createElement("a");
+    let csvUrl = URL.createObjectURL(csvData);
+
+    link.href =  csvUrl;
+    link.style = "visibility:hidden";
+    link.download = 'RapportGlobalExamen.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 
 function initAllExamGrid(){
     $('#filter-all-exa').keyup(function() {
@@ -50,15 +104,15 @@ function loadAllExamGrid(){
           title: "#",
           type: "number",
           width: 10,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "UGM_STATUS",
           title: "Status",
           type: "text",
           width: 40,
-          headercss: "cell-ref-sm-hd",
-          css: "cell-ref-sm",
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return getVerboseExamStatus(value);
           }
@@ -67,15 +121,15 @@ function loadAllExamGrid(){
           title: "Mention",
           type: "text",
           width: 40,
-          headercss: "cell-ref-sm-hd",
-          css: "cell-ref-sm"
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm"
         },
         { name: "URS_NIVEAU_CODE",
           title: "<i class='icon-list-ol'></i>",
           type: "text",
           width: 10,
-          headercss: "cell-ref-sm-hd",
-          css: "cell-ref-sm",
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value + '/' + item.URS_SEMESTER;
           }
@@ -84,14 +138,14 @@ function loadAllExamGrid(){
           title: "Date",
           type: "text",
           width: 25,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_TITLE",
           title: "Sujet",
           type: "text",
           width: 75,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value.substr(0, MAX_STR_L1);
@@ -100,7 +154,7 @@ function loadAllExamGrid(){
         { name: "UGM_FILENAME",
           title: "Fichier",
           type: "text",
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value.substr(0, MAX_STR_L2);
@@ -111,16 +165,16 @@ function loadAllExamGrid(){
           type: "number",
           width: 10,
           align: "right",
-          headercss: "cell-ref-sm-hd",
-          css: "cell-ref-sm"
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm"
         },
         { name: "URS_CREDIT",
           title: "Cdt",
           type: "number",
           width: 10,
           align: "right",
-          headercss: "cell-ref-sm-hd",
-          css: "cell-ref-sm",
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value/10;
           }
@@ -129,7 +183,7 @@ function loadAllExamGrid(){
           title: "Enseignant",
           type: "text",
           width: 50,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value.substr(0, MAX_STR_L3);
@@ -139,7 +193,7 @@ function loadAllExamGrid(){
           title: "<i class='icon-person nav-text'></i>",
           type: "text",
           width: 40,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
             return value.toUpperCase();
@@ -149,7 +203,7 @@ function loadAllExamGrid(){
           title: "<i class='icon-clock-1 nav-text'></i>",
           type: "text",
           width: 30,
-          headercss: "cell-ref-sm-hd",
+          headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         }
     ];

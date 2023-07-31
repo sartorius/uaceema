@@ -1637,6 +1637,12 @@ textarea[name=inputRef] {
 .cell-ref-uac-sm{
   font-size: 13px;
 }
+.cell-ref-uac-sm-hd{
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  background-color: var(--main-ace-color) !important;
+}
 
 .cell-ref-xs{
   font-size: var(--jsgrid-txt-xs);
