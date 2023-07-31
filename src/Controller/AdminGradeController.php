@@ -703,7 +703,7 @@ class AdminGradeController extends AbstractController{
 
     private function closeFlowAndWINMasterId($param_master_id, LoggerInterface $logger){
         // Get me the token !
-        $get_close_master_query = "CALL CLI_END_GraFlowMaster(" . $param_master_id . ");";
+        $get_close_master_query = "CALL CLI_END_GraFlowMasterGenGraLine(" . $param_master_id . ");";
         $logger->debug("Show me get_close_master_query: " . $get_close_master_query);
         $dbconnectioninst = DBConnectionManager::getInstance();
         $dbconnectioninst->query($get_close_master_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -733,6 +733,49 @@ class AdminGradeController extends AbstractController{
                 $logger->debug("*** succ: saveFileUnitary File Uploaded Successfully.");
             }
         }
+    }
+
+
+    public function managergraexam(Environment $twig, LoggerInterface $logger)
+    {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        $logger->debug("scale_right: " . $scale_right);
+        // Anyone can access to the manager but only limited people can input the date
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+
+            
+
+            $query_all_ugm = " SELECT * FROM v_master_exam ORDER BY UGM_TECH_LAST_UPDATE DESC; ";
+
+            $logger->debug("Firstname: " . $_SESSION["firstname"]);
+            $logger->debug("query_all_ugm: " . $query_all_ugm);
+
+
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            $result_all_ugm = $dbconnectioninst->query($query_all_ugm)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_all_ugm: " . count($result_all_ugm));
+
+            $content = $twig->render('Admin/gra/managergraexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                    'firstname' => $_SESSION["firstname"],
+                                                                    'lastname' => $_SESSION["lastname"],
+                                                                    'id' => $_SESSION["id"],
+                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'result_all_ugm' => $result_all_ugm,
+                                                                    'errtype' => '']);
+
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
     }
 
 

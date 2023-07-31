@@ -1634,6 +1634,10 @@ textarea[name=inputRef] {
   font-size: var(--jsgrid-txt-sm);
 }
 
+.cell-ref-uac-sm{
+  font-size: 13px;
+}
+
 .cell-ref-xs{
   font-size: var(--jsgrid-txt-xs);
 }
@@ -2424,4 +2428,13 @@ img.part-img{
   margin-top: 20px;
   color: #240056;
   font-size: 0.9em;
+}
+
+.uac-step{
+  background-color: #d8ddff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 3px;
 }

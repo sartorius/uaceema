@@ -181,3 +181,6 @@ loadgrascan:
 checkandloadgra:
     path:       /checkandloadgra
     controller: App\Controller\AdminGradeController::checkandloadgra
+managergraexam:
+    path:       /managergraexam
+    controller: App\Controller\AdminGradeController::managergraexam

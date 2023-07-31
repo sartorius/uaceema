@@ -1,0 +1,80 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_all_ugm is defined and result_all_ugm is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllExamToJsonArray = JSON.parse('{{ result_all_ugm | json_encode | raw }}');
+    // We init here the filter value
+	let filtereddataAllExamToJsonArray = Array.from(dataAllExamToJsonArray);
+
+
+    const MAX_STR_L1 = 45;
+    const MAX_STR_L2 = 30;
+    const MAX_STR_L3 = 30;
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllPAYToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">man-exa</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Manager Examen</h2>
+    Les différentes étapes d'un examen sont <i class="uac-step">Nouveau</i> > <i class="uac-step">Chargé</i> > <i class="uac-step">Saisie</i> > <i class="uac-step">Revue</i> > <i class="uac-step">Terminée</i>
+    <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-exa" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-exa" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="x()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-3">
+
+  </div>
+
+
+  <div class="col-3">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllExam">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+{# Necessary go to student profile #}
+{% include 'Admin/PAY/_gotostudentprofilefrompaymng.html.twig' %}
+{% include 'RawTemplate/SPE/_footer.w.graman.jsgrid.mgchart.html.twig' %}

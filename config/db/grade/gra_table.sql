@@ -53,3 +53,41 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_gra_grade` (
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `IDX_USER_ID` USING BTREE (`user_id`));
+
+DROP VIEW IF EXISTS v_master_exam;
+CREATE VIEW v_master_exam AS
+SELECT ugm.id AS UGM_ID,
+	   ugm.status AS UGM_STATUS,
+		 ugm.last_agent_id AS UGM_LAST_AGENT_ID,
+		 ugm.exam_date AS UGM_TECH_DATE,
+		 DATE_FORMAT(ugm.exam_date, "%d/%m/%Y") AS UGM_DATE,
+		 ugm.zip_filename AS UGM_FILENAME,
+		 ugm.cust_teacher_name AS UGM_TEACHER_NAME,
+		 ugm.teacher_id AS UGM_TEACHER_ID,
+		 ugm.subject_id AS UGM_SUBJECT_ID,
+		 ugm.nbr_of_page AS UGM_NBR_OF_PAGE,
+		 ugm.last_update AS UGM_TECH_LAST_UPDATE,
+		 DATE_FORMAT(ugm.last_update, "%d/%m/%Y") AS UGM_LAST_UPDATE,
+		 urs.mention_code AS URS_MENTION_CODE,
+		 urm.title AS URM_MENTION_TITLE,
+		 urs.niveau_code AS URS_NIVEAU_CODE,
+		 urs.semester AS URS_SEMESTER,
+		 urs.subject_title AS URS_TITLE,
+		 urs.credit AS URS_CREDIT,
+		 mu.username AS LAST_AGENT_USERNAME,
+		 mu.firstname AS LAST_AGENT_FIRSTNAME,
+		 mu.lastname AS LAST_AGENT_LASTNAME,
+     CONCAT(
+       UPPER(IFNULL(DATE_FORMAT(ugm.exam_date, "%d/%m/%Y"), '')),
+       UPPER(IFNULL(ugm.cust_teacher_name, '')),
+       UPPER(IFNULL(ugm.zip_filename, '')),
+       UPPER(IFNULL(urs.subject_title, '')),
+       UPPER(IFNULL(urm.title, '')),
+       UPPER(mu.username),
+       UPPER(mu.firstname),
+       UPPER(mu.lastname)
+     ) AS raw_data
+FROM uac_gra_master ugm JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
+						            JOIN uac_ref_mention urm ON urs.mention_code = urm.par_code
+							          JOIN uac_admin uaa ON uaa.id = ugm.last_agent_id
+							          JOIN mdl_user mu ON mu.id = uaa.id;
