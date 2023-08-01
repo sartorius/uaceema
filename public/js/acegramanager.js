@@ -120,12 +120,12 @@ function loadAllExamGrid(){
         { name: "URS_MENTION_CODE",
           title: "Mention",
           type: "text",
-          width: 40,
+          width: 25,
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_NIVEAU_CODE",
-          title: "<i class='icon-list-ol'></i>",
+          title: "<i class='icon-list-ordered'></i>",
           type: "text",
           width: 10,
           headercss: "cell-ref-uac-sm-hd",
@@ -144,7 +144,7 @@ function loadAllExamGrid(){
         { name: "URS_TITLE",
           title: "Sujet",
           type: "text",
-          width: 75,
+          width: 95,
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
@@ -182,7 +182,7 @@ function loadAllExamGrid(){
         { name: "UGM_TEACHER_NAME",
           title: "Enseignant",
           type: "text",
-          width: 50,
+          width: 90,
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {

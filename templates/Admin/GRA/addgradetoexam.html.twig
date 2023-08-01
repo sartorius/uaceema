@@ -6,16 +6,7 @@
 
     let dataAllUSRToJsonArray = JSON.parse('{{ result_all_usr | json_encode | raw }}');
 
-    let dataMentionToJsonArray = JSON.parse('{{ result_mention_query | json_encode | raw }}');
-    let dataAllClassToJsonArray = JSON.parse('{{ result_allclass_query | json_encode | raw }}');
-    let dataCountStuToJsonArray = JSON.parse('{{ result_count_stu_query | json_encode | raw }}');
-    let dataTeacherToJsonArray = JSON.parse('{{ result_teacher_query | json_encode | raw }}');
-    let filteredTeacherList = new Array();
 
-    let tempMention = '';
-    let tempMentionCode = '';
-    let tempClasse = '';
-    let tempClasseID = 0; // <> CourseID !!!
     let tempCountStu = 0;
 
     let initialPosition = '';
@@ -29,8 +20,6 @@
     let currentPage = 1;
     let maxLengthTable = 17;
 
-
-
   </script>
 {% else %}
     // Error
@@ -41,13 +30,13 @@
 
 
 
-<div id="mg-graph-identifier" class="disap">gra-aex</div>
+<div id="mg-graph-identifier" class="disap">gra-add</div>
 
 <div class="row  btn-banner btn-layer">
     <div class="col-1">
     </div>
     <div class="col-2 menu-dropdown">
-        <a class="btn btn-outline-dark btn-sm btn-up-menu" href="#" role="button">Quitter&nbsp;<span class="icon-times nav-text"></span></a>
+        <a class="btn btn-outline-dark btn-sm btn-up-menu" href="/managergraexam" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;&nbsp;Manager examen</a>
     </div>
     <div class="col-8">
 
@@ -71,45 +60,33 @@
 {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
 {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
 <div class="container">
-
+    <div class="row btn-layer">
+        <div class="col-lg-12">
+            <h2>Saisir notes</h2>
+        </div>
+    </div>
     <div class="row btn-layer">
         <div class="col-lg-12  info-cartouche">
             <div id="cartouche-edt">
-
                 <div class="menu-dropdown">
-
-                    <div class="dropdown btn-ace-menu tag-edit">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="drp-select" class="tag-color-edit">Mention</i>
-                        </button>
-                        <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-
-                        </div>
+                    <div class="btn-ace-menu disp-sub-gra">
+                        ECONO L1/1 17/08/2023&nbsp;
                     </div>
-
-                    <div class="dropdown btn-ace-menu tag-edit">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="selected-class" class="tag-color-edit">Classe</i>
-                        </button>
-                        <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Sélectionnez une mention</a>
-                        </div>
+                </div>
+                <div class="menu-dropdown">
+                    <div class="btn-ace-menu disp-class-qty">
+                        Incroyable sujet de fou&nbsp;
                     </div>
-
-                    <div class="dropdown btn-ace-menu tag-edit">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="cou-select" class="tag-color-edit">Matière</i>
-                        </button>
-                            <div id="dpcour-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        </div>
-                    </div>
-
                     <div class="btn-ace-menu disp-class-qty">
                     <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
                     </div>
 
                     <div class="btn-ace-menu disp-class-qty">
                     <i class="icon-files nav-text"></i>&nbsp;<i id="sel-pag-qty">0</i>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-graduation-cap nav-text"></i>&nbsp;<i id="sel-credit-qty">0</i>
                     </div>
 
                     {#
@@ -123,25 +100,6 @@
                     </div>
                     #}
                     
-
-                </div>
-                <div class="menu-dropdown">
-                    <div class="btn-ace-menu disp-class-qty">
-                        Date examen
-                    </div>
-                    <div class="dropdown btn-ace-menu tag-edit">
-                        <input class="pickdate tag-color-edit" type="date" id='exam-day' placeholder="MM/DD/YYYY" />
-                    </div>
-
-                    <div id="teacher-blk-gra" class="menu-dropdown tag-edit">
-                    <input id="teach-sel-gra" list="teach-list" class="tag-color-edit" placeholder="Enseignant responsable">
-                        <datalist id="teach-list">
-                        {# <option>Russia</option> #}
-                        </datalist>
-                    </div>
-                    <div class="dropdown btn-ace-menu">
-                        <button id="gra-val-hea" onclick="startStopGraEdit()" class="btn btn-dark btn-md btn-blk-menu" disabled><i id="btn-valid-name">Valider</i>&nbsp;<i class="icon-pencil-square-o nav-text"></i></button>
-                    </div>
 
                 </div>
                 <div id='pg-nav' class="menu-dropdown">
@@ -212,7 +170,7 @@
     {# ----------------------------------------------------------------------------------------------------------------------------------------------- #}
 
 
-    <div id="main-gra" class="row mask-pg">
+    <div id="main-gra" class="row">
             <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
                 <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" class="back-z" width="100%" alt="Girl">
@@ -238,4 +196,4 @@
     </div>
 </div>
 
-{% include 'RawTemplate/SPE/_footergratoexam.html.twig' %}
+{% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

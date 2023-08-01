@@ -1487,6 +1487,11 @@ textarea[name=inputRef] {
   font-size: 2em;
 }
 
+.disp-sub-gra{
+  color: var(--light-violet-80);
+  font-size: 1em;
+}
+
 .disp-class-sm{
   color: var(--main-gray-50);
   font-size: 1.4em;
@@ -2376,8 +2381,6 @@ img.part-img{
   color: var(--light-violet-80);
 }
 
-#ctrl-ban,
-#pg-nav,
 #pg-btn-save,
 #file-upl-loader-gra{
   visibility: hidden;
@@ -2394,7 +2397,6 @@ img.part-img{
   background-color: #e0ffe8;
 }
 
-.gra-ta-in,
 #loader-block{
   visibility: hidden;
 }

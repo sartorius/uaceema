@@ -49,21 +49,6 @@ class AdminGradeController extends AbstractController{
             $result_param_limit_page = $dbconnectioninst->query($param_limit_page_query)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_param_limit_page: " . $result_param_limit_page[0]['PG_LIMIT']);
             
-            $mention_query = " SELECT * FROM uac_ref_mention; ";
-            $logger->debug("Show me mention_query: " . $mention_query);
-            $result_mention_query = $dbconnectioninst->query($mention_query)->fetchAll(PDO::FETCH_ASSOC);
-
-            $allclass_query = " SELECT * FROM v_class_cohort; ";
-            $logger->debug("Show me allclass_query: " . $allclass_query);
-            $result_allclass_query = $dbconnectioninst->query($allclass_query)->fetchAll(PDO::FETCH_ASSOC);
-
-            $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
-            $logger->debug("Show me count_stu_query: " . $count_stu_query);
-            $result_count_stu_query = $dbconnectioninst->query($count_stu_query)->fetchAll(PDO::FETCH_ASSOC);
-
-            $teacher_query = " SELECT urt.id, xm.mention_code, urt.name FROM uac_ref_teacher urt JOIN uac_xref_teacher_mention xm ON xm.teach_id = urt.id;";
-            $logger->debug("Show me usedroom_query: " . $teacher_query);
-            $result_teacher_query = $dbconnectioninst->query($teacher_query)->fetchAll(PDO::FETCH_ASSOC);
 
             $page_maximum = intval(count($result_all_usr) / $result_param_limit_page[0]['PG_LIMIT']);
             if((count($result_all_usr) % $result_param_limit_page[0]['PG_LIMIT']) > 0){
@@ -76,10 +61,6 @@ class AdminGradeController extends AbstractController{
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'result_get_token' => $result_get_token,
-                                                                'result_mention_query'=>$result_mention_query,
-                                                                'result_allclass_query'=>$result_allclass_query,
-                                                                'result_count_stu_query'=>$result_count_stu_query,
-                                                                "result_teacher_query"=>$result_teacher_query,
                                                                 'result_all_usr' => $result_all_usr,
                                                                 'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
                                                                 'page_maximum' => $page_maximum,
@@ -205,7 +186,6 @@ class AdminGradeController extends AbstractController{
         if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
             $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
-            $maxziplimit = $_ENV['ZIP_LIMIT'];
             $zip_list_of_files = array();
             $zip_comments = '';
 
@@ -366,11 +346,7 @@ class AdminGradeController extends AbstractController{
                         $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments . '<br>' . $list_of_files_read;
                         if($is_too_heavy){
                             $is_still_valid = false;
-                            $full_error_msg = $full_error_msg . 'Error730H - Un des fichiers du zip dépasse la taille maximale de ' . $max_file_size . 'ko - Vérifiez : zip/' . $report_filename_too_heavy;
-                        }
-                        if($count_csv > $_ENV['ZIP_LIMIT']){
-                            $is_still_valid = false;
-                            $full_error_msg = $full_error_msg . 'Error734G - Le fichier zip est limité à ' . $_ENV['ZIP_LIMIT'] . ' fichiers intérieurs. Vérifiez : ' . $_FILES['fileToUpload']['name'];
+                            $full_error_msg = $full_error_msg . 'Error734G - Un des fichiers du zip dépasse la taille maximale de ' . $max_file_size . 'ko - Vérifiez : zip/' . $report_filename_too_heavy;
                         }
                         if($count_csv != $nbr_page){
                             $is_still_valid = false;
@@ -449,155 +425,10 @@ class AdminGradeController extends AbstractController{
                     }
                     $this->closeFlowAndWINMasterId($master_id, $logger);
 
-                    /*
-                    
-                    if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE)){
-                        $logger->debug("*** Master - We have opened the file ");
-                        $logger->debug("*** Master - Number of file: " . $zip->numFiles);
-                        $count_csv = 0;
-
-                        for($i = 0; $i < $zip->numFiles; $i++){
-                            $stat = $zip->statIndex($i);
-                            if(!(str_starts_with(basename( $stat['name']), '.')) &&
-                                    ((str_ends_with(basename( $stat['name']), '.jpg'))
-                                            || (str_ends_with(basename( $stat['name']), '.jpeg'))
-                                    )
-                                ){
-                                        $count_csv = $count_csv + 1;
-                                        // Do the file operation here : basename( $stat['name'])
-                                        $this->saveFileUnitary($master_id . '_' . $param_subject_id . '_', $mention_code, $stat, $logger, $scale_right);
-                                        // As jpg, we save the file page 1 on 1
-                                        $this->generateLoadGra($master_id, '/' . $mention_code . '/', $master_id . '_' . $param_subject_id . '_' . basename( $stat['name']), 1, $param_browser, $nbr_page, $logger);
-                                }
-                        }
-                    }
-                    else{
-                        $is_still_valid = false;
-                        $full_error_msg = $full_error_msg . 'Error739G - Erreur dans extraction pour enregistrement du fichier zip. Contactez le support et partagez leur le fichier: ' . $_FILES['fileToUpload']['name'];
-                    }
-                    $zip->close();
-                    */
                     
                 }
             }
-            // Else we do nothing
-            // TODO : Keep going on file verification and loading
             
-            /*
-            if (strlen($_FILES['fileToUpload']['name']) == 0){
-                $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR1115 Le Fichier est vide.</span>' . '<br>',
-                                                "extract_queries"=>"Erreur Lecture de fichier.<br>");
-                $content = $twig->render('Admin/EDT/loader.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                                        'firstname' => $_SESSION["firstname"],
-                                                                        'lastname' => $_SESSION["lastname"],
-                                                                        'id' => $_SESSION["id"],
-                                                                        'maxziplimit' => $maxziplimit,
-                                                                        'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                        'errtype' => '', 'nofile' => 'nofile']);
-
-            } else {
-                if (str_ends_with($_FILES['fileToUpload']['name'], '.csv')) {
-                    // We are in one file mode
-                    $result_for_one_file = $this->extractFileInsertLines('.csv', $_FILES['fileToUpload'], null, 0, null, 1, $logger, $scale_right);
-
-                } elseif (str_ends_with($_FILES['fileToUpload']['name'], '.zip')) {
-                    // We are in zip mode
-                    // Work on the zip
-                    $zip = new ZipArchive;
-                    $zip_rawfilename_loaded = $_FILES["fileToUpload"]["tmp_name"];
-                    $logger->debug("Number of file: " . $zip_rawfilename_loaded);
-                    $previsualisation_line_counter = 1;
-
-                    if (($zip_rawfilename_loaded != null) && ($zip->open($zip_rawfilename_loaded) === TRUE))
-                    {
-                        $logger->debug("We have opened the file ");
-                        $logger->debug("Number of file: " . $zip->numFiles);
-                        $count_csv = 0;
-
-                        for($i = 0; $i < $zip->numFiles; $i++){
-                            $stat = $zip->statIndex($i);
-                            if(!(str_starts_with(basename( $stat['name']), '.')) &&
-                                    (str_ends_with(basename( $stat['name']), '.csv'))){
-                                        $count_csv = $count_csv + 1;
-                                    }
-                        }
-
-                        $zip_comments = '<span class="icon-arrow-down nav-icon-fa nav-text"></span>&nbsp; Fichier(s) lu(s): ' . $count_csv . '<br>' . $zip_comments;
-
-                        if($count_csv < $_ENV['ZIP_LIMIT']){
-                            for($i = 0; $i < $zip->numFiles; $i++)
-                            {
-                                $stat = $zip->statIndex($i);
-                                //$logger->debug("Here is one file: " . basename( $stat['name']));
-                                if(!(str_starts_with(basename( $stat['name']), '.')) &&
-                                        (str_ends_with(basename( $stat['name']), '.csv'))){
-
-                                    $logger->debug("Look to open: " . basename( $stat['name']));
-
-                                    //********************************************************************************
-                                    //********************************************************************************
-                                    //********************************************************************************
-                                    //******************************  DO THE WORK ************************************
-                                    //********************************************************************************
-                                    //********************************************************************************
-                                    //********************************************************************************
-                                    // We iterate thru the file
-
-
-                                    $result_for_one_file = $this->extractFileInsertLines('.zip', null, $zip, $i, basename( $stat['name']), $previsualisation_line_counter, $logger, $scale_right);
-                                    // we use previsualization counter only for the client
-                                    $previsualisation_line_counter = $previsualisation_line_counter + 1;
-
-                                    array_push($zip_results, $result_for_one_file);
-                                    $status_msg = '<strong><span class="icon-check-square nav-icon-fa-sm nav-text"></span>&nbsp; Attente de validation</strong>';
-                                    if($result_for_one_file['short_err'] != ''){
-                                    $status_msg = '<i class="err"><strong><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;' . $result_for_one_file['short_err'] . '.&nbsp;Ce fichier ne sera pas chargé.</strong></i>';
-                                    }
-                                    $zip_comments = $zip_comments . '<br>' . $result_for_one_file['zip_one_comment'] . '&nbsp;' . $status_msg . '' ;
-
-                                    // We do quiet error here. Most of the time when the access is current week
-                                    // If we have at least 1 value
-                                    if(count($result_for_one_file['sp_result']) > 0){
-                                        $zip_all_master_id_inq = $zip_all_master_id_inq . ', ' . $result_for_one_file['sp_result'][0]['master_id'];
-                                    }
-                                }
-                            }
-                        }
-                        else{
-
-                            $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR671 Nombre de fichier .csv maximum possible ' . ($_ENV['ZIP_LIMIT'] - 1) . '/ Le fichier ' . $_FILES['fileToUpload']['name'] . ' en contient ' . $count_csv . '.</span>' . '<br>',
-                                                        "extract_queries"=>"Veuillez recharger avec un Zip qui contient moins de fichiers.", "sp_result"=>null, "overpassday"=>null);
-
-                        }
-                    }
-                    else
-                    {
-                        $logger->debug("Erreur lecture archive zip: " . $zip_rawfilename_loaded);
-                        $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR789 de lecture fichier zip: ' . $zip_rawfilename_loaded . '</span>' . '<br>',
-                                                        "extract_queries"=>"<br>Nous attendons un .zip ou un .csv <br> Vérifiez que également <strong>que le fichier .zip ne contient que des fichiers .csv</strong>", "sp_result"=>null, "overpassday"=>null);
-                    }
-
-
-
-
-
-                } else {
-                    // Error
-                    $result_for_one_file = array("extract_report"=>'<br><span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERR11282 Le fichier ' . $_FILES['fileToUpload']['name'] . ' n\'est pas lisible.</span>' . '<br>',
-                                                    "extract_queries"=>"Erreur Lecture de fichier.<br>Nous attendons un .csv", "sp_result"=>null, "overpassday"=>null);
-                }
-                $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                                                    'firstname' => $_SESSION["firstname"],
-                                                                                    'lastname' => $_SESSION["lastname"],
-                                                                                    'id' => $_SESSION["id"],
-                                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                                    'result_for_one_file' => $result_for_one_file,
-                                                                                    'zip_results' => $zip_results,
-                                                                                    'zip_comments' => '<div class="ace-sm report-val">' . $zip_comments . '</div>',
-                                                                                    'zip_all_master_id_inq' => $zip_all_master_id_inq]
-                                                                                );
-            }
-            */
             $full_feedback_msg = $zip_comments;
             $full_error_msg = '<div class="err">' . $full_error_msg . '</div>';
             if($is_still_valid) {

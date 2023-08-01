@@ -13,7 +13,7 @@ yui-compressor public/js/aceidentificationcommon.js > public/js/aceidentificatio
 yui-compressor public/js/acepay.js > public/js/acepay.min.js;
 yui-compressor public/js/aceedt.js > public/js/aceedt.min.js;
 yui-compressor public/js/acepublicedt.js > public/js/acepublicedt.min.js;
-yui-compressor public/js/acegragra.js > public/js/acegragra.min.js;
+yui-compressor public/js/acegraadd.js > public/js/acegraadd.min.js;
 yui-compressor public/js/acegraload.js > public/js/acegraload.min.js;
 yui-compressor public/js/acegramanager.js > public/js/acegramanager.min.js;
 
