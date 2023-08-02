@@ -56,7 +56,7 @@ function printPresenceSheet(){
             doc.text(
                 50, //x oddOffsetX is to define if position 1 or 2
                 23 + pageLimit*rawHeight, //y
-                ' Date : ' + formatterDateFR.format(refDate) + ' - ' + $('#teach-sel-gra').val().substr(0, maxStrL3) + ' - Page ' + pgNbr + ' sur ' + AllPage
+                 $('#teach-sel-gra').val().substr(0, maxStrL3) + ' - Date : ' + formatterDateFR.format(refDate) + ' - Page ' + pgNbr + ' sur ' + AllPage
                 );
             doc.text(
                 61, //x oddOffsetX is to define if position 1 or 2
