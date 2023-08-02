@@ -59,7 +59,7 @@ function printPresenceSheet(){
                 ' Date : ' + formatterDateFR.format(refDate) + ' - ' + $('#teach-sel-gra').val().substr(0, maxStrL3) + ' - Page ' + pgNbr + ' sur ' + AllPage
                 );
             doc.text(
-                54, //x oddOffsetX is to define if position 1 or 2
+                61, //x oddOffsetX is to define if position 1 or 2
                 15, //y
                 tempInvClass
                 );
@@ -75,20 +75,20 @@ function printPresenceSheet(){
             (i+1).toString()
             );
         doc.text(
-            55.5, //x oddOffsetX is to define if position 1 or 2
+            63, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             //VSH_LASTNAME VSH_FIRSTNAME
             dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_USERNAME
             );
         doc.text(
-            85.5, //x oddOffsetX is to define if position 1 or 2
-            23 + pgCount*rawHeight, //y
-            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_FIRSTNAME.substr(0, maxStrL1)
-            );
-        doc.text(
-            127, //x oddOffsetX is to define if position 1 or 2
+            90, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_LASTNAME.substr(0, maxStrL2)
+            );
+        doc.text(
+            146.5, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_FIRSTNAME.substr(0, maxStrL1)
             );
 
         

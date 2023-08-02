@@ -12,6 +12,7 @@ CREATE PROCEDURE `CLI_START_GraFlowMaster` (IN param_filename VARCHAR(300),
 BEGIN
     DECLARE inv_flow_code	CHAR(7);
     DECLARE concurrent_flow TINYINT;
+    DECLARE existing_exam_date TINYINT;
 
     DECLARE inv_flow_id	BIGINT;
     DECLARE inv_gra_master_id	BIGINT;
@@ -20,10 +21,14 @@ BEGIN
     SELECT 'GRALOAD' INTO inv_flow_code;
 
     SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE flow_code = 'GRALOAD' AND status = 'NEW';
+    SELECT COUNT(1) INTO existing_exam_date FROM uac_gra_master WHERE exam_date = param_exam_date AND subject_id = param_subject_id AND status NOT IN ('CAN');
 
     IF concurrent_flow > 0 THEN
         -- That means we have already an integration which has failed
         SELECT 0 AS INV_GRA_MASTER_ID;
+    ELSEIF existing_exam_date > 0 THEN
+        -- Existing exam for this date and this subject
+        SELECT -1 AS INV_GRA_MASTER_ID;
     ELSE
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
         SELECT LAST_INSERT_ID() INTO inv_flow_id;

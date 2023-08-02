@@ -419,6 +419,11 @@ class AdminGradeController extends AbstractController{
                     $is_still_valid = false;
                     $full_error_msg = $full_error_msg . "Error738G - Un chargement est en cours de traitement ou alors le dernier ne s'est pas terminé correctement.<br>Veuillez reessayer plus tard et si le problème persiste, contactez le support technique.";
                 }
+                if($master_id == -1){
+                    //There is an issue here
+                    $is_still_valid = false;
+                    $full_error_msg = $full_error_msg . "Error739G - Un examen pour le même sujet et la même date existe déjà. Vous devez d'abord l'annuler dans le manager examen.";
+                }
             }
             //We have a valid Master ID
             if($is_still_valid){
