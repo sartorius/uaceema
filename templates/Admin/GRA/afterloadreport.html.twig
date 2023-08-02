@@ -5,6 +5,8 @@
   <div class="col-lg-3">
   </div>
   <div class="col-lg-6">
+        
+        {{ result_operation | raw }}
         {{ full_error_msg | raw }}
         <hr>
         {{ full_feedback_msg | raw }}
@@ -13,14 +15,35 @@
   </div>
 </div>
 
+
+{% if success_operation == 'Y' %}
+      <div class="row button-bottom">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-3">
+          <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="/loadgrascan" role="button"><span class="icon-clipboard nav-icon-fa nav-text"></span>&nbsp;Charger d'autres examens</a>
+        </div>
+        <div class="col-lg-2">
+          <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="/managergraexam" role="button"><span class="icon-suitcase nav-icon-fa nav-text"></span>&nbsp;Aller au manager</a>
+        </div>
+        <div class="col-lg-3">
+          <a class="btn btn-dark btn-lg btn-print btn-block" href="/loadgrascan" role="button"><span class="icon-gavel nav-icon-fa nav-text"></span>&nbsp;Saisir notes</a>
+        </div>
+        <div class="col-lg-2">
+        </div>
+      </div>
+{% else %}
 <div class="row button-bottom">
-  <div class="col-lg-3">
-  </div>
-  <div class="col-lg-6">
-    <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="/loadgrascan" role="button"><span class="icon-times nav-icon-fa nav-text"></span>&nbsp;Retour</a>
-  </div>
-  <div class="col-lg-3">
-  </div>
-</div>
+        <div class="col-lg-3">
+        </div>
+        <div class="col-lg-6">
+          <a class="btn btn-outline-dark btn-lg btn-print btn-block" href="/loadgrascan" role="button"><span class="icon-times nav-icon-fa nav-text"></span>&nbsp;Re-essayer</a>
+        </div>
+        <div class="col-lg-3">
+        </div>
+      </div>
+{% endif %}
+
+
 
 {% include 'RawTemplate/_footer.html.twig' %}

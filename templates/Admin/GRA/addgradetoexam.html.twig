@@ -5,6 +5,7 @@
   <script>
 
     let dataAllUSRToJsonArray = JSON.parse('{{ result_all_usr | json_encode | raw }}');
+    let dataAllPageToJsonArray = JSON.parse('{{ result_get_all_page_query | json_encode | raw }}');
 
 
     let tempCountStu = 0;
@@ -19,6 +20,10 @@
 
     let currentPage = 1;
     let maxLengthTable = 17;
+
+    
+    const PATH_IMG = "{{ path('main') }}";
+    const SUB_PATH_IMG = "img/ace_gra";
 
   </script>
 {% else %}
@@ -70,23 +75,24 @@
             <div id="cartouche-edt">
                 <div class="menu-dropdown">
                     <div class="btn-ace-menu disp-sub-gra">
-                        ECONO L1/1 17/08/2023&nbsp;
+                        {{ result_get_exam_query[0]['URS_MENTION_CODE'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['URS_NIVEAU_CODE'] }}/{{ result_get_exam_query[0]['URS_SEMESTER'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_DATE'] }}
+                        &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_TEACHER_NAME'] }}
                     </div>
                 </div>
                 <div class="menu-dropdown">
                     <div class="btn-ace-menu disp-class-qty">
-                        Incroyable sujet de fou&nbsp;
+                        {{ result_get_exam_query[0]['URS_TITLE'][:60] }}&nbsp;
                     </div>
                     <div class="btn-ace-menu disp-class-qty">
-                    <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
-                    </div>
-
-                    <div class="btn-ace-menu disp-class-qty">
-                    <i class="icon-files nav-text"></i>&nbsp;<i id="sel-pag-qty">0</i>
+                    <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">{{ result_all_usr|length }}</i>
                     </div>
 
                     <div class="btn-ace-menu disp-class-qty">
-                    <i class="icon-graduation-cap nav-text"></i>&nbsp;<i id="sel-credit-qty">0</i>
+                    <i class="icon-files nav-text"></i>&nbsp;<i id="sel-pag-qty">{{ result_get_exam_query[0]['UGM_NBR_OF_PAGE'] }}</i>
+                    </div>
+
+                    <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-graduation-cap nav-text"></i>&nbsp;<i id="sel-credit-qty">{{ result_get_exam_query[0]['URS_CREDIT']/10 }}</i>
                     </div>
 
                     {#
@@ -130,15 +136,7 @@
             <button onclick="itop('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-down nav-text"></i></button>
         </div>
         &nbsp;
-        {#
-        <div class="btn-group gra-btn-bar" role="group" aria-label="Basic example">
-            <button id="pow-1" type="button" class="btn pow-group btn-dark active">1</button>
-            <button id="pow-2" type="button" class="btn pow-group btn-dark unsel-grp">2</button>
-            <button id="pow-3" type="button" class="btn pow-group btn-dark unsel-grp">3</button>
-            <button id="pow-4" type="button" class="btn pow-group btn-dark unsel-grp">4</button>
-            <button id="pow-5" type="button" class="btn pow-group btn-dark unsel-grp">5</button>
-        </div>
-        #}
+        
         <div id="gra-rg" class="gra-btn-bar">
             <input type="range" class="form-range" id="rg-pck">
         </div>
@@ -147,7 +145,7 @@
             <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-down nav-text"></i></button>
         </div>
         <div id="gra-app" class="gra-btn-bar">
-            <button onclick="applyCrossBookmark('1503.89/-850px/-219px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
+            <button onclick="applyCrossBookmark('1428.61/-740px/-140px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
             <button onclick="applyCrossBookmark('R')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-times nav-text"></i></button>
         </div>
         <div id="gra-app-pers" class="gra-btn-bar">
@@ -173,7 +171,7 @@
     <div id="main-gra" class="row">
             <div id="gra-ex" class="col-lg-6">
                 {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
-                <img id="ex-1" src="{{ path('main') }}img/ace_gra/Exam1R.jpg" class="back-z" width="100%" alt="Girl">
+                <img id="ex-1" src="{{ path('main') }}img/ace_gra{{ result_get_all_page_query[0]['gra_path'] }}{{ result_get_all_page_query[0]['gra_filename'] }}" class="back-z" width="100%" alt="Exam">
             </div>
             <div id="gra-gr" class="col-lg-6">
                 
@@ -195,5 +193,6 @@
         </div>
     </div>
 </div>
+
 
 {% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

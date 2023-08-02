@@ -36,36 +36,63 @@ class AdminGradeController extends AbstractController{
 
             $result_get_token = $this->getDailyTokenGRAStr($logger);
 
-            $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA FROM v_showuser vsh where vsh.cohort_id = 26 ORDER BY VSH_FIRSTNAME ASC; ";
-            $logger->debug("Show me allusr_query: " . $allusr_query);
-
-            $dbconnectioninst = DBConnectionManager::getInstance();
-            $result_all_usr = $dbconnectioninst->query($allusr_query)->fetchAll(PDO::FETCH_ASSOC);
-            $logger->debug("Show me: " . count($result_all_usr));
-
-
-            $param_limit_page_query = " SELECT par_int AS PG_LIMIT FROM uac_param WHERE key_code = 'GRASTUL'; ";
-            $logger->debug("Show me param_limit_page_query: " . $param_limit_page_query);
-            $result_param_limit_page = $dbconnectioninst->query($param_limit_page_query)->fetchAll(PDO::FETCH_ASSOC);
-            $logger->debug("Show me result_param_limit_page: " . $result_param_limit_page[0]['PG_LIMIT']);
+            
             
 
-            $page_maximum = intval(count($result_all_usr) / $result_param_limit_page[0]['PG_LIMIT']);
-            if((count($result_all_usr) % $result_param_limit_page[0]['PG_LIMIT']) > 0){
-                $page_maximum = $page_maximum + 1;
+            if((isset($_POST["read-master-id"]))
+                && ($_POST["read-master-id"] != null)){
+
+                $post_master_id = $_POST["read-master-id"];
+
+                $dbconnectioninst = DBConnectionManager::getInstance();
+    
+                $get_exam_query = " SELECT * FROM v_master_exam WHERE UGM_ID = " . $post_master_id . "; ";
+                $logger->debug("Show me get_exam_query: " . $get_exam_query);
+                $result_get_exam_query = $dbconnectioninst->query($get_exam_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_get_exam_query: " . count($result_get_exam_query));
+    
+                $inv_subject_id = $result_get_exam_query[0]['UGM_SUBJECT_ID'];
+    
+                // TODO Review list of stu
+                $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
+                $logger->debug("Show me allusr_query: " . $allusr_query);
+                $result_all_usr = $dbconnectioninst->query($allusr_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me: " . count($result_all_usr));
+    
+    
+                $param_limit_page_query = " SELECT par_int AS PG_LIMIT FROM uac_param WHERE key_code = 'GRASTUL'; ";
+                $logger->debug("Show me param_limit_page_query: " . $param_limit_page_query);
+                $result_param_limit_page = $dbconnectioninst->query($param_limit_page_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_param_limit_page: " . $result_param_limit_page[0]['PG_LIMIT']);
+                
+    
+                $page_maximum = $result_get_exam_query[0]['UGM_NBR_OF_PAGE'];
+    
+    
+                $get_all_page_query = " SELECT * FROM uac_gra_line WHERE master_id = " . $post_master_id . " ORDER BY page_i ASC; ";
+                $logger->debug("Show me get_all_page_query: " . $get_all_page_query);
+                $result_get_all_page_query = $dbconnectioninst->query($get_all_page_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_get_all_page_query: " . count($result_get_all_page_query));
+    
+    
+                $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                    'firstname' => $_SESSION["firstname"],
+                                                                    'lastname' => $_SESSION["lastname"],
+                                                                    'id' => $_SESSION["id"],
+                                                                    'result_get_token' => $result_get_token,
+                                                                    'result_all_usr' => $result_all_usr,
+                                                                    'result_get_exam_query' => $result_get_exam_query,
+                                                                    'result_get_all_page_query' => $result_get_all_page_query,
+                                                                    'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
+                                                                    'page_maximum' => $page_maximum,
+                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'errtype' => '']);
+
             }
-
-
-            $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                                'firstname' => $_SESSION["firstname"],
-                                                                'lastname' => $_SESSION["lastname"],
-                                                                'id' => $_SESSION["id"],
-                                                                'result_get_token' => $result_get_token,
-                                                                'result_all_usr' => $result_all_usr,
-                                                                'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
-                                                                'page_maximum' => $page_maximum,
-                                                                'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                'errtype' => '']);
+            else{
+                
+                $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+            }
         }
         else{
             // Error Code 404
@@ -429,25 +456,36 @@ class AdminGradeController extends AbstractController{
                 }
             }
             
+            $result_operation = '';
+            $success_operation = 'Y';
             $full_feedback_msg = $zip_comments;
             $full_error_msg = '<div class="err">' . $full_error_msg . '</div>';
             if($is_still_valid) {
+                $result_operation = '<h2>REF #' . $master_id . ' : Opération terminée avec succès</h2><br>' . $trace_report;
                 $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                     'firstname' => $_SESSION["firstname"],
                                                                                     'lastname' => $_SESSION["lastname"],
                                                                                     'id' => $_SESSION["id"],
                                                                                     'full_error_msg' => $full_error_msg,
+                                                                                    'result_operation' => $result_operation,
+                                                                                    'success_operation' => $success_operation,
+                                                                                    'master_id' => $master_id,
                                                                                     'full_feedback_msg' => $full_feedback_msg,
                                                                                     'scale_right' => ConnectionManager::whatScaleRight()]
                                                                                 );
             }
             else{
+                $success_operation = 'N';
+                $result_operation = '<h2>Opération en erreur</h2><br>';
                 $full_error_msg = '<span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;Erreur intégration fichier<br>' . $full_error_msg . $trace_report;
                 $content = $twig->render('Admin/GRA/afterloadreport.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                                     'firstname' => $_SESSION["firstname"],
                                                                                     'lastname' => $_SESSION["lastname"],
                                                                                     'id' => $_SESSION["id"],
                                                                                     'full_error_msg' => $full_error_msg,
+                                                                                    'result_operation' => $result_operation,
+                                                                                    'success_operation' => $success_operation,
+                                                                                    'master_id' => $master_id,
                                                                                     'full_feedback_msg' => $full_feedback_msg,
                                                                                     'scale_right' => ConnectionManager::whatScaleRight()]
                                                                                 );

@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_subject_cohort` (
 /****************************************************************************************************/
 /****************************************************************************************************/
 
+DO NOT RUN THIS AUTOMTICALLY
 
 UPDATE uac_load_subject
   SET status = 'ERR',
@@ -55,6 +56,7 @@ UPDATE uac_load_subject
 UPDATE uac_load_subject
   SET credit = CAST(load_credit AS DECIMAL(5,2)) * 10 WHERE status = 'NEW';
 
+-- Table tech_number already exists
 -- insert in xref
 INSERT IGNORE INTO uac_xref_subject_cohort (subject_id, cohort_id)
   SELECT

@@ -62,7 +62,7 @@ SELECT ugm.id AS UGM_ID,
 		 ugm.exam_date AS UGM_TECH_DATE,
 		 DATE_FORMAT(ugm.exam_date, "%d/%m/%Y") AS UGM_DATE,
 		 ugm.zip_filename AS UGM_FILENAME,
-		 ugm.cust_teacher_name AS UGM_TEACHER_NAME,
+		 fEscapeStr(ugm.cust_teacher_name) AS UGM_TEACHER_NAME,
 		 ugm.teacher_id AS UGM_TEACHER_ID,
 		 ugm.subject_id AS UGM_SUBJECT_ID,
 		 ugm.nbr_of_page AS UGM_NBR_OF_PAGE,
@@ -72,12 +72,12 @@ SELECT ugm.id AS UGM_ID,
 		 urm.title AS URM_MENTION_TITLE,
 		 urs.niveau_code AS URS_NIVEAU_CODE,
 		 urs.semester AS URS_SEMESTER,
-		 urs.subject_title AS URS_TITLE,
+		 fEscapeStr(urs.subject_title) AS URS_TITLE,
 		 urs.credit AS URS_CREDIT,
 		 mu.username AS LAST_AGENT_USERNAME,
 		 mu.firstname AS LAST_AGENT_FIRSTNAME,
 		 mu.lastname AS LAST_AGENT_LASTNAME,
-     CONCAT(
+     fEscapeStr(CONCAT(
        UPPER(IFNULL(DATE_FORMAT(ugm.exam_date, "%d/%m/%Y"), '')),
        UPPER(IFNULL(ugm.cust_teacher_name, '')),
        UPPER(IFNULL(ugm.zip_filename, '')),
@@ -86,7 +86,7 @@ SELECT ugm.id AS UGM_ID,
        UPPER(mu.username),
        UPPER(mu.firstname),
        UPPER(mu.lastname)
-     ) AS raw_data
+     )) AS raw_data
 FROM uac_gra_master ugm JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 						            JOIN uac_ref_mention urm ON urs.mention_code = urm.par_code
 							          JOIN uac_admin uaa ON uaa.id = ugm.last_agent_id

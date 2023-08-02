@@ -222,11 +222,17 @@ function loadAllExamGrid(){
         sorting: true,
         paging: true,
         data: filtereddataAllExamToJsonArray,
-        fields: refExamField/*,
+        fields: refExamField,
         rowClick: function(args){
-            goToSTUFromPayMngr(args.item.PAGE);
-        }*/
+          goToEXAMFromGraMngr(args.item.UGM_ID);
+        }
     });
+}
+
+// goToSTUFromDashAssiduite(args.item.PAGE);
+function goToEXAMFromGraMngr(param){
+  $("#read-master-id").val(param);
+  $("#mg-master-id-form").submit();
 }
 
 $(document).ready(function() {

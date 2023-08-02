@@ -308,10 +308,17 @@ function allowBannerAndMainPage(param){
 }
 
 function resetNavFooterBtn(){
-    if(currentPage ==  1){
+    if ((PAGE_MAX > 1)
+        && (currentPage ==  1)){
         document.getElementById("pg-btn-prec").style.visibility = "hidden";
         document.getElementById("pg-btn-next").style.visibility = "visible";
         document.getElementById("pg-btn-save").style.visibility = "hidden";
+    }
+    else if ((PAGE_MAX == 1)
+        && (currentPage ==  1)){
+        document.getElementById("pg-btn-prec").style.visibility = "hidden";
+        document.getElementById("pg-btn-next").style.visibility = "hidden";
+        document.getElementById("pg-btn-save").style.visibility = "visible";
     }
     else if(currentPage ==  PAGE_MAX){
         document.getElementById("pg-btn-prec").style.visibility = "visible";
@@ -327,6 +334,7 @@ function resetNavFooterBtn(){
 }
 
 function btnPagNav(param){
+    // Current page is 1..(n+1)
     let targetPage = currentPage + parseInt(param);
     updatePageNav('page-' + targetPage);
 }
@@ -340,10 +348,14 @@ function updatePageNav(activeId){
     currentPage = parseInt(activeId.split('-')[1]);
     fillStudent((parseInt(currentPage) - 1), 'Y');
 
+    //Handle image here
+    document.getElementById("ex-1").src =  PATH_IMG + SUB_PATH_IMG + dataAllPageToJsonArray[(currentPage - 1)].gra_path + dataAllPageToJsonArray[(currentPage - 1)].gra_filename;
+
     $('#disp-inv-pg').html(currentPage);
     resetNavFooterBtn();
     document.body.scrollTop = document.documentElement.scrollTop = 0;
     //Handle if first and last page
+    
 }
 
 
