@@ -184,3 +184,9 @@ checkandloadgra:
 managergraexam:
     path:       /managergraexam
     controller: App\Controller\AdminGradeController::managergraexam
+cancelexam:
+    path:       /cancelexam
+    controller: App\Controller\AdminGradeController::cancelexam
+confirmcancelexam:
+    path:       /confirmcancelexam
+    controller: App\Controller\AdminGradeController::managergraexam

@@ -196,6 +196,57 @@ class AdminGradeController extends AbstractController{
 
 
 
+    
+    public function cancelexam(Environment $twig, LoggerInterface $logger){
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        if(isset($_POST["fCustTeacherName"])
+            && isset($_POST["fExamDate"])
+            && isset($_POST["fMention"])
+            && isset($_POST["fNiveau"])
+            && isset($_POST["fSubject"])
+            && isset($_POST["fCredit"])
+            && isset($_POST["can-master-id"])
+            ){
+            if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+                $logger->debug("cancelexam : Firstname: " . $_SESSION["firstname"]);
+    
+                $param_cust_teacher_name = $_POST["fCustTeacherName"];
+                $param_exam_date = $_POST["fExamDate"];
+                $param_mention = $_POST["fMention"];
+                $param_niveau_semester = $_POST["fNiveau"];
+                $param_subject = $_POST["fSubject"];
+                $param_credit = $_POST["fCredit"]/10;
+                $master_id = $_POST["can-master-id"];
+    
+                $confirmation_msg = '<strong>Mention: </strong>' . $param_mention . '<br><strong>Niveau: </strong>' . $param_niveau_semester . '<br><strong>Sujet: </strong>' . $param_subject . '<br><strong>Crédit: </strong>' . $param_credit . '<br><strong>Enseignant: </strong>' . $param_cust_teacher_name . '<br><strong>Date examen: </strong>' . $param_exam_date;
+                
+                $content = $twig->render('Admin/GRA/cancelexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                                    'firstname' => $_SESSION["firstname"],
+                                                                                    'lastname' => $_SESSION["lastname"],
+                                                                                    'id' => $_SESSION["id"],
+                                                                                    'confirmation_msg' => $confirmation_msg,
+                                                                                    'master_id' => $master_id,
+                                                                                    'scale_right' => ConnectionManager::whatScaleRight()]
+                                                                                );
+    
+            }
+            else{
+                // Error Code 404
+                $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+            }
+        }
+        else{
+            $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
+
 
     public function checkandloadgra(Environment $twig, LoggerInterface $logger)
     {
@@ -623,16 +674,25 @@ class AdminGradeController extends AbstractController{
         // Anyone can access to the manager but only limited people can input the date
         if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
 
-
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            $confirm_cancel_id = 0;
+            if(isset($_POST["confirm-cancel-id"])){
+                $confirm_cancel_id = $_POST["confirm-cancel-id"];
+                // We are in a cancel case
+                $query_cancel_id = " UPDATE uac_gra_master SET status = 'CAN' WHERE id = " . $confirm_cancel_id . "; ";
+                $result_query_cancel_id = $dbconnectioninst->query($query_cancel_id)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("query_cancel_id: " . $query_cancel_id);
+                $logger->debug("count result_query_cancel_id: " . count($result_query_cancel_id));
+            }
             
 
             $query_all_ugm = " SELECT * FROM v_master_exam ORDER BY UGM_TECH_LAST_UPDATE DESC; ";
-
-            $logger->debug("Firstname: " . $_SESSION["firstname"]);
             $logger->debug("query_all_ugm: " . $query_all_ugm);
+            $logger->debug("managergraexam - Firstname: " . $_SESSION["firstname"]);
+            
 
 
-            $dbconnectioninst = DBConnectionManager::getInstance();
+            
             $result_all_ugm = $dbconnectioninst->query($query_all_ugm)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_all_ugm: " . count($result_all_ugm));
 
@@ -641,6 +701,7 @@ class AdminGradeController extends AbstractController{
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'confirm_cancel_id' => $confirm_cancel_id,
                                                                     'result_all_ugm' => $result_all_ugm,
                                                                     'errtype' => '']);
 

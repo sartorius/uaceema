@@ -83,6 +83,16 @@ function verboseStatusOfPayment(value){
     }
 }
 
+function showHeaderAlertMsg(msg, isPrimary){
+  $('#msg-alert').html(msg);
+  if(isPrimary == 'Y'){
+    $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+  }
+  else{
+    $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+  }
+  $('#ace-alert-msg').show(100);
+}
 
 function closeAlertMsg() {
   $('#ace-alert-msg').hide(1000);

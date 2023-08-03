@@ -2439,10 +2439,21 @@ img.part-img{
 }
 
 .uac-step{
-  background-color: #d8ddff;
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 8px;
   padding-right: 8px;
   border-radius: 3px;
+}
+
+.uac-step-purple{
+  background-color: #d8ddff;
+}
+
+.uac-step-yellow{
+  background-color: #f6ffb1;
+}
+
+.uac-step-green{
+  background-color: #c4e3bd;
 }

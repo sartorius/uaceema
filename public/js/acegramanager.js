@@ -21,7 +21,7 @@ function generateAllExamCSV(){
 	for(let i=0; i<involvedArray.length; i++){
 
             dataString = involvedArray[i].UGM_ID + SEP_ 
-                + getVerboseExamStatus(involvedArray[i].UGM_STATUS) + SEP_ 
+                + getVerboseExamStatus(involvedArray[i].UGM_STATUS, 'Y') + SEP_ 
                 + isNullMvo(involvedArray[i].URM_MENTION_TITLE) + SEP_ 
                 + isNullMvo(involvedArray[i].URS_NIVEAU_CODE) + SEP_ 
                 + isNullMvo(involvedArray[i].URS_SEMESTER) + SEP_ 
@@ -82,18 +82,36 @@ function filterDataAllExam(){
   
 function clearDataAllExam(){
     filtereddataAllExamToJsonArray = Array.from(dataAllExamToJsonArray);
+    
     loadAllExamGrid();
 };
 
-function getVerboseExamStatus(param){
+function getVerboseExamStatus(param, isText){
+    let startTagLoa = '<i class="uac-step uac-step-green">';
+    let startTagRev = '<i class="uac-step uac-step-yellow">';
+    let endTag = '</i>'
+    if(isText ==  'Y'){
+      startTagLoa = '';
+      startTagRev = '';
+      endTag = '';
+    }
     if(param == 'LOA'){
-        return 'Chargé'
+        return startTagLoa + 'Chargé' + endTag;
     }
     else if(param == 'NEW'){
-        return 'Nouveau'
+        return 'Nouveau';
+    }
+    else if(param == 'FED'){
+        return startTagRev + 'Saisie' + endTag;;
+    }
+    else if(param == 'REV'){
+        return 'Revue';
+    }
+    else if(param == 'CAN'){
+        return 'Annulé';
     }
     else{
-        return 'Terminé'
+        return 'Terminé';
     }
 }
 
@@ -104,6 +122,7 @@ function loadAllExamGrid(){
           title: "#",
           type: "number",
           width: 10,
+          align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
@@ -114,7 +133,7 @@ function loadAllExamGrid(){
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
-            return getVerboseExamStatus(value);
+            return getVerboseExamStatus(value, 'N');
           }
         },
         { name: "URS_MENTION_CODE",
@@ -164,7 +183,7 @@ function loadAllExamGrid(){
           title: "Pg",
           type: "number",
           width: 10,
-          align: "right",
+          align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
@@ -172,7 +191,7 @@ function loadAllExamGrid(){
           title: "Cdt",
           type: "number",
           width: 10,
-          align: "right",
+          align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
@@ -207,13 +226,18 @@ function loadAllExamGrid(){
           css: "cell-ref-uac-sm"
         },
         { name: "UGM_ID",
-          title: "An.",
+          title: "&nbsp;",
           width: 20,
           type: "text",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-center",
           itemTemplate: function(value, item) {
-            return '<button class="btn btn-dark tg-del"><i class="icon-times"></i></button>';
+            if(item.UGM_STATUS == 'CAN'){
+              return '<i class="icon-trash"></i>';
+            }
+            else{
+              return '<button class="btn btn-dark tg-del"><i class="icon-trash-o"></i></button>';
+            }
           }
         }
     ];
@@ -236,19 +260,46 @@ function loadAllExamGrid(){
         rowClick: function(args){
           let $target = $(args.event.target);
           if($target.closest(".tg-del").length){
-            alert('toto');
+            // We have clicked on the button deletion
+            if(args.item.UGM_STATUS != 'CAN'){
+              $("#fExamDate").val(args.item.UGM_DATE);
+              $("#fMention").val(args.item.URM_MENTION_TITLE);
+              $("#fNiveau").val(args.item.URS_NIVEAU_CODE + '/' + args.item.URS_SEMESTER);
+              $("#fSubject").val(args.item.URS_TITLE);
+              $("#fCustTeacherName").val(args.item.UGM_TEACHER_NAME);
+              $("#fCredit").val(args.item.URS_CREDIT);
+
+              $("#can-master-id").val(args.item.UGM_ID);
+              $("#mg-cancel-form").submit();
+            }
           }
           else{
-            goToEXAMFromGraMngr(args.item.UGM_ID);
+            // We have clicked on the line
+            if( (args.item.UGM_STATUS == 'LOA')
+                  || (args.item.UGM_STATUS == 'FED')
+              ){
+              goToEXAMFromGraMngr(args.item.UGM_ID);
+            }
+            else{
+              //Do nothing
+            }
           }
         }
     });
+
+    // Update the count
+    $('#count-exam').html(filtereddataAllExamToJsonArray.length);
 }
 
-// goToSTUFromDashAssiduite(args.item.PAGE);
+
 function goToEXAMFromGraMngr(param){
   $("#read-master-id").val(param);
   $("#mg-master-id-form").submit();
+}
+
+function goToConfirmExam(param){
+  $("#confirm-cancel-id").val(param);
+  $("#mg-confirm-cancel-id-form").submit();
 }
 
 $(document).ready(function() {
@@ -259,6 +310,14 @@ $(document).ready(function() {
       // Do something
       initAllExamGrid();
       loadAllExamGrid();
+      // Case of cancellation
+      if(confirmCancelId > 0){
+        showHeaderAlertMsg("L'annulation de l'examen #" + confirmCancelId + " a été terminée avec succès.", 'Y');
+        setTimeout(closeAlertMsg, 3000);
+      }
+      else{
+        //do nothing
+      }
     }
     else if($('#mg-graph-identifier').text() == 'man-not'){
         // Do something

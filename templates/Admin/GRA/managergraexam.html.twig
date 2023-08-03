@@ -5,8 +5,9 @@
 
     let dataAllExamToJsonArray = JSON.parse('{{ result_all_ugm | json_encode | raw }}');
     // We init here the filter value
-	let filtereddataAllExamToJsonArray = Array.from(dataAllExamToJsonArray);
+	  let filtereddataAllExamToJsonArray = Array.from(dataAllExamToJsonArray);
 
+    let confirmCancelId = {{ confirm_cancel_id }};
 
     const MAX_STR_L1 = 45;
     const MAX_STR_L2 = 30;
@@ -29,10 +30,13 @@
   </div>
   <div class="col-10">
     <h2>Manager Examen</h2>
-    Les différentes étapes d'un examen sont 
-        <i class="uac-step">Nouveau</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step">Chargé</i> &nbsp;
-        <i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step">Saisie</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; 
-        <i class="uac-step">Revue</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step">Terminé</i>
+    Les différentes étapes sont 
+        <i class="uac-step uac-step-purple">Nouveau</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step uac-step-purple">Chargé</i> &nbsp;
+        <i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step uac-step-purple">Saisie</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; 
+        <i class="uac-step uac-step-purple">Revue</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step uac-step-purple">Terminé</i>
+    <div class="mgs-note-banner">
+      Nombre d'examen(s) : <i id='count-exam'>{{ result_all_ugm|length }}</i> sur {{ result_all_ugm|length }}.
+    </div>
     <hr>
   </div>
   <div class="col-1">
@@ -41,7 +45,6 @@
 <div class="row dash-bar">
   <div class="col-1">
   </div>
-
   <div class="col-2 fil-el">
     <textarea class="form-control" rows="1" id="filter-all-exa" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
@@ -80,4 +83,5 @@
 
 {# Necessary go to student profile #}
 {% include 'Admin/GRA/_gotoexamfrommng.html.twig' %}
+{% include 'Admin/GRA/_gotocanfrommng.html.twig' %}
 {% include 'RawTemplate/SPE/_footer.w.graman.jsgrid.mgchart.html.twig' %}
