@@ -1,3 +1,4 @@
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('GRACSBK', 'Default cross bookmark', NULL, '1428.61/-771px/-140px/0');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRALOAD', 'Integration des notes', NULL, NULL);
 -- Display EDT for Administration
 DELIMITER $$

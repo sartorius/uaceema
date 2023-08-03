@@ -126,14 +126,14 @@
     <div id="ctrl-ban" class="row btn-banner btn-layer">
         
         <div id="gra-magnify" class="gra-btn-bar">
-            <button onclick="grow('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-search-minus nav-text"></i></button>
-            <button onclick="grow('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-search-plus nav-text"></i></button>
+            <button onclick="grow('A')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-search-minus nav-text"></i></button>
+            <button onclick="grow('W')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-search-plus nav-text"></i></button>
         </div>
         <div id="gra-move" class="gra-btn-bar">
-            <button onclick="left('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-left nav-text"></i></button>
-            <button onclick="left('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-right nav-text"></i></button>
-            <button onclick="itop('A')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-up nav-text"></i></button>
-            <button onclick="itop('W')" class="btn btn-dark btn-md btn-blk-export"><i class="icon-arrow-down nav-text"></i></button>
+            <button onclick="left('A')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-arrow-left nav-text"></i></button>
+            <button onclick="left('W')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-arrow-right nav-text"></i></button>
+            <button onclick="itop('A')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-arrow-up nav-text"></i></button>
+            <button onclick="itop('W')" class="btn btn-dark btn-md btn-blk-export upd-bkm"><i class="icon-arrow-down nav-text"></i></button>
         </div>
         &nbsp;
         
@@ -141,11 +141,11 @@
             <input type="range" class="form-range" id="rg-pck">
         </div>
         <div id="gra-rotate" class="gra-btn-bar">
-            <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-up nav-text"></i></button>
-            <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-chevron-down nav-text"></i></button>
+            <button onclick="clockW('W')" class="btn btn-outline-dark btn-md btn-blk-export upd-bkm"><i class="icon-chevron-up nav-text"></i></button>
+            <button onclick="clockW('A')" class="btn btn-outline-dark btn-md btn-blk-export upd-bkm"><i class="icon-chevron-down nav-text"></i></button>
         </div>
         <div id="gra-app" class="gra-btn-bar">
-            <button onclick="applyCrossBookmark('1428.61/-771px/-140px/0')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
+            <button onclick="applyCrossBookmark('{{ default_bookmark }}')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
             <button onclick="applyCrossBookmark('R')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-times nav-text"></i></button>
         </div>
         <div id="gra-app-pers" class="gra-btn-bar">
@@ -195,8 +195,17 @@
         <div class="col-lg-12  info-cartouche gra-footer">
             <button id="pg-btn-save" onclick="checkAndValidateExam()" class="btn btn-dark btn-lg btn-block">Enregistrer toutes les notes&nbsp;<i class="icon-check-square nav-text"></i></button> 
         </div>
+        <div class="col-lg-12">
+            <div id='cross-bookmark'>
+                    Traces techniques :<br>
+                    <i class="icon-bookmark nav-text"></i>&nbsp;<i id="disp-bookm">{{ default_bookmark }}</i>
+            </div>
+        </div>
     </div>
 </div>
 
+
+
+                
 
 {% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

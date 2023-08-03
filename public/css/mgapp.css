@@ -2318,6 +2318,13 @@ img.part-img{
   left: 100px;
 }
 
+#cross-bookmark{
+  color: var(--main-gray-50);
+  font-size: 12px;
+  text-align: left;
+  padding-left: 3.7em;
+}
+
 .btn-layer{
   background-color: rgb(255, 255, 255);
 }

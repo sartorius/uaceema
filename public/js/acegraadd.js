@@ -372,7 +372,10 @@ $(document).ready(function() {
       $( ".pow-group" ).click(function() {
         updatePageNav(this.id);
       });
-      fillStudent(0, 'N');
+      fillStudent(0, 'N'); 
+      $( ".upd-bkm" ).click(function() {
+        $('#disp-bookm').html(snapshotCurrentParamImg());
+      });
 
       // Set personnal bold
       if(localStorage.getItem('prsCrsParam') == null){

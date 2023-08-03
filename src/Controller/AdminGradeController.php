@@ -73,6 +73,12 @@ class AdminGradeController extends AbstractController{
                 $logger->debug("Show me get_all_page_query: " . $get_all_page_query);
                 $result_get_all_page_query = $dbconnectioninst->query($get_all_page_query)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me result_get_all_page_query: " . count($result_get_all_page_query));
+
+                $get_default_bookmark_query = " SELECT par_value AS DEF_BOOKMARK FROM uac_param WHERE key_code = 'GRACSBK'; ";
+                $logger->debug("Show me get_default_bookmark_query: " . $get_default_bookmark_query);
+                $result_get_default_bookmark_query = $dbconnectioninst->query($get_default_bookmark_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me: " . $result_get_default_bookmark_query[0]['DEF_BOOKMARK']);
+                $default_bookmark = $result_get_default_bookmark_query[0]['DEF_BOOKMARK'];
     
     
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -85,6 +91,7 @@ class AdminGradeController extends AbstractController{
                                                                     'result_get_all_page_query' => $result_get_all_page_query,
                                                                     'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
                                                                     'page_maximum' => $page_maximum,
+                                                                    'default_bookmark' => $default_bookmark,
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
                                                                     'errtype' => '']);
 
