@@ -78,7 +78,12 @@ class AdminGradeController extends AbstractController{
                 $logger->debug("Show me get_default_bookmark_query: " . $get_default_bookmark_query);
                 $result_get_default_bookmark_query = $dbconnectioninst->query($get_default_bookmark_query)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me: " . $result_get_default_bookmark_query[0]['DEF_BOOKMARK']);
+
                 $default_bookmark = $result_get_default_bookmark_query[0]['DEF_BOOKMARK'];
+                // If exists we use the save bookmark
+                if($result_get_exam_query[0]['UGM_CROSS_BOOKMARK'] != null){
+                    $default_bookmark = $result_get_exam_query[0]['UGM_CROSS_BOOKMARK'];
+                }
     
     
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),

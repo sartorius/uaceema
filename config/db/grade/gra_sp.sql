@@ -57,8 +57,8 @@ BEGIN
 
     SELECT flow_id INTO inv_flow_id FROM uac_gra_master WHERE id = param_master_id AND status = 'NEW';
     -- Insert Gra Line
-    INSERT INTO uac_gra_line (id, master_id, gra_path, gra_filename, page_i, browser)
-        SELECT id, master_id, gra_path, gra_filename, page_i, browser FROM uac_load_gra WHERE master_id = param_master_id AND status = 'NEW';
+    INSERT INTO uac_gra_line (id, master_id, gra_path, gra_filename, page_i)
+        SELECT id, master_id, gra_path, gra_filename, page_i FROM uac_load_gra WHERE master_id = param_master_id AND status = 'NEW';
 
 
     UPDATE uac_load_gra SET flow_id = inv_flow_id, status = 'END' WHERE master_id = param_master_id AND status = 'NEW';

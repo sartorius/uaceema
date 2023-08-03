@@ -105,7 +105,8 @@ function checkAndValidateExam(){
     }
 }
 
-function checkAllExam(){dataAllUSRToJsonArray
+function checkAllExam(){
+    //dataAllUSRToJsonArray
     for(let i=0; i<dataAllUSRToJsonArray.length; i++ ){
         if(dataAllUSRToJsonArray[i].HID_GRA == ''){
             return i;
