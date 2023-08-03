@@ -49,6 +49,8 @@
     const formatterDateFR = new Intl.DateTimeFormat('fr-FR');
     const SUB_TOKEN = '{{ result_get_token }}';
 
+    const PADD_CHAR = '_';
+
 
   </script>
 {% else %}
@@ -173,6 +175,8 @@
                         <button id="gra-gen-prs" onclick="printPresenceSheet()" class="btn btn-dark btn-md btn-blk-menu" disabled>Générer&nbsp;<i class="icon-files nav-text"></i></button>
                     </div>
                 </div>
+                <br>
+                <span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;La fiche de présence est par <strong>ordralphabétique du username</strong>. Pour faciliter son remplissage, demandez aux étudiants de noter leur username sur leur feuille d'examen.<br>
             </div>
         </div>
         

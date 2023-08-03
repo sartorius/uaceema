@@ -205,6 +205,16 @@ function loadAllExamGrid(){
           width: 30,
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
+        },
+        { name: "UGM_ID",
+          title: "An.",
+          width: 20,
+          type: "text",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm-center",
+          itemTemplate: function(value, item) {
+            return '<button class="btn btn-dark tg-del"><i class="icon-times"></i></button>';
+          }
         }
     ];
 
@@ -224,7 +234,13 @@ function loadAllExamGrid(){
         data: filtereddataAllExamToJsonArray,
         fields: refExamField,
         rowClick: function(args){
-          goToEXAMFromGraMngr(args.item.UGM_ID);
+          let $target = $(args.event.target);
+          if($target.closest(".tg-del").length){
+            alert('toto');
+          }
+          else{
+            goToEXAMFromGraMngr(args.item.UGM_ID);
+          }
         }
     });
 }

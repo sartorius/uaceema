@@ -23,7 +23,7 @@ function printPresenceSheet(){
     const rawHeight = 8.35;
     const maxStrS = 10;
     const maxStrM = 15;
-    const maxStrL1 = 17;
+    const maxStrL1 = 15;
     const maxStrL2 = 23;
     const maxStrL3 = 35;
     
@@ -75,7 +75,7 @@ function printPresenceSheet(){
             (i+1).toString()
             );
         doc.text(
-            63, //x oddOffsetX is to define if position 1 or 2
+            64, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             //VSH_LASTNAME VSH_FIRSTNAME
             dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_USERNAME
@@ -83,12 +83,12 @@ function printPresenceSheet(){
         doc.text(
             90, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
-            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_LASTNAME.substr(0, maxStrL2)
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_LASTNAME.substr(0, maxStrL2).padStart(maxStrL2, PADD_CHAR)
             );
         doc.text(
             146.5, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
-            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_FIRSTNAME.substr(0, maxStrL1)
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_FIRSTNAME.substr(0, maxStrL1).padStart(maxStrL1, PADD_CHAR)
             );
 
         
