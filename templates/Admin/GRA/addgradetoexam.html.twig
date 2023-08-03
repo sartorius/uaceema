@@ -170,8 +170,12 @@
 
     <div id="main-gra" class="row">
             <div id="gra-ex" class="col-lg-6">
-                {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
-                <img id="ex-1" src="{{ path('main') }}img/ace_gra{{ result_get_all_page_query[0]['gra_path'] }}{{ result_get_all_page_query[0]['gra_filename'] }}" class="back-z" width="100%" alt="Exam">
+                {% if result_get_all_page_query|length > 0 %}
+                    {# ln -s /Users/ratinahirana/Sites/aceemintranet_data/grade ace_gra #}
+                    <img id="ex-1" src="{{ path('main') }}img/ace_gra{{ result_get_all_page_query[0]['gra_path'] }}{{ result_get_all_page_query[0]['gra_filename'] }}" class="back-z" width="100%" alt="Exam">
+                {% else %}
+                    <img id="ex-1" src="{{ path('main') }}img/Error314_500px.png" class="back-z" width="100%" alt="Exam">
+                {% endif %}
             </div>
             <div id="gra-gr" class="col-lg-6">
                 
