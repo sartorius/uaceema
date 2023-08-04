@@ -2404,10 +2404,10 @@ img.part-img{
   background-color: #e0ffe8;
 }
 .rev-txtar{
-  background-color: #ffecd1;
+  color: var(--deep-ace-blue);
 }
 
-#loader-block{
+#loader-block-gra{
   visibility: hidden;
 }
 

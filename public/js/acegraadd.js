@@ -137,17 +137,20 @@ function validateInputGra(event, line){
     if(testRegexGrade($('#gr'+line).val())){
         $('#gr'+line).removeClass('err-txtar');
         if($('#gr'+line).val() != ''){
-            let coloring = 'ok-txtar';
-            $('#gr'+line).addClass(coloring);
+            let revColoring = 'ok-txtar';
+            if(mode == 'R'){
+                revColoring = 'rev-txtar';
+            }
+            $('#gr'+line).addClass(revColoring);
         }
         dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
         dataAllUSRToJsonArray[line].DIRTY_GRA = 'Y';
-        //console.log('-- valid');
+        console.log('-- valid');
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
         dataAllUSRToJsonArray[line].HID_GRA = 'x';
-        //console.log('-- invalid');
+        console.log('-- invalid');
     }
 }
 

@@ -302,7 +302,7 @@ function allowGenerateAndMainPage(param){
         $('#main-gra').removeClass('mask-pg');
         $("#gra-gen-prs").prop("disabled", false);
         document.getElementById("file-upl-loader-gra").style.visibility = "visible";
-        document.getElementById("loader-block").style.visibility = "visible";
+        document.getElementById("loader-block-gra").style.visibility = "visible";
 
         
         $("#fTeacherId").val(setAndGetTeacherId());
@@ -319,7 +319,7 @@ function allowGenerateAndMainPage(param){
         $('#main-gra').addClass('mask-pg');
         $("#gra-gen-prs").prop("disabled", true);
         document.getElementById("file-upl-loader-gra").style.visibility = "hidden";
-        document.getElementById("loader-block").style.visibility = "hidden";
+        document.getElementById("loader-block-gra").style.visibility = "hidden";
     }
 }
 
