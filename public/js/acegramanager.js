@@ -313,10 +313,15 @@ $(document).ready(function() {
       // Case of cancellation
       if(confirmCancelId > 0){
         showHeaderAlertMsg("L'annulation de l'examen #" + confirmCancelId + " a été terminée avec succès.", 'Y');
-        setTimeout(closeAlertMsg, 3000);
+        setTimeout(closeAlertMsg, 7000);
       }
-      else{
-        //do nothing
+      if(createMasterId > 0){
+        showHeaderAlertMsg("L'attribution des notes de l'examen #" + createMasterId + " a été terminée avec succès.", 'Y');
+        setTimeout(closeAlertMsg, 7000);
+      }
+      if(reviewMasterId > 0){
+        showHeaderAlertMsg("La revue des notes de l'examen #" + reviewMasterId + " a été terminée avec succès.", 'Y');
+        setTimeout(closeAlertMsg, 7000);
       }
     }
     else if($('#mg-graph-identifier').text() == 'man-not'){

@@ -1,3 +1,40 @@
+function generategradetoexamDB(){
+    
+    $.ajax('/generategradetoexamDB', {
+        type: 'POST',  // http method
+        data: {
+          agentId: AGENT_ID,
+          masterId: POST_MASTER_ID,
+          loadGradeData: JSON.stringify(dataAllUSRToJsonArray),
+          token : GET_TOKEN
+        },  // data to submit
+        success: function (data, status, xhr) {
+            //We have to locally create the reduction in case of re-scan 
+            //let iMyReduction = data['param_user_id'];
+            
+            goToCreateGrades(data['param_master_id']);
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-alert').html("ERR411GRA: exam #" + masterId + " une erreur s'est produite, veuillez contacter le support technique.");
+          $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+          $('#ace-alert-msg').show(100);
+        }
+    });
+}
+
+
+function goToCreateGrades(param){
+    $("#create-master-id").val(param);
+    $("#review-master-id").val(0);
+    $("#mg-create-review-grades-form").submit();
+}
+
+function goToReviewGrades(param){
+    $("#create-master-id").val(0);
+    $("#review-master-id").val(param);
+    $("#mg-create-review-grades-form").submit();
+}
+
 // First page is zero
 function fillStudent(paramPage, ableToEdit){
     let strTable = '<table>';
@@ -102,6 +139,8 @@ function checkAndValidateExam(){
     }
     else{
         console.log('Check All exam - we are good: ' + allFilled);
+        //Go to saving !!!
+        generategradetoexamDB();
     }
 }
 

@@ -17,6 +17,13 @@
     const PAD_POWER = 1;
 
     const PAGE_MAX = {{ page_maximum }};
+    const GET_TOKEN = "{{ result_get_token }}";
+    const AGENT_ID = {{ id }};
+    const POST_MASTER_ID = {{ post_master_id }};
+
+    const EXAM_STATUS = "{{ exam_status }}";
+    const EXAM_LAST_AGENT_ID = {{ exam_last_agent_id }};
+    const LAST_AGENT_ID_SAME_AS_CURRENT = "{{ last_agent_id_same_as_current }}";
 
     let currentPage = 1;
     let maxLengthTable = 17;
@@ -207,5 +214,5 @@
 
 
                 
-
+{% include 'Admin/GRA/_gotomngfromgrade.html.twig' %}
 {% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

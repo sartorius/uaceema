@@ -190,3 +190,9 @@ cancelexam:
 confirmcancelexam:
     path:       /confirmcancelexam
     controller: App\Controller\AdminGradeController::managergraexam
+generategradetoexamDB:
+    path:       /generategradetoexamDB
+    controller: App\Controller\AdminGradeController::generategradetoexamDB
+createreviewgrades:
+    path:       /createreviewgrades
+    controller: App\Controller\AdminGradeController::managergraexam

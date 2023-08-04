@@ -54,7 +54,7 @@ class AdminGradeController extends AbstractController{
                 $inv_subject_id = $result_get_exam_query[0]['UGM_SUBJECT_ID'];
     
                 // TODO Review list of stu
-                $allusr_query = " SELECT vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
+                $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'N' AS DIRTY_GRA FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
                 $logger->debug("Show me allusr_query: " . $allusr_query);
                 $result_all_usr = $dbconnectioninst->query($allusr_query)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me: " . count($result_all_usr));
@@ -84,6 +84,13 @@ class AdminGradeController extends AbstractController{
                 if($result_get_exam_query[0]['UGM_CROSS_BOOKMARK'] != null){
                     $default_bookmark = $result_get_exam_query[0]['UGM_CROSS_BOOKMARK'];
                 }
+
+                $exam_status = $result_get_exam_query[0]['UGM_STATUS'];
+                $exam_last_agent_id = $result_get_exam_query[0]['UGM_LAST_AGENT_ID'];
+                $last_agent_id_same_as_current = 'N';
+                if($exam_last_agent_id == $_SESSION["id"]){
+                    $last_agent_id_same_as_current = 'Y';
+                }
     
     
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -92,6 +99,10 @@ class AdminGradeController extends AbstractController{
                                                                     'id' => $_SESSION["id"],
                                                                     'result_get_token' => $result_get_token,
                                                                     'result_all_usr' => $result_all_usr,
+                                                                    'post_master_id' => $post_master_id,
+                                                                    'exam_status' => $exam_status,
+                                                                    'exam_last_agent_id' => $exam_last_agent_id,
+                                                                    'last_agent_id_same_as_current' => $last_agent_id_same_as_current,
                                                                     'result_get_exam_query' => $result_get_exam_query,
                                                                     'result_get_all_page_query' => $result_get_all_page_query,
                                                                     'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
@@ -569,6 +580,91 @@ class AdminGradeController extends AbstractController{
         return new Response($content);
     }
 
+    public function generategradetoexamDB(Request $request, LoggerInterface $logger){
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenGRAStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err678GRA ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_agent_id = $request->request->get('agentId');
+          $param_master_id = $request->request->get('masterId');
+          // Load the complicated collection
+          $param_jsondata = json_decode($request->request->get('loadGradeData'), true);
+
+          //echo $param_jsondata[0]['username'];
+          // INSERT INTO uac_gra_grade (master_id, user_id, operation, grade) VALUES (1, 1, 'CRE', 18.5);
+          $query_value = 'INSERT IGNORE INTO uac_gra_grade (master_id, user_id, operation, grade, gra_status) VALUES (';
+          $first_comma = '';
+          foreach ($param_jsondata as $read)
+          {
+                if(($read['HID_GRA'] == 'A')
+                    || ($read['HID_GRA'] == 'E')){
+                    $query_value = $query_value . $first_comma . $param_master_id . ',' . $read['VSH_ID'] . ",'CRE',0,'" . $read['HID_GRA'] . "')";
+                }
+                else{
+                    $query_value = $query_value . $first_comma . $param_master_id . ',' . $read['VSH_ID'] . ",'CRE'," . $read['HID_GRA'] . ",'P')";
+                }
+                $first_comma = ', (';
+          }
+          $query_value = $query_value . ';';
+
+          sleep(2);
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          //$query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
+
+          $logger->debug("generategradetoexamDB - Show me query_value: " . $query_value);
+
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("-- We have insert the lines");
+
+
+          $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . " WHERE id = " . $param_master_id . " ; ";
+          $logger->debug("-- query_update_master: " . $query_update_master);
+          $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'param_master_id' => $param_master_id,
+              'message' => 'Tout est OK: '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation notation DB'),
+      400);
+    }
+
 
     /********************************************************************************************************/
     /********************************************************************************************************/
@@ -688,13 +784,32 @@ class AdminGradeController extends AbstractController{
 
             $dbconnectioninst = DBConnectionManager::getInstance();
             $confirm_cancel_id = 0;
+            $create_grades_master_id = 0;
+            $review_grades_master_id = 0;
             if(isset($_POST["confirm-cancel-id"])){
                 $confirm_cancel_id = $_POST["confirm-cancel-id"];
                 // We are in a cancel case
-                $query_cancel_id = " UPDATE uac_gra_master SET status = 'CAN' WHERE id = " . $confirm_cancel_id . "; ";
+                $query_cancel_id = " UPDATE uac_gra_master SET status = 'CAN', last_agent_id = " . $_SESSION["id"] . " WHERE id = " . $confirm_cancel_id . "; ";
                 $result_query_cancel_id = $dbconnectioninst->query($query_cancel_id)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("query_cancel_id: " . $query_cancel_id);
                 $logger->debug("count result_query_cancel_id: " . count($result_query_cancel_id));
+
+                $query_delete_id = " DELETE FROM uac_gra_grade WHERE master_id = " . $confirm_cancel_id . "; ";
+                $result_query_delete_id = $dbconnectioninst->query($query_delete_id)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("query_delete_id: " . $query_delete_id);
+                $logger->debug("count result_query_cancel_id: " . count($result_query_delete_id));
+            }
+
+            if(isset($_POST["create-master-id"])){
+                if(intval($_POST["create-master-id"]) > 0){
+                    $create_grades_master_id = intval($_POST["create-master-id"]);
+                }
+            }
+
+            if(isset($_POST["review-master-id"])){
+                if(intval($_POST["review-master-id"]) > 0){
+                    $review_grades_master_id = intval($_POST["review-master-id"]);
+                }
             }
             
 
@@ -714,6 +829,8 @@ class AdminGradeController extends AbstractController{
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
                                                                     'confirm_cancel_id' => $confirm_cancel_id,
+                                                                    'create_grades_master_id' => $create_grades_master_id,
+                                                                    'review_grades_master_id' => $review_grades_master_id,
                                                                     'result_all_ugm' => $result_all_ugm,
                                                                     'errtype' => '']);
 

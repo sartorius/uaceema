@@ -92,6 +92,7 @@ function showHeaderAlertMsg(msg, isPrimary){
     $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
   }
   $('#ace-alert-msg').show(100);
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 
 function closeAlertMsg() {
