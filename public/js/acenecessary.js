@@ -1,5 +1,12 @@
 /***********************************************************************************************************/
 
+// Send the event and block the input
+function blockInputKeyboard(e){
+  e = e || window.event;
+  // to cancel the event:
+  if( e.preventDefault) e.preventDefault();
+  return false;
+}
 
 function getBrowserId(){
   let browserName = (function (agent) {        switch (true) {
@@ -82,6 +89,36 @@ function verboseStatusOfPayment(value){
       return 'Annulé';
     }
 }
+
+
+function getVerboseExamStatus(param, isText){
+  let startTagLoa = '<i class="uac-step uac-step-green">';
+  let startTagRev = '<i class="uac-step uac-step-yellow">';
+  let endTag = '</i>'
+  if(isText ==  'Y'){
+    startTagLoa = '';
+    startTagRev = '';
+    endTag = '';
+  }
+  if(param == 'LOA'){
+      return startTagLoa + 'à saisir' + endTag;
+  }
+  else if(param == 'NEW'){
+      return 'Nouveau';
+  }
+  else if(param == 'FED'){
+      return startTagRev + 'à vérifier' + endTag;;
+  }
+  else if(param == 'CAN'){
+      return 'Annulé';
+  }
+  else{
+      return 'Terminé';
+  }
+}
+
+/***********************************************************************************************************/
+
 
 function showHeaderAlertMsg(msg, isPrimary){
   $('#msg-alert').html(msg);

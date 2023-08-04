@@ -86,35 +86,6 @@ function clearDataAllExam(){
     loadAllExamGrid();
 };
 
-function getVerboseExamStatus(param, isText){
-    let startTagLoa = '<i class="uac-step uac-step-green">';
-    let startTagRev = '<i class="uac-step uac-step-yellow">';
-    let endTag = '</i>'
-    if(isText ==  'Y'){
-      startTagLoa = '';
-      startTagRev = '';
-      endTag = '';
-    }
-    if(param == 'LOA'){
-        return startTagLoa + 'Chargé' + endTag;
-    }
-    else if(param == 'NEW'){
-        return 'Nouveau';
-    }
-    else if(param == 'FED'){
-        return startTagRev + 'Saisie' + endTag;;
-    }
-    else if(param == 'REV'){
-        return 'Revue';
-    }
-    else if(param == 'CAN'){
-        return 'Annulé';
-    }
-    else{
-        return 'Terminé';
-    }
-}
-
 function loadAllExamGrid(){
 
     refExamField = [
@@ -156,7 +127,7 @@ function loadAllExamGrid(){
         { name: "UGM_DATE",
           title: "Date",
           type: "text",
-          width: 25,
+          width: 30,
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },

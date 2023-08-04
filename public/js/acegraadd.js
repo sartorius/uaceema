@@ -36,14 +36,21 @@ function goToReviewGrades(param){
 }
 
 // First page is zero
-function fillStudent(paramPage, ableToEdit){
+function fillStudent(paramPage){
     let strTable = '<table>';
     let paramPageLimit = (paramPage+1)*pageLimit;
     let paramStart = paramPage*pageLimit;
-    let classEdit = 'gra-ta-in';
-    if(ableToEdit == 'Y'){
-        classEdit = '';
+    let classEdit = '';
+    let classEditUnlist = '';
+    
+    if(mode == 'O'){
+        classEdit = 'edit-sel-off';
+        classEditUnlist = 'edit-sel-off';
     }
+    if(mode == 'R'){
+        classEditUnlist = 'edit-sel-off';
+    }
+    
     
     if(paramPageLimit > dataAllUSRToJsonArray.length){
         paramPageLimit = dataAllUSRToJsonArray.length;
@@ -54,12 +61,17 @@ function fillStudent(paramPage, ableToEdit){
         let highlightClassExisting = '';
         if((dataAllUSRToJsonArray[i].HID_GRA != '') &&
             (dataAllUSRToJsonArray[i].HID_GRA != 'x')){
+                // Be carefull when we are A or E then the HID GRA will take the value
+                if((dataAllUSRToJsonArray[i].GRA_STATUS == 'A')
+                    || (dataAllUSRToJsonArray[i].GRA_STATUS == 'E')){
+                    existingInputGra = dataAllUSRToJsonArray[i].HID_GRA = dataAllUSRToJsonArray[i].GRA_STATUS;
+                }
                 existingInputGra = dataAllUSRToJsonArray[i].HID_GRA;
                 highlightClassExisting = 'ok-txtar';
         }
         
         strTable = strTable + '<tr>' ;
-        strTable = strTable + '<td class="c-t1"><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-txta ' + highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(' + i + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
+        strTable = strTable + '<td class="c-t1"><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-txta ' + highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + i + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME.substring(0, maxLengthTable) + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME.substring(0, maxLengthTable) + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>';
@@ -70,7 +82,7 @@ function fillStudent(paramPage, ableToEdit){
     if(paramPage == (parseInt(PAGE_MAX) - 1)){
         for(let j=paramPageLimit; j<(PAGE_MAX*pageLimit); j++){
             strTable = strTable + '<tr>' ;
-            strTable = strTable + '<td class="c-t1"><textarea name="gr' + j + '" rows="1" class="gra-txta gra-ta-in" cols="4" placeholder="0"></textarea></td>';
+            strTable = strTable + '<td class="c-t1"><textarea name="gr' + j + '" rows="1" class="gra-txta ' + classEditUnlist + '" cols="4" placeholder="0"></textarea></td>';
             strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>NA</td>';
@@ -109,19 +121,33 @@ function testRegexGrade(param){
     }
 }
 
-function validateInputGra(line){
-    //console.log('click gra: ' + line + '/' + $('#gr'+line).val());
+
+function validateInputGra(event, line){
+    // console.log('click gra: ' + line + '/' + $('#gr'+line).val());
     // add this class err-txtar if error
+    /*
+    console.log('Read event: [' + event.key + '] code: [' + event.code + ']');
+    if((event.code !== "Enter")
+        && (event.code !== "Space")){
+    }
+    else{
+        blockInputKeyboard(event);
+    }
+    */
     if(testRegexGrade($('#gr'+line).val())){
         $('#gr'+line).removeClass('err-txtar');
         if($('#gr'+line).val() != ''){
-            $('#gr'+line).addClass('ok-txtar');
+            let coloring = 'ok-txtar';
+            $('#gr'+line).addClass(coloring);
         }
         dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
+        dataAllUSRToJsonArray[line].DIRTY_GRA = 'Y';
+        //console.log('-- valid');
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
         dataAllUSRToJsonArray[line].HID_GRA = 'x';
+        //console.log('-- invalid');
     }
 }
 
@@ -328,8 +354,7 @@ function startStopGraEdit(){
 
 function allowBannerAndMainPage(param){
     if(param == 'Y'){
-        // This is to show input on each grade
-        $('.gra-txta').removeClass('gra-ta-in');
+        
 
         $('#main-gra').removeClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "visible";
@@ -339,8 +364,6 @@ function allowBannerAndMainPage(param){
     else{
         // This is to hide input on each grade
         applyCrossBookmark('R');
-        $('.gra-txta').addClass('gra-ta-in');
-        
         $('#main-gra').addClass('mask-pg');
         document.getElementById("ctrl-ban").style.visibility = "hidden";
         document.getElementById("pg-nav").style.visibility = "hidden";
@@ -358,12 +381,22 @@ function resetNavFooterBtn(){
         && (currentPage ==  1)){
         document.getElementById("pg-btn-prec").style.visibility = "hidden";
         document.getElementById("pg-btn-next").style.visibility = "hidden";
-        document.getElementById("pg-btn-save").style.visibility = "visible";
+        if(mode != 'O'){
+            document.getElementById("pg-btn-save").style.visibility = "visible";
+        }
+        else{
+            document.getElementById("pg-btn-save").style.visibility = "hidden";
+        }
     }
     else if(currentPage ==  PAGE_MAX){
         document.getElementById("pg-btn-prec").style.visibility = "visible";
         document.getElementById("pg-btn-next").style.visibility = "hidden";
-        document.getElementById("pg-btn-save").style.visibility = "visible";
+        if(mode != 'O'){
+            document.getElementById("pg-btn-save").style.visibility = "visible";
+        }
+        else{
+            document.getElementById("pg-btn-save").style.visibility = "hidden";
+        }
     }
     else{
         document.getElementById("pg-btn-prec").style.visibility = "visible";
@@ -386,7 +419,7 @@ function updatePageNav(activeId){
     $('#' + activeId).addClass('active').removeClass('unsel-grp'); // Add the class to the nth element
 
     currentPage = parseInt(activeId.split('-')[1]);
-    fillStudent((parseInt(currentPage) - 1), 'Y');
+    fillStudent((parseInt(currentPage) - 1));
 
     //Handle image here
     document.getElementById("ex-1").src =  PATH_IMG + SUB_PATH_IMG + dataAllPageToJsonArray[(currentPage - 1)].gra_path + dataAllPageToJsonArray[(currentPage - 1)].gra_filename;
@@ -398,6 +431,31 @@ function updatePageNav(activeId){
     
 }
 
+function iniModeOfTheAddGrade(){
+    // Default is C - C for Creation, R for Review, O for Read-only
+    if((EXAM_STATUS == 'FED')
+        && (LAST_AGENT_ID_SAME_AS_CURRENT == 'N')){
+        mode = 'R';
+        $('#id-action-submit').html('Valider');
+        $('#title-add-gra').html('Vérifier notes');
+        $('#disp-status-cart').html(getVerboseExamStatus(EXAM_STATUS, 'N'));
+    }
+    else if((EXAM_STATUS == 'LOA') || (EXAM_STATUS == 'NEW')){
+        mode = 'C';
+        $('#title-add-gra').html('Saisir notes');
+        $('#disp-status-cart').html(getVerboseExamStatus(EXAM_STATUS, 'N'));
+    }
+    else{
+        mode = 'O';
+        $('#title-add-gra').html('Voir notes');
+        let addMsg = '';
+        if((EXAM_STATUS == 'FED')
+                && (LAST_AGENT_ID_SAME_AS_CURRENT == 'Y')){
+            addMsg = ' : le vérificateur doit être différent du saisisseur';
+        }
+        $('#disp-status-cart').html('<i class="uac-step uac-step-purple">Lecture seule' + addMsg + '</i>');
+    }
+}
 
 
 
@@ -405,14 +463,14 @@ function updatePageNav(activeId){
 $(document).ready(function() {
     console.log('We are in gra add');
     if($('#mg-graph-identifier').text() == 'gra-add'){
-    
+      iniModeOfTheAddGrade();
       initInitialPosition();
       $('.disp-max-pg').html(PAGE_MAX);
       updatePageNav('page-1');
       $( ".pow-group" ).click(function() {
         updatePageNav(this.id);
       });
-      fillStudent(0, 'N'); 
+      fillStudent(0); 
       $( ".upd-bkm" ).click(function() {
         $('#disp-bookm').html(snapshotCurrentParamImg());
       });
@@ -421,8 +479,6 @@ $(document).ready(function() {
       if(localStorage.getItem('prsCrsParam') == null){
         $('#prs-bkmk').prop("disabled", true);
       }
-      
-
     }
     else{
       //Do nothing

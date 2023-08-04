@@ -24,6 +24,9 @@
     const EXAM_STATUS = "{{ exam_status }}";
     const EXAM_LAST_AGENT_ID = {{ exam_last_agent_id }};
     const LAST_AGENT_ID_SAME_AS_CURRENT = "{{ last_agent_id_same_as_current }}";
+    
+    // C for Creation, R for Review, O for Read-only
+    let mode = 'C';
 
     let currentPage = 1;
     let maxLengthTable = 17;
@@ -74,7 +77,8 @@
 <div class="container">
     <div class="row btn-layer">
         <div class="col-lg-12">
-            <h2>Saisir notes</h2>
+            <h2><i id="title-add-gra"></i></h2>
+            
         </div>
     </div>
     <div class="row btn-layer">
@@ -83,7 +87,7 @@
                 <div class="menu-dropdown">
                     <div class="btn-ace-menu disp-sub-gra">
                         {{ result_get_exam_query[0]['URS_MENTION_CODE'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['URS_NIVEAU_CODE'] }}/{{ result_get_exam_query[0]['URS_SEMESTER'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_DATE'] }}
-                        &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_TEACHER_NAME'] }}
+                        &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_TEACHER_NAME'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;<i id="disp-status-cart"></i>
                     </div>
                 </div>
                 <div class="menu-dropdown">
@@ -200,7 +204,7 @@
             </div>
         </div>
         <div class="col-lg-12  info-cartouche gra-footer">
-            <button id="pg-btn-save" onclick="checkAndValidateExam()" class="btn btn-dark btn-lg btn-block">Enregistrer toutes les notes&nbsp;<i class="icon-check-square nav-text"></i></button> 
+            <button id="pg-btn-save" onclick="checkAndValidateExam()" class="btn btn-dark btn-lg btn-block"><i id="id-action-submit">Enregistrer</i> toutes les notes&nbsp;<i class="icon-check-square nav-text"></i></button> 
         </div>
         <div class="col-lg-12">
             <div id='cross-bookmark'>

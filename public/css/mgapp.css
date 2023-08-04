@@ -2403,6 +2403,9 @@ img.part-img{
 .ok-txtar{
   background-color: #e0ffe8;
 }
+.rev-txtar{
+  background-color: #ffecd1;
+}
 
 #loader-block{
   visibility: hidden;
@@ -2455,12 +2458,15 @@ img.part-img{
 
 .uac-step-purple{
   background-color: #d8ddff;
+  color: black;
 }
 
 .uac-step-yellow{
-  background-color: #f6ffb1;
+  background-color: #ee7b00;
+  color: white;
 }
 
 .uac-step-green{
-  background-color: #c4e3bd;
+  background-color: #188500;
+  color: white;
 }
