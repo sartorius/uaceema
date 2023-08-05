@@ -91,13 +91,21 @@
           let dataHistoPayToJsonArray = new Array();
       {% endif %}
 
-      {% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))
-            or ((from_admin != 'N') and (param_does_gra_module == 'Y'))) %}
-              const PARAM_DISP_GRA = 'Y';
-              let dataAllGradeToJsonArray = JSON.parse('{{ result_query_all_grade | json_encode | raw }}');
-      {% else %}
-              const PARAM_DISP_GRA = 'N';
-              let dataAllGradeToJsonArray = new dateArray();
+
+      let paramDispGraPublic = 'N';
+      let dataAllGradeToJsonArray = new Array();
+      {# We check the student dashboard #}
+      {% if ((from_admin == 'N') and (param_does_gra_public == 'Y')) %}
+              paramDispGraPublic = 'Y';
+              dataAllGradeToJsonArray = JSON.parse('{{ result_query_all_grade | json_encode | raw }}');
+      {% endif %}
+
+
+      let paramDispGraAdmin = 'N';
+      {# We check the from admin - we consider dataAllGradeToJsonArray is already created #}
+      {% if ((from_admin != 'N') and (param_does_gra_module == 'Y')) %}
+              paramDispGraAdmin = 'Y';
+              dataAllGradeToJsonArray = JSON.parse('{{ result_query_all_grade | json_encode | raw }}');
       {% endif %}
 
     </script>

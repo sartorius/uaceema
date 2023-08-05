@@ -667,7 +667,9 @@ class AdminGradeController extends AbstractController{
           $logger->debug("-- We have insert the lines");
 
           // NEW > LOA > FED > END -- CAN
-          $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . " WHERE id = " . $param_master_id . " ; ";
+          $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
+                                    . " avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = " . $param_master_id . " and ugg.gra_status = 'P') "
+                                    . " WHERE id = " . $param_master_id . " ; ";
           $logger->debug("-- query_update_master: " . $query_update_master);
           $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -750,7 +752,9 @@ class AdminGradeController extends AbstractController{
           $logger->debug("-- We have updated the lines");
 
           // NEW > LOA > FED > END -- CAN
-          $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . " WHERE id = " . $param_master_id . " ; ";
+          $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
+                                    . " avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = " . $param_master_id . " and ugg.gra_status = 'P') "
+                                    . " WHERE id = " . $param_master_id . " ; ";
           $logger->debug("-- query_update_master: " . $query_update_master);
           $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
 

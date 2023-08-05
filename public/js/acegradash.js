@@ -201,6 +201,7 @@ function generateAllGraReport(){
                     + "Nom" + GLOBAL_SEP_ 
                     + "Note" + GLOBAL_SEP_ 
                     + "Classe" + GLOBAL_SEP_ 
+                    + "Moyenne de la classe" + GLOBAL_SEP_ 
                     + "Matricule" + GLOBAL_SEP_ 
 
                     + "Niveau" + GLOBAL_SEP_ 
@@ -219,6 +220,7 @@ function generateAllGraReport(){
                 + isNullMvo(involvedArray[i].VSH_LASTNAME) + GLOBAL_SEP_ 
                 + verboseOneGrade(involvedArray[i].TECH_GRADE, involvedArray[i].TECH_STATUS) + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VCC_SHORTCLASS) + GLOBAL_SEP_ 
+                + isNullMvo(dataOneExamToJsonArray[0].UGG_AVG) + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VSH_MATRICULE) + GLOBAL_SEP_ 
 
                 + isNullMvo(dataOneExamToJsonArray[0].URS_NIVEAU_CODE) + GLOBAL_SEP_ 

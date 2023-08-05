@@ -1,3 +1,27 @@
+function initGraShortCut(){
+    $("#scmenu-gra").click(function() {
+      document.getElementById('anchor-gra').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+}
+function doesPaymentLateExist(){
+  let isLate = false;
+  if(dataSumPerTrancheToJsonArray != null){
+    for(let i=0; i<dataSumPerTrancheToJsonArray.length; i++){
+      // If we have something to pay (greater than zero) and late then we are late
+      if((parseInt(dataSumPerTrancheToJsonArray[i].REST_TO_PAY) > 0) 
+              && (dataSumPerTrancheToJsonArray[i].NEGATIVE_IS_LATE < 0)){
+              return true
+      }
+    }
+  }
+  else{
+    // If there is no payment then we display note
+    isLate = false;
+  }
+  return isLate;
+}
 function loadGraGrid(){
   let refGraField;
 
@@ -83,7 +107,15 @@ function loadGraGrid(){
                   title: "Niveau",
                   type: "text",
                   width: 20,
-                  align: "left",
+                  align: "right",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs"
+                },
+                { name: "UGG_AVG",
+                  title: "Moy classe",
+                  type: "number",
+                  width: 25,
+                  align: "right",
                   headercss: "cell-ref-sm-hd",
                   css: "cell-ref-xs"
                 },
@@ -1858,13 +1890,25 @@ $(document).ready(function() {
           });
         });
       }
-      if(PARAM_DISP_GRA == 'Y'){
-          $("#scmenu-gra").click(function() {
-            document.getElementById('anchor-gra').scrollIntoView({
-              behavior: 'smooth'
-            });
-          });
+
+      if(paramDispGraAdmin == 'Y'){
           loadGraGrid();
+          initGraShortCut();
+      }
+      else if(paramDispGraPublic == 'Y'){
+          initGraShortCut();
+          if(doesPaymentLateExist()){
+            // Payment late exists
+            $('#jsGridStuGrade').html("<div id='gra-late-warn'>Veuillez régler vos frais de scolarité en retard pour afficher votre tableau de notes&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span></div>");
+          }
+          else{
+            // There is no payment late so we can show grades
+            loadGraGrid();
+          }
+          
+      }
+      else{
+
       }
 
     }

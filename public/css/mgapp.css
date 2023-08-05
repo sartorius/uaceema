@@ -2476,6 +2476,9 @@ img.part-img{
   color: white;
 }
 
-.test-color{
-  color: #f1effc;
+#gra-late-warn{
+  color: var(--deep-ace-blue);
+  font-size: 1.3em;
+  padding-left: 30px;
+  padding-top: 40px;
 }
