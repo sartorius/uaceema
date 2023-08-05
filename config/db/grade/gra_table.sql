@@ -102,3 +102,28 @@ FROM uac_gra_master ugm JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 						            JOIN uac_ref_mention urm ON urs.mention_code = urm.par_code
 							          JOIN uac_admin uaa ON uaa.id = ugm.last_agent_id
 							          JOIN mdl_user mu ON mu.id = uaa.id;
+
+
+DROP VIEW IF EXISTS v_grade_exam;
+CREATE VIEW v_grade_exam AS
+SELECT
+	ugg.id AS UGG_ID,
+	ugg.master_id AS UGG_MASTER_ID,
+	ugg.grade AS TECH_GRADE,
+	ugg.gra_status AS TECH_STATUS,
+	ugg.operation AS TECH_OPERATION,
+	UPPER(VSH.USERNAME) AS VSH_USERNAME,
+	VSH.FIRSTNAME AS VSH_FIRSTNAME,
+	VSH.LASTNAME AS VSH_LASTNAME,
+	VSH.MATRICULE AS VSH_MATRICULE,
+	vcc.short_classe AS VCC_SHORTCLASS,
+   CASE WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status WHEN ugg.grade < 10 THEN 'BAVG' ELSE 'AAVG' END AS AVG_POS,
+     fEscapeStr(CONCAT(
+       UPPER(VSH.USERNAME),
+       UPPER(VSH.LASTNAME),
+       UPPER(VSH.MATRICULE),
+       UPPER(vcc.short_classe)
+     )) AS raw_data
+FROM uac_gra_grade ugg
+JOIN v_showuser VSH ON VSH.ID = ugg.user_id
+JOIN v_class_cohort vcc ON vcc.id = VSH.COHORT_ID;

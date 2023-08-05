@@ -860,7 +860,7 @@ BEGIN
                                           AND ulmnew.status = 'INP'
                                           AND ulmnew.master_id = inv_master_id
                                           AND ulmold.master_id NOT IN (inv_master_id)
-                                          AND ulmold.status = 'NUD'
+                                          AND ulmold.status IN ('NUD', 'ATT', 'END')
                 SET
                 ulmnew.reject_reason = 'Duplicat - utilisateur introuvable',
                 ulmnew.status = 'DUP',

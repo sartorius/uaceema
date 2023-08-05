@@ -2404,7 +2404,7 @@ img.part-img{
   background-color: #e0ffe8;
 }
 .rev-txtar{
-  color: var(--deep-ace-blue);
+  color: rgb(194, 0, 0);
 }
 
 #loader-block-gra{
@@ -2468,5 +2468,10 @@ img.part-img{
 
 .uac-step-green{
   background-color: #188500;
+  color: white;
+}
+
+.uac-step-dkblue{
+  background-color: #1f2972;
   color: white;
 }

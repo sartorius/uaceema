@@ -58,12 +58,14 @@ class AdminGradeController extends AbstractController{
                 if(($exam_status == 'FED')
                     || ($exam_status == 'REV')
                     || ($exam_status == 'END')){
+                    // Review cases !
                     // Data already exists. We need to load them.
-                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY VSH_USERNAME ASC; ";
+                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY VSH_USERNAME ASC; ";
                     
                 }
                 else{
-                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
+                    // Creation cases !
+                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
                     
                 }
                 
@@ -657,8 +659,91 @@ class AdminGradeController extends AbstractController{
           $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
           $logger->debug("-- We have insert the lines");
 
-
+          // NEW > LOA > FED > END -- CAN
           $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . " WHERE id = " . $param_master_id . " ; ";
+          $logger->debug("-- query_update_master: " . $query_update_master);
+          $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'param_master_id' => $param_master_id,
+              'message' => 'Tout est OK: '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation notation DB'),
+      400);
+    }
+
+    public function generatereviewexamDB(Request $request, LoggerInterface $logger){
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenGRAStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err679GRA ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_agent_id = $request->request->get('agentId');
+          $param_master_id = $request->request->get('masterId');
+          // Load the complicated collection
+          $param_jsondata = json_decode($request->request->get('loadReviewData'), true);
+
+          //echo $param_jsondata[0]['username'];
+          //UPDATE uac_gra_grade SET grade = 13, gra_status = 'P', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
+          //UPDATE uac_gra_grade SET grade = 0, gra_status = 'E', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
+          $query_value = '';
+          $query_prefix = 'UPDATE uac_gra_grade SET grade = ';
+          foreach ($param_jsondata as $read)
+          {
+                if(($read['HID_GRA'] == 'A')
+                    || ($read['HID_GRA'] == 'E')){
+                    $query_value = $query_value . $query_prefix . "0" . ",gra_status ='" . $read['HID_GRA'] . "', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
+                }
+                else{
+                    $query_value = $query_value . $query_prefix . $read['HID_GRA'] . ",gra_status ='P', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
+                }
+          }
+          sleep(2);
+
+
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          //$query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
+
+          $logger->debug("generatereviewexamDB - Show me query_value: " . $query_value);
+
+          $dbconnectioninst = DBConnectionManager::getInstance();
+
+          $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("-- We have updated the lines");
+
+          // NEW > LOA > FED > END -- CAN
+          $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . " WHERE id = " . $param_master_id . " ; ";
           $logger->debug("-- query_update_master: " . $query_update_master);
           $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -846,6 +931,59 @@ class AdminGradeController extends AbstractController{
                                                                     'result_all_ugm' => $result_all_ugm,
                                                                     'errtype' => '']);
 
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
+    public function readonlyexam(Environment $twig, LoggerInterface $logger)
+    {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        $logger->debug("readonlyexam -- scale_right: " . $scale_right);
+        // Anyone can access to the manager but only limited people can input the date
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+            if(isset($_POST["readonly-master-id"]) && (intval($_POST["readonly-master-id"]) > 0)){
+                $master_id = intval($_POST["readonly-master-id"]);
+                $dbconnectioninst = DBConnectionManager::getInstance();
+
+                $query_one_ugm = " SELECT * FROM v_master_exam WHERE UGM_ID=" . $master_id . "; ";
+                $logger->debug("query_all_ugm: " . $query_one_ugm);
+                $logger->debug("readonlyexam - Firstname: " . $_SESSION["firstname"]);
+                $result_one_ugm = $dbconnectioninst->query($query_one_ugm)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_all_ugm: " . count($result_one_ugm));
+    
+
+
+                $query_all_ugg = " SELECT * FROM v_grade_exam WHERE UGG_MASTER_ID =" . $master_id . " ORDER BY VSH_USERNAME; ";
+                $logger->debug("query_all_ugg: " . $query_all_ugg);
+                $result_all_ugg = $dbconnectioninst->query($query_all_ugg)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_all_ugm: " . count($result_all_ugg));
+
+
+    
+                $content = $twig->render('Admin/gra/readonlyexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                        'firstname' => $_SESSION["firstname"],
+                                                                        'lastname' => $_SESSION["lastname"],
+                                                                        'id' => $_SESSION["id"],
+                                                                        'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                        'result_one_ugm' => $result_one_ugm,
+                                                                        'result_all_ugg' => $result_all_ugg,
+                                                                        'errtype' => '']);
+            }
+            else{
+                //404
+                $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+            }
         }
         else{
             // Error Code 404

@@ -16,6 +16,7 @@ yui-compressor public/js/acepublicedt.js > public/js/acepublicedt.min.js;
 yui-compressor public/js/acegraadd.js > public/js/acegraadd.min.js;
 yui-compressor public/js/acegraload.js > public/js/acegraload.min.js;
 yui-compressor public/js/acegramanager.js > public/js/acegramanager.min.js;
+yui-compressor public/js/acegradash.js > public/js/acegradash.min.js;
 
 yui-compressor public/css/mgapp.css > public/css/mgapp.min.css;
 yui-compressor public/css/manja.css > public/css/manja.min.css;

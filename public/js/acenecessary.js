@@ -94,12 +94,14 @@ function verboseStatusOfPayment(value){
 function getVerboseExamStatus(param, isText){
   let startTagLoa = '<i class="uac-step uac-step-green">';
   let startTagRev = '<i class="uac-step uac-step-yellow">';
+  let startTagEnd = '<i class="uac-step uac-step-dkblue">';
   let endTag = '</i>'
   if(isText ==  'Y'){
     startTagLoa = '';
     startTagRev = '';
     endTag = '';
   }
+  // NEW > LOA > FED > END -- CAN
   if(param == 'LOA'){
       return startTagLoa + 'à saisir' + endTag;
   }
@@ -113,7 +115,8 @@ function getVerboseExamStatus(param, isText){
       return 'Annulé';
   }
   else{
-      return 'Terminé';
+      // END
+      return startTagEnd + 'Terminé' + endTag;;
   }
 }
 

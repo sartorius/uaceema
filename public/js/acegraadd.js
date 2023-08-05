@@ -15,7 +15,30 @@ function generategradetoexamDB(){
             goToCreateGrades(data['param_master_id']);
         },
         error: function (jqXhr, textStatus, errorMessage) {
-          $('#msg-alert').html("ERR411GRA: exam #" + masterId + " une erreur s'est produite, veuillez contacter le support technique.");
+          $('#msg-alert').html("ERR411GRA: exam #" + masterId + " une erreur s'est produite pour la saisie, veuillez contacter le support technique.");
+          $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+          $('#ace-alert-msg').show(100);
+        }
+    });
+}
+
+function generatereviewexamDB(){
+    $.ajax('/generatereviewexamDB', {
+        type: 'POST',  // http method
+        data: {
+          agentId: AGENT_ID,
+          masterId: POST_MASTER_ID,
+          loadReviewData: JSON.stringify(updateDataAllUSRToJsonArray),
+          token : GET_TOKEN
+        },  // data to submit
+        success: function (data, status, xhr) {
+            //We have to locally create the reduction in case of re-scan 
+            //let iMyReduction = data['param_user_id'];
+            
+            goToReviewGrades(data['param_master_id']);
+        },
+        error: function (jqXhr, textStatus, errorMessage) {
+          $('#msg-alert').html("ERR411GRA: exam #" + masterId + " une erreur s'est produite pour la vérification, veuillez contacter le support technique.");
           $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
           $('#ace-alert-msg').show(100);
         }
@@ -59,6 +82,7 @@ function fillStudent(paramPage){
     for(let i=paramStart; i<paramPageLimit; i++){
         let existingInputGra = '';
         let highlightClassExisting = '';
+        let highlightClassDirty = '';
         if((dataAllUSRToJsonArray[i].HID_GRA != '') &&
             (dataAllUSRToJsonArray[i].HID_GRA != 'x')){
                 // Be carefull when we are A or E then the HID GRA will take the value
@@ -68,10 +92,15 @@ function fillStudent(paramPage){
                 }
                 existingInputGra = dataAllUSRToJsonArray[i].HID_GRA;
                 highlightClassExisting = 'ok-txtar';
+                
+                if((mode == 'R')
+                        && (dataAllUSRToJsonArray[i].DIRTY_GRA == 'Y')){
+                            highlightClassDirty = 'rev-txtar';
+                }
         }
         
         strTable = strTable + '<tr>' ;
-        strTable = strTable + '<td class="c-t1"><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-txta ' + highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + i + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
+        strTable = strTable + '<td class="c-t1"><textarea id="gr' + i + '" name="gr' + i + '" rows="1" class="gra-txta ' + highlightClassDirty + ' '+ highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + i + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_FIRSTNAME.substring(0, maxLengthTable) + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_LASTNAME.substring(0, maxLengthTable) + '</td>';
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>';
@@ -137,20 +166,19 @@ function validateInputGra(event, line){
     if(testRegexGrade($('#gr'+line).val())){
         $('#gr'+line).removeClass('err-txtar');
         if($('#gr'+line).val() != ''){
-            let revColoring = 'ok-txtar';
+            $('#gr'+line).addClass('ok-txtar');
             if(mode == 'R'){
-                revColoring = 'rev-txtar';
+                $('#gr'+line).addClass('rev-txtar');
             }
-            $('#gr'+line).addClass(revColoring);
         }
         dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
         dataAllUSRToJsonArray[line].DIRTY_GRA = 'Y';
-        console.log('-- valid');
+        //console.log('-- valid');
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
         dataAllUSRToJsonArray[line].HID_GRA = 'x';
-        console.log('-- invalid');
+        //console.log('-- invalid');
     }
 }
 
@@ -169,7 +197,19 @@ function checkAndValidateExam(){
     else{
         console.log('Check All exam - we are good: ' + allFilled);
         //Go to saving !!!
-        generategradetoexamDB();
+        if(mode == 'C'){
+            generategradetoexamDB();
+        }
+        else{
+            //TO DO duplicate Dirty Lines
+            updateDataAllUSRToJsonArray = new Array();
+            for(let i=0; i<dataAllUSRToJsonArray.length; i++){
+                if(dataAllUSRToJsonArray[i].DIRTY_GRA == 'Y'){
+                    updateDataAllUSRToJsonArray.push(dataAllUSRToJsonArray[i]);
+                }
+            }
+            generatereviewexamDB();
+        }
     }
 }
 

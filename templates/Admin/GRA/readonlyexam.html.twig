@@ -1,0 +1,72 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_one_ugm is defined and result_one_ugm is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataOneExamToJsonArray = JSON.parse('{{ result_one_ugm | json_encode | raw }}');
+    let dataAllGradeToJsonArray = JSON.parse('{{ result_all_ugg | json_encode | raw }}');
+    // We init here the filter value
+	let filteredDataAllGradeToJsonArray = Array.from(dataAllGradeToJsonArray);
+    
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllMVOToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">one-exa</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Manager Mvola</h2>
+    <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-mvo" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-mvo" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="x()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-3">
+
+  </div>
+
+
+  <div class="col-3">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllGrade">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+{% include 'RawTemplate/SPE/_footer.w.gradash.jsgrid.mgchart.html.twig' %}

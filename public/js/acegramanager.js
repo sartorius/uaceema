@@ -249,7 +249,10 @@ function loadAllExamGrid(){
             if( (args.item.UGM_STATUS == 'LOA')
                   || (args.item.UGM_STATUS == 'FED')
               ){
-              goToEXAMFromGraMngr(args.item.UGM_ID);
+                goToEXAMForGradeFromGraMngr(args.item.UGM_ID);
+            }
+            else if(args.item.UGM_STATUS == 'END'){
+                goToEXAMForReadOnlyFromGraMngr(args.item.UGM_ID);
             }
             else{
               //Do nothing
@@ -263,9 +266,14 @@ function loadAllExamGrid(){
 }
 
 
-function goToEXAMFromGraMngr(param){
+function goToEXAMForGradeFromGraMngr(param){
   $("#read-master-id").val(param);
-  $("#mg-master-id-form").submit();
+  $("#mg-grade-master-id-form").submit();
+}
+
+function goToEXAMForReadOnlyFromGraMngr(param){
+  $("#readonly-master-id").val(param);
+  $("#mg-readonly-master-id-form").submit();
 }
 
 function goToConfirmExam(param){
@@ -294,9 +302,6 @@ $(document).ready(function() {
         showHeaderAlertMsg("La revue des notes de l'examen #" + reviewMasterId + " a été terminée avec succès.", 'Y');
         setTimeout(closeAlertMsg, 7000);
       }
-    }
-    else if($('#mg-graph-identifier').text() == 'man-not'){
-        // Do something
     }
     else{
       //Do nothing

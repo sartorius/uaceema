@@ -196,3 +196,9 @@ generategradetoexamDB:
 createreviewgrades:
     path:       /createreviewgrades
     controller: App\Controller\AdminGradeController::managergraexam
+generatereviewexamDB:
+    path:       /generatereviewexamDB
+    controller: App\Controller\AdminGradeController::generatereviewexamDB
+readonlyexam:
+    path:       /readonlyexam
+    controller: App\Controller\AdminGradeController::readonlyexam
