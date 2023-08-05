@@ -117,7 +117,6 @@ SELECT
 	VSH.LASTNAME AS VSH_LASTNAME,
 	VSH.MATRICULE AS VSH_MATRICULE,
 	vcc.short_classe AS VCC_SHORTCLASS,
-   CASE WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status WHEN ugg.grade < 10 THEN 'BAVG' ELSE 'AAVG' END AS AVG_POS,
      fEscapeStr(CONCAT(
        UPPER(VSH.USERNAME),
        UPPER(VSH.LASTNAME),

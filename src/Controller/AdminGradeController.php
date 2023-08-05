@@ -105,6 +105,12 @@ class AdminGradeController extends AbstractController{
                 if($exam_last_agent_id == $_SESSION["id"]){
                     $last_agent_id_same_as_current = 'Y';
                 }
+
+                $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe ORDER BY vcc.id ASC SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS, GROUP_CONCAT(vcc.ID SEPARATOR '|') AS GRP_VCC_ID FROM uac_ref_subject urs  "
+                                        . " JOIN uac_xref_subject_cohort xref ON urs.id = xref.subject_id "
+                                        . " JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id WHERE urs.id = " . $result_get_exam_query[0]['UGM_SUBJECT_ID'] . " GROUP BY urs.id; ";
+                $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);
+                $result_class_per_subject_query = $dbconnectioninst->query($class_per_subject_query)->fetchAll(PDO::FETCH_ASSOC);
     
     
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -120,6 +126,7 @@ class AdminGradeController extends AbstractController{
                                                                     'result_get_exam_query' => $result_get_exam_query,
                                                                     'result_get_all_page_query' => $result_get_all_page_query,
                                                                     'page_limit' => $result_param_limit_page[0]['PG_LIMIT'],
+                                                                    'result_class_per_subject_query' => $result_class_per_subject_query,
                                                                     'page_maximum' => $page_maximum,
                                                                     'default_bookmark' => $default_bookmark,
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
@@ -969,7 +976,26 @@ class AdminGradeController extends AbstractController{
                 $result_all_ugg = $dbconnectioninst->query($query_all_ugg)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me result_all_ugm: " . count($result_all_ugg));
 
+                $class_per_subject_query = " SELECT urs.id AS URS_ID, GROUP_CONCAT(vcc.short_classe ORDER BY vcc.id ASC SEPARATOR ' + ') AS GRP_VCC_SHORT_CLASS, GROUP_CONCAT(vcc.ID SEPARATOR '|') AS GRP_VCC_ID FROM uac_ref_subject urs  "
+                                        . " JOIN uac_xref_subject_cohort xref ON urs.id = xref.subject_id "
+                                        . " JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id WHERE urs.id = " . $result_one_ugm[0]['UGM_SUBJECT_ID'] . " GROUP BY urs.id; ";
+                $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);
+                $result_class_per_subject_query = $dbconnectioninst->query($class_per_subject_query)->fetchAll(PDO::FETCH_ASSOC);
 
+
+                $stat_average = " SELECT CASE WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status WHEN ugg.grade < 10 THEN 'BAVG' ELSE 'AAVG' END AS CATEGORY, COUNT(1) AS COUNT_PART FROM uac_gra_grade ugg "
+                                . " WHERE ugg.master_id = " . $master_id . " GROUP BY CASE WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status WHEN ugg.grade < 10 THEN 'BAVG' ELSE 'AAVG' END; ";
+                $logger->debug("Show stat_average: " . $stat_average);
+                $result_stat_average = $dbconnectioninst->query($stat_average)->fetchAll(PDO::FETCH_ASSOC);
+
+                $stat_grade_rep = " SELECT CASE WHEN ugg.grade < 2 THEN '0' WHEN ugg.grade < 4 THEN '1' WHEN ugg.grade < 6 THEN '2' WHEN ugg.grade < 8 THEN '3' WHEN ugg.grade < 10 THEN '4' "
+                                    . " WHEN ugg.grade < 12 THEN '5' WHEN ugg.grade < 14 THEN '6' WHEN ugg.grade < 16 THEN '7' WHEN ugg.grade < 18 THEN '8' ELSE '9' END AS ORD, "
+                                    . " CASE WHEN ugg.grade < 2 THEN '0-2' WHEN ugg.grade < 4 THEN '2-4' WHEN ugg.grade < 6 THEN '4-6' WHEN ugg.grade < 8 THEN '6-8' WHEN ugg.grade < 10 THEN '8-10' "
+                                    . " WHEN ugg.grade < 12 THEN '10-12' WHEN ugg.grade < 14 THEN '12-14' WHEN ugg.grade < 16 THEN '14-16' WHEN ugg.grade < 18 THEN '16-18' ELSE '18-20' END AS CATEGORY, "
+                                    . " COUNT(1) AS CPT FROM uac_gra_grade ugg WHERE ugg.master_id = " . $master_id . " AND ugg.gra_status IN ('P') "
+                                    . " GROUP BY CATEGORY, ORD ORDER BY ORD; ";
+                $logger->debug("Show stat_grade_rep: " . $stat_grade_rep);
+                $result_stat_grade_rep = $dbconnectioninst->query($stat_grade_rep)->fetchAll(PDO::FETCH_ASSOC);
     
                 $content = $twig->render('Admin/gra/readonlyexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                         'firstname' => $_SESSION["firstname"],
@@ -978,6 +1004,9 @@ class AdminGradeController extends AbstractController{
                                                                         'scale_right' => ConnectionManager::whatScaleRight(),
                                                                         'result_one_ugm' => $result_one_ugm,
                                                                         'result_all_ugg' => $result_all_ugg,
+                                                                        'result_class_per_subject_query' => $result_class_per_subject_query,
+                                                                        'result_stat_average' => $result_stat_average,
+                                                                        'result_stat_grade_rep' => $result_stat_grade_rep,
                                                                         'errtype' => '']);
             }
             else{

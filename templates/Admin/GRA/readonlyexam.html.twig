@@ -7,12 +7,16 @@
     let dataAllGradeToJsonArray = JSON.parse('{{ result_all_ugg | json_encode | raw }}');
     // We init here the filter value
 	let filteredDataAllGradeToJsonArray = Array.from(dataAllGradeToJsonArray);
+
+    // Statistics  
+    let dataStatAverageArray = JSON.parse('{{ result_stat_average | json_encode | raw }}');
+    let dataStatGradeRepArray = JSON.parse('{{ result_stat_grade_rep | json_encode | raw }}');
     
   </script>
 {% else %}
     // Error
     <script>
-      let dataAllMVOToJsonArray = "";
+      let dataOneExamToJsonArray = "";
     </script>
 {% endif %}
 
@@ -23,27 +27,39 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <h2>Manager Mvola</h2>
+    <h2>Notes #{{ result_one_ugm[0]['UGM_ID'] }}&nbsp;-&nbsp;{{ result_one_ugm[0]['URS_TITLE'] }}</h2>
+    <div class="menu-dropdown">
+        <div class="btn-ace-menu disp-sub-gra">
+            {{ result_one_ugm[0]['URS_MENTION_CODE'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_one_ugm[0]['URS_NIVEAU_CODE'] }}/{{ result_one_ugm[0]['URS_SEMESTER'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_one_ugm[0]['UGM_DATE'] }}
+            &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_one_ugm[0]['UGM_TEACHER_NAME'] }}
+            <br><i class="icon-columns nav-text"></i>&nbsp;{{ result_class_per_subject_query[0]['GRP_VCC_SHORT_CLASS'] }}&nbsp;&nbsp;<i class="icon-files nav-text"></i>&nbsp;{{ result_one_ugm[0]['UGM_FILENAME'] }}&nbsp;&nbsp;<i class="icon-graduation-cap nav-text"></i>&nbsp;{{ result_one_ugm[0]['URS_CREDIT']/10 }}
+        </div>
+    </div>
     <hr>
+    <div class="mgs-note-banner">
+        Nombre de note(s) : <i id='count-gra'>{{ result_all_ugg|length }}</i> sur {{ result_all_ugg|length }}.
+    </div>
   </div>
   <div class="col-1">
   </div>
 </div>
+{# ----------------------------------------------------------------------------------------------------------- #}
+
 <div class="row dash-bar">
   <div class="col-1">
   </div>
 
   <div class="col-2 fil-el">
-    <textarea class="form-control" rows="1" id="filter-all-mvo" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+    <textarea class="form-control" rows="1" id="filter-one-exa" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
   <div class="col-1 fil-el">
-    <button id="re-init-dash-mvo" type="button" class="btn btn-md btn-block btn-default">
+    <button id="re-init-dash-one-exa" type="button" class="btn btn-md btn-block btn-default">
       <i class="icon-refresh"></i>
     </button>
   </div>
   <div class="col-1">
     
-    <button onclick="x()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    <button onclick="generateAllGraReport()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
     
   </div>
   <div class="col-3">
@@ -57,12 +73,22 @@
   <div class="col-1">
   </div>
 </div>
+{# ----------------------------------------------------------------------------------------------------------- #}
 <div class="row">
   <div class="col-1">
   </div>
-  <div class="col-10">
+  <div class="col-5">
     <div id="jsGridAllGrade">
     </div>
+  </div>
+  <div class="col-5">
+    <h2>Répartition par note</h2>
+    <hr>
+    <canvas id="gradePopulation"></canvas>
+    <br><br>
+    <h2>Répartition vis-à-vis 10</h2>
+    <hr>
+    <canvas id="averagePopulation"></canvas>
   </div>
   <div class="col-1">
   </div>

@@ -154,7 +154,7 @@ function clearCartouche(){
     $("#fPageNbr").val(tempPageNbr);
     $("#fSubToken").val('0');
 
-    $("#disp-all-classes").html(tempInvClass);
+    $("#disp-all-classes").html('<i class="icon-columns nav-text"></i>&nbsp;' + tempInvClass);
     $("#sel-credit-qty").html(parseInt(tempCredit));
 }
 
@@ -206,7 +206,7 @@ function selectSubject(subjectId, str, credit){
         let iTempInvClass = getInvolvedClasses();
         tempInvClass = iTempInvClass[0];
         tempArrayClass = (iTempInvClass[1]).toString().split('|');
-        $("#disp-all-classes").html(tempInvClass);
+        $("#disp-all-classes").html('<i class="icon-columns nav-text"></i>&nbsp;' + tempInvClass);
     
         let getTempCountStu = getQtyStu();
         tempCountStu = parseInt(getTempCountStu[0]);

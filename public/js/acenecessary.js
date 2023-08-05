@@ -1,5 +1,14 @@
 /***********************************************************************************************************/
 
+const GLOBAL_SEP_ = ";"
+
+function removeAccentuated(param){
+  return param.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+/***********************************************************************************************************/
+
+
 // Send the event and block the input
 function blockInputKeyboard(e){
   e = e || window.event;
