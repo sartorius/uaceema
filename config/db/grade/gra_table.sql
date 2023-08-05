@@ -126,3 +126,20 @@ SELECT
 FROM uac_gra_grade ugg
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id
 JOIN v_class_cohort vcc ON vcc.id = VSH.COHORT_ID;
+
+DROP VIEW IF EXISTS v_stu_grade;
+CREATE VIEW v_stu_grade AS
+SELECT
+	ugg.id AS UGG_ID,
+	ugg.master_id AS UGG_MASTER_ID,
+	ugg.user_id AS UGG_STU_ID,
+	CASE WHEN ugm.status NOT IN ('END') THEN 'X' WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status ELSE ugg.grade END AS UGG_GRADE,
+	ugg.operation AS TECH_OPERATION,
+	DATE_FORMAT(ugm.exam_date, "%d/%m/%Y") AS UGM_DATE,
+	CONCAT(urs.niveau_code, '/', urs.semester) AS UGM_NIV_SEM,
+	fEscapeStr(urs.subject_title) AS URS_TITLE,
+	urs.credit AS URS_CREDIT
+FROM uac_gra_grade ugg
+JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
+JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
+JOIN v_showuser VSH ON VSH.ID = ugg.user_id;

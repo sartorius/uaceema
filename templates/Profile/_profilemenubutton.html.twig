@@ -5,6 +5,11 @@
   {% if param_does_pay_display == 'Y' %}
       <button type="button" id="scmenu-pay" class="btn btn-outline-dark btn-sm menu-btn"><span class="icon-files nav-text"></span>&nbsp;Écolage</button>
   {% endif %}
+  {# N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard - P : Payment Manager #}
+  {% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))
+            or (param_does_gra_module == 'Y')) %}
+              <button type="button" id="scmenu-gra" class="btn btn-outline-dark btn-sm menu-btn"><span class="icon-files nav-text"></span>&nbsp;Notes</button>
+  {% endif %}
 </div>
 <div class="col-sm-3">
 </div>

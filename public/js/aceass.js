@@ -1737,6 +1737,13 @@ $(document).ready(function() {
           });
         });
       }
+      if(PARAM_DISP_GRA == 'Y'){
+          $("#scmenu-gra").click(function() {
+            document.getElementById('anchor-gra').scrollIntoView({
+              behavior: 'smooth'
+            });
+          });
+      }
 
     }
     /****************************************************/

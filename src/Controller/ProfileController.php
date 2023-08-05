@@ -272,6 +272,35 @@ class ProfileController extends AbstractController
             /***********************************************************************************************************************************************************/
             /***********************************************************************************************************************************************************/
 
+            $does_gra_module = " SELECT par_code FROM uac_param WHERE key_code = 'GRAMODV'; ";
+            $result_does_gra_module = $dbconnectioninst->query($does_gra_module)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show does_pay_public: " . $result_does_gra_module[0]['par_code']);
+    
+            $param_does_gra_module = $result_does_gra_module[0]['par_code'];
+
+            $does_gra_public = " SELECT par_code FROM uac_param WHERE key_code = 'GRAPUBL'; ";
+            $result_does_gra_public = $dbconnectioninst->query($does_gra_public)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show does_pay_public: " . $result_does_gra_public[0]['par_code']);
+    
+            $param_does_gra_public = $result_does_gra_public[0]['par_code'];
+            $result_query_all_grade = array();
+
+            if($param_does_gra_module == 'Y'){
+              $query_all_grade = " SELECT * FROM v_stu_grade WHERE UGG_STU_ID=" . $result[0]['ID'] . "; ";
+              $result_query_all_grade = $dbconnectioninst->query($query_all_grade)->fetchAll(PDO::FETCH_ASSOC);
+              $logger->debug("Show result_query_all_grade: " . count($result_query_all_grade));
+            }
+
+
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /******************************************************************    END GRADE    ************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+
+
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
@@ -290,7 +319,10 @@ class ProfileController extends AbstractController
                                       "resultSumPerTranche"=>$resultSumPerTranche,
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,
-                                      "result_query_stat_ass"=>$result_query_stat_ass
+                                      "result_query_stat_ass"=>$result_query_stat_ass,
+                                      "param_does_gra_module"=>$param_does_gra_module,
+                                      "param_does_gra_public"=>$param_does_gra_public,
+                                      "result_query_all_grade"=>$result_query_all_grade
                                     ]);
       }
     }

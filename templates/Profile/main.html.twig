@@ -91,6 +91,13 @@
           let dataHistoPayToJsonArray = new Array();
       {% endif %}
 
+      {% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))
+            or (param_does_gra_module == 'Y')) %}
+              const PARAM_DISP_GRA = 'Y';
+      {% else %}
+              const PARAM_DISP_GRA = 'N';
+      {% endif %}
+
     </script>
 {% else %}
     <script>
@@ -419,6 +426,11 @@
                               {% include 'Profile/_paymentblock.html.twig' %}
                     {% endif %}
             {% endif %}
+{% endif %}
+
+{% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))
+            or (param_does_gra_module == 'Y')) %}
+              {% include 'Profile/_gradeblock.html.twig' %}
 {% endif %}
 
 {% include 'RawTemplate/SPE/_footeredtpublic.html.twig' %}

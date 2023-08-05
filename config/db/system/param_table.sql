@@ -90,7 +90,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 
 -- Grade
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRADSHV', 'Notes module visible Y oui N non', NULL, 'Y');
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRAMODV', 'Notes module visible Y oui N non', NULL, 'Y');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRAPUBL', 'Notes dashboard visible etudiant Y oui N non', NULL, 'Y');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRASTUL', 'Limite nombre student par page', 32, NULL);
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRAJPGL', 'Taille limite fichier JPG en ko', 300, NULL);
