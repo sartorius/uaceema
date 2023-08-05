@@ -7,7 +7,9 @@ function removeAccentuated(param){
 }
 
 /***********************************************************************************************************/
-
+function scrollToTop(){
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+}
 
 // Send the event and block the input
 function blockInputKeyboard(e){

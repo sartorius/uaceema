@@ -53,6 +53,7 @@ class AdminGradeController extends AbstractController{
     
                 $inv_subject_id = $result_get_exam_query[0]['UGM_SUBJECT_ID'];
                 $exam_status = $result_get_exam_query[0]['UGM_STATUS'];
+                $exam_mention_code = $result_get_exam_query[0]['URS_MENTION_CODE'];
                 // TODO Review list of stu
                 // NEW* > LOA > FED > REV* > END*
                 if(($exam_status == 'FED')
@@ -60,18 +61,28 @@ class AdminGradeController extends AbstractController{
                     || ($exam_status == 'END')){
                     // Review cases !
                     // Data already exists. We need to load them.
-                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY VSH_USERNAME ASC; ";
-                    
+                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY ugg.id ASC; ";
+                    $allothermentionusr_query = null;
                 }
                 else{
                     // Creation cases !
                     $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
                     
+                    $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
+                                                . " 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT id FROM v_class_cohort vcc WHERE vcc.mention_code = '" . $exam_mention_code . "') AND vsh.ID NOT "
+                                                . " IN (SELECT vsh.ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ")); ";
                 }
                 
                 $logger->debug("Show me allusr_query: " . $allusr_query);
                 $result_all_usr = $dbconnectioninst->query($allusr_query)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me: " . count($result_all_usr));
+                
+                $result_allothermentionusr_query = array();
+                if($allothermentionusr_query != null){
+                    $logger->debug("Show me allothermentionusr_query: " . $allothermentionusr_query);
+                    $result_allothermentionusr_query = $dbconnectioninst->query($allothermentionusr_query)->fetchAll(PDO::FETCH_ASSOC);
+                    $logger->debug("Show me: " . count($result_allothermentionusr_query));
+                }
     
     
                 $param_limit_page_query = " SELECT par_int AS PG_LIMIT FROM uac_param WHERE key_code = 'GRASTUL'; ";
@@ -112,13 +123,14 @@ class AdminGradeController extends AbstractController{
                 $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);
                 $result_class_per_subject_query = $dbconnectioninst->query($class_per_subject_query)->fetchAll(PDO::FETCH_ASSOC);
     
-    
+                
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
                                                                     'result_get_token' => $result_get_token,
                                                                     'result_all_usr' => $result_all_usr,
+                                                                    'result_allothermentionusr_query' => $result_allothermentionusr_query,
                                                                     'post_master_id' => $post_master_id,
                                                                     'exam_status' => $exam_status,
                                                                     'exam_last_agent_id' => $exam_last_agent_id,
@@ -721,35 +733,39 @@ class AdminGradeController extends AbstractController{
           $param_master_id = $request->request->get('masterId');
           // Load the complicated collection
           $param_jsondata = json_decode($request->request->get('loadReviewData'), true);
-
-          //echo $param_jsondata[0]['username'];
-          //UPDATE uac_gra_grade SET grade = 13, gra_status = 'P', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
-          //UPDATE uac_gra_grade SET grade = 0, gra_status = 'E', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
-          $query_value = '';
-          $query_prefix = 'UPDATE uac_gra_grade SET grade = ';
-          foreach ($param_jsondata as $read)
-          {
-                if(($read['HID_GRA'] == 'A')
-                    || ($read['HID_GRA'] == 'E')){
-                    $query_value = $query_value . $query_prefix . "0" . ",gra_status ='" . $read['HID_GRA'] . "', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
-                }
-                else{
-                    $query_value = $query_value . $query_prefix . $read['HID_GRA'] . ",gra_status ='P', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
-                }
-          }
-          sleep(2);
-
-
-          //echo $param_jsondata[0]['username'];
-          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          //$query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
-
-          $logger->debug("generatereviewexamDB - Show me query_value: " . $query_value);
-
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
-          $logger->debug("-- We have updated the lines");
+          // We do not do any update if there is no data to update
+          if(count($param_jsondata) > 0){
+            //echo $param_jsondata[0]['username'];
+            //UPDATE uac_gra_grade SET grade = 13, gra_status = 'P', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
+            //UPDATE uac_gra_grade SET grade = 0, gra_status = 'E', operation = 'REV', last_update = CURRENT_TIMESTAMP WHERE id = 7;
+            $query_value = '';
+            $query_prefix = 'UPDATE uac_gra_grade SET grade = ';
+            foreach ($param_jsondata as $read)
+            {
+                  if(($read['HID_GRA'] == 'A')
+                      || ($read['HID_GRA'] == 'E')){
+                      $query_value = $query_value . $query_prefix . "0" . ",gra_status ='" . $read['HID_GRA'] . "', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
+                  }
+                  else{
+                      $query_value = $query_value . $query_prefix . $read['HID_GRA'] . ",gra_status ='P', operation='REV', last_update=CURRENT_TIMESTAMP WHERE id =" . $read['GRA_ID'] . ";";
+                  }
+            }
+            sleep(2);
+  
+  
+            //echo $param_jsondata[0]['username'];
+            //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+            //$query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
+  
+            $logger->debug("generatereviewexamDB - Show me query_value: " . $query_value);
+  
+            
+  
+            $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("-- We have updated the lines");
+          }
 
           // NEW > LOA > FED > END -- CAN
           $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "

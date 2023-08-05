@@ -112,7 +112,7 @@ function loadGraGrid(){
                   css: "cell-ref-xs"
                 },
                 { name: "UGG_AVG",
-                  title: "Moy classe",
+                  title: "Moy. classe",
                   type: "number",
                   width: 25,
                   align: "right",
