@@ -7,7 +7,8 @@
   {% endif %}
   {# N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard - P : Payment Manager #}
   {% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))
-            or (param_does_gra_module == 'Y')) %}
+            or ((from_admin != 'N') and (param_does_gra_module == 'Y'))) %}
+
               <button type="button" id="scmenu-gra" class="btn btn-outline-dark btn-sm menu-btn"><span class="icon-files nav-text"></span>&nbsp;Notes</button>
   {% endif %}
 </div>

@@ -1,3 +1,124 @@
+function loadGraGrid(){
+  let refGraField;
+
+  if(window.screen.availWidth < 1100){
+    refGraField = [
+          { name: "URS_TITLE",
+            title: "Examen",
+            type: "text",
+            align: "left",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+                return value.substring(0, 25);
+            }
+          },
+          { name: "UGG_GRADE",
+            title: "Note",
+            type: "number",
+            width: 40,
+            align: "right",
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs",
+            itemTemplate: function(value, item) {
+              if(value == 'X'){
+                return 'En cours';
+              }
+              else if(value == 'A'){
+                return 'Absent(e)';
+              }
+              else if(value == 'E'){
+                  return 'Excusé(e)';
+              }
+              else{
+                return value;
+              }
+            }
+          }
+      ];
+  }
+  else{
+    refGraField = [
+                { name: "URS_TITLE",
+                  title: "Examen",
+                  type: "text",
+                  align: "left",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs",
+                  itemTemplate: function(value, item) {
+                      return value.substring(0, 25);
+                  }
+                },
+                { name: "UGG_GRADE",
+                  title: "Note",
+                  type: "number",
+                  width: 30,
+                  align: "right",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs",
+                  itemTemplate: function(value, item) {
+                    if(value == 'X'){
+                      return 'En cours';
+                    }
+                    else if(value == 'A'){
+                      return 'Absent(e)';
+                    }
+                    else if(value == 'E'){
+                        return 'Excusé(e)';
+                    }
+                    else{
+                      return value;
+                    }
+                  }
+                },
+                { name: "UGM_DATE",
+                  title: "Date",
+                  type: "number",
+                  width: 40,
+                  align: "center",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs"
+                },
+                { name: "UGM_NIV_SEM",
+                  title: "Niveau",
+                  type: "text",
+                  width: 20,
+                  align: "left",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs"
+                },
+                { name: "URS_CREDIT",
+                  title: "Crédit",
+                  type: "number",
+                  width: 20,
+                  align: "right",
+                  headercss: "cell-ref-sm-hd",
+                  css: "cell-ref-xs",
+                  itemTemplate: function(value, item){
+                    return (value/10);
+                  }
+                }
+      ];
+  }
+
+  $("#jsGridStuGrade").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucune note disponible",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: dataAllGradeToJsonArray,
+      fields: refGraField 
+  });
+}
+
 
 function loadHistoPayGrid(){
   let refHistoPayField;
@@ -1743,6 +1864,7 @@ $(document).ready(function() {
               behavior: 'smooth'
             });
           });
+          loadGraGrid();
       }
 
     }
