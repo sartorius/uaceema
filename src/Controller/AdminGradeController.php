@@ -1028,6 +1028,43 @@ class AdminGradeController extends AbstractController{
         return new Response($content);
     }
 
+    public function managergragrade(Environment $twig, LoggerInterface $logger)
+    {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        $logger->debug("scale_right: " . $scale_right);
+        // Anyone can access to the manager but only limited people can input the date
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            
+            $query_all_mention_grade = " SELECT * FROM v_mention_grade; ";
+            $logger->debug("query_all_mention_grade: " . $query_all_mention_grade);
+            $logger->debug("managergragrade - Firstname: " . $_SESSION["firstname"]);
+            
+            $result_query_all_mention_grade = $dbconnectioninst->query($query_all_mention_grade)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_all_mention_niv: " . count($result_query_all_mention_grade));
+
+            $content = $twig->render('Admin/gra/managergragrade.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                    'firstname' => $_SESSION["firstname"],
+                                                                    'lastname' => $_SESSION["lastname"],
+                                                                    'id' => $_SESSION["id"],
+                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'result_query_all_mention_niv' => $result_query_all_mention_grade,
+                                                                    'errtype' => '']);
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
     public function readonlyexam(Environment $twig, LoggerInterface $logger)
     {
 

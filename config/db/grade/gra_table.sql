@@ -149,3 +149,17 @@ JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
                         AND ugm.status NOT IN ('CAN')
 JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id;
+
+
+DROP VIEW IF EXISTS v_mention_grade;
+CREATE VIEW v_mention_grade AS
+SELECT
+	urs.mention_code AS URS_MENTION_CODE,
+	urs.niveau_code AS URS_NIVEAU_CODE,
+	 urs.semester AS URS_SEMESTER,
+   CONCAT(urs.mention_code, urs.niveau_code, urs.semester) AS raw_data,
+	 count(1) AS URS_CPT
+FROM uac_gra_master ugm JOIN uac_ref_subject urs ON urs.id = ugm.subject_id
+												 AND ugm.status IN ('END')
+GROUP BY urs.mention_code, urs.niveau_code, urs.semester, CONCAT(urs.mention_code, urs.niveau_code, urs.semester)
+ORDER BY raw_data;
