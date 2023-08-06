@@ -1,5 +1,5 @@
 function generategradetoexamDB(){
-    
+    $('#loading').show(50);
     $.ajax('/generategradetoexamDB', {
         type: 'POST',  // http method
         data: {
@@ -15,6 +15,7 @@ function generategradetoexamDB(){
             goToCreateGrades(data['param_master_id']);
         },
         error: function (jqXhr, textStatus, errorMessage) {
+          $('#loading').hide(50);
           $('#msg-alert').html("ERR411GRA: exam #" + POST_MASTER_ID + " une erreur s'est produite pour la saisie, veuillez contacter le support technique.");
           $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
           $('#ace-alert-msg').show(100);
@@ -24,6 +25,7 @@ function generategradetoexamDB(){
 }
 
 function generatereviewexamDB(){
+    $('#loading').show(50);
     $.ajax('/generatereviewexamDB', {
         type: 'POST',  // http method
         data: {
@@ -39,6 +41,7 @@ function generatereviewexamDB(){
             goToReviewGrades(data['param_master_id']);
         },
         error: function (jqXhr, textStatus, errorMessage) {
+          $('#loading').hide(50);
           $('#msg-alert').html("ERR411GRA: exam #" + POST_MASTER_ID + " une erreur s'est produite pour la vérification, veuillez contacter le support technique.");
           $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
           $('#ace-alert-msg').show(100);
@@ -59,6 +62,214 @@ function goToReviewGrades(param){
     $("#review-master-id").val(param);
     $("#mg-create-review-grades-form").submit();
 }
+
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// ****************************************       Fill pop up      ****************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+
+
+function resetPopUpAddGrade(){
+    $('#addpay-ace').val('');
+    $('#gr1000').val('');
+    $('#gr1000').removeClass('ok-txtar');
+    $('#gr1000').removeClass('err-txtar');
+    $('#last-read-bc').html('');
+    $('#scan-gra-input').show(100);
+    $('#ctrl-name').html('');
+
+    $('#othg-lname').html('');
+    $('#othg-fname').html('');
+    $('#othg-sclass').html('');
+
+    $("#btn-idegra").hide(100);
+    $("#btn-canidegra").hide(100);
+
+    vshUsernameOthg = "";
+    vshLastnameOthg = "";
+    vshFirstnameOthg = "";
+    vshIdOthg = 0;
+    hidGraOthg = 0;
+
+    // Block management TODO
+    $('#assign-gra').show(100);
+    $('#gra-detail-othergra').hide(100);
+    $('#btn-addothend').hide(100);
+}
+
+function openAddOtherGraBlk(){
+    // Block management
+    $('#assign-gra').hide(100);
+    $('#gra-detail-othergra').show(100);
+}
+
+function addOtherGradeEnd(){
+    //Check first if the line exists or not
+    let alreadyAdded = false;
+    let i = 0;
+
+    while ((i<addMoreDataOtherUSRToJsonArray.length)
+                && (!alreadyAdded)) {
+        // code block to be executed
+        if(addMoreDataOtherUSRToJsonArray[i].VSH_ID == vshIdOthg){
+            alreadyAdded = true;
+            addMoreDataOtherUSRToJsonArray[i].HID_GRA = hidGraOthg;
+        }
+        i = i + 1;
+    }
+
+    if(!alreadyAdded){
+        let myOtherGradeLine = {
+                DIRTY_GRA: "x",
+                GRA_ID: 0,
+                GRA_STATUS: "x",
+                HID_GRA: hidGraOthg,
+                VSH_FIRSTNAME: vshFirstnameOthg,
+                VSH_ID: vshIdOthg,
+                VSH_LASTNAME: vshLastnameOthg,
+                VSH_USERNAME: vshUsernameOthg
+            };
+        //Can be added several time
+        addMoreDataOtherUSRToJsonArray.push(myOtherGradeLine);
+    }
+    fillStudent((parseInt(currentPage) - 1));
+    $('#gra-details-modal').modal('toggle');
+}
+
+function mngAddOtherGraUserExists(val){
+    //CARIZOU151 BEBIMAM925
+    for (let i = 0; i < dataAllOtherMentionUSRToJsonArray.length; i++) {
+      if (dataAllOtherMentionUSRToJsonArray[i].VSH_USERNAME === val){
+        
+  
+        $('#addpay-ace').val('');
+        $('#scan-gra-input').hide(100);
+        $('#ctrl-name').html(dataAllOtherMentionUSRToJsonArray[i].VSH_FIRSTNAME + ' - ' + dataAllOtherMentionUSRToJsonArray[i].OTH_CLASS);
+        $("#btn-idegra").show(100);
+        $("#btn-canidegra").show(100);
+
+        $('#othg-lname').html(dataAllOtherMentionUSRToJsonArray[i].VSH_LASTNAME);
+        $('#othg-fname').html(dataAllOtherMentionUSRToJsonArray[i].VSH_FIRSTNAME);
+        $('#othg-sclass').html(dataAllOtherMentionUSRToJsonArray[i].OTH_CLASS);
+        
+        vshUsernameOthg = dataAllOtherMentionUSRToJsonArray[i].VSH_USERNAME;
+        vshLastnameOthg = dataAllOtherMentionUSRToJsonArray[i].VSH_LASTNAME;
+        vshFirstnameOthg = dataAllOtherMentionUSRToJsonArray[i].VSH_FIRSTNAME;
+        vshIdOthg = dataAllOtherMentionUSRToJsonArray[i].VSH_ID;
+
+        return true;
+      }
+    }
+    resetPopUpAddGrade();
+    return false;
+}
+  
+function verifyGraContentScan(){
+  
+    $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+    $('#ace-alert-msg').hide(100);
+    
+  
+  
+    if ($('#addpay-ace').val().length == 10){
+  
+      let originalRedInput = $('#addpay-ace').val();
+      let readInput = $('#addpay-ace').val().replace(/[^a-z0-9]/gi,'').toUpperCase();
+      //console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
+  
+      if(readInput.length < 10){
+        // We are on the wrong keyboard config as it must be 10
+        readInput = convertWordAZERTY(originalRedInput).replace(/[^a-z0-9]/gi,'').toUpperCase();
+      }
+  
+      let scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;ERR91Format&nbsp;</i>';
+      // Here we check the format
+      if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
+        // Only if the read is clean
+  
+        if(mngAddOtherGraUserExists(readInput)){
+          /********************************************************** FOUND **********************************************************/
+          scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
+          //Allow button enabled
+  
+        }
+        else{
+          /******************************************************** NOT FOUND ********************************************************/
+          scanValidToDisplay = ' <i class="mgs-rd-o-err">&nbsp;Étudiant introuvable&nbsp;</i>';
+        }
+      }
+      else{
+          // If we are on the pay screen we need to do somthing
+          // We do not match a username
+      }
+  
+      //console.log('We have read: ' + $('#addpay-ace').val());
+      $('#last-read-bc').html(readInput + scanValidToDisplay);
+  
+      // Save for any internet issue here
+      //$("#btn-load-bc").show();
+  
+  
+  
+    }
+    else if($('#addpay-ace').val().length > 10) {
+      // Great length
+      $('#addpay-ace').val('');
+      resetMvoAttribuer();
+  
+    }
+    else {
+      //Do nothing
+    }
+}
+
+function showPopUpAddGrade(){
+    resetPopUpAddGrade();
+    $('#gra-details-modal').modal('show');
+}
+
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// *****************************************       Fill table      ****************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+// ********************************************************************************************************************
+
+function fillUnitaryPageStudent(paramIndex, paramArray, classEdit){
+    let tempStrTable = '';
+    let existingInputGra = '';
+    let highlightClassExisting = '';
+    let highlightClassDirty = '';
+    if((paramArray[paramIndex].HID_GRA != '') &&
+        (paramArray[paramIndex].HID_GRA != 'x')){
+            // Be carefull when we are A or E then the HID GRA will take the value
+            if((paramArray[paramIndex].GRA_STATUS == 'A')
+                || (paramArray[paramIndex].GRA_STATUS == 'E')){
+                existingInputGra = paramArray[paramIndex].HID_GRA = paramArray[paramIndex].GRA_STATUS;
+            }
+            existingInputGra = paramArray[paramIndex].HID_GRA;
+            highlightClassExisting = 'ok-txtar';
+            
+            if((mode == 'R')
+                    && (paramArray[paramIndex].DIRTY_GRA == 'Y')){
+                        highlightClassDirty = 'rev-txtar';
+            }
+    }
+    
+    tempStrTable = tempStrTable + '<tr>' ;
+    tempStrTable = tempStrTable + '<td class="c-t1"><textarea id="gr' + paramIndex + '" name="gr' + paramIndex + '" rows="1" class="gra-txta ' + highlightClassDirty + ' '+ highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + paramIndex + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
+    tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_FIRSTNAME.substring(0, maxLengthTable) + '</td>';
+    tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_LASTNAME.substring(0, maxLengthTable) + '</td>';
+    tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_USERNAME + '</td>';
+    tempStrTable = tempStrTable + '<td>' + (parseInt(paramIndex) + 1) + '</td>';
+    tempStrTable = tempStrTable + '</tr>';
+    return tempStrTable;
+}
+
 
 // First page is zero
 function fillStudent(paramPage){
@@ -82,6 +293,7 @@ function fillStudent(paramPage){
     }
 
     for(let i=paramStart; i<paramPageLimit; i++){
+        /*
         let existingInputGra = '';
         let highlightClassExisting = '';
         let highlightClassDirty = '';
@@ -108,18 +320,33 @@ function fillStudent(paramPage){
         strTable = strTable + '<td>' + dataAllUSRToJsonArray[i].VSH_USERNAME + '</td>';
         strTable = strTable + '<td>' + (parseInt(i) + 1) + '</td>';
         strTable = strTable + '</tr>';
+        */
+        strTable = strTable + fillUnitaryPageStudent(i, dataAllUSRToJsonArray, classEdit);
     };
+
+    
+
     //Need to fill the last page
     if(paramPage == (parseInt(PAGE_MAX) - 1)){
-        for(let j=paramPageLimit; j<(PAGE_MAX*pageLimit); j++){
+        
+        //We are on the last page !!!
+        // Need to fill with addMoreDataOtherUSRToJsonArray
+        for(let k=0; k<addMoreDataOtherUSRToJsonArray.length; k++){
+            strTable = strTable + fillUnitaryPageStudent(k, addMoreDataOtherUSRToJsonArray, classEdit);
+        }
+
+
+        for(let j=(paramPageLimit + addMoreDataOtherUSRToJsonArray.length); j<(PAGE_MAX*pageLimit); j++){
             strTable = strTable + '<tr>' ;
-            strTable = strTable + '<td class="c-t1"><textarea name="gr' + j + '" rows="1" class="gra-txta ' + classEditUnlist + '" cols="4" placeholder="0"></textarea></td>';
+            //strTable = strTable + '<td class="c-t1"><textarea name="gr' + j + '" rows="1" class="gra-txta ' + classEditUnlist + '" cols="4" placeholder="0"></textarea></td>';
+            strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>NA</td>';
             strTable = strTable + '<td>' + (parseInt(j) + 1) + '</td>';
             strTable = strTable + '</tr>';
         }
+        
     }
     strTable = strTable + '</table>';
     $("#gra-gr").html(strTable);
@@ -173,14 +400,28 @@ function validateInputGra(event, line){
                 $('#gr'+line).addClass('rev-txtar');
             }
         }
-        dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
-        dataAllUSRToJsonArray[line].DIRTY_GRA = 'Y';
-        //console.log('-- valid');
+        if(line == 1000){
+            // We are in other cases
+            hidGraOthg = $('#gr'+line).val().replace(',', '.');
+            $('#btn-addothend').show(100);
+        }
+        else{
+            // We are on usual
+            dataAllUSRToJsonArray[line].HID_GRA = $('#gr'+line).val().replace(',', '.');
+            dataAllUSRToJsonArray[line].DIRTY_GRA = 'Y';
+            //console.log('-- valid');
+        }
     }
     else{
         $('#gr'+line).removeClass('ok-txtar').addClass('err-txtar');
-        dataAllUSRToJsonArray[line].HID_GRA = 'x';
-        //console.log('-- invalid');
+        if(line == 1000){
+            hidGraOthg = 'x';
+            $('#btn-addothend').hide(100);
+        }
+        else{
+            dataAllUSRToJsonArray[line].HID_GRA = 'x';
+            //console.log('-- invalid');
+        }
     }
 }
 
@@ -420,33 +661,33 @@ function resetNavFooterBtn(){
         && (currentPage ==  1)){
         document.getElementById("pg-btn-prec").style.visibility = "hidden";
         document.getElementById("pg-btn-next").style.visibility = "visible";
-        document.getElementById("pg-btn-save").style.visibility = "hidden";
+        document.getElementById("pg-gra-end-blk").style.visibility = "hidden";
     }
     else if ((PAGE_MAX == 1)
         && (currentPage ==  1)){
         document.getElementById("pg-btn-prec").style.visibility = "hidden";
         document.getElementById("pg-btn-next").style.visibility = "hidden";
         if(mode != 'O'){
-            document.getElementById("pg-btn-save").style.visibility = "visible";
+            document.getElementById("pg-gra-end-blk").style.visibility = "visible";
         }
         else{
-            document.getElementById("pg-btn-save").style.visibility = "hidden";
+            document.getElementById("pg-gra-end-blk").style.visibility = "hidden";
         }
     }
     else if(currentPage ==  PAGE_MAX){
         document.getElementById("pg-btn-prec").style.visibility = "visible";
         document.getElementById("pg-btn-next").style.visibility = "hidden";
         if(mode != 'O'){
-            document.getElementById("pg-btn-save").style.visibility = "visible";
+            document.getElementById("pg-gra-end-blk").style.visibility = "visible";
         }
         else{
-            document.getElementById("pg-btn-save").style.visibility = "hidden";
+            document.getElementById("pg-gra-end-blk").style.visibility = "hidden";
         }
     }
     else{
         document.getElementById("pg-btn-prec").style.visibility = "visible";
         document.getElementById("pg-btn-next").style.visibility = "visible";
-        document.getElementById("pg-btn-save").style.visibility = "hidden";
+        document.getElementById("pg-gra-end-blk").style.visibility = "hidden";
         //Do nothing
     }
 }
@@ -518,6 +759,11 @@ $(document).ready(function() {
       fillStudent(0); 
       $( ".upd-bkm" ).click(function() {
         $('#disp-bookm').html(snapshotCurrentParamImg());
+      });
+
+      // Do something
+      $( "#addpay-ace" ).keyup(function() {
+        verifyGraContentScan();
       });
 
       // Set personnal bold

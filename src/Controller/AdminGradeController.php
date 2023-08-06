@@ -62,13 +62,16 @@ class AdminGradeController extends AbstractController{
                     // Review cases !
                     // Data already exists. We need to load them.
                     $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY ugg.id ASC; ";
-                    $allothermentionusr_query = null;
+                    
+                    $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.SHORTCLASS AS OTH_CLASS, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
+                                                . " 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT id FROM v_class_cohort vcc WHERE vcc.mention_code = '" . $exam_mention_code . "') AND vsh.ID NOT "
+                                                . " IN (SELECT ugg.user_id FROM uac_gra_grade ugg WHERE ugg.master_id = " . $post_master_id . "); ";
                 }
                 else{
                     // Creation cases !
                     $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
                     
-                    $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
+                    $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.SHORTCLASS AS OTH_CLASS, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
                                                 . " 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT id FROM v_class_cohort vcc WHERE vcc.mention_code = '" . $exam_mention_code . "') AND vsh.ID NOT "
                                                 . " IN (SELECT vsh.ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ")); ";
                 }

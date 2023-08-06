@@ -1,0 +1,60 @@
+<!-- Modal -->
+<div class="modal fade" id="gra-details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <strong>Ajouter une note&nbsp;</strong>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class='popup-box-details'>
+            <i class="icon-clipboard-1"></i>&nbsp;Détails Examen
+            <br><br>
+            <div id='gra-details-txt'>
+                {{ result_get_exam_query[0]['URS_MENTION_CODE'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['URS_NIVEAU_CODE'] }}/{{ result_get_exam_query[0]['URS_SEMESTER'] }}&nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_DATE'] }}
+                &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp;{{ result_get_exam_query[0]['UGM_TEACHER_NAME'] }}
+                <br>{{ result_get_exam_query[0]['URS_TITLE'][:60] }}&nbsp;
+            </div>
+            <div id='assign-gra'>
+            <hr>
+                <div class='pop-up-title'><i class="icon-map-signs"></i>&nbsp;Identifier étudiant</div>
+                <i class="recap-mis"><span class="icon-exclamation-triangle nav-icon-fa nav-text"></span></i>&nbsp;Seuls les étudiants appartenant à la <strong>mention {{ result_get_exam_query[0]['URS_MENTION_CODE'] }}</strong> peuvent être ajouté. Si l'étudiant est introuvable, veuillez contacter le support technique. Si vous attribuez une note à un étudiant déjà ajouté, sa note sera mise à jour.
+                <br>
+                <span class="icon-person nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-bc" class="mgs-addpay-lg"></i><br>
+                
+                <div id='scan-gra-input'>
+                    <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Username étudiant">
+                </div>
+                <div id='scan-gra-btn'>
+                    <button onclick="openAddOtherGraBlk()" id='btn-idegra' class="btn btn-lg btn-default btn-block">Noter <i id='ctrl-name'></i></button>
+                    <button onclick="resetPopUpAddGrade()" id='btn-canidegra' class="btn btn-md btn-outline-dark btn-block">Annuler</button>
+                </div>
+            </div>
+            <hr>
+            <div id='gra-detail-othergra'>
+                <i class="icon-plus-square"></i>&nbsp;Attribuer une note
+                <br><br>
+                <div class="menu-dropdown">
+                    <div id="othg-ide" class="othg-blk-det">
+                        <strong>Nom</strong>&nbsp;<i id="othg-lname"></i><br>
+                        <strong>Prénom</strong>&nbsp;<i id="othg-fname"></i><br>
+                        <strong>Classe</strong>&nbsp;<i id="othg-sclass"></i><br>
+                    </div>
+                    <div id="othg-gra" class="othg-blk-det">
+                        <textarea id="gr1000" rows="1" cols="7" class="othg-txta" onkeyup="validateInputGra(event,1000)"></textarea>
+                    </div>
+                    <div class="othg-blk-det">
+                        <i class="othg-txta">/20</i>
+                    </div>
+                </div>
+                <br>
+                <button onclick="addOtherGradeEnd()" id='btn-addothend' class="btn btn-lg btn-default btn-block"><i class="icon-gavel"></i>&nbsp;&nbsp;&nbsp;Attribuer cette note</button>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>

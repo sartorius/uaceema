@@ -9,6 +9,7 @@
     let dataAllOtherMentionUSRToJsonArray = JSON.parse('{{ result_allothermentionusr_query | json_encode | raw }}');
 
     let updateDataAllUSRToJsonArray = new Array();
+    let addMoreDataOtherUSRToJsonArray = new Array();
 
 
     let tempCountStu = 0;
@@ -37,6 +38,12 @@
     
     const PATH_IMG = "{{ path('main') }}";
     const SUB_PATH_IMG = "img/ace_gra";
+
+    let vshUsernameOthg = "";
+    let vshLastnameOthg = "";
+    let vshFirstnameOthg = "";
+    let vshIdOthg = 0;
+    let hidGraOthg = 0;
 
   </script>
 {% else %}
@@ -207,7 +214,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-12  info-cartouche gra-footer">
+        <div id="pg-gra-end-blk" class="col-lg-12  info-cartouche gra-footer">
+            <button id="pg-btn-add-gra" onclick="showPopUpAddGrade()" class="btn btn-default btn-md btn-block"><i class="icon-plus-square nav-text"></i>&nbsp;Ajouter un étudiant manquant</button>
+
             <button id="pg-btn-save" onclick="checkAndValidateExam()" class="btn btn-dark btn-lg btn-block"><i id="id-action-submit">Enregistrer</i> toutes les notes&nbsp;<i class="icon-check-square nav-text"></i></button> 
         </div>
         <div class="col-lg-12">
@@ -221,6 +230,6 @@
 
 
 
-                
+{% include 'Admin/GRA/_modaladdgra.html.twig' %}
 {% include 'Admin/GRA/_gotomngfromgrade.html.twig' %}
 {% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

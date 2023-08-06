@@ -2388,10 +2388,28 @@ img.part-img{
   color: var(--light-violet-80);
 }
 
-#pg-btn-save,
+#pg-gra-end-blk,
 #file-upl-loader-gra{
   visibility: hidden;
 }
+
+#pg-btn-add-gra{
+  max-width: 50%;
+  margin-bottom: 30px;
+}
+
+#gra-details-txt{
+  color: var(--main-ace-color);
+}
+
+.othg-blk-det{
+  width: 32%;
+}
+
+.othg-txta{
+  font-size: 3em;
+}
+
 .mask-pg{
   opacity: 0.2;
 }
@@ -2401,10 +2419,10 @@ img.part-img{
   color: white;
 }
 .ok-txtar{
-  background-color: #e0ffe8;
+  background-color: #f4fff7;
 }
 .rev-txtar{
-  color: rgb(194, 0, 0);
+  color: rgb(72 146 17);
 }
 
 #loader-block-gra{
