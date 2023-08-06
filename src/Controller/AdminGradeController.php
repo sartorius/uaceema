@@ -651,6 +651,9 @@ class AdminGradeController extends AbstractController{
           $param_jsondata = json_decode($request->request->get('loadGradeData'), true);
           $param_jsondata_othgra = json_decode($request->request->get('loadOtherGradeData'), true);
 
+          $param_crossbookmark = $request->request->get('crossBookmark');
+          $param_browser = $request->request->get('browser');
+
           //echo $param_jsondata[0]['username'];
           // INSERT INTO uac_gra_grade (master_id, user_id, operation, grade) VALUES (1, 1, 'CRE', 18.5);
           /*
@@ -697,6 +700,7 @@ class AdminGradeController extends AbstractController{
 
           // NEW > LOA > FED > END -- CAN
           $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
+                                    . " cross_bookmark = '" . $param_crossbookmark . "', cross_browser = '" . $param_browser . "', "
                                     . " avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = " . $param_master_id . " and ugg.gra_status = 'P') "
                                     . " WHERE id = " . $param_master_id . " ; ";
           $logger->debug("-- query_update_master: " . $query_update_master);
@@ -752,6 +756,8 @@ class AdminGradeController extends AbstractController{
           $param_jsondata = json_decode($request->request->get('loadReviewData'), true);
           $param_jsondata_othgra = json_decode($request->request->get('loadOtherGradeData'), true);
 
+          $param_crossbookmark = $request->request->get('crossBookmark');
+          $param_browser = $request->request->get('browser');
 
           $dbconnectioninst = DBConnectionManager::getInstance();
 
@@ -798,6 +804,7 @@ class AdminGradeController extends AbstractController{
 
           // NEW > LOA > FED > END -- CAN
           $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
+                                    . " cross_bookmark = '" . $param_crossbookmark . "', cross_browser = '" . $param_browser . "', "
                                     . " avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = " . $param_master_id . " and ugg.gra_status = 'P') "
                                     . " WHERE id = " . $param_master_id . " ; ";
           $logger->debug("-- query_update_master: " . $query_update_master);
@@ -991,7 +998,12 @@ class AdminGradeController extends AbstractController{
             $logger->debug("managergraexam - Firstname: " . $_SESSION["firstname"]);
             
 
-
+            if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+                $edit_access = 'Y';
+            }
+            else{
+                $edit_access = 'N';
+            }
             
             $result_all_ugm = $dbconnectioninst->query($query_all_ugm)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_all_ugm: " . count($result_all_ugm));
@@ -1001,6 +1013,7 @@ class AdminGradeController extends AbstractController{
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'edit_access' => $edit_access,
                                                                     'confirm_cancel_id' => $confirm_cancel_id,
                                                                     'create_grades_master_id' => $create_grades_master_id,
                                                                     'review_grades_master_id' => $review_grades_master_id,

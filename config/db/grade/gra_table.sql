@@ -126,6 +126,8 @@ SELECT
        UPPER(vcc.short_classe)
      )) AS raw_data
 FROM uac_gra_grade ugg
+JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
+                        AND ugm.status NOT IN ('CAN')
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id
 JOIN v_class_cohort vcc ON vcc.id = VSH.COHORT_ID;
 
@@ -144,5 +146,6 @@ SELECT
 	urs.credit AS URS_CREDIT
 FROM uac_gra_grade ugg
 JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
+                        AND ugm.status NOT IN ('CAN')
 JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id;

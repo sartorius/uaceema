@@ -207,7 +207,13 @@ function loadAllExamGrid(){
               return '<i class="icon-trash"></i>';
             }
             else{
-              return '<button class="btn btn-dark tg-del"><i class="icon-trash-o"></i></button>';
+              if(EDIT_ACCESS == 'Y'){
+                return '<button class="btn btn-dark tg-del"><i class="icon-trash-o"></i></button>';
+              }
+              else{
+                return '&nbsp;';
+              }
+              
             }
           }
         }
@@ -249,7 +255,10 @@ function loadAllExamGrid(){
             if( (args.item.UGM_STATUS == 'LOA')
                   || (args.item.UGM_STATUS == 'FED')
               ){
-                goToEXAMForGradeFromGraMngr(args.item.UGM_ID);
+                if(EDIT_ACCESS == 'Y'){
+                  goToEXAMForGradeFromGraMngr(args.item.UGM_ID);
+                }
+                // We do nothing if were have not access right
             }
             else if(args.item.UGM_STATUS == 'END'){
                 goToEXAMForReadOnlyFromGraMngr(args.item.UGM_ID);

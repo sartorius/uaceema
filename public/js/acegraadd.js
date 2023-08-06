@@ -7,6 +7,8 @@ function generategradetoexamDB(){
           masterId: POST_MASTER_ID,
           loadGradeData: JSON.stringify(dataAllUSRToJsonArray),
           loadOtherGradeData: JSON.stringify(addMoreDataOtherUSRToJsonArray),
+          crossBookmark: snapshotCurrentParamImg(),
+          browser: getBrowserId(),
           token : GET_TOKEN
         },  // data to submit
         success: function (data, status, xhr) {
@@ -34,6 +36,8 @@ function generatereviewexamDB(){
           masterId: POST_MASTER_ID,
           loadReviewData: JSON.stringify(updateDataAllUSRToJsonArray),
           loadOtherGradeData: JSON.stringify(addMoreDataOtherUSRToJsonArray),
+          crossBookmark: snapshotCurrentParamImg(),
+          browser: getBrowserId(),
           token : GET_TOKEN
         },  // data to submit
         success: function (data, status, xhr) {
