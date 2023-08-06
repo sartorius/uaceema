@@ -142,7 +142,7 @@ function addOtherGradeEnd(){
 }
 
 function mngAddOtherGraUserExists(val){
-    //CARIZOU151 BEBIMAM925 STEVAND135
+    //CARIZOU151 BEBIMAM925 STEVAND135 CHRIHER744
     for (let i = 0; i < dataAllOtherMentionUSRToJsonArray.length; i++) {
       if (dataAllOtherMentionUSRToJsonArray[i].VSH_USERNAME === val){
         
@@ -336,6 +336,10 @@ function fillStudent(paramPage){
     //Need to fill the last page
     if(paramPage == (parseInt(PAGE_MAX) - 1)){
         
+        //If we have more we display on last page
+        for(let m=paramPageLimit; m<dataAllUSRToJsonArray.length; m++ ){
+            strTable = strTable + fillUnitaryPageStudent(m, dataAllUSRToJsonArray, classEdit, 'N');
+        }
         //We are on the last page !!!
         // Need to fill with addMoreDataOtherUSRToJsonArray
         for(let k=0; k<addMoreDataOtherUSRToJsonArray.length; k++){
