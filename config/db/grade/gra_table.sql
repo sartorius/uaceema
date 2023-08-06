@@ -157,9 +157,21 @@ SELECT
 	urs.mention_code AS URS_MENTION_CODE,
 	urs.niveau_code AS URS_NIVEAU_CODE,
 	 urs.semester AS URS_SEMESTER,
-   CONCAT(urs.mention_code, urs.niveau_code, urs.semester) AS raw_data,
+   UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester)) AS raw_data,
 	 count(1) AS URS_CPT
 FROM uac_gra_master ugm JOIN uac_ref_subject urs ON urs.id = ugm.subject_id
 												 AND ugm.status IN ('END')
 GROUP BY urs.mention_code, urs.niveau_code, urs.semester, CONCAT(urs.mention_code, urs.niveau_code, urs.semester)
 ORDER BY raw_data;
+
+
+DROP VIEW IF EXISTS v_ref_subject;
+CREATE VIEW v_ref_subject AS
+select
+	urs.mention_code AS URS_MENTION_CODE,
+	urs.niveau_code AS URS_NIVEAU_CODE,
+	urs.semester AS URS_SEMESTER,
+	fEscapeStr(urs.subject_title) AS URS_SUBJECT_TITLE,
+	urs.credit AS URS_CREDIT,
+	UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester, fEscapeStr(urs.subject_title))) AS raw_data
+from uac_ref_subject urs ORDER BY CONCAT(urs.mention_code, urs.niveau_code, urs.semester);

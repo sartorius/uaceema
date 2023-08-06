@@ -1028,7 +1028,7 @@ class AdminGradeController extends AbstractController{
         return new Response($content);
     }
 
-    public function managergragrade(Environment $twig, LoggerInterface $logger)
+    public function managergramention(Environment $twig, LoggerInterface $logger)
     {
 
         if (session_status() == PHP_SESSION_NONE) {
@@ -1050,12 +1050,21 @@ class AdminGradeController extends AbstractController{
             $result_query_all_mention_grade = $dbconnectioninst->query($query_all_mention_grade)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_all_mention_niv: " . count($result_query_all_mention_grade));
 
-            $content = $twig->render('Admin/gra/managergragrade.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+            $query_all_subject = " SELECT * FROM v_ref_subject; ";
+            $logger->debug("query_all_subject: " . $query_all_subject);
+            $logger->debug("managergragrade - Firstname: " . $_SESSION["firstname"]);
+            
+            $result_query_all_subject = $dbconnectioninst->query($query_all_subject)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_all_subject: " . count($result_query_all_subject));
+
+            
+            $content = $twig->render('Admin/gra/managergramention.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
-                                                                    'result_query_all_mention_niv' => $result_query_all_mention_grade,
+                                                                    'result_query_all_mention_grade' => $result_query_all_mention_grade,
+                                                                    'result_query_all_subject' => $result_query_all_subject,
                                                                     'errtype' => '']);
         }
         else{
