@@ -6,6 +6,7 @@ function generategradetoexamDB(){
           agentId: AGENT_ID,
           masterId: POST_MASTER_ID,
           loadGradeData: JSON.stringify(dataAllUSRToJsonArray),
+          loadOtherGradeData: JSON.stringify(addMoreDataOtherUSRToJsonArray),
           token : GET_TOKEN
         },  // data to submit
         success: function (data, status, xhr) {
@@ -32,6 +33,7 @@ function generatereviewexamDB(){
           agentId: AGENT_ID,
           masterId: POST_MASTER_ID,
           loadReviewData: JSON.stringify(updateDataAllUSRToJsonArray),
+          loadOtherGradeData: JSON.stringify(addMoreDataOtherUSRToJsonArray),
           token : GET_TOKEN
         },  // data to submit
         success: function (data, status, xhr) {
@@ -140,7 +142,7 @@ function addOtherGradeEnd(){
 }
 
 function mngAddOtherGraUserExists(val){
-    //CARIZOU151 BEBIMAM925
+    //CARIZOU151 BEBIMAM925 STEVAND135
     for (let i = 0; i < dataAllOtherMentionUSRToJsonArray.length; i++) {
       if (dataAllOtherMentionUSRToJsonArray[i].VSH_USERNAME === val){
         
@@ -239,7 +241,7 @@ function showPopUpAddGrade(){
 // ********************************************************************************************************************
 // ********************************************************************************************************************
 
-function fillUnitaryPageStudent(paramIndex, paramArray, classEdit){
+function fillUnitaryPageStudent(paramIndex, paramArray, classEdit, isOthGraList){
     let tempStrTable = '';
     let existingInputGra = '';
     let highlightClassExisting = '';
@@ -261,7 +263,12 @@ function fillUnitaryPageStudent(paramIndex, paramArray, classEdit){
     }
     
     tempStrTable = tempStrTable + '<tr>' ;
-    tempStrTable = tempStrTable + '<td class="c-t1"><textarea id="gr' + paramIndex + '" name="gr' + paramIndex + '" rows="1" class="gra-txta ' + highlightClassDirty + ' '+ highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + paramIndex + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
+    if(isOthGraList == 'Y'){
+        tempStrTable = tempStrTable + '<td><i class="oth-grtd uac-step">' + existingInputGra + '</i></td>';
+    }
+    else{
+        tempStrTable = tempStrTable + '<td class="c-t1"><textarea id="gr' + paramIndex + '" name="gr' + paramIndex + '" rows="1" class="gra-txta ' + highlightClassDirty + ' '+ highlightClassExisting + ' ' + classEdit + '" cols="4" onkeyup="validateInputGra(event,' + paramIndex + ')" placeholder="0">' + existingInputGra + '</textarea></td>';
+    }
     tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_FIRSTNAME.substring(0, maxLengthTable) + '</td>';
     tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_LASTNAME.substring(0, maxLengthTable) + '</td>';
     tempStrTable = tempStrTable + '<td>' + paramArray[paramIndex].VSH_USERNAME + '</td>';
@@ -321,7 +328,7 @@ function fillStudent(paramPage){
         strTable = strTable + '<td>' + (parseInt(i) + 1) + '</td>';
         strTable = strTable + '</tr>';
         */
-        strTable = strTable + fillUnitaryPageStudent(i, dataAllUSRToJsonArray, classEdit);
+        strTable = strTable + fillUnitaryPageStudent(i, dataAllUSRToJsonArray, classEdit, 'N');
     };
 
     
@@ -332,7 +339,7 @@ function fillStudent(paramPage){
         //We are on the last page !!!
         // Need to fill with addMoreDataOtherUSRToJsonArray
         for(let k=0; k<addMoreDataOtherUSRToJsonArray.length; k++){
-            strTable = strTable + fillUnitaryPageStudent(k, addMoreDataOtherUSRToJsonArray, classEdit);
+            strTable = strTable + fillUnitaryPageStudent(k, addMoreDataOtherUSRToJsonArray, classEdit, 'Y');
         }
 
 

@@ -2425,6 +2425,12 @@ img.part-img{
   color: rgb(72 146 17);
 }
 
+.oth-grtd{
+  background-color: #0000d3;
+  color:white;
+  font-size: 1.3em;
+}
+
 #loader-block-gra{
   visibility: hidden;
 }

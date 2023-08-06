@@ -649,9 +649,11 @@ class AdminGradeController extends AbstractController{
           $param_master_id = $request->request->get('masterId');
           // Load the complicated collection
           $param_jsondata = json_decode($request->request->get('loadGradeData'), true);
+          $param_jsondata_othgra = json_decode($request->request->get('loadOtherGradeData'), true);
 
           //echo $param_jsondata[0]['username'];
           // INSERT INTO uac_gra_grade (master_id, user_id, operation, grade) VALUES (1, 1, 'CRE', 18.5);
+          /*
           $query_value = 'INSERT IGNORE INTO uac_gra_grade (master_id, user_id, operation, grade, gra_status) VALUES (';
           $first_comma = '';
           foreach ($param_jsondata as $read)
@@ -666,8 +668,10 @@ class AdminGradeController extends AbstractController{
                 $first_comma = ', (';
           }
           $query_value = $query_value . ';';
+          */
 
-          sleep(2);
+          $query_value = $this->getInsertQueryGraGra($param_master_id, $param_jsondata, 'CRE', $logger);
+          sleep(1);
 
 
           //echo $param_jsondata[0]['username'];
@@ -680,6 +684,16 @@ class AdminGradeController extends AbstractController{
 
           $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
           $logger->debug("-- We have insert the lines");
+
+          if(count($param_jsondata_othgra) > 0){
+                //We need to take care of the other data
+                $query_value_othgra = $this->getInsertQueryGraGra($param_master_id, $param_jsondata_othgra, 'OTH', $logger);
+                sleep(1);
+                $logger->debug("generategradetoexamDB - Show me query_value_othgra: " . $query_value_othgra);
+                $dbconnectioninst->query($query_value_othgra)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("-- We have insert the lines OTHER");
+          }
+
 
           // NEW > LOA > FED > END -- CAN
           $query_update_master = "UPDATE uac_gra_master SET status = 'FED', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
@@ -736,6 +750,9 @@ class AdminGradeController extends AbstractController{
           $param_master_id = $request->request->get('masterId');
           // Load the complicated collection
           $param_jsondata = json_decode($request->request->get('loadReviewData'), true);
+          $param_jsondata_othgra = json_decode($request->request->get('loadOtherGradeData'), true);
+
+
           $dbconnectioninst = DBConnectionManager::getInstance();
 
           // We do not do any update if there is no data to update
@@ -768,6 +785,15 @@ class AdminGradeController extends AbstractController{
   
             $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("-- We have updated the lines");
+          }
+
+          if(count($param_jsondata_othgra) > 0){
+                //We need to take care of the other data
+                $query_value_othgra = $this->getInsertQueryGraGra($param_master_id, $param_jsondata_othgra, 'OTH', $logger);
+                sleep(1);
+                $logger->debug("generategradetoexamDB - Show me query_value_othgra: " . $query_value_othgra);
+                $dbconnectioninst->query($query_value_othgra)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("-- We have insert the lines OTHER");
           }
 
           // NEW > LOA > FED > END -- CAN
@@ -851,6 +877,26 @@ class AdminGradeController extends AbstractController{
         $logger->debug("result_get_token: " . $result_get_start_master_query[0]["INV_GRA_MASTER_ID"]);
     
         return $result_get_start_master_query[0]["INV_GRA_MASTER_ID"];
+    }
+
+    private function getInsertQueryGraGra($param_master_id, $param_array, $param_operation, LoggerInterface $logger){
+        $temp_query = '';
+
+        $temp_query = 'INSERT IGNORE INTO uac_gra_grade (master_id, user_id, operation, grade, gra_status) VALUES (';
+          $first_comma = '';
+          foreach ($param_array as $read)
+          {
+                if(($read['HID_GRA'] == 'A')
+                    || ($read['HID_GRA'] == 'E')){
+                    $temp_query = $temp_query . $first_comma . $param_master_id . ',' . $read['VSH_ID'] . ",'" . $param_operation . "',0,'" . $read['HID_GRA'] . "')";
+                }
+                else{
+                    $temp_query = $temp_query . $first_comma . $param_master_id . ',' . $read['VSH_ID'] . ",'" . $param_operation . "'," . $read['HID_GRA'] . ",'P')";
+                }
+                $first_comma = ', (';
+          }
+        $temp_query = $temp_query . ';';
+        return $temp_query;
     }
 
     private function generateLoadGra($param_master_id, $param_path, $param_filename, $param_page_i, $browser, $nbr_page, LoggerInterface $logger){
