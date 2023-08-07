@@ -2511,3 +2511,20 @@ img.part-img{
   color: #0000d3;
   font-style: normal;
 }
+
+.head-prim{
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.prim-w{
+  max-width: 60px !important;
+}
+
+.gra-c{
+  text-align: center;
+}
+
+.head-prim-line{
+  height: 210px;
+}

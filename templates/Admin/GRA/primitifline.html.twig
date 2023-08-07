@@ -1,0 +1,77 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% include 'Admin/GRA/_addprimitifstyle.html.twig' %}
+{% if result_query_all_primitif_line is defined and result_query_all_primitif_line is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataPrimitifLineToJsonArray = JSON.parse('{{ result_query_all_primitif_line | json_encode | raw }}');
+    // We init here the filter value
+	let filtereddataPrimitifLineToJsonArray = Array.from(dataPrimitifLineToJsonArray);
+
+    const NBR_EXAM = {{ nbr_exam }};
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataPrimitifLineToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">lin-pri</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Primitif : {{ vcc_shortclass }}</h2>
+    <div class="mgs-note-banner">
+      Somme des crédits : <i id="sum-cred">x</i><br>
+      Nombre d'étudiant(s) : <i id="nbr-fil-et">x</i> sur <i id="nbr-all-et">x</i>.
+    </div>
+    <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-pri" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-pri" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="generateAllExamCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-3">
+
+  </div>
+
+
+  <div class="col-3">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="main-pri">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+{% include 'RawTemplate/SPE/_footer.w.grapriman.jsgrid.mgchart.html.twig' %}

@@ -1,4 +1,120 @@
 
+function initAllExamGrid(){
+  $('#filter-all-pri').keyup(function() {
+    filterDataAllPri();
+  });
+  $('#re-init-dash-pri').click(function() {
+    $('#filter-all-pri').val('');
+    clearDataAllPri();
+  });
+}
+
+ 
+
+function filterDataAllPri(){
+  if(($('#filter-all-pri').val().length > 1) && ($('#filter-all-pri').val().length < 35)){
+    //console.log('We need to filter !' + $('#filter-all').val());
+    //console.log('in : filterDataAllPri');
+    filtereddataPrimitifLineToJsonArray = dataPrimitifLineToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-all-pri').val().toUpperCase())
+                                  });
+    loadPrimitifMain();
+  }
+  else if(($('#filter-all-pri').val().length < 2)) {
+    // We clear data
+    clearDataAllPri();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+function clearDataAllPri(){
+  filtereddataPrimitifLineToJsonArray = Array.from(dataPrimitifLineToJsonArray);
+  
+  loadPrimitifMain();
+};
+
+
+function loadPrimitifMain(){
+    //console.log('in : loadPrimitifMain');
+    let tabStr = '<table>';
+
+    const EMPTY_HEAD_PRELINE_SUBJ = '<tr class="head-prim-line"><th></th><th></th><th></th><th></th>';
+    const EMPTY_HEAD_PRELINE = '<th></th><th></th><th></th><th style="text-align: right;">';
+
+    // Line of subject
+
+    // Line of semester
+    let headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Semestre' + '</th>';
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_SEMESTER + '</th>';
+    }
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    // Line of Reference
+    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + '#' + '</th>';
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_ID + '</th>';
+    }
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    headerStr = EMPTY_HEAD_PRELINE_SUBJ;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='head-prim' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_TITLE.substr(0, 25) + '</th>';
+    }
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    // Line of credit
+    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Crédit' + '</th>';
+    let sumCredit = 0;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + '</th>';
+      sumCredit = sumCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
+    }
+    $('#sum-cred').html(sumCredit/10);
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    // Line of credit
+    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Moyenne' + '</th>';
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGG_AVG + '</th>';
+    }
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    // Line of date
+    headerStr = "<tr style='border-bottom: 2.5px solid black;'>" + EMPTY_HEAD_PRELINE + 'Date' + '</th>';
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGM_DATE + '</th>';
+    }
+    headerStr += '</tr>';
+    tabStr += headerStr;
+
+    let i=0;
+    while (i<filtereddataPrimitifLineToJsonArray.length){
+      //We read student per student
+      let lineStr = '';
+      lineStr += "<tr><td style='width: 100px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + "</td><td style='width: 200px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + "</td>";
+      for(let j=(0 + i); j<(NBR_EXAM + i); j++){
+        lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
+      }
+      lineStr += "</tr>";
+      tabStr += lineStr;
+
+      // END OF WHILE
+      i = i+NBR_EXAM;
+    }
+
+    tabStr += '</table>';
+    $('#main-pri').html(tabStr);
+
+    $('#nbr-fil-et').html(filtereddataPrimitifLineToJsonArray.length/NBR_EXAM);
+}
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
@@ -179,14 +295,6 @@ function loadAllNivGrid(){
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
-        { name: "URS_SEMESTER",
-          title: "Sem.",
-          type: "text",
-          width: 10,
-          align: "center",
-          headercss: "cell-ref-uac-sm-hd",
-          css: "cell-ref-uac-sm"
-        },
         { name: "VCC_SHORTCLASS",
           title: "Classe",
           type: "text",
@@ -221,7 +329,9 @@ function loadAllNivGrid(){
         data: filtereddataAllPrimitifToJsonArray,
         fields: refNivField,
         rowClick: function(args){
-          // Do something
+            // Do something
+            $('#loading').show(50);
+            goToPrimitif(args.item.VCC_ID, args.item.VCC_SHORTCLASS, args.item.URS_CPT);
         }
     });
 
@@ -229,6 +339,13 @@ function loadAllNivGrid(){
     $('#count-niv').html(filtereddataAllPrimitifToJsonArray.length);
 }
 
+
+function goToPrimitif(paramId, paramName, paramNbrExam){
+  $("#vcc-id").val(paramId);
+  $("#vcc-shortclass").val(paramName);
+  $("#nbrExam").val(paramNbrExam);
+  $("#mg-goto-primitif-line").submit();
+}
 
 // ***************************************************************************************
 $(document).ready(function() {
@@ -240,8 +357,14 @@ $(document).ready(function() {
       initAllSubGrid();
       loadAllSubGrid();
     }
+    else if($('#mg-graph-identifier').text() == 'lin-pri'){
+      //Do nothing
+      console.log('In lin-pri');
+      $('#nbr-all-et').html(dataPrimitifLineToJsonArray.length/NBR_EXAM);
+      initAllExamGrid();
+      loadPrimitifMain();
+    }
     else{
       //Do nothing
     }
-  
 });

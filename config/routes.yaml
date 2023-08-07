@@ -205,3 +205,6 @@ readonlyexam:
 managerprimitif:
     path:       /managerprimitif
     controller: App\Controller\AdminGradeController::managerprimitif
+primitifline:
+    path:       /primitifline
+    controller: App\Controller\AdminGradeController::primitifline

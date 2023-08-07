@@ -1074,6 +1074,78 @@ class AdminGradeController extends AbstractController{
         return new Response($content);
     }
 
+
+
+
+    public function primitifline(Environment $twig, LoggerInterface $logger)
+    {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        $logger->debug("scale_right: " . $scale_right);
+        // Anyone can access to the manager but only limited people can input the date
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+            $is_class_valid = false;
+            $vcc_id = 0;
+            $vcc_shortclass = '';
+            $nbr_exam = 0;
+            if(isset($_POST["vcc-id"])){
+                if(intval($_POST["vcc-id"]) > 0){
+                    $vcc_id = intval($_POST["vcc-id"]);
+                    $is_class_valid = true;
+                }
+            }
+            if(isset($_POST["vcc-shortclass"])){
+                $vcc_shortclass = $_POST["vcc-shortclass"];
+                $is_class_valid = true;
+            }
+            else{
+                $is_class_valid = false;
+            }
+
+            if(isset($_POST["nbrExam"])){
+                if(intval($_POST["nbrExam"]) > 0){
+                    $nbr_exam = intval($_POST["nbrExam"]);
+                    $is_class_valid = true;
+                }
+            }
+
+            if(!$is_class_valid){
+                $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+            }
+            else{
+                $dbconnectioninst = DBConnectionManager::getInstance();
+                
+                $query_all_primitif_line = " SELECT * FROM v_primitif_line WHERE VSH_COHORT_ID = " . $vcc_id . "; ";
+                $logger->debug("query_all_primitif_line: " . $query_all_primitif_line);
+                $logger->debug("primitifline - Firstname: " . $_SESSION["firstname"]);
+                
+                $result_query_all_primitif_line = $dbconnectioninst->query($query_all_primitif_line)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me result_query_all_primitif_line: " . count($result_query_all_primitif_line));
+                
+                $content = $twig->render('Admin/gra/primitifline.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                        'firstname' => $_SESSION["firstname"],
+                                                                        'lastname' => $_SESSION["lastname"],
+                                                                        'id' => $_SESSION["id"],
+                                                                        'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                        'result_query_all_primitif_line' => $result_query_all_primitif_line,
+                                                                        'vcc_shortclass' => $vcc_shortclass,
+                                                                        'nbr_exam' => $nbr_exam,
+                                                                        'errtype' => '']);
+            }
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
     public function readonlyexam(Environment $twig, LoggerInterface $logger)
     {
 
