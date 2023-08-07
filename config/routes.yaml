@@ -202,6 +202,6 @@ generatereviewexamDB:
 readonlyexam:
     path:       /readonlyexam
     controller: App\Controller\AdminGradeController::readonlyexam
-managergramention:
-    path:       /managergramention
-    controller: App\Controller\AdminGradeController::managergramention
+managerprimitif:
+    path:       /managerprimitif
+    controller: App\Controller\AdminGradeController::managerprimitif

@@ -315,15 +315,23 @@ function loadOneExamGrid(){
         { name: "VSH_USERNAME",
           title: "Username",
           type: "text",
-          width: 45,
+          width: 47,
           align: "left",
           headercss: "cell-ref-uac-sm-hd",
-          css: "cell-ref-uac-sm"
+          css: "cell-ref-uac-sm",
+          itemTemplate: function(value, item) {
+            if(item.TECH_OPERATION == 'OTH'){
+              return '<i class="blue-txt">' + value + '</i>';
+            }
+            else{
+              return value;
+            }
+          }
         },
         { name: "VSH_FIRSTNAME",
           title: "Prénom",
           type: "text",
-          width: 45,
+          width: 47,
           align: "left",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
@@ -334,7 +342,7 @@ function loadOneExamGrid(){
         { name: "VSH_LASTNAME",
           title: "Nom",
           type: "text",
-          width: 90,
+          width: 92,
           align: "left",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",

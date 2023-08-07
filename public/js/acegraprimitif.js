@@ -1,3 +1,24 @@
+
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************              MANAGER            ***************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+// ******************************************************************************************************************************
+
 function initAllSubGrid(){
     $('#filter-all-sub').keyup(function() {
         filterDataAllSub();
@@ -119,7 +140,7 @@ function initAllNivGrid(){
 function filterDataAllNiv(){
     if(($('#filter-all-niv').val().length > 1) && ($('#filter-all-niv').val().length < 35)){
       //console.log('We need to filter !' + $('#filter-all').val());
-      filtereddataAllMentionGradeToJsonArray = dataAllMentionGradeToJsonArray.filter(function (el) {
+      filtereddataAllPrimitifToJsonArray = dataAllPrimitifToJsonArray.filter(function (el) {
                                         return el.raw_data.includes($('#filter-all-niv').val().toUpperCase())
                                     });
         loadAllNivGrid();
@@ -134,7 +155,7 @@ function filterDataAllNiv(){
 }
   
 function clearDataAllNiv(){
-    filtereddataAllMentionGradeToJsonArray = Array.from(dataAllMentionGradeToJsonArray);
+    filtereddataAllPrimitifToJsonArray = Array.from(dataAllPrimitifToJsonArray);
     
     loadAllNivGrid();
 };
@@ -145,21 +166,29 @@ function loadAllNivGrid(){
         { name: "URS_MENTION_CODE",
           title: "Mention",
           type: "text",
-          width: 30,
+          width: 20,
           align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_NIVEAU_CODE",
-          title: "Niveau",
+          title: "Niv.",
           type: "text",
-          width: 30,
+          width: 10,
           align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_SEMESTER",
-          title: "Semestre",
+          title: "Sem.",
+          type: "text",
+          width: 10,
+          align: "center",
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm"
+        },
+        { name: "VCC_SHORTCLASS",
+          title: "Classe",
           type: "text",
           width: 30,
           align: "center",
@@ -189,7 +218,7 @@ function loadAllNivGrid(){
 
         sorting: true,
         paging: true,
-        data: filtereddataAllMentionGradeToJsonArray,
+        data: filtereddataAllPrimitifToJsonArray,
         fields: refNivField,
         rowClick: function(args){
           // Do something
@@ -197,13 +226,13 @@ function loadAllNivGrid(){
     });
 
     // Update the count
-    $('#count-niv').html(filtereddataAllMentionGradeToJsonArray.length);
+    $('#count-niv').html(filtereddataAllPrimitifToJsonArray.length);
 }
 
 
 // ***************************************************************************************
 $(document).ready(function() {
-    if($('#mg-graph-identifier').text() == 'man-men'){
+    if($('#mg-graph-identifier').text() == 'man-pri'){
       // Do something
       initAllNivGrid();
       loadAllNivGrid();

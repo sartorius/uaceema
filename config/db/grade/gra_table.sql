@@ -150,20 +150,21 @@ JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
 JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id;
 
-
-DROP VIEW IF EXISTS v_mention_grade;
-CREATE VIEW v_mention_grade AS
+DROP VIEW IF EXISTS v_primitif_niv;
+CREATE VIEW v_primitif_niv AS
 SELECT
 	urs.mention_code AS URS_MENTION_CODE,
 	urs.niveau_code AS URS_NIVEAU_CODE,
 	 urs.semester AS URS_SEMESTER,
-   UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester)) AS raw_data,
+	 vcc.short_classe AS VCC_SHORTCLASS,
+   UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester, vcc.short_classe)) AS raw_data,
 	 count(1) AS URS_CPT
 FROM uac_gra_master ugm JOIN uac_ref_subject urs ON urs.id = ugm.subject_id
 												 AND ugm.status IN ('END')
-GROUP BY urs.mention_code, urs.niveau_code, urs.semester, CONCAT(urs.mention_code, urs.niveau_code, urs.semester)
+							 JOIN uac_xref_subject_cohort xref ON xref.subject_id = ugm.subject_id
+							 JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id
+GROUP BY urs.mention_code, urs.niveau_code, urs.semester, vcc.short_classe, UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester))
 ORDER BY raw_data;
-
 
 DROP VIEW IF EXISTS v_ref_subject;
 CREATE VIEW v_ref_subject AS
@@ -175,3 +176,22 @@ select
 	urs.credit AS URS_CREDIT,
 	UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester, fEscapeStr(urs.subject_title))) AS raw_data
 from uac_ref_subject urs ORDER BY CONCAT(urs.mention_code, urs.niveau_code, urs.semester);
+
+DROP VIEW IF EXISTS v_primitif_grade;
+CREATE VIEW v_primitif_grade AS
+SELECT
+	ugg.id AS UGG_ID,
+	ugg.master_id AS UGG_MASTER_ID,
+	ugg.user_id AS UGG_STU_ID,
+	CASE WHEN ugm.status NOT IN ('END') THEN 'X' WHEN ugg.gra_status IN ('A', 'E') THEN ugg.gra_status ELSE ugg.grade END AS UGG_GRADE,
+  IFNULL(ugm.avg_grade, '-') AS UGG_AVG,
+	ugg.operation AS TECH_OPERATION,
+	DATE_FORMAT(ugm.exam_date, "%d/%m/%Y") AS UGM_DATE,
+	CONCAT(urs.niveau_code, '/', urs.semester) AS UGM_NIV_SEM,
+	fEscapeStr(urs.subject_title) AS URS_TITLE,
+	urs.credit AS URS_CREDIT
+FROM uac_gra_grade ugg
+JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
+                        AND ugm.status NOT IN ('CAN')
+JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
+JOIN v_showuser VSH ON VSH.ID = ugg.user_id;
