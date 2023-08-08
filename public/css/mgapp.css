@@ -1649,6 +1649,13 @@ textarea[name=inputRef] {
   background-color: var(--main-ace-color) !important;
 }
 
+.cell-dark-uac-sm-hd{
+  font-size: 13px;
+  color: white;
+  font-weight: 800;
+  background-color: #343a40 !important;
+}
+
 .cell-ref-xs{
   font-size: var(--jsgrid-txt-xs);
 }
@@ -2517,8 +2524,8 @@ img.part-img{
   text-orientation: mixed;
 }
 
-.prim-w{
-  max-width: 60px !important;
+.prim-emp{
+  background-color: white;
 }
 
 .gra-c{

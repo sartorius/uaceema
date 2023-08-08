@@ -40,8 +40,8 @@ function loadPrimitifMain(){
     //console.log('in : loadPrimitifMain');
     let tabStr = '<table>';
 
-    const EMPTY_HEAD_PRELINE_SUBJ = '<tr class="head-prim-line"><th></th><th></th><th></th><th></th>';
-    const EMPTY_HEAD_PRELINE = '<th></th><th></th><th></th><th style="text-align: right;">';
+    const EMPTY_HEAD_PRELINE_SUBJ = '<tr class="head-prim-line"><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th>';
+    const EMPTY_HEAD_PRELINE = '<th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th><th style="text-align: right;">';
 
     // Line of subject
 
@@ -69,13 +69,10 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of credit
-    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Crédit' + '</th>';
-    let sumCredit = 0;
+    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + sumOfCredit/10 + '&nbsp;Crédits' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + '</th>';
-      sumCredit = sumCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
     }
-    $('#sum-cred').html(sumCredit/10);
     headerStr += '</tr>';
     tabStr += headerStr;
 
@@ -114,6 +111,96 @@ function loadPrimitifMain(){
     $('#main-pri').html(tabStr);
 
     $('#nbr-fil-et').html(filtereddataPrimitifLineToJsonArray.length/NBR_EXAM);
+}
+
+
+function generateReportPrimitive(){
+    const csvContentType = "data:text/csv;charset=utf-8,";
+    let csvContent = "";
+    const SEP_ = ";"
+
+    let dataString = "";
+
+    const EMPTY_HEAD_PRELINE_SUBJ = SEP_ + SEP_ + SEP_ + SEP_;
+    const EMPTY_HEAD_PRELINE = SEP_ + SEP_ + SEP_;
+
+    // Line of subject
+
+    // Line of semester
+    let headerStr = EMPTY_HEAD_PRELINE + 'Semestre' + SEP_;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].URS_SEMESTER + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    // Line of Reference
+    headerStr =  EMPTY_HEAD_PRELINE + '#' + SEP_;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].URS_ID + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    headerStr = EMPTY_HEAD_PRELINE_SUBJ;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].URS_TITLE.substr(0, 25) + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    // Line of credit
+    headerStr = EMPTY_HEAD_PRELINE + sumOfCredit/10 + ' Crédits' + SEP_;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    // Line of credit
+    headerStr = EMPTY_HEAD_PRELINE + 'Moyenne' + SEP_;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].UGG_AVG + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    // Line of date
+    headerStr = EMPTY_HEAD_PRELINE + 'Date' + SEP_;
+    for(let i=0; i<NBR_EXAM; i++){
+      headerStr += dataPrimitifLineToJsonArray[i].UGM_DATE + SEP_;
+    }
+    headerStr += "\n";
+    dataString += headerStr;
+
+    let i=0;
+    while (i<filtereddataPrimitifLineToJsonArray.length){
+      //We read student per student
+      let lineStr = '';
+      lineStr += filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + SEP_;
+      for(let j=(0 + i); j<(NBR_EXAM + i); j++){
+        lineStr += filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + SEP_;
+      }
+      lineStr += "\n";
+      dataString += lineStr;
+
+      // END OF WHILE
+      i = i+NBR_EXAM;
+    }
+
+    //console.log('Click on csv');
+    let encodedUri = encodeURI(dataString);
+    let csvData = new Blob([dataString], { type: csvContentType });
+
+        let link = document.createElement("a");
+    let csvUrl = URL.createObjectURL(csvData);
+
+    link.href =  csvUrl;
+    link.style = "visibility:hidden";
+    link.download = 'RapportPrimitif' + SHORT_CLASS.replaceAll('/', '_') + '.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
@@ -284,7 +371,7 @@ function loadAllNivGrid(){
           type: "text",
           width: 20,
           align: "center",
-          headercss: "cell-ref-uac-sm-hd",
+          headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_NIVEAU_CODE",
@@ -292,7 +379,7 @@ function loadAllNivGrid(){
           type: "text",
           width: 10,
           align: "center",
-          headercss: "cell-ref-uac-sm-hd",
+          headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "VCC_SHORTCLASS",
@@ -300,7 +387,7 @@ function loadAllNivGrid(){
           type: "text",
           width: 30,
           align: "center",
-          headercss: "cell-ref-uac-sm-hd",
+          headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"
         },
         { name: "URS_CPT",
@@ -308,7 +395,7 @@ function loadAllNivGrid(){
           type: "text",
           width: 30,
           align: "center",
-          headercss: "cell-ref-uac-sm-hd",
+          headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"
         }
     ];
@@ -361,6 +448,11 @@ $(document).ready(function() {
       //Do nothing
       console.log('In lin-pri');
       $('#nbr-all-et').html(dataPrimitifLineToJsonArray.length/NBR_EXAM);
+
+      // Initialise the sum of credit
+      for(let i=0; i<NBR_EXAM; i++){
+        sumOfCredit = sumOfCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
+      }
       initAllExamGrid();
       loadPrimitifMain();
     }

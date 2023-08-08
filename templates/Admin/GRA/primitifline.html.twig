@@ -9,6 +9,8 @@
 	let filtereddataPrimitifLineToJsonArray = Array.from(dataPrimitifLineToJsonArray);
 
     const NBR_EXAM = {{ nbr_exam }};
+    let sumOfCredit = 0;
+    const SHORT_CLASS = "{{ vcc_shortclass }}";
 
   </script>
 {% else %}
@@ -27,7 +29,6 @@
   <div class="col-10">
     <h2>Primitif : {{ vcc_shortclass }}</h2>
     <div class="mgs-note-banner">
-      Somme des crédits : <i id="sum-cred">x</i><br>
       Nombre d'étudiant(s) : <i id="nbr-fil-et">x</i> sur <i id="nbr-all-et">x</i>.
     </div>
     <hr>
@@ -48,7 +49,7 @@
   </div>
   <div class="col-1">
     
-    <button onclick="generateAllExamCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    <button onclick="generateReportPrimitive()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
     
   </div>
   <div class="col-3">
