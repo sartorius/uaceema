@@ -1,4 +1,4 @@
-/*
+
 
 function initAllExamGrid(){
   $('#filter-all-pri').keyup(function() {
@@ -204,7 +204,7 @@ function generateReportPrimitive(){
     document.body.removeChild(link);
 }
 
-*/
+
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
@@ -224,7 +224,7 @@ function generateReportPrimitive(){
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
 // ******************************************************************************************************************************
-/*
+
 function initAllSubGrid(){
     $('#filter-all-sub').keyup(function() {
         filterDataAllSub();
@@ -436,7 +436,7 @@ function goToPrimitif(paramId, paramName, paramNbrExam){
   $("#nbrExam").val(paramNbrExam);
   $("#mg-goto-primitif-line").submit();
 }
-*/
+
 // ***************************************************************************************
 
 $(document).ready(function() {
@@ -455,7 +455,7 @@ $(document).ready(function() {
 
       // Initialise the sum of credit
       for(let i=0; i<NBR_EXAM; i++){
-        //sumOfCredit = sumOfCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
+        sumOfCredit = sumOfCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
       }
       initAllExamGrid();
       loadPrimitifMain();
