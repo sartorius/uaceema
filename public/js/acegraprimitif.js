@@ -93,12 +93,12 @@ function loadPrimitifMain(){
     headerStr += '</tr>';
     tabStr += headerStr;
 
-    let i=0;
+    var i=0;
     while (i<filtereddataPrimitifLineToJsonArray.length){
       //We read student per student
-      let lineStr = '';
+      var lineStr = '';
       lineStr += "<tr><td style='width: 100px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + "</td><td style='width: 200px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + "</td>";
-      for(let j=(0 + i); j<(NBR_EXAM + i); j++){
+      for(var j=(0 + i); j<(NBR_EXAM + i); j++){
         lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
       }
       lineStr += "</tr>";
@@ -174,12 +174,12 @@ function generateReportPrimitive(){
     headerStr += "\n";
     dataString += headerStr;
 
-    let i=0;
+    var i=0;
     while (i<filtereddataPrimitifLineToJsonArray.length){
       //We read student per student
-      let lineStr = '';
+      var lineStr = '';
       lineStr += filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + SEP_ + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + SEP_;
-      for(let j=(0 + i); j<(NBR_EXAM + i); j++){
+      for(var j=(0 + i); j<(NBR_EXAM + i); j++){
         lineStr += filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + SEP_;
       }
       lineStr += "\n";
