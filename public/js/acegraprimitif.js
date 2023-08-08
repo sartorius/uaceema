@@ -117,7 +117,7 @@ function loadPrimitifMain(){
 function generateReportPrimitive(){
     const csvContentType = "data:text/csv;charset=utf-8,";
     let csvContent = "";
-    const SEP_ = ";"
+    const SEP_ = ";";
 
     let dataString = "";
 
