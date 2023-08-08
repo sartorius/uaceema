@@ -455,7 +455,7 @@ $(document).ready(function() {
 
       // Initialise the sum of credit
       for(let i=0; i<NBR_EXAM; i++){
-        sumOfCredit = sumOfCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
+        //sumOfCredit = sumOfCredit + parseInt(dataPrimitifLineToJsonArray[i].URS_CREDIT);
       }
       initAllExamGrid();
       loadPrimitifMain();
