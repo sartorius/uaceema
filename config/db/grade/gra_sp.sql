@@ -1,5 +1,6 @@
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('GRACSBK', 'Default cross bookmark', NULL, '1428.61/-771px/-144px/0');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRALOAD', 'Integration des notes', NULL, NULL);
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('YEARAAA', 'Yearly verbose', NULL, '2022-23');
 -- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_START_GraFlowMaster$$

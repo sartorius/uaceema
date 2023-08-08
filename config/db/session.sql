@@ -22,6 +22,13 @@ symfony server:start
 11:14:32.186 debug	Hash password: lesoleildumatin fcdb5f9e7ac599b87b31eee2833b18a2 -- ravorab367 -- id 15
 11:14:32.186 debug	Hash password: lamangueverteavecpiment bb292e40979127642d72c0018c490965 -- harvelr092 -- id 14
 
+-- Test
+11:14:32.186 debug	Hash password: lerepasdusoirpouletsauce c241d04c2cdadc35a6625b9d8192b7e2 -- ionrako617 -- id 4
+11:14:32.186 debug	Hash password: lepisode1starwarskenobi bb292e40979127642d72c0018c490965 -- tsirako227 -- id 8
+11:14:32.186 debug	Hash password: unnuagedansleciel d064a894fb8645879312b10d366cd604 -- scolari321 -- id 6
+
+
+
 -- RANITOA038 already all paid
 -- MAMINOM236
 

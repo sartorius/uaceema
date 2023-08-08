@@ -9,12 +9,14 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_subject` (
   `semester` TINYINT NULL,
   `subject_title` VARCHAR(200) NULL,
   `load_credit` VARCHAR(10) NULL,
+  `ue` TINYINT NULL,
   `credit` SMALLINT UNSIGNED NULL COMMENT 'Credit are x10',
   `teacher_name` VARCHAR(100) NULL,
   `comment` VARCHAR(100) NULL,
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
+
 
 -- INSERT INTO uac_load_subject (id, mention_code, niveau_code, classe_str, semester, subject_title, load_credit, teacher_name) VALUES (
 -- https://docs.google.com/spreadsheets/d/1y1l3fRNYpJVj9aSkpbDg4VMT0V8xVs09jvJ_ZjiAk5I/edit?usp=sharing
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_subject` (
   `niveau_code` CHAR(2) NULL,
   `semester` TINYINT UNSIGNED NULL,
   `subject_title` VARCHAR(200) NULL,
+  `ue` TINYINT NOT NULL,
   `credit` SMALLINT UNSIGNED NULL COMMENT 'Credit are x10',
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -70,5 +73,5 @@ INSERT IGNORE INTO uac_xref_subject_cohort (subject_id, cohort_id)
     uac_load_subject.id, tech_number.id;
 
 -- Insert in the main ref table
-INSERT IGNORE INTO uac_ref_subject (id, mention_code, niveau_code, semester, subject_title, credit)
-  SELECT id, mention_code, niveau_code, semester, subject_title, credit FROM uac_load_subject where status = 'NEW';
+INSERT IGNORE INTO uac_ref_subject (id, mention_code, niveau_code, semester, subject_title, credit, ue)
+  SELECT id, mention_code, niveau_code, semester, subject_title, credit, ue FROM uac_load_subject where status = 'NEW';

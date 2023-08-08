@@ -46,7 +46,7 @@ function loadPrimitifMain(){
     // Line of subject
 
     // Line of semester
-    let headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Semestre' + '</th>';
+    let headerStr = '<tr>' + '<th>' + SHORT_CLASS + '</th><th>' + YEAR + '</th><th></th><th style="text-align: right;">' + 'Semestre' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_SEMESTER + '</th>';
     }
@@ -69,7 +69,7 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of credit
-    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + sumOfCredit/10 + '&nbsp;Crédits' + '</th>';
+    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + sumOfCredit/10 + '/60&nbsp;Crédits' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + '</th>';
     }
@@ -127,7 +127,7 @@ function generateReportPrimitive(){
     // Line of subject
 
     // Line of semester
-    let headerStr = EMPTY_HEAD_PRELINE + 'Semestre' + SEP_;
+    let headerStr = SHORT_CLASS + SEP_ + YEAR + SEP_ + SEP_ + 'Semestre' + SEP_;
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_SEMESTER + SEP_;
     }
@@ -150,7 +150,7 @@ function generateReportPrimitive(){
     dataString += headerStr;
 
     // Line of credit
-    headerStr = EMPTY_HEAD_PRELINE + sumOfCredit/10 + ' Crédits' + SEP_;
+    headerStr = EMPTY_HEAD_PRELINE + sumOfCredit/10 + '/60 Crédits' + SEP_;
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + SEP_;
     }

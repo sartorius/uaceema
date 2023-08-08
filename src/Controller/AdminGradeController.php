@@ -1127,6 +1127,14 @@ class AdminGradeController extends AbstractController{
                 
                 $result_query_all_primitif_line = $dbconnectioninst->query($query_all_primitif_line)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me result_query_all_primitif_line: " . count($result_query_all_primitif_line));
+
+
+                $get_default_year_query = " SELECT par_value AS DEF_YEAR FROM uac_param WHERE key_code = 'YEARAAA'; ";
+                $logger->debug("Show me get_default_year_query: " . $get_default_year_query);
+                $result_get_default_year_query = $dbconnectioninst->query($get_default_year_query)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show me: " . $result_get_default_year_query[0]['DEF_YEAR']);
+
+                $default_year = $result_get_default_year_query[0]['DEF_YEAR'];
                 
                 $content = $twig->render('Admin/gra/primitifline.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                         'firstname' => $_SESSION["firstname"],
@@ -1136,6 +1144,7 @@ class AdminGradeController extends AbstractController{
                                                                         'result_query_all_primitif_line' => $result_query_all_primitif_line,
                                                                         'vcc_shortclass' => $vcc_shortclass,
                                                                         'nbr_exam' => $nbr_exam,
+                                                                        'default_year' => $default_year,
                                                                         'errtype' => '']);
             }
         }
