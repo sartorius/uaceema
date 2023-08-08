@@ -438,6 +438,7 @@ function goToPrimitif(paramId, paramName, paramNbrExam){
 }
 */
 // ***************************************************************************************
+
 $(document).ready(function() {
     if($('#mg-graph-identifier').text() == 'man-pri'){
       // Do something
