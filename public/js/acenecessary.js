@@ -1,6 +1,6 @@
 /***********************************************************************************************************/
 
-const GLOBAL_SEP_ = ";"
+const GLOBAL_SEP_ = ";";
 
 function removeAccentuated(param){
   return param.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
