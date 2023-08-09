@@ -99,7 +99,14 @@ function loadPrimitifMain(){
       var lineStr = '';
       lineStr += "<tr><td style='width: 100px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + "</td><td style='width: 200px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + "</td>";
       for(var j=(0 + i); j<(NBR_EXAM + i); j++){
-        lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
+        if(((filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'E')
+            || (filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'A'))
+            && (parseFloat(filtereddataPrimitifLineToJsonArray[j].UGG_GRADE) < 7)){
+          lineStr += "<td class='gra-c'  style='width: 60px;'><i class='recap-mis'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</i></td>';
+        }
+        else{
+          lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
+        }
       }
       lineStr += "</tr>";
       tabStr += lineStr;

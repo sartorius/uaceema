@@ -34,8 +34,8 @@ yui-compressor public/js/acegradash.js > public/js/acegradash.min.js;
 echo 'acegraprimitif.js';
 yui-compressor public/js/acegraprimitif.js > public/js/acegraprimitif.min.js;
 echo 'END';
-
+echo '----------------------------';
 yui-compressor public/css/mgapp.css > public/css/mgapp.min.css;
-echo 'MG CSS END';
+echo 'mgapp.css CSS END';
 yui-compressor public/css/manja.css > public/css/manja.min.css;
-echo 'Manja CSS END';
+echo 'manja.css CSS END';

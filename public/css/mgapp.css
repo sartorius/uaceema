@@ -1683,14 +1683,17 @@ textarea[name=inputRef] {
 .recap-lat{
   color: var(--main-gray-50);
   font-weight: 800;
+  font-style: normal;
 }
 .recap-vla{
   color: #000000;
   font-weight: 800;
+  font-style: normal;
 }
 .recap-mis{
   color: #E90000;
   font-weight: 800;
+  font-style: normal;
 }
 
 .recap-nex{

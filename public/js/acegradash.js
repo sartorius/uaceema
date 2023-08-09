@@ -273,7 +273,12 @@ function verboseOneGrade(paramGrade, paramStatus){
         return 'Excusé(e)';
     }
     else{
-        return paramGrade;
+        if(parseFloat(paramGrade) < 7){
+          return "<i class='recap-mis'>" + paramGrade + "</i>";
+        }
+        else{
+          return paramGrade;
+        }
     }
 }
 

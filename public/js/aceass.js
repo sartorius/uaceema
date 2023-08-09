@@ -55,7 +55,12 @@ function loadGraGrid(){
                   return 'Excusé(e)';
               }
               else{
-                return value;
+                if(parseFloat(value) < 7){
+                  return "<i class='recap-mis'>" + value + "</i>";
+                }
+                else{
+                  return value;
+                }
               }
             }
           }
@@ -91,7 +96,12 @@ function loadGraGrid(){
                         return 'Excusé(e)';
                     }
                     else{
-                      return value;
+                      if(parseFloat(value) < 7){
+                        return "<i class='recap-mis'>" + value + "</i>";
+                      }
+                      else{
+                        return value;
+                      }
                     }
                   }
                 },
