@@ -1008,7 +1008,7 @@ class AdminGradeController extends AbstractController{
             $result_all_ugm = $dbconnectioninst->query($query_all_ugm)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_all_ugm: " . count($result_all_ugm));
 
-            $content = $twig->render('Admin/gra/managergraexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+            $content = $twig->render('Admin/GRA/managergraexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
@@ -1058,7 +1058,7 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me result_query_all_subject: " . count($result_query_all_subject));
 
             
-            $content = $twig->render('Admin/gra/managerprimitif.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+            $content = $twig->render('Admin/GRA/managerprimitif.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
@@ -1136,7 +1136,7 @@ class AdminGradeController extends AbstractController{
 
                 $default_year = $result_get_default_year_query[0]['DEF_YEAR'];
                 
-                $content = $twig->render('Admin/gra/primitifline.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                $content = $twig->render('Admin/GRA/primitifline.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                         'firstname' => $_SESSION["firstname"],
                                                                         'lastname' => $_SESSION["lastname"],
                                                                         'id' => $_SESSION["id"],
@@ -1206,7 +1206,7 @@ class AdminGradeController extends AbstractController{
                 $logger->debug("Show stat_grade_rep: " . $stat_grade_rep);
                 $result_stat_grade_rep = $dbconnectioninst->query($stat_grade_rep)->fetchAll(PDO::FETCH_ASSOC);
     
-                $content = $twig->render('Admin/gra/readonlyexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                $content = $twig->render('Admin/GRA/readonlyexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                         'firstname' => $_SESSION["firstname"],
                                                                         'lastname' => $_SESSION["lastname"],
                                                                         'id' => $_SESSION["id"],
