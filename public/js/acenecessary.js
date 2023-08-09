@@ -106,7 +106,7 @@ function getVerboseExamStatus(param, isText){
   let startTagLoa = '<i class="uac-step uac-step-green">';
   let startTagRev = '<i class="uac-step uac-step-yellow">';
   let startTagEnd = '<i class="uac-step uac-step-dkblue">';
-  let endTag = '</i>'
+  let endTag = '</i>';
   if(isText ==  'Y'){
     startTagLoa = '';
     startTagRev = '';
