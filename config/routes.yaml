@@ -39,6 +39,9 @@ letsgetitstarted:
 helpfraisdescolarite:
     path:       /helpfraisdescolarite
     controller: App\Controller\TutorialController::helpfraisdescolarite
+concours:
+    path:       /concours
+    controller: App\Controller\TutorialController::concours
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login

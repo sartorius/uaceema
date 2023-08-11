@@ -1708,15 +1708,24 @@ textarea[name=inputRef] {
 .recap-val{
   color: #007e2e;
   font-weight: 800;
+  font-style: normal;
 }
 
 .recap-qui{
   color: #6600B1;
   font-weight: 800;
+  font-style: normal;
+}
+
+.recap-warn-2{
+  color: #c95e00;
+  font-weight: 800;
+  font-style: normal;
 }
 
 .cell-warn{
   color: #0000d3;
+  font-style: normal;
 }
 
 .cell-trace-hd{
@@ -2537,4 +2546,26 @@ img.part-img{
 
 .head-prim-line{
   height: 210px;
+}
+
+.i-rouge{
+  color:rgb(220, 0, 0);
+}
+.i-rose{
+  color:rgb(255, 188, 188);
+}
+.i-bleu{
+  color:rgb(0, 64, 255);
+}
+.i-orange{
+  color:rgb(255, 179, 0);
+}
+.i-jaune{
+  color:rgb(255, 234, 0);
+}
+.i-vert{
+  color:rgb(0, 168, 92);
+}
+.disp-sm{
+  font-size: 14px;
 }

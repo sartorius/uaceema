@@ -1,0 +1,130 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <img src="{{ path('main') }}img/help/banner_concours.png"
+                  title="BannerPay" alt="Banner Concours Image" class="full-banner-img">
+    <h1>Passer le concours ACEEM</h1>
+    <div class="mgs-ace-note">
+        Vous souhaitez nous rejoindre ? Vous trouvez ici toutes les informations nécessaires pour intégrer l'université ACEEM par concours.
+    </div>
+    <div class="blk-main-help">
+        <h2><span class="icon-calendar-1 nav-text"></span>&nbsp;Date de concours en 1ère Année</h2>
+        <ul>
+            <li>1ère vague : 12-13 Septembre 2023</li>
+            <li>2ème vague : 03-04 Octobre 2023</li>
+        </ul>
+    </div>
+    <div class="blk-main-help">
+        <h2><span class="icon-files nav-text"></span>&nbsp;Dossier d'inscription : pièces à fournir</h2>
+        <ul>
+            <li>04 Photos d’identité récentes</li>
+            <li>01 Demande manuscrite avec motivation</li>
+            <ul>
+                <li>à adresser à Mr Le Recteur de l’Université ACEEM</li>
+            </ul>
+            <li>01 Bulletin de naissance ou Acte de naissance</li>
+            <li>01 Certificat de résidence</li>
+            <li>01 Relevé de notes BAC et Diplôme BAC  (Photocopie certifiée)</li>
+            <li>01 Chemise cartonnée en fonction de la mention concourrue : </li>
+            <ul>
+                <li>Droit (DT) : chemise couleur rouge&nbsp;<span class="icon-square nav-text i-rouge"></span></li>
+                <li>Gestion (GE) : chemise couleur rose&nbsp;<span class="icon-square nav-text i-rose"></span></li>
+                <li>Communication (CO) : chemise couleur bleu&nbsp;<span class="icon-square nav-text i-bleu"></span></li>
+                <li>Économie (ECO) : chemise couleur orange&nbsp;<span class="icon-square nav-text i-orange"></span></li>
+                <li>Informatique & Électronique (IE) : chemise couleur jaune&nbsp;<span class="icon-square nav-text i-jaune"></span></li>
+                <li>Sciences de la Santé (SST) : chemise couleur verte&nbsp;<span class="icon-square nav-text i-vert"></span></li>
+            </ul>
+            <li>Droits de concours ou entretien : <strong>50 000 Ariary</strong> </li>
+        </ul>
+    </div>
+    <div class="blk-main-help">
+        <h2><span class="icon-clipboard-1 nav-text"></span>&nbsp;Liste des matières par concours</h2>
+        <div class="mgs-ace-note">
+            Voici la liste des épreuves que vous aurez à passer par concours
+        </div>
+        <table>
+            <tr style="border-bottom:0.5px solid">
+              <th style="min-width:330px;"><strong>Concours</strong></th>
+              <th style="min-width:330px;"><strong>Matières</strong></th>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Droit/DT</td>
+              <td class='disp-sm'>
+                • Français<br>  
+                • Malagasy<br>
+                • Histo-géo/Initiation à l'étude de droit<br>
+                • Philosophie/Économie générale<br>
+              </td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Gestion/GE</td>
+              <td class='disp-sm'>
+                • Mathématiques générales<br>  
+                • Français<br>
+                • Culture générale<br>
+                • Anglais<br>
+              </td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Communication/CO</td>
+              <td class='disp-sm'>
+                • Français<br>  
+                • Anglais<br>  
+                • Malagasy<br>
+                • Connaissances générales<br>
+              </td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Économie/ECO</td>
+              <td class='disp-sm'>
+                • Mathématiques générales<br>  
+                • Culture générale<br>
+              </td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Informatique & Électronique/IE</td>
+              <td class='disp-sm'>
+                • Mathématiques générales<br>  
+                • Physique<br>
+                • Culture générale<br>
+                • Français<br>  
+              </td>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td>Sciences de la Santé/SST</td>
+              <td class='disp-sm'>
+                • Mathématiques générales<br>  
+                • Physique-chimie<br>
+                • Biologie<br>
+                • Français<br>  
+                • Malagasy<br>  
+              </td>
+            </tr>
+          </table>
+    </div>
+    <hr>
+    <div class="blk-main-help">
+        {% set quesn = 0 %}
+        <h2><span class="icon-question-circle nav-text"></span>&nbsp;Questions fréquentes</h2>
+        <br><br>
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quelle est la différence entre la 1ère et le 2ème vague ?</h3>
+        xxx
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Organisez-vous des rencontres lycéennes en provinces ?</h3>
+        xxx
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Puis-je m'inscrire à plusieurs concours en 1ère année ?</h3>
+        xxx
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment fournir mon dossier d'inscription ?</h3>
+        xxx
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Organisez-vous des rencontres en provinces ?</h3>
+        xxx
+
+    </div>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

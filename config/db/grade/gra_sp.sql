@@ -69,3 +69,44 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+
+-- This end review is todo
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_REV_GraReviewExamEnd$$
+CREATE PROCEDURE `CLI_REV_GraReviewExamEnd` (IN param_agent_id BIGINT, IN param_master_id BIGINT, IN param_cross_bookmark VARCHAR(100), IN param_browser VARCHAR(100))
+BEGIN
+    DECLARE inv_subject_id	BIGINT;
+
+    SELECT subject_id INTO inv_subject_id FROM uac_gra_master WHERE id = param_master_id;
+    -- We have to set to 'N' all grade for the same subject id
+    -- and lower
+
+    -- Set all grade to N
+    UPDATE uac_gra_grade main_gra JOIN (
+      SELECT ugg_ref.id AS UGG_REF_ID
+      FROM uac_gra_grade ugg_ref
+			JOIN uac_gra_master ugm
+			ON ugg_ref.master_id = ugm.id
+			   AND ugm.subject_id = inv_subject_id) AS t2
+                      ON main_gra.id = t2.UGG_REF_ID
+            				  SET main_gra.to_be_used = 'N';
+
+    -- Up to the rule we need to identify the max grade :
+    -- Maximum up to session
+    -- Be carefull if we put the first grade to Max if 2 grades have Max 
+    -- The last grade ?
+    -- TO DO : set to be used for the relevant grade
+
+    -- Update the master
+    UPDATE uac_gra_master
+      SET status = 'END',
+      last_update = CURRENT_TIMESTAMP,
+      last_agent_id = param_agent_id,
+      cross_bookmark = param_cross_bookmark,
+      cross_browser = param_browser,
+      avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = param_master_id and ugg.gra_status = 'P')
+      WHERE id = param_master_id ;
+
+END$$
+-- Remove $$ for OVH

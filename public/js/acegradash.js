@@ -276,6 +276,9 @@ function verboseOneGrade(paramGrade, paramStatus){
         if(parseFloat(paramGrade) < 7){
           return "<i class='recap-mis'>" + paramGrade + "</i>";
         }
+        else if(parseFloat(paramGrade) < 10){
+          return "<i class='recap-qui'>" + paramGrade + "</i>";
+        }
         else{
           return paramGrade;
         }

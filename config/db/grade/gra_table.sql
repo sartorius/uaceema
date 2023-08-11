@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_gra_line` (
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
+
 -- INDEX be carefull
 -- *************************************************************
 -- *************************************************************
@@ -58,12 +59,13 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_gra_grade` (
   `gra_status` CHAR(1) NOT NULL DEFAULT 'P' COMMENT 'Can be P Present A Absent or E Excused',
   `operation` CHAR(3) NOT NULL,
   `grade` DECIMAL(4,2) NOT NULL DEFAULT 0,
+  `to_be_used` CHAR(1) NOT NULL DEFAULT 'N',
   `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE (`master_id`, `user_id`),
   INDEX `IDX_USER_ID` USING BTREE (`user_id`));
-
+  
 
 DROP VIEW IF EXISTS v_master_exam;
 CREATE VIEW v_master_exam AS
