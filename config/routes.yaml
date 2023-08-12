@@ -33,6 +33,9 @@ news:
 partner:
     path:       /partner
     controller: App\Controller\StaticController::partner
+calendar:
+    path:       /calendar
+    controller: App\Controller\StaticController::calendar
 letsgetitstarted:
     path:       /letsgetitstarted
     controller: App\Controller\TutorialController::letsgetitstarted

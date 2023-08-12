@@ -131,4 +131,11 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+  public function calendar(Environment $twig)
+  {
+    $content = $twig->render('Static/calendar.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+
 }
