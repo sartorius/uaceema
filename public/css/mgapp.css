@@ -307,7 +307,7 @@ h3 {
   color: var(--main-ace-color);
   padding-right: 40px;
   padding-bottom: 10px;
-  font-size: 1em;
+  font-size: 1.0em;
   font-weight: bold;
 }
 
