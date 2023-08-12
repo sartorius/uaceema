@@ -1,4 +1,5 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
+{% set i_width = 49 %}
 
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
@@ -48,12 +49,12 @@
         </div>
         <table>
             <tr style="border-bottom:0.5px solid">
-              <th style="min-width:330px;"><strong>Concours</strong></th>
-              <th style="min-width:330px;"><strong>Matières</strong></th>
+              <th style="width:{{ i_width }}%;"><strong>Concours</strong></th>
+              <th style="width:{{ i_width }}%;"><strong>Matières</strong></th>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Droit/DT</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Droit/DT</td>
+              <td class='disp-sm disp-tab'>
                 • Français<br>  
                 • Malagasy<br>
                 • Histo-géo/Initiation à l'étude de droit<br>
@@ -61,8 +62,8 @@
               </td>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Gestion/GE</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Gestion/GE</td>
+              <td class='disp-sm disp-tab'>
                 • Mathématiques générales<br>  
                 • Français<br>
                 • Culture générale<br>
@@ -70,8 +71,8 @@
               </td>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Communication/CO</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Communication/CO</td>
+              <td class='disp-sm disp-tab'>
                 • Français<br>  
                 • Anglais<br>  
                 • Malagasy<br>
@@ -79,15 +80,15 @@
               </td>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Économie/ECO</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Économie/ECO</td>
+              <td class='disp-sm disp-tab'>
                 • Mathématiques générales<br>  
                 • Culture générale<br>
               </td>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Informatique & Électronique/IE</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Informatique & Électronique/IE</td>
+              <td class='disp-sm disp-tab'>
                 • Mathématiques générales<br>  
                 • Physique<br>
                 • Culture générale<br>
@@ -95,8 +96,8 @@
               </td>
             </tr>
             <tr style="border-bottom:0.5px solid">
-              <td>Sciences de la Santé/SST</td>
-              <td class='disp-sm'>
+              <td class='disp-sm disp-tab'>Sciences de la Santé/SST</td>
+              <td class='disp-sm disp-tab'>
                 • Mathématiques générales<br>  
                 • Physique-chimie<br>
                 • Biologie<br>
@@ -106,7 +107,6 @@
             </tr>
           </table>
     </div>
-    <hr>
     <div class="blk-main-help">
         {% set quesn = 0 %}
         <h2><span class="icon-question-circle nav-text"></span>&nbsp;Questions fréquentes</h2>
