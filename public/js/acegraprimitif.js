@@ -107,7 +107,7 @@ function loadPrimitifMain(){
         else if(((filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'E')
             || (filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'A'))
             && (parseFloat(filtereddataPrimitifLineToJsonArray[j].UGG_GRADE) < 10)){
-          lineStr += "<td class='gra-c'  style='width: 60px;'><i class='recap-warn-2'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</i></td>';
+          lineStr += "<td class='gra-c'  style='width: 60px;'><i class='recap-qui'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</i></td>';
         }
         else{
           lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';

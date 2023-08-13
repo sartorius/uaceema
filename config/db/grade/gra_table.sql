@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_gra_grade` (
   PRIMARY KEY (`id`),
   UNIQUE (`master_id`, `user_id`),
   INDEX `IDX_USER_ID` USING BTREE (`user_id`));
-  
+
 
 DROP VIEW IF EXISTS v_master_exam;
 CREATE VIEW v_master_exam AS

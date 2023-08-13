@@ -67,7 +67,10 @@ html, body {
   margin: 0;
   font-family: "Libre Franklin", "Helvetica Neue", helvetica, arial, sans-serif;
 }
-
+/* I have to update for Moz */
+.form-control{
+  max-height: 40px;
+}
 .navbar-nav .dropdown-menu{
   padding-bottom: 10px;
   margin-bottom: 10px;
