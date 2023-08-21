@@ -160,7 +160,7 @@
         {% set quesn = 0 %}
         <h2><span class="icon-question-circle nav-text"></span>&nbsp;Questions fréquentes</h2>
         <br><br>
-        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment savoir quelle filière est faîte pour moi ?</h3>
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment savoir quelle mention/filière est faîte pour moi ?</h3>
         Chaque parcours est différent, il y en a forcément un fait pour vous, plus de détails sur chaque mention <a href="/mention">ici</a>.
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quelle est la différence entre la 1ère et le 2ème vague ?</h3>
         xxx
@@ -183,6 +183,10 @@
             </ul>
             <li>Envoyer l'email</li>
         </ul>
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment remplir la fiche de pré-inscription ?</h3>
+        Remplissez directement la fiche à l'ordinateur, sauvegardez-là et mettez là en pièce jointe dans l'email. Comme dans cet exemple :
+        <img src="{{ path('main') }}img/FicheInscriptionExemple.png"
+                  title="FicheInscription" alt="Fiche Inscription Image" class="full-banner-img">
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quel est le numéro Mvola pour payer les droits d'inscription ?</h3>
         Envoyez via Mvola au numéro : {{ contact_mvola }}
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;À quelle adresse email envoyer mon inscription au concours ?</h3>
