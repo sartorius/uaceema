@@ -1,5 +1,7 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
 {% set i_width = 49 %}
+{% set contact_email = 'contact@uaceem.com' %}
+{% set contact_mvola = '034 49 60 000' %}
 
 <div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
@@ -14,33 +16,80 @@
     <div class="blk-main-help">
         <h2><span class="icon-calendar-1 nav-text"></span>&nbsp;Date de concours en 1ère Année</h2>
         <ul>
-            <li>1ère vague : 12-13 Septembre 2023</li>
-            <li>2ème vague : 3-4 Octobre 2023</li>
+            <li>1ère vague : 19-20 Septembre 2023</li>
+            <li>2ème vague : à confirmer</li>
         </ul>
     </div>
     <div class="blk-main-help">
-        <h2><span class="icon-files nav-text"></span>&nbsp;Dossier d'inscription : pièces à fournir</h2>
-        Voici le dossier d'inscription à fournir pour chaque mention, plus de détails sur chaque mention <a href="/mention">ici</a>.
+        <h2><span class="icon-facebook-official nav-text"></span>&nbsp;Actualités</h2>
+        Suivez nos dernières actualités sur notre <a href="https://www.facebook.com/oniversiteaceem">Facebook</a>.
+        <table>
+            <tr style="border-bottom:0.5px solid">
+              <th style="min-width:{{ i_width }}%;"><strong>Date</strong></th>
+              <th style="min-width:{{ i_width }}%;"><strong>Rencontre</strong></th>
+            </tr>
+            <tr style="border-bottom:0.5px solid">
+              <td class='disp-sm disp-tab'>22-23-24 Août 2023</td>
+              <td class='disp-sm disp-tab'>
+              Saint Michel Amparibe
+              </td>
+            </tr>
+
+            <tr style="border-bottom:0.5px solid">
+              <td class='disp-sm disp-tab'>24-25-26 Août 2023</td>
+              <td class='disp-sm disp-tab'>
+              PLAZA Ampefiloha
+              </td>
+            </tr>
+
+            <tr style="border-bottom:0.5px solid">
+              <td class='disp-sm disp-tab'>24-25-26 Août 2023</td>
+              <td class='disp-sm disp-tab'>
+              PARVIS Analakely
+              </td>
+            </tr>
+
+            <tr style="border-bottom:0.5px solid">
+              <td class='disp-sm disp-tab'>24-25 Août 2023</td>
+              <td class='disp-sm disp-tab'>
+              FOYER Canada Anjoma - Toamasina
+              </td>
+            </tr>
+
+            <tr style="border-bottom:0.5px solid">
+              <td class='disp-sm disp-tab'>07-08 Septembre 2023</td>
+              <td class='disp-sm disp-tab'>
+              Parking Akoor' Digue
+              </td>
+            </tr>
+
+          </table>
+    </div>
+    <div class="blk-main-help">
+        <h2><span class="icon-files nav-text"></span>&nbsp;Dossier d'inscription à fournir par email</h2>
+        Pour passer le concours, vous devez nous envoyer un email avec le contenu suivant :
         <ul>
-            <li>04 Photos d’identité récentes</li>
-            <li>01 Demande manuscrite avec motivation</li>
+            <li>1 photo d’identité récente scannée</li>
+            <li>Preuve de réussite du BACC au choix :</li>
             <ul>
-                <li>à adresser à Mr Le Recteur de l’Université ACEEM</li>
-            </ul>
-            <li>01 Bulletin de naissance ou Acte de naissance</li>
-            <li>01 Certificat de résidence</li>
-            <li>01 Relevé de notes BAC et Diplôme BAC  (Photocopie certifiée)</li>
-            <li>01 Chemise cartonnée en fonction de la mention concourrue : </li>
-            <ul>
-                <li>Droit (DT) : chemise couleur rouge&nbsp;<span class="icon-square nav-text i-rouge"></span></li>
-                <li>Gestion (GE) : chemise couleur rose&nbsp;<span class="icon-square nav-text i-rose"></span></li>
-                <li>Communication (CO) : chemise couleur bleu&nbsp;<span class="icon-square nav-text i-bleu"></span></li>
-                <li>Économie (ECO) : chemise couleur orange&nbsp;<span class="icon-square nav-text i-orange"></span></li>
-                <li>Informatique & Électronique (IE) : chemise couleur jaune&nbsp;<span class="icon-square nav-text i-jaune"></span></li>
-                <li>Sciences de la Santé (SST) : chemise couleur verte&nbsp;<span class="icon-square nav-text i-vert"></span></li>
+                <li>Photo du journal scannée</li>
+                <li>Capture d'écran du message de l'opérateur</li>
+                <li>Capture d'écran site web du ministère</li>
             </ul>
             <li>Droits de concours ou entretien : <strong>50 000 Ariary</strong> </li>
+            <ul>
+                <li>Envoyez le paiement Mvola au : {{ contact_mvola }}</li>
+                <li>Nous donner <strong>la référence du paiement Mvola</strong> dans l'email</li>
+            </ul>
+            <li>La fiche de pré-inscription ci-dessous <strong>remplie</strong> </li>
+            <ul>
+                <li>Remplissez directement les informations de la fiche de pré-inscription à l'ordinateur</li>
+                <li>Renvoyez-la nous par email</li>
+            </ul>
         </ul>
+        <br>
+        {% include 'Static/_mentionupfoot.html.twig' %}
+        Enfin, envoyez via email à {{ contact_email }}
     </div>
     <div class="blk-main-help">
         <h2><span class="icon-clipboard-1 nav-text"></span>&nbsp;Liste des matières par concours</h2>
@@ -116,13 +165,49 @@
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quelle est la différence entre la 1ère et le 2ème vague ?</h3>
         xxx
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Organisez-vous des rencontres lycéennes en provinces ?</h3>
-        xxx
+        Oui, c'est indiquez sur cette page à la rubrique "Actualité" et suivez notre <a href="https://www.facebook.com/oniversiteaceem">Facebook</a>.
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Puis-je m'inscrire à plusieurs concours en 1ère année ?</h3>
         xxx
-        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment fournir mon dossier d'inscription ?</h3>
-        xxx
-        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Organisez-vous des rencontres en provinces ?</h3>
-        xxx
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quels sont les étapes pour m'inscrire ?</h3>
+        <ul>
+            <li>Réunir tous les documents demandés (photos, preuve du bacc etc.)</li>
+            <li>Payer les droits d'inscription via Mvola</li>
+            <li>Récupérer la référence de paiement Mvola</li>
+            <li>Remplir la fiche de pré-inscription</li>
+            <li>Créer l'email</li>
+            <ul>
+                <li>en indiquant dedans la référence du paiement Mvola</li>
+                <li>en attachant en pièce jointe la photo d'identité</li>
+                <li>en attachant en pièce jointe la preuve de réussite au Bacc</li>
+                <li>en attachant en pièce jointe la fiche de pré-inscription</li>
+            </ul>
+            <li>Envoyer l'email</li>
+        </ul>
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quel est le numéro Mvola pour payer les droits d'inscription ?</h3>
+        Envoyez via Mvola au numéro : {{ contact_mvola }}
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;À quelle adresse email envoyer mon inscription au concours ?</h3>
+        Envoyez via email à {{ contact_email }}
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Que se passe-t-il après le concours ?</h3>
+        Vous serez informé du résultat et si vous avez la chance d'être admis, il faudra compléter votre dossier avec les pièces suivantes
+        <ul>
+            <li>01 Demande manuscrite avec motivation</li>
+            <ul>
+                <li>à adresser à Mr Le Recteur de l’Université ACEEM</li>
+            </ul>
+            <li>01 Bulletin de naissance ou Acte de naissance</li>
+            <li>01 Certificat de résidence</li>
+            <li>01 Relevé de notes BAC et Diplôme BAC  (Photocopie certifiée)</li>
+            <li>01 Chemise cartonnée en fonction de la mention concourrue : </li>
+            <ul>
+                <li>Droit (DT) : chemise couleur rouge&nbsp;<span class="icon-square nav-text i-rouge"></span></li>
+                <li>Gestion (GE) : chemise couleur rose&nbsp;<span class="icon-square nav-text i-rose"></span></li>
+                <li>Communication (CO) : chemise couleur bleu&nbsp;<span class="icon-square nav-text i-bleu"></span></li>
+                <li>Économie (ECO) : chemise couleur orange&nbsp;<span class="icon-square nav-text i-orange"></span></li>
+                <li>Informatique & Électronique (IE) : chemise couleur jaune&nbsp;<span class="icon-square nav-text i-jaune"></span></li>
+                <li>Sciences de la Santé (SST) : chemise couleur verte&nbsp;<span class="icon-square nav-text i-vert"></span></li>
+            </ul>
+        </ul>
+
 
     </div>
   </div>
