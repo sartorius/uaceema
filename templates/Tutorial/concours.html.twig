@@ -67,7 +67,11 @@
     </div>
     <div class="blk-main-help">
         <h2><span class="icon-files nav-text"></span>&nbsp;Dossier d'inscription à fournir par email</h2>
-        Pour passer le concours, vous devez nous envoyer un email avec le contenu suivant :
+        Pour passer le concours, vous devez faire 2 étapes : <strong>remplir la fiche de pré-inscription et nous envoyer un email</strong>
+
+
+        <h3>Étape 1 : envoyer l'email</h3>
+        Envoyez-nous un email avec :
         <ul>
             <li>1 photo d’identité récente scannée</li>
             <li>Preuve de réussite du BACC au choix :</li>
@@ -79,17 +83,21 @@
             <li>Droits de concours ou entretien : <strong>50 000 Ariary</strong> </li>
             <ul>
                 <li>Envoyez le paiement Mvola au : {{ contact_mvola }}</li>
-                <li>Nous donner <strong>la référence du paiement Mvola</strong> dans l'email</li>
-            </ul>
-            <li>La fiche de pré-inscription ci-dessous <strong>remplie</strong> </li>
-            <ul>
-                <li>Remplissez directement les informations de la fiche de pré-inscription à l'ordinateur</li>
-                <li>Renvoyez-la nous par email</li>
+                <li>Notez bien <strong>la référence du paiement Mvola</strong> il faudra la renseigner dans la fiche de l'étape 2</li>
             </ul>
         </ul>
-        <br>
-        {% include 'Static/_mentionupfoot.html.twig' %}
         Enfin, envoyez via email à {{ contact_email }}
+
+        <h3>Étape 2 : remplir la Fiche</h3>
+        <li>Remplir la fiche de pré-inscription ci-dessous </li>
+        <ul>
+            <li>Remplissez directement les informations de la fiche de pré-inscription à l'ordinateur</li>
+            <li>Cliquez sur "envoyer" à la fin de la fiche</li>
+        </ul>
+        <br>
+        <br>
+            <a href="https://forms.gle/eZtdWykMxVvXRmqp6" type="button" target="_blank" class="btn btn-default btn-lg btn-block"><span class="icon-file-text-o nav-text"></span>&nbsp;Remplir la fiche de pré-inscription</a>
+        <br>
     </div>
     <div class="blk-main-help">
         <h2><span class="icon-clipboard-1 nav-text"></span>&nbsp;Liste des matières par concours</h2>
@@ -160,37 +168,33 @@
         {% set quesn = 0 %}
         <h2><span class="icon-question-circle nav-text"></span>&nbsp;Questions fréquentes</h2>
         <br><br>
-        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment savoir quelle mention/filière est faîte pour moi ?</h3>
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment savoir quelle Mention/filière est faîte pour moi ?</h3>
         Chaque parcours est différent, il y en a forcément un fait pour vous, plus de détails sur chaque mention <a href="/mention">ici</a>.
-        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quelle est la différence entre la 1ère et le 2ème vague ?</h3>
-        xxx
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Organisez-vous des rencontres lycéennes en provinces ?</h3>
         Oui, c'est indiquez sur cette page à la rubrique "Actualité" et suivez notre <a href="https://www.facebook.com/oniversiteaceem">Facebook</a>.
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Puis-je m'inscrire à plusieurs concours en 1ère année ?</h3>
-        xxx
+        Vous pouvez vous inscrire à une Mention pour la 1ère vague et à une autre Mention pour la 2ème vague.
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quels sont les étapes pour m'inscrire ?</h3>
         <ul>
             <li>Réunir tous les documents demandés (photos, preuve du bacc etc.)</li>
             <li>Payer les droits d'inscription via Mvola</li>
             <li>Récupérer la référence de paiement Mvola</li>
-            <li>Remplir la fiche de pré-inscription</li>
-            <li>Créer l'email</li>
+            <li>Envoyer l'email</li>
             <ul>
-                <li>en indiquant dedans la référence du paiement Mvola</li>
                 <li>en attachant en pièce jointe la photo d'identité</li>
                 <li>en attachant en pièce jointe la preuve de réussite au Bacc</li>
-                <li>en attachant en pièce jointe la fiche de pré-inscription</li>
             </ul>
             <li>Envoyer l'email</li>
+            <li>Remplir la fiche de pré-inscription en cliquant sur le lien</li>
         </ul>
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Comment remplir la fiche de pré-inscription ?</h3>
-        Remplissez directement la fiche à l'ordinateur, sauvegardez-là et mettez là en pièce jointe dans l'email. Comme dans cet exemple :
-        <img src="{{ path('main') }}img/FicheInscriptionExemple.png"
-                  title="FicheInscription" alt="Fiche Inscription Image" class="full-banner-img">
+        Cliquez sur le bouton "Remplir la fiche de pré-inscription" et renseignez les informations demandées. N'oubliez pas de cliquer sur Envoyer.
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Quel est le numéro Mvola pour payer les droits d'inscription ?</h3>
-        Envoyez via Mvola au numéro : {{ contact_mvola }}
+        Envoyez votre paiement via Mvola au numéro : {{ contact_mvola }}
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;À quelle adresse email envoyer mon inscription au concours ?</h3>
         Envoyez via email à {{ contact_email }}
+        <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Si je rencontre un problème quel numéro appeler ?</h3>
+        Pour tout problème technique et informatique, contactez nous au +261 34 49 500 74
         <h3>#{% set quesn = quesn + 1 %}{{ quesn }}&nbsp;Que se passe-t-il après le concours ?</h3>
         Vous serez informé du résultat et si vous avez la chance d'être admis, il faudra compléter votre dossier avec les pièces suivantes
         <ul>
@@ -201,7 +205,7 @@
             <li>01 Bulletin de naissance ou Acte de naissance</li>
             <li>01 Certificat de résidence</li>
             <li>01 Relevé de notes BAC et Diplôme BAC  (Photocopie certifiée)</li>
-            <li>01 Chemise cartonnée en fonction de la mention concourrue : </li>
+            <li>01 Chemise cartonnée en fonction de la Mention concourrue : </li>
             <ul>
                 <li>Droit (DT) : chemise couleur rouge&nbsp;<span class="icon-square nav-text i-rouge"></span></li>
                 <li>Gestion (GE) : chemise couleur rose&nbsp;<span class="icon-square nav-text i-rose"></span></li>
@@ -218,5 +222,7 @@
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
 </div>
+
+
 
 {% include 'RawTemplate/_footer.html.twig' %}
