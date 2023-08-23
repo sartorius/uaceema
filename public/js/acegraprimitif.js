@@ -51,7 +51,7 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_SEMESTER + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp"></th></tr>';
     tabStr += headerStr;
 
     // Line of Reference
@@ -59,14 +59,14 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_ID + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp"></th></tr>';
     tabStr += headerStr;
 
     headerStr = EMPTY_HEAD_PRELINE_SUBJ;
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='head-prim' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_TITLE.substr(0, 25) + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp"></th></tr>';
     tabStr += headerStr;
 
     // Line of credit
@@ -74,7 +74,7 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp"></th></tr>';
     tabStr += headerStr;
 
     // Line of credit
@@ -82,7 +82,7 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGG_AVG + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp"></th></tr>';
     tabStr += headerStr;
 
     // Line of date
@@ -90,7 +90,7 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGM_DATE + '</th>';
     }
-    headerStr += '</tr>';
+    headerStr += '<th class="prim-emp" style="width: 700px;">Observation assiduité</th></tr>';
     tabStr += headerStr;
 
     var i=0;
@@ -113,6 +113,7 @@ function loadPrimitifMain(){
           lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
         }
       }
+      lineStr += "<td>" + filtereddataPrimitifLineToJsonArray[i].OBSERV_ASS + "</td>";
       lineStr += "</tr>";
       tabStr += lineStr;
 
@@ -144,7 +145,7 @@ function generateReportPrimitive(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_SEMESTER + SEP_;
     }
-    headerStr += "\n";
+    headerStr += SEP_ + "\n";
     dataString += headerStr;
 
     // Line of Reference
@@ -152,14 +153,14 @@ function generateReportPrimitive(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_ID + SEP_;
     }
-    headerStr += "\n";
+    headerStr += SEP_ + "\n";
     dataString += headerStr;
 
     headerStr = EMPTY_HEAD_PRELINE_SUBJ;
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_TITLE.substr(0, 25) + SEP_;
     }
-    headerStr += "\n";
+    headerStr += SEP_ + "\n";
     dataString += headerStr;
 
     // Line of credit
@@ -167,7 +168,7 @@ function generateReportPrimitive(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + SEP_;
     }
-    headerStr += "\n";
+    headerStr += SEP_ + "\n";
     dataString += headerStr;
 
     // Line of credit
@@ -175,7 +176,7 @@ function generateReportPrimitive(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].UGG_AVG + SEP_;
     }
-    headerStr += "\n";
+    headerStr += SEP_ + "\n";
     dataString += headerStr;
 
     // Line of date
@@ -183,7 +184,7 @@ function generateReportPrimitive(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += dataPrimitifLineToJsonArray[i].UGM_DATE + SEP_;
     }
-    headerStr += "\n";
+    headerStr += "Observation assiduité" + "\n";
     dataString += headerStr;
 
     var i=0;
@@ -194,7 +195,7 @@ function generateReportPrimitive(){
       for(var j=(0 + i); j<(NBR_EXAM + i); j++){
         lineStr += filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + SEP_;
       }
-      lineStr += "\n";
+      lineStr += filtereddataPrimitifLineToJsonArray[i].OBSERV_ASS + "\n";
       dataString += lineStr;
 
       // END OF WHILE
