@@ -90,14 +90,14 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGM_DATE + '</th>';
     }
-    headerStr += '<th class="prim-emp" style="width: 700px;">Observation assiduité</th></tr>';
+    headerStr += '<th class="prim-emp" style="width: 500px;">Observation assiduité</th></tr>';
     tabStr += headerStr;
 
     var i=0;
     while (i<filtereddataPrimitifLineToJsonArray.length){
       //We read student per student
       var lineStr = '';
-      lineStr += "<tr><td style='width: 100px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + "</td><td style='width: 200px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + "</td>";
+      lineStr += "<tr><td style='width: 100px;'>" + "<a href='/profile/" + filtereddataPrimitifLineToJsonArray[i].VSH_PAGE + "' target='_blank'>" + filtereddataPrimitifLineToJsonArray[i].VSH_USERNAME + "</a></td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_FIRSTNAME + "</td><td style='width: 200px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_LASTNAME + "</td><td style='width: 120px;'>" + filtereddataPrimitifLineToJsonArray[i].VSH_MATRICULE + "</td>";
       for(var j=(0 + i); j<(NBR_EXAM + i); j++){
         if(((filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'E')
             || (filtereddataPrimitifLineToJsonArray[j].UGG_GRADE != 'A'))
@@ -113,7 +113,7 @@ function loadPrimitifMain(){
           lineStr += "<td class='gra-c'  style='width: 60px;'>" + filtereddataPrimitifLineToJsonArray[j].UGG_GRADE + '</td>';
         }
       }
-      lineStr += "<td>" + filtereddataPrimitifLineToJsonArray[i].OBSERV_ASS + "</td>";
+      lineStr += "<td>" + filtereddataPrimitifLineToJsonArray[i].OBSERV_ASS.replaceAll('_', '<br>') + "</td>";
       lineStr += "</tr>";
       tabStr += lineStr;
 

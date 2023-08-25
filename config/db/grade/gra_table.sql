@@ -182,9 +182,9 @@ from uac_ref_subject urs ORDER BY CONCAT(urs.mention_code, urs.niveau_code, urs.
 
 DROP VIEW IF EXISTS v_tech_gra_ass_line;
 CREATE VIEW v_tech_gra_ass_line AS
-SELECT VSH_ID, VSH_USERNAME, VSH_COHORT_ID, VSH_SHORT_CLASS, ASS_STATUS, ASS_COUNT, CLS_COUNT, TRUNCATE(ASS_COUNT/CLS_COUNT, 3) AS ASS_AVG, STU_COUNT, CONCAT('[', ASS_STATUS, '] ', ASS_COUNT, 'vs', TRUNCATE(ASS_COUNT/CLS_COUNT, 3)) AS SUM_UP
+SELECT VSH_ID, VSH_USERNAME, VSH_COHORT_ID, VSH_SHORT_CLASS, ASS_STATUS, VSH_ASS_COUNT, CLS_COUNT, TRUNCATE(ALL_STU_COUNT/CLS_COUNT, 3) AS ASS_AVG, ALL_STU_COUNT, CONCAT('[', ASS_STATUS, '] ', VSH_ASS_COUNT, 'vs', TRUNCATE(ALL_STU_COUNT/CLS_COUNT, 3)) AS SUM_UP
     FROM (
-    	SELECT vsh.cohort_id AS VSH_COHORT_ID, vsh.SHORTCLASS AS VSH_SHORT_CLASS, ass.status AS ASS_STATUS, COUNT(1) AS ASS_COUNT, vsh.ID AS VSH_ID, vsh.USERNAME AS VSH_USERNAME
+    	SELECT vsh.cohort_id AS VSH_COHORT_ID, vsh.SHORTCLASS AS VSH_SHORT_CLASS, ass.status AS ASS_STATUS, COUNT(1) AS VSH_ASS_COUNT, vsh.ID AS VSH_ID, vsh.USERNAME AS VSH_USERNAME
     	FROM uac_assiduite ass JOIN v_showuser vsh ON ass.user_id = vsh.ID
     								 JOIN mdl_user mu ON mu.id = vsh.ID
       WHERE ass.create_date > mu.create_date
@@ -198,7 +198,7 @@ SELECT VSH_ID, VSH_USERNAME, VSH_COHORT_ID, VSH_SHORT_CLASS, ASS_STATUS, ASS_COU
     	GROUP BY vsh.cohort_id
     ) t_class ON t_count_ass.VSH_COHORT_ID = t_class.CLS_COHORT_ID
     JOIN (
-      SELECT vsh.cohort_id AS STU_COHORT_ID, ass.status AS STU_STATUS, COUNT(1) AS STU_COUNT
+      SELECT vsh.cohort_id AS STU_COHORT_ID, ass.status AS STU_STATUS, COUNT(1) AS ALL_STU_COUNT
     	FROM uac_assiduite ass JOIN v_showuser vsh ON ass.user_id = vsh.ID
     								 JOIN mdl_user mu ON mu.id = vsh.ID
       WHERE ass.create_date > mu.create_date
@@ -214,6 +214,7 @@ SELECT
   UPPER(VSH.USERNAME) AS VSH_USERNAME,
 	VSH.FIRSTNAME AS VSH_FIRSTNAME,
 	VSH.LASTNAME AS VSH_LASTNAME,
+	VSH.PAGE AS VSH_PAGE,
 	VSH.MATRICULE AS VSH_MATRICULE,
   VSH.COHORT_ID AS VSH_COHORT_ID,
 	ugg.id AS UGG_ID,
@@ -237,6 +238,6 @@ JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
 JOIN uac_ref_subject urs ON ugm.subject_id = urs.id
 JOIN v_showuser VSH ON VSH.ID = ugg.user_id
 LEFT JOIN (
-  SELECT VSH_ID AS T_VSH_ID, GROUP_CONCAT(SUM_UP ORDER BY ASS_STATUS DESC SEPARATOR ' ') AS ASS_SUM_UP FROM v_tech_gra_ass_line GROUP BY VSH_ID
+  SELECT VSH_ID AS T_VSH_ID, GROUP_CONCAT(SUM_UP ORDER BY ASS_STATUS DESC SEPARATOR '_') AS ASS_SUM_UP FROM v_tech_gra_ass_line GROUP BY VSH_ID
 ) t_ass ON VSH.ID = t_ass.T_VSH_ID
 ORDER BY ORDER_ID, ugm.exam_date ASC;
