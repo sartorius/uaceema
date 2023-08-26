@@ -1028,6 +1028,46 @@ class AdminGradeController extends AbstractController{
         return new Response($content);
     }
 
+
+    public function missingstudent(Environment $twig, LoggerInterface $logger)
+    {
+
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $scale_right = ConnectionManager::whatScaleRight();
+
+        $logger->debug("scale_right: " . $scale_right);
+        // Anyone can access to the manager but only limited people can input the date
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+            $dbconnectioninst = DBConnectionManager::getInstance();
+            
+            $query_missing_stu = " SELECT vpl.*, vpl.URS_NIVEAU_CODE AS EXAM_NIVEAU, vcc.niveau AS STU_NIVEAU FROM v_primitif_line vpl JOIN v_class_cohort vcc ON vpl.VSH_COHORT_ID = vcc.id "
+                              .  " WHERE NOT(vpl.URS_NIVEAU_CODE = vcc.niveau) ORDER BY UGG_ID DESC; ";
+            $logger->debug("missingstudent - Firstname: " . $_SESSION["firstname"]);
+            
+
+            $result_query_missing_stu = $dbconnectioninst->query($query_missing_stu)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_missing_stu: " . count($result_query_missing_stu));
+
+            $content = $twig->render('Admin/GRA/missingstudent.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                    'firstname' => $_SESSION["firstname"],
+                                                                    'lastname' => $_SESSION["lastname"],
+                                                                    'id' => $_SESSION["id"],
+                                                                    'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'result_query_missing_stu' => $result_query_missing_stu,
+                                                                    'errtype' => '']);
+
+        }
+        else{
+            // Error Code 404
+            $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        }
+        return new Response($content);
+    }
+
     public function managerprimitif(Environment $twig, LoggerInterface $logger)
     {
 

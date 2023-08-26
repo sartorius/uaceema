@@ -214,3 +214,6 @@ managerprimitif:
 primitifline:
     path:       /primitifline
     controller: App\Controller\AdminGradeController::primitifline
+missingstudent:
+    path:       /missingstudent
+    controller: App\Controller\AdminGradeController::missingstudent

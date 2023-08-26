@@ -90,7 +90,7 @@ function loadPrimitifMain(){
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGM_DATE + '</th>';
     }
-    headerStr += '<th class="prim-emp" style="width: 500px;">Observation assiduité</th></tr>';
+    headerStr += '<th class="prim-emp" style="width: 170px;">Observation assiduité</th></tr>';
     tabStr += headerStr;
 
     var i=0;

@@ -1,3 +1,236 @@
+function generateAllMissingStuCSV(){
+    const csvContentType = "data:text/csv;charset=utf-8,";
+    let csvContent = "";
+    let involvedArray = filtereddataAllMissingStuGradToJsonArray;
+    const SEP_ = ";"
+
+    let dataString = "Référence" + SEP_ 
+                      + "Niveau étudiant" + SEP_ 
+                      + "Username" + SEP_ 
+                      + "Prénom" + SEP_ 
+                      + "Nom" + SEP_ 
+                      + "Matricule" + SEP_ 
+                      + "Note étudiant" + SEP_
+                      + "Moyenne de la classe" + SEP_ 
+                      + "Niveau de examen" + SEP_ 
+                      + "Date examen" + SEP_ 
+                      + "Mention" + SEP_ 
+                      + "Sujet examen" + SEP_ + "\n";
+    csvContent += dataString;
+    for(let i=0; i<involvedArray.length; i++){
+
+              dataString = involvedArray[i].UGG_ID + SEP_ 
+                  + isNullMvo(involvedArray[i].STU_NIVEAU) + SEP_ 
+                  + isNullMvo(involvedArray[i].VSH_USERNAME) + SEP_ 
+                  + isNullMvo(involvedArray[i].VSH_FIRSTNAME) + SEP_ 
+                  + isNullMvo(involvedArray[i].VSH_LASTNAME) + SEP_ 
+                  + isNullMvo(involvedArray[i].VSH_MATRICULE) + SEP_ 
+                  + isNullMvo(involvedArray[i].UGG_GRADE) + SEP_ 
+                  + isNullMvo(involvedArray[i].UGG_AVG) + SEP_ 
+                  + isNullMvo(involvedArray[i].URS_NIVEAU_CODE)  + '/' + isNullMvo(involvedArray[i].URS_SEMESTER) + SEP_ 
+                  + isNullMvo(involvedArray[i].UGM_DATE) + SEP_ 
+                  + isNullMvo(involvedArray[i].URS_MENTION_CODE) + SEP_ 
+                  + isNullMvo(involvedArray[i].URS_TITLE) + SEP_ ;
+              // easy close here
+              csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
+    }
+
+    //console.log('Click on csv');
+    let encodedUri = encodeURI(csvContent);
+    let csvData = new Blob([csvContent], { type: csvContentType });
+
+        let link = document.createElement("a");
+    let csvUrl = URL.createObjectURL(csvData);
+
+    link.href =  csvUrl;
+    link.style = "visibility:hidden";
+    link.download = 'RapportNoteEtudiantManquant.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+}
+
+function initAllMissingStuGradGrid(){
+  $('#filter-mis-stu').keyup(function() {
+      filterDataAllMissingStuGrad();
+  });
+  $('#re-init-dash-mis-stu').click(function() {
+    $('#filter-mis-stu').val('');
+    clearDataAllMissingStuGrad();
+  });
+}
+
+function filterDataAllMissingStuGrad(){
+  if(($('#filter-mis-stu').val().length > 1) && ($('#filter-mis-stu').val().length < 35)){
+    //console.log('We need to filter !' + $('#filter-all').val());
+    filtereddataAllMissingStuGradToJsonArray = dataAllMissingStuGradToJsonArray.filter(function (el) {
+                                      return el.raw_data.includes($('#filter-mis-stu').val().toUpperCase())
+                                  });
+      loadAllMissingStuGradGrid();
+  }
+  else if(($('#filter-mis-stu').val().length < 2)) {
+    // We clear data
+    clearDataAllMissingStuGrad();
+  }
+  else{
+    // DO nothing
+  }
+}
+
+function clearDataAllMissingStuGrad(){
+  filtereddataAllMissingStuGradToJsonArray = Array.from(dataAllMissingStuGradToJsonArray);
+  
+  loadAllMissingStuGradGrid();
+};
+
+
+
+function loadAllMissingStuGradGrid(){
+
+  refMissingStuGraField = [
+      { name: "UGG_ID",
+        title: "#",
+        type: "number",
+        width: 10,
+        align: "center",
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "STU_NIVEAU",
+        title: "<i class='icon-list-ordered'></i>",
+        type: "text",
+        width: 10,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "VSH_USERNAME",
+        title: "Username",
+        type: "text",
+        width: 30,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "VSH_FIRSTNAME",
+        title: "Prénom",
+        type: "text",
+        width: 30,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          return value.substr(0, MAX_STR_L1);
+        }
+      },
+      { name: "VSH_LASTNAME",
+        title: "Nom",
+        type: "text",
+        width: 40,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          return value.substr(0, MAX_STR_L1);
+        }
+      },
+      { name: "UGG_GRADE",
+        title: "Note",
+        type: "text",
+        width: 20,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          if(((value != 'E')
+              || (value != 'A'))
+              && (parseFloat(value) < 7)){
+            return "<span class='gra-c'  style='width: 60px;'><i class='recap-mis'>" + value + '</i></span>';
+          }
+          else if(((value != 'E')
+              || (value != 'A'))
+              && (parseFloat(value) < 10)){
+            return "<span class='gra-c'  style='width: 60px;'><i class='recap-qui'>" + value + '</i></span>';
+          }
+          else{
+            return "<span class='gra-c'  style='width: 60px;'>" + value + '</span>';
+          }
+        }
+      },
+      { name: "UGG_AVG",
+        title: "Classe",
+        type: "text",
+        width: 20,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "URS_NIVEAU_CODE",
+        title: "<i class='icon-list-ordered'></i>",
+        type: "text",
+        width: 10,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          return value + '/' + item.URS_SEMESTER;
+        }
+      },
+      { name: "UGM_DATE",
+        title: "Date",
+        type: "text",
+        width: 10,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "URS_MENTION_CODE",
+        title: "Mention",
+        type: "text",
+        width: 18,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "URS_TITLE",
+        title: "Sujet examen",
+        type: "text",
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          return value.substr(0, MAX_STR_L1);
+        }
+      }
+  ];
+
+  $("#jsGridAllMissingStu").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucune note disponible",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: filtereddataAllMissingStuGradToJsonArray,
+      fields: refMissingStuGraField,
+      rowClick: function(args){
+      }
+  });
+
+  // Update the count
+  $('#count-miss-stu').html(filtereddataAllMissingStuGradToJsonArray.length);
+}
+
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+
+
 function generateAllExamCSV(){
     const csvContentType = "data:text/csv;charset=utf-8,";
     let csvContent = "";
@@ -311,6 +544,10 @@ $(document).ready(function() {
         showHeaderAlertMsg("La revue des notes de l'examen #" + reviewMasterId + " a été terminée avec succès.", 'Y');
         setTimeout(closeAlertMsg, 7000);
       }
+    }
+    else if($('#mg-graph-identifier').text() == 'mis-stu'){
+      initAllMissingStuGradGrid();
+      loadAllMissingStuGradGrid();
     }
     else{
       //Do nothing

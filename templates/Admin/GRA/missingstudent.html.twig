@@ -1,0 +1,76 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if result_query_missing_stu is defined and result_query_missing_stu is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllMissingStuGradToJsonArray = JSON.parse('{{ result_query_missing_stu | json_encode | raw }}');
+    // We init here the filter value
+	let filtereddataAllMissingStuGradToJsonArray = Array.from(dataAllMissingStuGradToJsonArray);
+
+    const MAX_STR_L1 = 45;
+    const MAX_STR_L2 = 30;
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllMissStuToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">mis-stu</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h2>Notes étudiant manquant</h2>
+    Vous trouvez ici les notes des étudiants manquants : ceux qui ne sont pas dans les feuilles d'examen.
+    <hr>
+    <div class="mgs-note-banner">
+      Nombre d'étudiant(s) : <i id='count-miss-stu'>{{ result_query_missing_stu|length }}</i> sur {{ result_query_missing_stu|length }}.
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-mis-stu" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-mis-stu" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="generateAllMissingStuCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-3">
+
+  </div>
+
+
+  <div class="col-3">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllMissingStu">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footer.w.graman.jsgrid.mgchart.html.twig' %}

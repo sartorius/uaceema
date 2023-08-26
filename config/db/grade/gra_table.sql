@@ -225,13 +225,14 @@ SELECT
 	ugg.operation AS TECH_OPERATION,
 	DATE_FORMAT(ugm.exam_date, "%d/%m") AS UGM_DATE,
 	urs.id AS URS_ID,
+	urs.mention_code AS URS_MENTION_CODE,
 	urs.niveau_code AS URS_NIVEAU_CODE,
 	urs.semester AS URS_SEMESTER,
 	fEscapeStr(urs.subject_title) AS URS_TITLE,
 	urs.credit AS URS_CREDIT,
   CONCAT(VSH.USERNAME, '_', urs.semester, '_', urs.id) AS ORDER_ID,
   IFNULL(t_ass.ASS_SUM_UP, 'na') AS OBSERV_ASS,
-  UPPER(CONCAT(VSH.USERNAME, VSH.FIRSTNAME, VSH.LASTNAME, VSH.MATRICULE)) AS raw_data
+  fEscapeStr(UPPER(CONCAT(VSH.USERNAME, VSH.FIRSTNAME, VSH.LASTNAME, VSH.MATRICULE, urs.mention_code, urs.subject_title))) AS raw_data
 FROM uac_gra_grade ugg
 JOIN uac_gra_master ugm ON ugm.id = ugg.master_id
                         AND ugm.status IN ('END')
