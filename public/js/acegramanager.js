@@ -92,7 +92,7 @@ function loadAllMissingStuGradGrid(){
       { name: "UGG_ID",
         title: "#",
         type: "number",
-        width: 10,
+        width: 15,
         align: "center",
         headercss: "cell-ref-uac-sm-hd",
         css: "cell-ref-uac-sm"
@@ -107,9 +107,9 @@ function loadAllMissingStuGradGrid(){
       { name: "VSH_USERNAME",
         title: "Username",
         type: "text",
-        width: 30,
+        width: 25,
         headercss: "cell-ref-uac-sm-hd",
-        css: "cell-ref-uac-sm"
+        css: "cell-recap-l-num"
       },
       { name: "VSH_FIRSTNAME",
         title: "Prénom",
