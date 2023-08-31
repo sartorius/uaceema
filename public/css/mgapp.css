@@ -340,6 +340,16 @@ h4 {
   font-weight: bold;
 }
 
+
+.mgs-note-red-w{
+  text-align: justify;
+  color: rgb(148, 0, 0);
+  padding-left: 40px;
+  padding-right: 40px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
 .mgs-note-warnprof{
     margin-top: 20px;
     text-align: justify;
