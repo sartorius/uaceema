@@ -218,7 +218,7 @@ function generateAllGraReport(){
             dataString = involvedArray[i].VSH_USERNAME + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VSH_FIRSTNAME) + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VSH_LASTNAME) + GLOBAL_SEP_ 
-                + verboseOneGrade(involvedArray[i].TECH_GRADE, involvedArray[i].TECH_STATUS) + GLOBAL_SEP_ 
+                + rawOneGrade(involvedArray[i].TECH_GRADE, involvedArray[i].TECH_STATUS) + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VCC_SHORTCLASS) + GLOBAL_SEP_ 
                 + isNullMvo(dataOneExamToJsonArray[0].UGG_AVG) + GLOBAL_SEP_ 
                 + isNullMvo(involvedArray[i].VSH_MATRICULE) + GLOBAL_SEP_ 
@@ -283,6 +283,18 @@ function verboseOneGrade(paramGrade, paramStatus){
           return paramGrade;
         }
     }
+}
+
+function rawOneGrade(paramGrade, paramStatus){
+  if(paramStatus == 'A'){
+      return 'Absent(e)';
+  }
+  else if(paramStatus == 'E'){
+      return 'Excusé(e)';
+  }
+  else{
+    return paramGrade;
+  }
 }
 
 function initOneExamGrid(){

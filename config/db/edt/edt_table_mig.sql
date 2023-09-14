@@ -136,7 +136,7 @@ SELECT
 	  DATE_FORMAT(uel.day, '%d/%m') AS COURS_DATE,
     CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN CONCAT('0', uel.min_starts_at) ELSE uel.min_starts_at END) AS DEBUT_COURS,
 	  CONCAT(vcc.niveau, '/', vcc.mention, '/', vcc.parcours, '/', vcc.groupe) AS CLASSE,
-    REPLACE(REPLACE(REPLACE(fEscapeLineFeed(uel.raw_course_title), ' ', ' - '), ',', ''), '\\n', ' - ') AS COURS_DETAILS
+    REPLACE(REPLACE(REPLACE(fEscapeStr(fEscapeLineFeed(uel.raw_course_title)), ' ', ' - '), ',', ''), '\\n', ' - ') AS COURS_DETAILS
 	  FROM uac_assiduite ass JOIN mdl_user mu
                             ON mu.id = ass.user_id
                             JOIN uac_edt_line uel
