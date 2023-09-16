@@ -1,51 +1,3 @@
-function printDiplomaSheet(param){
-
-  console.log('Click on printDiplomaSheet');
-
-
-  // Here format A4
-  let doc = new jsPDF('p','mm',[297, 210]);
-
-
-  doc.setFont('Helvetica');
-  doc.setFontStyle('normal');
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(10);
-  doc.text(
-      20, //x oddOffsetX is to define if position 1 or 2
-      30, //y
-      'Test'
-      );
-  
-  const img = new Image();
-  img.src = document.getElementById('mbc-0').getElementsByTagName('img')[0];
-  img.onload = () => {
-    doc.addImage(img, //img src
-      'PNG', //format
-      30,//x oddOffsetX is to define if position 1 or 2
-      40, //y
-      300, //Width
-      300, null, 'FAST'); //Height // Fast is to get less big files
-
-      $("#waiting-blc").hide(500);
-      doc.save('Diploma_' + param.UD_CODENAME);
-  };
-
-  /*
-  doc.addImage(document.getElementById('mbc-0').getElementsByTagName('img')[0], //img src
-      'PNG', //format
-      30,//x oddOffsetX is to define if position 1 or 2
-      40, //y
-      300, //Width
-      300, null, 'FAST'); //Height // Fast is to get less big files
-  */
-  // Release the screen
-  // We don't go at the end of the loop to avoid
-  
-
-}
-
-
 //*********************************************************************************************************
 //*********************************************************************************************************
 //*********************************************************************************************************
@@ -257,21 +209,7 @@ function loadAllDiplomaGrid(){
       sorting: true,
       paging: true,
       data: filtereddataAllDiplomaToJsonArray,
-      fields: refDiplomaField,
-      rowClick: function(args){
-        /*
-        $("#waiting-blc").show(100);
-        // Update the QR Code
-        new QRCode(document.getElementById("mbc-0"), { 
-          text: CONST_CURRENT_URL + "/diploma/" + args.item.UD_SECRET + args.item.UD_CODENAME,
-          width: 300,
-          height: 300
-        }
-        );
-
-        printDiplomaSheet(args.item);
-        */
-      }
+      fields: refDiplomaField
   });
 
   // Update the count
