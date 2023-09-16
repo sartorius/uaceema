@@ -33,6 +33,8 @@ echo 'acegradash.js';
 yui-compressor public/js/acegradash.js > public/js/acegradash.min.js;
 echo 'acegraprimitif.js';
 yui-compressor public/js/acegraprimitif.js > public/js/acegraprimitif.min.js;
+echo 'acediploma.js';
+yui-compressor public/js/acediploma.js > public/js/acediploma.min.js;
 echo 'END';
 echo '----------------------------';
 yui-compressor public/css/mgapp.css > public/css/mgapp.min.css;

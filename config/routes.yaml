@@ -124,6 +124,9 @@ vieetudiante:
 provinceint:
     path:       /provinceint
     controller: App\Controller\StaticController::provinceint
+verifdiplomatxt:
+    path:       /verifdiplomatxt
+    controller: App\Controller\StaticController::verifdiplomatxt
 alumni:
     path:       /alumni
     controller: App\Controller\AdminAlumniController::main
@@ -220,3 +223,9 @@ missingstudent:
 diploma:
     path:       /diploma/{page}
     controller: App\Controller\DiplomaController::show
+managerdiploma:
+    path:       /managerdiploma
+    controller: App\Controller\DiplomaController::managerdiploma
+dematdiploma:
+    path:       /dematdiploma/{page}
+    controller: App\Controller\DiplomaController::dematdiploma

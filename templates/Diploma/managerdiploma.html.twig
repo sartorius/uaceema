@@ -1,0 +1,80 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+
+{% if result_query_all_diploma is defined and result_query_all_diploma is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllDiplomaToJsonArray = JSON.parse('{{ result_query_all_diploma | json_encode | raw }}');
+    // We init here the filter value
+	let filtereddataAllDiplomaToJsonArray = Array.from(dataAllDiplomaToJsonArray);
+
+    const CONST_CURRENT_URL = "{{ current_url }}";
+
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    // Error LoadFile
+    <script>
+      let dataAllPrimitifToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">man-dip</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h1>Manager Diplôme</h1>
+    <hr>
+    <div class="mgs-note-banner">
+      Nombre de diplôme(s) : <i id='count-dipl'>{{ result_query_all_diploma|length }}</i> sur {{ result_query_all_diploma|length }}.
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-dip" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-dip" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="generateAllDiplomaCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-3">
+
+  </div>
+
+
+  <div class="col-3">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllDiploma">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+
+{# Necessary go to student profile #}
+{% include 'RawTemplate/SPE/_footer.diploma.html.twig' %}

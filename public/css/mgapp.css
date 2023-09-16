@@ -2611,3 +2611,13 @@ img.part-img{
 .main-pg-blc{
   margin-top: 2em;
 }
+
+.dipl-txt{
+  font-size: 1.5em;
+  color: #3c356e;
+}
+
+.dipl-txt-sm{
+  font-size: 0.9em;
+  color: #676767;
+}

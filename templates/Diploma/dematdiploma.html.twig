@@ -1,0 +1,83 @@
+{% include 'RawTemplate/_header.empty.html.twig' %}
+{% include 'Dirty/dirtyqrcode.html.twig' %}
+
+<div id="mg-graph-identifier">dip-demat</div>
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+
+  <div class="col-lg-6">
+    <div class="mgs-questiondefinition">
+      <div class="mg-verify-page">
+          <div>
+            <div>
+                <div class="monosp-ft-title">
+                        <div class="center">
+                        <div id="mbc-0" class="qr-one">
+                        </div>
+                        </div>
+                        <br>
+                        <span class="mgs-ace-note">Vérifiez ce diplôme avec ce QRCode</span>
+                </div>
+            </div>
+            <div class="middle-txt">
+              
+            </div>
+            <div class="row">
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-8 dipl-txt">
+                Scannez ce QRCode pour vérifier que <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> est bien titulaire du diplôme
+                {% if diploma['UD_LEVEL'] == 'L' %} Licence{% else %} Master{% endif %}, 
+                de mention {{ diploma['URM_TITLE'] }}, 
+                intitulé <strong>{{ diploma['URDT_TYPE'] }}</strong>.<br>
+                Le QRCode doit vous renvoyer sur le <strong>site officiel uaceem.com</strong> de l'Université ACEEM, la seule institution habilitée à certifier ce diplôme.
+                <br><br>
+                Vous pouvez aussi visiter <i id="dipl-url">{{ current_url }}/diploma/{{ page }}</i>
+                <br>
+                <br><br>
+              </div>
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-8 dipl-txt-sm">
+                Scan this QRCode to check that <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> is owner of the diploma
+                {% if diploma['UD_LEVEL'] == 'L' %} Licence/Bachelor{% else %} Master{% endif %}, 
+                major {{ diploma['URM_TITLE'] }}, 
+                named <strong>{{ diploma['URDT_TYPE'] }}</strong>.<br>
+                The QRCode must redirect you on the <strong>official website uaceem.com</strong> of ACEEM University, the only institution with ability to certify this diploma.
+                <br><br>
+                <button onclick="window.print()" class="btn btn-dark btn-block">&nbsp;<i class="icon-print"></i>&nbsp;</button>
+                <br><br>
+                <br><br>
+                <div>
+                    <img src="{{ path('main') }}img/certificationDiplome01.png" style="width:350px; height:350px; opacity: 0.8;"
+                            title="ACEEMCertificate" alt="ACEEM Certification">
+                </div>
+              </div>
+              <div class="col-lg-2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-8">
+                    
+              </div>
+              <div class="col-lg-2">
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footer.demat.html.twig' %}

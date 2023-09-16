@@ -1,0 +1,23 @@
+
+<br><br><br><br>
+</div> <!-- Wrapper -->
+
+</body>
+{% include 'RawTemplate/_footerpostraw.html.twig' %}
+
+{% if app_environment == 'dev' %}
+        <script src="{{ path('main') }}js/acediploma.js"></script>
+        <script src="{{ path('main') }}js/aceidentificationcommon.js"></script>
+{% else %}
+        {# ################################################### #}
+        {# ################################################### #}
+        {# ################################################### #}
+        {# ################################################### #}
+        {# ### Dont forget to put the min here after debug ### #}
+        {# ################################################### #}
+        {# ################################################### #}
+        {# ################################################### #}
+        <script src="{{ path('main') }}js/acediploma.min.js"></script>
+        <script src="{{ path('main') }}js/aceidentificationcommon.min.js"></script>
+{% endif %}
+</html>

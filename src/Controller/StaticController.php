@@ -138,4 +138,11 @@ class StaticController extends AbstractController
     return new Response($content);
   }
 
+  public function verifdiplomatxt(Environment $twig)
+  {
+    $content = $twig->render('Static/verifdiplomatxt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
+
 }

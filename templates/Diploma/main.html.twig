@@ -8,24 +8,45 @@
 
   <div class="col-lg-6">
     <div class="mgs-questiondefinition">
-      <form action="{{ path('verify_application') }}" method="post" class="mg-verify-page" autocomplete="new-password">
+      <div class="mg-verify-page">
           <div>
-            <div class="mg-verify-logo-250">
-            <img src="{{ path('main') }}img/check500_500px.png" style="width:200px; height:200px; opacity: 0.8;"
-                      title="MGScoreCertificate" alt="MGScore Certification">
-
+            <div>
+                    <img src="{{ path('main') }}img/certificationDiplome01.png" style="width:350px; height:350px; opacity: 0.8;"
+                            title="ACEEMCertificate" alt="ACEEM Certification">
             </div>
             <div class="middle-txt">
               
             </div>
             <div class="row">
-              <div class="col-lg-12">
-                Lorem ipsum : {{ diploma['UD_LASTNAME'] }} - {{ diploma['UD_FIRSTNAME'] }}
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-8 dipl-txt">
+                L'université ACEEM certifie que <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> est bien titulaire du diplôme
+                {% if diploma['UD_LEVEL'] == 'L' %} Licence{% else %} Master{% endif %}, 
+                de mention {{ diploma['URM_TITLE'] }}, 
+                intitulé <strong>{{ diploma['URDT_TYPE'] }}</strong>,
+                promotion {{ diploma['TITLE_YEAR'] }}
+                depuis l'année {{ diploma['CORE_YEAR'] }}.
+                <br><br>
+              </div>
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-2">
+              </div>
+              <div class="col-lg-8 dipl-txt-sm">
+                ACEEM University certifies that <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> is owner of the diploma
+                {% if diploma['UD_LEVEL'] == 'L' %} Licence/Bachelor{% else %} Master{% endif %}, 
+                major {{ diploma['URM_TITLE'] }}, 
+                named <strong>{{ diploma['URDT_TYPE'] }}</strong>,
+                school year {{ diploma['TITLE_YEAR'] }}
+                since year {{ diploma['CORE_YEAR'] }}.
+              </div>
+              <div class="col-lg-2">
               </div>
             </div>
           </div>
 
-      </form>
+      </div>
     </div>
   </div>
 

@@ -24,7 +24,7 @@ BEGIN
         INSERT INTO uac_dip (id, level, year, lastname, firstname, core_type)
           SELECT id, level, load_year, lastname, firstname, core_type FROM uac_load_dip WHERE status = 'INP';
 
-        UPDATE uac_dip ud SET ud.code_name = RPAD(SUBSTRING(UPPER(REPLACE(lastname, '-', '')), 1, code_name_size), code_name_size, "X") WHERE secret IS NULL;
+        UPDATE uac_dip ud SET ud.code_name = RPAD(SUBSTRING(UPPER(REPLACE(REPLACE(lastname, ' ', ''), '-', '')), 1, code_name_size), code_name_size, "X") WHERE secret IS NULL;
         -- Add secret
         UPDATE uac_dip SET secret = 7000 + FLOOR(RAND()*1000), last_update = NOW() WHERE secret IS NULL;
         -- End of the correct process

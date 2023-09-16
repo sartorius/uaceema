@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UACEEM</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="shortcut icon" type="image/png" href="{{ path('main') }}img/logo32x32.jpg">
+
+  <link rel="stylesheet" href="{{ path('main') }}css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ path('main') }}css/all.min.css">
+  {# Need to handle the app_environment #}
+  {% if app_environment == 'dev' %}
+
+          <link rel="stylesheet" href="{{ path('main') }}css/mgapp.css">
+          <link rel="stylesheet" href="{{ path('main') }}css/manja.css">
+  {% else %}
+          <link rel="stylesheet" href="{{ path('main') }}css/mgapp.min.css">
+          <link rel="stylesheet" href="{{ path('main') }}css/manja.min.css">
+  {% endif %}
+
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT');
+  </style>
+
+
+      <!-- Renders a link tag (if your module requires any CSS)
+           <link rel="stylesheet" href="/build/app.css"> -->
+</head>
+<body>
+
+<div class="wrapper">
+
+      <div id="ace-alert-msg" class="row">
+        <div class="col-lg-2">
+        </div>
+        <div class="col-lg-8">
+          <div id="type-alert" class="alert alert-primary alert-uac" role="alert">
+            <span class="nav-text"><i id="msg-alert">Test</i></span>
+          </div>
+        </div>
+        <div class="col-lg-2">
+        </div>
+      </div>

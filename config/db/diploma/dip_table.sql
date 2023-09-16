@@ -63,16 +63,27 @@ DROP VIEW IF EXISTS v_get_dip;
 CREATE VIEW v_get_dip AS
 SELECT
 	ud.id AS UD_ID,
-	ud.lastname AS UD_LASTNAME,
-	ud.firstname AS UD_FIRSTNAME,
+	fEscapeStr(ud.lastname) AS UD_LASTNAME,
+	fEscapeStr(ud.firstname) AS UD_FIRSTNAME,
 	ud.code_name AS UD_CODENAME,
 	CONCAT(ud.secret, LPAD(ud.id, 7, '0')) AS UD_SECRET,
+	ud.level AS UD_LEVEL,
 	urdt.par_code AS URDT_CODE,
-	urdt.title AS URDT_TYPE,
+	urdt.mention_code AS URDT_MENTION_CODE,
+	fEscapeStr(urdt.title) AS URDT_TYPE,
 	urm.title AS URM_TITLE,
 	urdy.core_year AS CORE_YEAR,
 	urdy.long_name AS FULL_YEAR,
-	urdy.title AS TITLE_YEAR
+	urdy.title AS TITLE_YEAR,
+  fEscapeLineFeed(fEscapeStr(UPPER(CONCAT(
+    ud.lastname,
+    ud.firstname,
+    ud.code_name,
+    urdt.mention_code,
+    urdt.title,
+    urm.title,
+    urdy.title
+  )))) AS raw_data
 FROM uac_dip ud JOIN uac_ref_dip_type urdt ON ud.core_type = urdt.id
 				JOIN uac_ref_dip_year urdy ON ud.year = urdy.core_year
 					JOIN uac_ref_mention urm ON urdt.mention_code = urm.par_code
