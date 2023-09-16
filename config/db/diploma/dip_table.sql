@@ -59,6 +59,26 @@ PRIMARY KEY (`core_year`));
 
 INSERT IGNORE INTO uac_ref_dip_year (core_year, long_name, title) VALUES (2022, '2021-22', 'Tsara Joro');
 
+-- Data for set up
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (1,'PV','DROIT PRIVE', 'DROIT');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (2,'PUB','DROIT PUBLIC', 'DROIT');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (3,'CEP','COMMUNICATION ENTREPRISE ET PUBLICITAIRE', 'COMMU');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (4,'CMJ','COMMUNICATION MULTIMEDIA ET JOURNALISME', 'COMMU');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (5,'ACI','AUDIT ET CONTROLE INTERNE', 'GESTI');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (6,'MCI','MARKETING ET COMMERCE INTERNATIONAL', 'GESTI');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (7,'OPT','OPTICIEN OPTOMETRISTE', 'SIENS');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (8,'AGS','ADMINISTRATION ET GESTION DU SYSTEME DE SANTE', 'SIENS');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (9,'TBI','TECHNIQUES BIOMEDICALES', 'SIENS');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (10,'IMM','IMAGERIE MEDICALE', 'SIENS');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (11,'MBS','MADAGASCAR BUSINESS SCHOOL', 'MBSXX');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (12,'INF','INFORMATIQUE', 'INFOE');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (13,'COM','COMMUNICATION MULTISECTORIELLE', 'COMMU');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (14,'FAC','FINANCE AUDIT ET CONTROLE DE GESTION', 'GESTI');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (15,'MMC','MANAGEMENT MARKETING ET COMMERCE INTERNATIONAL', 'GESTI');
+INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (16,'ECO','SCIENCES ECONOMIQUES ET ETUDES DU DEVELOPPEMENT', 'ECONO');
+
+
+
 DROP VIEW IF EXISTS v_get_dip;
 CREATE VIEW v_get_dip AS
 SELECT
