@@ -1,0 +1,37 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+<div id="mg-graph-identifier">dip-mai</div>
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+
+  <div class="col-lg-6">
+    <div class="mgs-questiondefinition">
+      <form action="{{ path('verify_application') }}" method="post" class="mg-verify-page" autocomplete="new-password">
+          <div>
+            <div class="mg-verify-logo-250">
+            <img src="{{ path('main') }}img/check500_500px.png" style="width:200px; height:200px; opacity: 0.8;"
+                      title="MGScoreCertificate" alt="MGScore Certification">
+
+            </div>
+            <div class="middle-txt">
+              
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                Lorem ipsum : {{ diploma['UD_LASTNAME'] }} - {{ diploma['UD_FIRSTNAME'] }}
+              </div>
+            </div>
+          </div>
+
+      </form>
+    </div>
+  </div>
+
+
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}
