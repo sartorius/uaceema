@@ -42,7 +42,7 @@ for(let i=0; i<involvedArray.length; i++){
               + isNullMvo(involvedArray[i].TITLE_YEAR) + SEP_ 
               + isNullMvo(involvedArray[i].UD_CODENAME) + SEP_ 
               + isNullMvo(involvedArray[i].UD_SECRET) + SEP_ 
-              + CONST_CURRENT_URL + "/diploma/" + isNullMvo(involvedArray[i].UD_SECRET) + isNullMvo(involvedArray[i].UD_CODENAME) + SEP_ ;
+              + CONST_CURRENT_URL + "/dematdiploma/" + isNullMvo(involvedArray[i].UD_SECRET) + isNullMvo(involvedArray[i].UD_CODENAME) + SEP_ ;
           // easy close here
           csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
 }
