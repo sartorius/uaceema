@@ -23,7 +23,7 @@
               <div class="col-lg-8 dipl-txt">
                 L'université ACEEM certifie que <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> est bien titulaire du diplôme
                 {% if diploma['UD_LEVEL'] == 'L' %} Licence{% else %} Master{% endif %}, 
-                de mention {{ diploma['URM_TITLE'] }}, 
+                de Mention {{ diploma['URM_TITLE'] }}, 
                 intitulé <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 promotion {{ diploma['TITLE_YEAR'] }}
                 depuis l'année {{ diploma['CORE_YEAR'] }}.
@@ -36,10 +36,10 @@
               <div class="col-lg-8 dipl-txt-sm">
                 ACEEM University certifies that <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> is owner of the diploma
                 {% if diploma['UD_LEVEL'] == 'L' %} Licence/Bachelor{% else %} Master{% endif %}, 
-                major {{ diploma['URM_TITLE'] }}, 
+                Major {{ diploma['URM_TITLE'] }}, 
                 named <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 school year {{ diploma['TITLE_YEAR'] }}
-                since year {{ diploma['CORE_YEAR'] }}.
+                since {{ diploma['CORE_YEAR'] }}.
               </div>
               <div class="col-lg-2">
               </div>
