@@ -34,3 +34,4 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+-- Input all diploma then call CALL SRV_CRT_Diploma(2022);
