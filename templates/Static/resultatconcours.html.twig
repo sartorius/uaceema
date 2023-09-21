@@ -1,0 +1,48 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+{% set i_width = 20 %}
+
+<div class="row">
+  <div class="col-lg-2 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-8 mgs-mainblk-txt">
+    <h1>Résultat concours entrée en L1</h1>
+    <hr>
+    <div class="mgs-med-note">
+        Félicitations aux étudiants suivants ! Vous êtes admis au concours d'entrée L1 de l'Université ACEEM.
+    </div>
+    <h2>2023-24 Première Vague</h2>
+    <div class="mgs-ace-note">
+        Délibération terminée pour les mentions suivantes :<br>
+        <ul>
+            {% for mention in result_query_get_ccr_mention_v1 %}<li>{{ mention["mention_txt"] }}</li>{% endfor %}
+        </ul>
+    </div>
+    <table style="width: 100%;">
+            <tr style="border-bottom:0.5px solid">
+              <th style="min-width:{{ i_width }}%;"><strong>Mention</strong></th>
+              <th style="min-width:{{ i_width }}%;"><strong>Numéro Concours</strong></th>
+              <th style="min-width:{{ i_width }}%;"><strong>Nom et prénoms</strong></th>
+              <th style="min-width:{{ i_width }}%;"><strong>Vague</strong></th>
+            </tr>
+
+            {% for result in result_query_get_ccr_results_v1 %}
+                    <tr style="border-bottom:0.5px solid">
+                    <td class='disp-sm disp-tab'>{{ result["mention_txt"] }}</td>
+                    <td class='disp-sm disp-tab'>{{ result["convocation_nb"] }}</td>
+                    <td class='disp-sm disp-tab'>{{ result["fullname"] }}</td>
+                    <td class='disp-sm disp-tab'>{{ result["wave"] }}</td>
+                    </tr>
+            {% endfor %}
+
+    </table>
+    <br><br><br>
+    <h2>2023-24 Deuxième Vague</h2>
+    <div class="mgs-ace-note">
+        Pas encore de délibération.
+    </div>
+  </div>
+  <div class="col-lg-2 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/_footer.html.twig' %}

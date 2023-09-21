@@ -740,6 +740,13 @@ textarea[name=inputRef] {
     font-size: 0.7em;
 }
 
+
+.mgs-med-note{
+  color: #29417e;
+  font-size: 1.2em;
+  margin-bottom: 2em;
+}
+
 .monosp-ft-title{
   text-align: center;
   margin-top: 2.5em;

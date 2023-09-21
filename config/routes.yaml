@@ -45,6 +45,9 @@ helpfraisdescolarite:
 concours:
     path:       /concours
     controller: App\Controller\TutorialController::concours
+resultatconcours:
+    path:       /resultatconcours
+    controller: App\Controller\StaticController::resultatconcours
 login:
     path:       /login
     controller: App\Controller\ConnectionController::login
