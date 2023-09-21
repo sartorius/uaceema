@@ -490,6 +490,7 @@ SELECT
   ) AS raw_data
 FROM uac_mvola_master umm
 			JOIN uac_load_mvola ulm ON umm.id = ulm.master_id
+WHERE ulm.status NOT IN ('DUP')
 			ORDER BY STR_TO_DATE(ulm.load_cra_date,'%d/%m/%Y %H:%i:%s') DESC;
 
 DROP VIEW IF EXISTS v_all_pay;
