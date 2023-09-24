@@ -22,7 +22,7 @@
               <th style="min-width:{{ i_width }}%;"><strong>Mention</strong></th>
               <th style="min-width:{{ i_width }}%;"><strong>Numéro Concours</strong></th>
               <th style="min-width:{{ i_width }}%;"><strong>Nom et prénoms</strong></th>
-              <th style="min-width:{{ i_width }}%;"><strong>Vague</strong></th>
+              <th style="min-width:{{ i_width }}%;"><strong>Observation</strong></th>
             </tr>
 
             {% for result in result_query_get_ccr_results_v1 %}
@@ -30,7 +30,7 @@
                     <td class='disp-sm disp-tab'>{{ result["mention_txt"] }}</td>
                     <td class='disp-sm disp-tab'>{{ result["convocation_nb"] }}</td>
                     <td class='disp-sm disp-tab'>{{ result["fullname"] }}</td>
-                    <td class='disp-sm disp-tab'>{{ result["wave"] }}</td>
+                    <td class='disp-sm disp-tab'>{{ result["resultat"]|capitalize }}</td>
                     </tr>
             {% endfor %}
 
