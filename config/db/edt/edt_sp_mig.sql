@@ -826,3 +826,25 @@ END$$
 -- Legacy to be dropped
 -- DROP PROCEDURE IF EXISTS CLI_GET_SHOWEDTForADM$$
 -- DROP PROCEDURE IF EXISTS CLI_GET_FWEDT$$
+
+
+-- The export expect value as CHAR(1) 0, 1 or D and D i for the current day
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_PublishAllEDTS1$$
+CREATE PROCEDURE `CLI_GET_PublishAllEDTS1` ()
+BEGIN
+    DECLARE monday_one	DATE;
+
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+
+    -- Monday Zero
+    SELECT DAYOFWEEK(CURRENT_DATE) INTO inv_cur_dayw;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY) INTO inv_cur_date;
+    SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_one;
+
+    -- Main operation is done here !
+    UPDATE uac_edt_master SET visibility = 'V' WHERE monday_ofthew = monday_one;
+END$$
+-- Remove $$ for OVH

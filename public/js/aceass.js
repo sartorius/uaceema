@@ -1771,6 +1771,35 @@ function generateNoExitReportCSV(){
   link.click();
   document.body.removeChild(link);
 }
+
+function initButtonPublishS1(){
+  let i=0;
+  let existS1 = false;
+
+  while ((i<dataAllEDTToJsonArray.length) && !existS1){
+    if((dataAllEDTToJsonArray[i].s == 'S1') && (dataAllEDTToJsonArray[i].visibility ==  "D")){
+      existS1 = true;
+    }
+    i++;
+  }
+
+  if(existS1){
+    console.log('We found an S1 to display');
+    //document.getElementById("pub-s1").disabled = false;
+    $("#pub-s1").prop('disabled', false);
+  }
+  else{
+    console.log('We did not found an S1 to display');
+    //document.getElementById("pub-s1").disabled = true;
+    $("#pub-s1").prop('disabled', true);
+  }
+}
+
+function goToPublishAllS1(){
+  $("#mg-publish-all-S1").submit();
+}
+
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -1947,6 +1976,7 @@ $(document).ready(function() {
     initAllEDTGrid();
     loadAllEDTGrid();
     initWarningEDT();
+    initButtonPublishS1();
     textS0 = initTextExport(textS0ToJsonArray);
     textS1 = initTextExport(textS1ToJsonArray);
     textD = initTextExport(textDToJsonArray);

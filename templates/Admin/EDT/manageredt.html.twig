@@ -72,9 +72,18 @@
     <button onclick="copyEDTS1()" class="btn btn-outline-dark btn-md btn-blk-export">S1 &nbsp;<i class="icon-file-text-o nav-text"></i></button>
     <button onclick="copyEDTD()" class="btn btn-outline-dark btn-md btn-blk-export">J &nbsp;<i class="icon-file-text-o nav-text"></i></button>
   </div>
+  <div class="col-1">
+    
+    {% if (create_edt_right == 'Y') %}
+            <button id="pub-s1" onclick="goToPublishAllS1()" class="btn btn-dark btn-md btn-blk-menu" disabled="">Publier S1&nbsp;<span class="icon-bolt nav-text"></span></button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
+    
+  </div>
 
 
-  <div class="col-3">
+  <div class="col-2">
   </div>
 
   <div class="col-1">
@@ -115,4 +124,5 @@
 
 {# This is the post Goto #}
 {% include 'Admin/EDT/_rawmanagerEDTGoToPost.html.twig' %}
+{% include 'Admin/EDT/_rawmanagerEDTPublishAllS1.html.twig' %}
 {% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}

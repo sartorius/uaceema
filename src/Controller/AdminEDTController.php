@@ -17,6 +17,34 @@ use \ZipArchive;
 
 class AdminEDTController extends AbstractController
 {
+
+  //publishAllS1
+  public function publishAllS1(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+    // Must be exactly 11 or more than 99
+    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+
+        $import_query = " CALL CLI_GET_PublishAllEDTS1(); ";
+        $dbconnectioninst = DBConnectionManager::getInstance();
+        $resultsp = $dbconnectioninst->query($import_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me: " . count($resultsp));
+
+        // Once we have done the full update we go to the manager EDT!
+        return $this->manageredt($twig, $logger);
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+        return new Response($content);
+    }
+  }
+
   public function jqcreateedt(Environment $twig, LoggerInterface $logger)
   {
 
