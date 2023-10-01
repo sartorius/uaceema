@@ -297,6 +297,9 @@ class AdminEDTController extends AbstractController
           $param_inv_tech_monday = $request->request->get('invTechMonday');
           $logger->debug("Show me param_inv_tech_monday: " . $param_inv_tech_monday);
 
+          $param_edt_title = $request->request->get('invTitle');
+          $logger->debug("Show me param_order: " . $param_edt_title);
+
           $param_order = $request->request->get('orderEDT');
           $logger->debug("Show me param_order: " . $param_order);
 
@@ -345,7 +348,7 @@ class AdminEDTController extends AbstractController
           }
 
 
-          $query_integration_EDT = "CALL SRV_CRT_JQEDT (" . $tag_stamp_for_export . ", '" . $param_inv_tech_monday . "', " . $param_cohort_id . ", '" . $param_order .  "' );";
+          $query_integration_EDT = "CALL SRV_CRT_JQEDT (" . $tag_stamp_for_export . ", '" . $param_inv_tech_monday . "', " . $param_cohort_id . ", '" . $param_order .  "', '" . $param_edt_title . "' );";
           $logger->debug("Show me query_integration_EDT: " . $query_integration_EDT);
 
           $result_integration_EDT = $dbconnectioninst->query($query_integration_EDT)->fetchAll(PDO::FETCH_ASSOC);

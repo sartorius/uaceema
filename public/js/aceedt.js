@@ -57,6 +57,7 @@ function publishEDT(order){
         // Real data
         invCohortId: tempClasseID,
         invTechMonday: invMondayStr,
+        invTitle: removeAllQuotes(removeAccentuated($('#ttl-note-input').val().trim())).length == 0 ? 'NA' : removeAllQuotes(removeAccentuated($('#ttl-note-input').val().trim())),
         orderEDT: order,
         myEDTArray: JSON.stringify(myEDTArray)
 
@@ -259,11 +260,13 @@ function selectClasse(classeId, str, humanAction){
       $(".bdt-save-pub").prop("disabled", false);
       $("#btn-edit-jqedt").prop("disabled", false);
       $("#edt-save-blk").show(100);
+      switchTitleEdit('Y');
   }
   else{
       $("#publish-cls").html('');
       $("#edt-save-blk").hide(100);
       $("#btn-edit-jqedt").prop("disabled", true);
+      switchTitleEdit('N');
   }
   //console.log('You have just classeId: ' + classeId);
   // Refresh necessary to identify overcapacity
@@ -635,6 +638,7 @@ function startOnOffEdit(){
     editModeOn();
     $("#btn-edit-name").html("Figer EDT");
     $("#last-update").html('en cours de modification.');
+    switchTitleEdit(editMode);
     refreshCellClick('startOnOffEdit');
   }
   else{
@@ -643,7 +647,7 @@ function startOnOffEdit(){
     editMode = 'N';
     editModeOff();
     $("#btn-edit-name").html("Modifier EDT");
-
+    switchTitleEdit(editMode);
   }
 
 }
@@ -1120,6 +1124,23 @@ function refreshCellClick(caller){
 
 }
 
+function switchTitleEdit(paramEdit){
+  if(paramEdit == 'Y'){
+    $("#disp-ttl-note").hide(100);
+    $("#ttl-note-input").show(100);
+  }
+  else{
+    $("#disp-ttl-note").show(100);
+    $("#ttl-note-input").hide(100);
+    if($('#ttl-note-input').val().trim().length > 0){
+      $("#ttl-note").html($('#ttl-note-input').val().trim());
+    }
+    else{
+      $("#ttl-note").html('NA');
+    }
+  }
+}
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -1159,6 +1180,9 @@ $(document).ready(function() {
         // We do nothing as the EDT is empty
       }
       editMode = 'N';
+      //Set Title
+      $('#ttl-note-input').val(dataLoadToJsonArray[0].master_title);
+      switchTitleEdit(editMode);
       
     }
     else{

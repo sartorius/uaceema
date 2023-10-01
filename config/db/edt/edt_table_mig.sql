@@ -56,7 +56,8 @@ ADD COLUMN `shift_duration` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Halftim
 ALTER TABLE uac_edt_line
 ADD COLUMN `teacher_id` SMALLINT NOT NULL DEFAULT 0 AFTER shift_duration;
 
-
+ALTER TABLE uac_edt_master
+ADD COLUMN edt_title VARCHAR(300) NOT NULL DEFAULT 'NA' AFTER monday_ofthew;
 
 DROP TABLE IF EXISTS uac_ref_day_queue;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_day_queue` (

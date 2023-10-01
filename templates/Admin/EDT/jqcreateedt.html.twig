@@ -46,6 +46,7 @@
       let tempTeacherName = '';
       let tempTeacherId = '';
 
+
       const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
       const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
       const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
@@ -160,6 +161,9 @@
           
         </div>
         <div class="edt-status"><i class="icon-exclamation-circle nav-text"></i>&nbsp;Status : <i id='last-update'>(non publié)</i></div>
+
+        <div id="disp-ttl-note" class="edt-status">Titre/note : <i id='ttl-note'>NA</i></div>
+        <textarea id="ttl-note-input" placeholder="Entrez un titre ou une note pour l'EDT si nécessaire." style="resize: none;"  name="w3review" rows="1" cols="80"></textarea>
 
         {# We have the rights to edit #}
         {% if edit_rights == 'Y' %}

@@ -1,6 +1,6 @@
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_JQEDT$$
-CREATE PROCEDURE `SRV_CRT_JQEDT` (IN param_stamp INT, IN param_monday_date DATE, IN param_cohort_id INT, IN param_order CHAR(1))
+CREATE PROCEDURE `SRV_CRT_JQEDT` (IN param_stamp INT, IN param_monday_date DATE, IN param_cohort_id INT, IN param_order CHAR(1), IN param_title VARCHAR(300))
 BEGIN
     DECLARE flow_code	CHAR(7);
     DECLARE inv_flow_id	BIGINT;
@@ -48,7 +48,7 @@ BEGIN
 
     -- Proceed to new lines !
     -- Add the timestamp for Madagascar timezone
-    INSERT INTO uac_edt_master (flow_id, cohort_id, monday_ofthew, visibility, jq_edt_type, last_update) VALUES (inv_flow_id, param_cohort_id, param_monday_date, param_order, 'Y', DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 HOUR));
+    INSERT INTO uac_edt_master (flow_id, cohort_id, monday_ofthew, visibility, jq_edt_type, edt_title, last_update) VALUES (inv_flow_id, param_cohort_id, param_monday_date, param_order, 'Y', param_title, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 HOUR));
     SELECT LAST_INSERT_ID() INTO inv_master_id;
 
     -- uac_edt_line INSERT HERE
@@ -270,6 +270,7 @@ BEGIN
                   uem.jq_edt_type AS jq_edt_type,
                   uem.visibility AS visibility,
                   uem.cohort_id AS cohort_id,
+                  uem.edt_title AS master_title,
                   vcc.short_classe AS short_classe,
                   urm.par_code AS mention_code,
                   urm.title AS mention,
@@ -317,6 +318,7 @@ BEGIN
                 uem.jq_edt_type AS jq_edt_type,
                 uem.visibility AS visibility,
                 uem.cohort_id AS cohort_id,
+                uem.edt_title AS master_title,
                 vcc.short_classe AS short_classe,
                 urm.par_code AS mention_code,
                 urm.title AS mention,
@@ -366,6 +368,7 @@ BEGIN
           uem.jq_edt_type AS jq_edt_type,
           uem.visibility AS visibility,
           uem.cohort_id AS cohort_id,
+          uem.edt_title AS master_title,
           vcc.short_classe AS short_classe,
           urm.par_code AS mention_code,
           urm.title AS mention,

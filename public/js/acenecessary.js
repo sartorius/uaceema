@@ -6,6 +6,10 @@ function removeAccentuated(param){
   return param.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
+function removeAllQuotes(param){
+  return param.replace(/"/g, '').replace(/'/g, '');
+}
+
 /***********************************************************************************************************/
 function scrollToTop(){
   document.body.scrollTop = document.documentElement.scrollTop = 0;
