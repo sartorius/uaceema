@@ -303,3 +303,153 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+
+-- The export expect value as CHAR(1) 0, 1 or D and D i for the current day
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_EDTTextExport$$
+CREATE PROCEDURE `CLI_GET_EDTTextExport` (IN param_type CHAR(1))
+BEGIN
+    DECLARE monday_zero	DATE;
+    DECLARE monday_one	DATE;
+
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+
+    -- Monday Zero
+    SELECT DAYOFWEEK(CURRENT_DATE) INTO inv_cur_dayw;
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_zero;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL 7 DAY) INTO inv_cur_date;
+    SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO monday_one;
+
+    IF (param_type = '0') THEN
+                SELECT
+                 'S0' AS inv_s,
+                 uem.id AS master_id,
+                 uem.edt_title AS master_title,
+                 uem.cohort_id AS cohort_id,
+                 vcc.short_classe AS short_classe,
+                 CASE
+                    WHEN uel.day_code = 0 THEN "LUNDI"
+                    WHEN uel.day_code = 1 THEN "MARDI"
+                    WHEN uel.day_code = 2 THEN "MERCREDI"
+                    WHEN uel.day_code = 3 THEN "JEUDI"
+                    WHEN uel.day_code = 4 THEN "VENDREDI"
+                    ELSE "SAMEDI"
+                    END AS label_day_fr,
+                 DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+                 DATE_FORMAT(uel.day, "%d/%m") AS nday,
+                 fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+                 uel.course_status AS course_status,
+                  urr.id AS urr_id,
+                  urr.name AS urr_name,
+                  uel.duration_min AS uel_duration_min,
+                  uel.min_starts_at AS uel_min_starts_at,
+                  uel.end_time AS uel_end_time,
+                  uel.start_time AS uel_start_time,
+                  urt.id AS teacher_id,
+                  urt.name AS teacher_name,
+                 DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+               FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                                     JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                                    JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                                    JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                                    JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                                    JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                    JOIN uac_ref_room urr ON urr.id = uel.room_id
+                                    JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                    JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+               WHERE uem.monday_ofthew = monday_zero
+               AND uem.visibility = 'V'
+               AND uem.jq_edt_type = 'Y'
+               AND uel.course_status NOT IN ('1', '2')
+               ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
+    ELSEIF (param_type = '1')  THEN
+              SELECT
+               'S1' AS inv_s,
+               uem.id AS master_id,
+               uem.edt_title AS master_title,
+               uem.cohort_id AS cohort_id,
+               vcc.short_classe AS short_classe,
+               CASE
+                  WHEN uel.day_code = 0 THEN "LUNDI"
+                  WHEN uel.day_code = 1 THEN "MARDI"
+                  WHEN uel.day_code = 2 THEN "MERCREDI"
+                  WHEN uel.day_code = 3 THEN "JEUDI"
+                  WHEN uel.day_code = 4 THEN "VENDREDI"
+                  ELSE "SAMEDI"
+                  END AS label_day_fr,
+               DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+               DATE_FORMAT(uel.day, "%d/%m") AS nday,
+               fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+               uel.course_status AS course_status,
+                urr.id AS urr_id,
+                urr.name AS urr_name,
+                uel.duration_min AS uel_duration_min,
+                uel.min_starts_at AS uel_min_starts_at,
+                uel.end_time AS uel_end_time,
+                uel.start_time AS uel_start_time,
+                urt.id AS teacher_id,
+                urt.name AS teacher_name,
+               DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+             FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                                   JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                                  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                                  JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                                  JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                                  JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                  JOIN uac_ref_room urr ON urr.id = uel.room_id
+                                  JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                  JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+             WHERE uem.monday_ofthew = monday_one
+             AND uem.visibility = 'V'
+             AND uem.jq_edt_type = 'Y'
+             AND uel.course_status NOT IN ('1', '2')
+             ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
+    ELSEIF (param_type = 'D')  THEN
+              SELECT
+               'D' AS inv_s,
+               uem.id AS master_id,
+               uem.edt_title AS master_title,
+               uem.cohort_id AS cohort_id,
+               vcc.short_classe AS short_classe,
+               CASE
+                  WHEN uel.day_code = 0 THEN "LUNDI"
+                  WHEN uel.day_code = 1 THEN "MARDI"
+                  WHEN uel.day_code = 2 THEN "MERCREDI"
+                  WHEN uel.day_code = 3 THEN "JEUDI"
+                  WHEN uel.day_code = 4 THEN "VENDREDI"
+                  ELSE "SAMEDI"
+                  END AS label_day_fr,
+               DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+               DATE_FORMAT(uel.day, "%d/%m") AS nday,
+               fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+               uel.course_status AS course_status,
+                urr.id AS urr_id,
+                urr.name AS urr_name,
+                uel.duration_min AS uel_duration_min,
+                uel.min_starts_at AS uel_min_starts_at,
+                uel.end_time AS uel_end_time,
+                uel.start_time AS uel_start_time,
+                urt.id AS teacher_id,
+                urt.name AS teacher_name,
+               DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+             FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                                   JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                                  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                                  JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                                  JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                                  JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                                  JOIN uac_ref_room urr ON urr.id = uel.room_id
+                                  JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                                  JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+             WHERE uem.last_update > CURRENT_DATE
+             AND uem.monday_ofthew <= CURRENT_DATE
+             AND uem.visibility = 'V'
+             AND uem.jq_edt_type = 'Y'
+             AND uel.course_status NOT IN ('1', '2')
+             ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
+    END IF;
+END$$
+-- Remove $$ for OVH

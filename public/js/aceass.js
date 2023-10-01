@@ -1177,7 +1177,7 @@ function initTextExport(jsonArray){
         text = text + cReturn;
       }
       invClasse = jsonArray[i].cohort_id;
-      text = text + breakClasse + cReturn + jsonArray[i].short_classe + cReturn;
+      text = text + breakClasse + cReturn + jsonArray[i].short_classe  + ' - ' + jsonArray[i].master_title + cReturn;
       text = text + breakClasse + cReturn;
     }
     text = text + jsonArray[i].label_day_fr + ' - ' + jsonArray[i].nday + ' début: ' + jsonArray[i].uel_start_time + ' fin: ' + jsonArray[i].uel_end_time  + cReturn;

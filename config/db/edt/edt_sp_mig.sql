@@ -627,6 +627,7 @@ BEGIN
                 SELECT
                  'S0' AS inv_s,
                  uem.id AS master_id,
+                 uem.edt_title AS master_title,
                  uem.cohort_id AS cohort_id,
                  vcc.short_classe AS short_classe,
                  CASE
@@ -668,6 +669,7 @@ BEGIN
               SELECT
                'S1' AS inv_s,
                uem.id AS master_id,
+               uem.edt_title AS master_title,
                uem.cohort_id AS cohort_id,
                vcc.short_classe AS short_classe,
                CASE
@@ -709,6 +711,7 @@ BEGIN
               SELECT
                'D' AS inv_s,
                uem.id AS master_id,
+               uem.edt_title AS master_title,
                uem.cohort_id AS cohort_id,
                vcc.short_classe AS short_classe,
                CASE
