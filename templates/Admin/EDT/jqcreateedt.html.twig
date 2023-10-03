@@ -35,6 +35,8 @@
       let edtExistAlreadyMasterId = 0;
       let edtExistAlreadyMasterIdJQType = 'Y';
 
+      let tokenToBeBurnOnlyOnce = 'Y';
+
       // This variable only used for debug
       let tempMisc;
 
@@ -241,14 +243,16 @@
               <div id='modal-crs-status'>
                 <div id="crs-status" class="btn-group" role="group" aria-label="Status">
                   <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group active">Actif</button>
-                  <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Optionnel</button>
-                  <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group">Hors site</button>
+                  <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Opt.</button>
+                  <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group">HS</button>
                   <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">Annulé</button>
+                  <button id="stt-m" type="button" value="M" class="btn btn-outline-secondary stt-group">Abs.</button>
 
                   <button id="stt-1" type="button" value="1" class="btn btn-outline-secondary stt-group">Note 1</button>
                   <button id="stt-2" type="button" value="2" class="btn btn-outline-secondary stt-group">Note 2</button>
                 </div>
               </div>
+              
 
 
               <div id='modal-crs-room'>
@@ -261,6 +265,9 @@
             <datalist id="teach-list">
               {# <option>Russia</option> #}
             </datalist>
+        </div>
+        <div class='sm-inf'>
+              <i class="icon-info-circle nav-text"></i>&nbsp;Note : Opt. (Optionnel), HS (Hors Site) et Abs. (Prof Absent)
         </div>
         <div id="teach-sel-msg">
           <i class="icon-exclamation-triangle nav-text"></i>&nbsp;Enseignant introuvable dans notre référentiel : vous devez mettre son nom dans la partie description juste en bas, sinon aucun professeur ne sera indiqué pour ce cours.

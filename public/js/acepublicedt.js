@@ -155,6 +155,10 @@ function publicDrawEDT(){
               crsStatus = '-can';
               courseTitleTemp = 'ANNULÉ : <i class="ua-line">' + courseTitleTemp + '</i>';
               break;
+            case 'M':
+              crsStatus = '-mis';
+              courseTitleTemp = 'ANNULÉ PROF ABS : <i class="ua-line">' + courseTitleTemp + '</i>';
+              break;
             case 'H':
               crsStatus = '-hos';
               courseTitleTemp = '<strong>Hors site</strong> : ' + courseTitleTemp;

@@ -1085,6 +1085,17 @@ textarea[name=inputRef] {
   width: var(--course-width-sm);
 }
 
+.myedt-course-mis{
+  color : WHITE;
+  background-color: #000000;
+  text-align: center;
+  border:1px solid black;
+  font-weight: 600;
+  font-size: var(--course-txt-sm);
+  width: var(--course-width-sm);
+}
+
+
 .myedt-course-opt{
   color : #3D341A;
   background-color: #F9EFD2;
@@ -1498,6 +1509,11 @@ textarea[name=inputRef] {
 }
 .edit-sel-off{
   pointer-events: none;
+}
+
+.sm-inf{
+  font-size: 14px;
+  color: rgb(138, 122, 163);
 }
 
 #ttl-note-input{

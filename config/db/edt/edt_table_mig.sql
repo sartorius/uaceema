@@ -164,7 +164,11 @@ SELECT vcc.short_classe AS CLASSE,
                       WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
                       ELSE "Samedi"
                       END AS JOUR,
-    CASE WHEN uel.course_status = "A" THEN "Présenté" ELSE "Annulé" END AS COURSE_STATUS,
+    CASE WHEN uel.course_status = "A" THEN "Présenté sur site"
+         WHEN uel.course_status = "M" THEN "Prof Absent"
+         WHEN uel.course_status = "H" THEN "Présenté hors site"
+         WHEN uel.course_status = "O" THEN "Présenté optionnel"
+    ELSE "Annulé" END AS COURSE_STATUS,
     REPLACE(CONCAT(fEscapeLineFeed(fEscapeStr(uel.raw_course_title)), ' ', urt.name,
                 CASE WHEN uel.start_time IS NOT NULL THEN CONCAT(" - Début ", uel.start_time) ELSE "" END,
                 CASE WHEN uel.end_time IS NOT NULL THEN CONCAT(" - Fin ", uel.end_time) ELSE "" END), '\\n', ' - ') AS COURS_DETAILS,

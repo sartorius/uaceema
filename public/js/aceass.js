@@ -1188,6 +1188,9 @@ function initTextExport(jsonArray){
       case 'C':
         text = text + '[ATTENTION] ANNULÉ ';
         break;
+      case 'M':
+        text = text + '[ATTENTION] ANNULÉ PROF ABSENT ';
+        break;
       case 'O':
         text = text + '[Optionnel] ';
         break;

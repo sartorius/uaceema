@@ -260,7 +260,13 @@ function selectClasse(classeId, str, humanAction){
       $(".bdt-save-pub").prop("disabled", false);
       $("#btn-edit-jqedt").prop("disabled", false);
       $("#edt-save-blk").show(100);
-      switchTitleEdit('Y');
+      if((mode == 'LOA') && (dataLoadToJsonArray.length > 0) && (tokenToBeBurnOnlyOnce == 'Y')){
+        //Do this only once at first load in case we load the file to avoid graphic show/hide
+        tokenToBeBurnOnlyOnce = 'N';
+      }
+      else{
+        switchTitleEdit('Y');
+      }
   }
   else{
       $("#publish-cls").html('');
@@ -757,6 +763,10 @@ function drawMainEDT(callBack, caller){
           case 'H':
             crsStatus = '-hos';
             courseTitleTemp = '<strong>Hors site</strong> : ' + courseTitleTemp;
+            break;
+          case 'M':
+            crsStatus = '-mis';
+            courseTitleTemp = 'ANNULÉ PROF ABS : <i class="ua-line">' + courseTitleTemp + '</i>';
             break;
           case '1':
             crsStatus = '-n1';
