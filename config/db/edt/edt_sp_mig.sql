@@ -448,6 +448,7 @@ BEGIN
     IF (count_result_set = 0) THEN
           SELECT
               NULL AS flow_id,
+              NULL AS master_title,
               'N' AS jq_edt_type,
               NULL AS mention,
               NULL AS niveau,
@@ -481,6 +482,7 @@ BEGIN
                 -- Return the list for control
                 SELECT
                   uem.id AS master_id,
+                  uem.edt_title AS master_title,
                   uem.jq_edt_type AS jq_edt_type,
                   uem.visibility AS visibility,
                   uem.cohort_id AS cohort_id,
@@ -537,6 +539,7 @@ BEGIN
                  -- Return the list for control
                  SELECT
                    uem.id AS master_id,
+                   uem.edt_title AS master_title,
                    uem.jq_edt_type AS jq_edt_type,
                    uem.visibility AS visibility,
                    uem.cohort_id AS cohort_id,

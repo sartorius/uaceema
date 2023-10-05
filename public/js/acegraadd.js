@@ -48,7 +48,7 @@ function generatereviewexamDB(){
         },
         error: function (jqXhr, textStatus, errorMessage) {
           $('#loading').hide(50);
-          $('#msg-alert').html("ERR411GRA: exam #" + POST_MASTER_ID + " une erreur s'est produite pour la vérification, veuillez contacter le support technique.");
+          $('#msg-alert').html("ERR412GRA: exam #" + POST_MASTER_ID + " une erreur s'est produite pour la vérification, veuillez contacter le support technique.");
           $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
           $('#ace-alert-msg').show(100);
           scrollToTop();

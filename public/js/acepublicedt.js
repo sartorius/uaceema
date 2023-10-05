@@ -85,6 +85,9 @@ function publicDrawEDT(){
   
     reinitDateArraysPublic();
   
+    if(dataLoadToJsonArray.length > 0){
+      $('#edt-ttl').html('Titre : ' + dataLoadToJsonArray[0].master_title);
+    }
     // This will not be visible and will be necessary only for export EXCEL
     tableText =  tableText + '<tr id="table-header-export" style="height: 0px"><td colspan="7">' + '<i id="title-edt-export"></i>' + '</td></tr>';
   

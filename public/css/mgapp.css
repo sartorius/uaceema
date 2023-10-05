@@ -1148,6 +1148,12 @@ textarea[name=inputRef] {
   width: var(--course-width-sm);
 }
 
+#edt-ttl{
+  font-size: 20px;
+  color: #44006f;
+  margin-bottom: 10px;
+}
+
 /********************************** EDT ROWSPAN *************************************/
 
 @media (min-width:414px){
