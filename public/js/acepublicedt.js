@@ -80,13 +80,13 @@ function reinitDateArraysPublic(){
 /******************************************* END: Function COPY PAST ADMIN ********************************************/
 
 
-function publicDrawEDT(){
+function publicDrawEDT(paramMainEDTId, paramTitleEDT){
     let tableText = '<table id="my-main-table" style="width: 100%" class="' + classBackground + ' edit-sel-off"><tbody>';
   
     reinitDateArraysPublic();
   
     if(dataLoadToJsonArray.length > 0){
-      $('#edt-ttl').html('Titre : ' + dataLoadToJsonArray[0].master_title);
+      $(paramTitleEDT).html('Titre : ' + dataLoadToJsonArray[0].master_title);
     }
     // This will not be visible and will be necessary only for export EXCEL
     tableText =  tableText + '<tr id="table-header-export" style="height: 0px"><td colspan="7">' + '<i id="title-edt-export"></i>' + '</td></tr>';
@@ -195,7 +195,7 @@ function publicDrawEDT(){
     }
   
     tableText = tableText  + '</tbody></table>';
-    $('#main-edt').html(tableText);
+    $(paramMainEDTId).html(tableText);
 
 }
 
@@ -216,7 +216,7 @@ $(document).ready(function() {
         else{
           // We do nothing as the EDT is empty
         }
-        publicDrawEDT();
+        publicDrawEDT('#main-edt', '#edt-ttl');
       }
       else{
         // We are not JQ so we do nothing

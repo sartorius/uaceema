@@ -169,6 +169,59 @@ class StaticController extends AbstractController
   }
 
 
+
+  public function alledt(Environment $twig, LoggerInterface $logger, $week_id)
+  {
+      // This is public with no restriction
+      if($week_id == 0){
+        $logger->debug("Correct value of week_id: " . $week_id);
+      }
+      else if($week_id == 1){
+        $logger->debug("Correct value of week_id: " . $week_id);
+      }
+      else{
+        $logger->debug("Incorrect value of week_id: " . $week_id);
+      }
+
+
+      if(isset($week_id) && (($week_id == 0) || ($week_id == 1))){
+
+          $dbconnectioninst = DBConnectionManager::getInstance();
+                    
+          $query_get_all_master_id = " CALL CLI_GET_COUNTALLEDTJQ(" . $week_id . "); ";
+          $logger->debug("query_get_all_master_id: " . $query_get_all_master_id);
+
+          $result_query_get_all_master_id = $dbconnectioninst->query($query_get_all_master_id)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("Show me result_query_get_all_master_id: " . count($result_query_get_all_master_id));
+
+          if(count($result_query_get_all_master_id) > 0){
+            $query_get_all_edt = " CALL CLI_GET_ALLFWEDTJQ(" . $week_id . "); ";
+            $logger->debug("query_get_all_edt: " . $query_get_all_edt);
+
+            $result_query_get_all_edt = $dbconnectioninst->query($query_get_all_edt)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_get_all_master_id: " . count($result_query_get_all_edt));
+          }
+          
+          
+          $content = $twig->render('Static/alledt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                  'firstname' => $_SESSION["firstname"],
+                                                                  'lastname' => $_SESSION["lastname"],
+                                                                  'id' => $_SESSION["id"],
+                                                                  'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                  'week_id' => $week_id,
+                                                                  'result_query_get_all_master_id' => $result_query_get_all_master_id,
+                                                                  'result_query_get_all_edt' => $result_query_get_all_edt,
+                                                                  'errtype' => '']);
+                                                                  
+      }
+      else{
+          // Error Code 404
+          $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+      }
+      return new Response($content);
+  }
+
+
   
 
 }

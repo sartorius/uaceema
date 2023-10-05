@@ -1,0 +1,45 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+        <h1>EDT Semaine S{{ week_id }}</h1>
+        <hr>
+        {% if result_query_get_all_master_id|length > 0 %}
+        Voici la liste des emplois du temps publié(s) de cette semaine :
+        <ul>
+            {% for el in result_query_get_all_master_id %}
+                <li>{{ el.UEM_ID }}) {{ el.VCC_SHORT_CLASS }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        Aucun emploi du temps n'a été publié pour cette semaine.
+        {% endif %}
+        <hr>
+        </div>
+    </div>
+</div>
+
+{% if result_query_get_all_master_id|length > 0 %}
+{# Display here all main EDT #}
+    {% for el in result_query_get_all_master_id %}
+        {# Do something for each EDT #}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                <hr>
+                <h2>{{ el.VCC_SHORT_CLASS }}</h2>
+                <div id='edt-ttl{{ el.UEM_ID }}'>
+                </div>
+                <div  style="overflow-x: scroll; width: 100%;" class='uac-jqedt-version'>
+                    <div id="main-edt-{{ el.UEM_ID }}">
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% include 'RawTemplate/SPE/_footeralledtpublic.html.twig' %}

@@ -652,3 +652,167 @@ BEGIN
     END IF;
 END$$
 -- Remove $$ for OVH
+
+
+-- Count all Master EDT
+-- Read the All EDT
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_COUNTALLEDTJQ$$
+CREATE PROCEDURE `CLI_GET_COUNTALLEDTJQ` (IN param_week TINYINT)
+BEGIN
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_monday_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+    DECLARE count_result_set	INT;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL (7 * param_week) DAY) INTO inv_cur_date;
+    -- inv_cur_dayw will be 7 or 1 for week end
+    -- Check the week involved
+    SELECT DAYOFWEEK(inv_cur_date) INTO inv_cur_dayw;
+
+    -- If WE, we take next Monday
+    IF inv_cur_dayw IN (7) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 2 DAY) INTO inv_monday_date;
+    ELSEIF inv_cur_dayw IN (1) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 1 DAY) INTO inv_monday_date;
+    ELSE
+        SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO inv_monday_date;
+    END IF;
+
+
+    SELECT uem.id AS UEM_ID, vcc.short_classe AS VCC_SHORT_CLASS
+        FROM uac_edt_master uem JOIN v_class_cohort vcc ON uem.cohort_id = vcc.id
+        WHERE monday_ofthew = inv_monday_date
+        AND visibility = 'V' ORDER BY uem.cohort_id ASC;
+END$$
+-- Remove $$ for OVH
+
+
+-- Read the All EDT
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_GET_ALLFWEDTJQ$$
+CREATE PROCEDURE `CLI_GET_ALLFWEDTJQ` (IN param_week TINYINT)
+BEGIN
+    DECLARE inv_cur_date	DATE;
+    DECLARE inv_monday_date	DATE;
+    DECLARE inv_cur_dayw	TINYINT;
+    DECLARE count_result_set	INT;
+
+    SELECT DATE_ADD(CURRENT_DATE, INTERVAL (7 * param_week) DAY) INTO inv_cur_date;
+    -- inv_cur_dayw will be 7 or 1 for week end
+    -- Check the week involved
+    SELECT DAYOFWEEK(inv_cur_date) INTO inv_cur_dayw;
+
+    -- If WE, we take next Monday
+    IF inv_cur_dayw IN (7) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 2 DAY) INTO inv_monday_date;
+    ELSEIF inv_cur_dayw IN (1) THEN
+        SELECT DATE_ADD(inv_cur_date, INTERVAL 1 DAY) INTO inv_monday_date;
+    ELSE
+        SELECT DATE_ADD(inv_cur_date, INTERVAL -(inv_cur_dayw - 2) DAY) INTO inv_monday_date;
+    END IF;
+
+
+    SELECT COUNT(1) INTO count_result_set
+        FROM uac_edt_master uem
+        WHERE monday_ofthew = inv_monday_date
+        AND visibility = 'V';
+
+    IF (count_result_set = 0) THEN
+          SELECT
+              NULL AS flow_id,
+              NULL AS master_title,
+              'N' AS jq_edt_type,
+              NULL AS mention,
+              NULL AS niveau,
+              NULL AS parcours,
+              NULL AS groupe,
+              NULL AS label_day_fr,
+              DATE_FORMAT(inv_monday_date, "%Y-%m-%d") AS inv_tech_monday,
+              DATE_FORMAT(inv_monday_date, "%d/%m/%Y") AS monday,
+              -- To be removed as duplicate old fashion
+              DATE_FORMAT(inv_monday_date, "%d/%m/%Y") AS mondayw,
+              DATE_FORMAT(inv_cur_date, "%d/%m") AS nday,
+              0 AS day_code,
+              0 AS hour_starts_at,
+              0 AS duration_hour,
+              'X' AS course_status,
+              0 AS urr_id,
+              'X' AS urr_name,
+              'X' AS course_id,
+              0 AS duration_min,
+              0 AS min_starts_at,
+              NULL AS end_time,
+              NULL AS start_time,
+              0 AS shift_duration,
+              NULL AS raw_course_title,
+              0 AS teacher_id,
+              NULL AS teacher_name,
+              NULL AS last_update;
+    ELSE
+      -- We have result
+      -- Return the list for control
+      SELECT
+        uem.id AS master_id,
+        uem.edt_title AS master_title,
+        uem.jq_edt_type AS jq_edt_type,
+        uem.visibility AS visibility,
+        uem.cohort_id AS cohort_id,
+        vcc.short_classe AS short_classe,
+        urm.title AS mention,
+        uc.niveau AS niveau,
+        urp.title AS parcours,
+        urg.title AS groupe,
+        CASE
+           WHEN uel.day_code = 0 THEN "LUNDI"
+           WHEN uel.day_code = 1 THEN "MARDI"
+           WHEN uel.day_code = 2 THEN "MERCREDI"
+           WHEN uel.day_code = 3 THEN "JEUDI"
+           WHEN uel.day_code = 4 THEN "VENDREDI"
+           ELSE "SAMEDI"
+           END AS label_day_fr,
+        DATE_FORMAT(uem.monday_ofthew, "%Y-%m-%d") AS inv_tech_monday,
+        DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS monday,
+       -- To be removed as duplicate old fashion
+        DATE_FORMAT(uem.monday_ofthew, "%d/%m/%Y") AS mondayw,
+        DATE_FORMAT(uel.day, "%d/%m") AS nday,
+        DATE_FORMAT(uel.day, "%Y-%m-%d") AS tech_date,
+        uel.day_code AS day_code,
+        uel.hour_starts_at AS uel_hour_starts_at,
+       -- To be removed as duplicate old fashion
+        uel.hour_starts_at AS hour_starts_at,
+        uel.duration_hour AS uel_duration_hour,
+       -- To be removed as duplicate old fashion
+       uel.duration_hour AS duration_hour,
+        fEscapeLineFeed(fEscapeStr(uel.raw_course_title)) AS raw_course_title,
+        uel.course_status AS course_status,
+         urr.id AS urr_id,
+         urr.name AS urr_name,
+         urr.capacity AS room_capacity,
+         uel.course_id AS course_id,
+         uel.duration_min AS uel_duration_min,
+         uel.min_starts_at AS uel_min_starts_at,
+         uel.end_time AS uel_end_time,
+         uel.start_time AS uel_start_time,
+         uel.shift_duration AS uel_shift_duration,
+         urt.id AS teacher_id,
+         urt.name AS teacher_name,
+         uel.label_day AS uel_label_day,
+        DATE_FORMAT(uem.last_update, "%d/%m %H:%i") AS last_update
+      FROM uac_edt_line uel JOIN uac_edt_master uem ON uem.id = uel.master_id
+                            JOIN uac_cohort uc ON uc.id = uem.cohort_id
+                           JOIN uac_ref_mention urm ON urm.par_code = uc.mention
+                           JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
+                           JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
+                           JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                           JOIN uac_ref_room urr ON urr.id = uel.room_id
+                           JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+                           JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+      WHERE uem.monday_ofthew = inv_monday_date
+      AND uem.visibility = 'V'
+      AND uel.course_status NOT IN ('1', '2')
+      -- We need another order because we do not display per line here
+      ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
+    END IF;
+END$$
+-- Remove $$ for OVH

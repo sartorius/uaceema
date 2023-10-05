@@ -131,6 +131,11 @@ provinceint:
 verifdiplomatxt:
     path:       /verifdiplomatxt
     controller: App\Controller\StaticController::verifdiplomatxt
+alledt:
+    path:       /alledt/{week_id}
+    controller: App\Controller\StaticController::alledt
+    defaults:
+        week_id:   0
 alumni:
     path:       /alumni
     controller: App\Controller\AdminAlumniController::main
