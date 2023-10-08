@@ -200,6 +200,11 @@ class StaticController extends AbstractController
 
             $result_query_get_all_edt = $dbconnectioninst->query($query_get_all_edt)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_get_all_master_id: " . count($result_query_get_all_edt));
+
+            $techInvMonday = $result_query_get_all_edt[0]['inv_tech_monday'];
+          }
+          else{
+            $result_query_get_all_edt = array();
           }
           
           
@@ -211,6 +216,7 @@ class StaticController extends AbstractController
                                                                   'week_id' => $week_id,
                                                                   'result_query_get_all_master_id' => $result_query_get_all_master_id,
                                                                   'result_query_get_all_edt' => $result_query_get_all_edt,
+                                                                  'techInvMonday' => $techInvMonday,
                                                                   'errtype' => '']);
                                                                   
       }

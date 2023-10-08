@@ -1,22 +1,54 @@
 {% include 'RawTemplate/_hearder.html.twig' %}
+{% set free_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
 
 
+{# We handle here the JQ EDT #}
+{% if result_query_get_all_edt is defined and result_query_get_all_edt is not null %}
+    <script>
+      let dataAllEDTLoadToJsonArray = JSON.parse('{{ result_query_get_all_edt | json_encode | raw }}');
+
+        // Data to be filled for the EDT
+        let dataLoadToJsonArray = new Array();
+        let myEDTArray = new Array();
+        let myEDTRowSpanDebtArray = new Array();
+
+        const refHours = ["7h-8h", "8h-9h", "9h-10h", "10h-11h", "11h-12h", "12h-13h", "13h-14h", "14h-15h", "15h-16h", "16h-17h", "17h-18h"];
+        const refHoursStart = ["7h", "8h", "9h", "10h", "11h", "12h", "13h", "14h", "15h", "16h", "17h"];
+        const refHalfHoursStart = ["7h00", "7h30", "8h00", "8h30", "9h00", "9h30", "10h00", "10h30", "11h00", "11h30", "12h00", "12h30", "13h00", "13h30", "14h00", "14h30", "15h00", "15h30", "16h00", "16h30", "17h00", "17h30"];
+        const refDays = ["&nbsp;", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+        const refEnglishDay = ["&nbsp;", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+        const refDayCode = ["0", "1", "2", "3", "4", "5", "6"];
+        const classBackground = "edt-bg-free-{{ free_i }}";
+        const maxRawCourseTitleLength = 800;
+        const constRowHalfSize = 20;
+
+        let invMondayStr = '{{ techInvMonday }}';
+
+        let dateArray = new Array();
+        let techDateArray = new Array();
+
+    </script>
+{% else %}
+    <script>
+      let dataAllEDTLoadToJsonArray = null;
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">all-edt</div>
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
         <h1>EDT Semaine S{{ week_id }}</h1>
         <hr>
         {% if result_query_get_all_master_id|length > 0 %}
-        Voici la liste des emplois du temps publié(s) de cette semaine :
-        <ul>
-            {% for el in result_query_get_all_master_id %}
-                <li>{{ el.UEM_ID }}) {{ el.VCC_SHORT_CLASS }}</li>
-            {% endfor %}
-        </ul>
+        Voici la liste des emplois du temps publié(s) de cette semaine :<br>
+        {% for el in result_query_get_all_master_id %}
+            <button type="button" class="btn btn-dark btn-list-ace" onclick="goToAllEDT({{ el.UEM_ID }})">{{ el.VCC_SHORT_CLASS }}</button> <br>
+        {% endfor %}
         {% else %}
         Aucun emploi du temps n'a été publié pour cette semaine.
         {% endif %}
-        <hr>
         </div>
     </div>
 </div>

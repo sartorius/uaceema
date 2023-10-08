@@ -33,6 +33,13 @@ function printPresenceSheet(){
                         0, //y
                         210, //Width
                         297, null, 'FAST'); //Height // Fast is to get less big files
+
+    doc.addImage(document.getElementById('logo-ace'), //img src
+                        'PNG', //format
+                        1,//x oddOffsetX is to define if position 1 or 2
+                        1, //y
+                        19, //Width
+                        8, null, 'FAST'); //Height // Fast is to get less big files
     //pageLimit
     let pgCount = 0;
     let pgNbr = 1;
@@ -105,6 +112,13 @@ function printPresenceSheet(){
                         0, //y
                         210, //Width
                         297, null, 'FAST'); //Height // Fast is to get less big files
+            
+            doc.addImage(document.getElementById('logo-ace'), //img src
+                        'PNG', //format
+                        1,//x oddOffsetX is to define if position 1 or 2
+                        1, //y
+                        19, //Width
+                        8, null, 'FAST'); //Height // Fast is to get less big files
         }
     }
   

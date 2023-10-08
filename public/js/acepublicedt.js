@@ -28,6 +28,8 @@ function findCourse(courseId){
 
 function loadEDTPublic(){
   myEDTArray = new Array();
+  myEDTRowSpanDebtArray = new Array();
+
   for(let i=0; i<dataLoadToJsonArray.length; i++){
     let cell = dataLoadToJsonArray[i].course_id.toString().split("-");
     let myEDTLine = {
@@ -199,6 +201,13 @@ function publicDrawEDT(paramMainEDTId, paramTitleEDT){
 
 }
 
+function goToAllEDT(paramAnchor){
+  const scrollOptions = {
+    behavior: 'smooth',
+    block: 'start'
+  };  
+  document.getElementById('edt-ttl' + paramAnchor).scrollIntoView(scrollOptions); 
+}
 
 /***********************************************************************************************************/
 
@@ -221,6 +230,36 @@ $(document).ready(function() {
       else{
         // We are not JQ so we do nothing
       }
+    }
+    else if($('#mg-graph-identifier').text() == 'all-edt'){
+      // Do something
+      // We are in all EDT
+      if(dataAllEDTLoadToJsonArray[0].course_id != null){
+        let invMasterId = dataAllEDTLoadToJsonArray[0].master_id;
+        for(let i=0; i<dataAllEDTLoadToJsonArray.length; i++){
+          if(invMasterId == dataAllEDTLoadToJsonArray[i].master_id){
+              dataLoadToJsonArray.push(dataAllEDTLoadToJsonArray[i]);
+          }
+          else{
+            // We have changed so let's load the EDT : loadEDTPublic();
+            loadEDTPublic();
+            publicDrawEDT('#main-edt-' + invMasterId, '#edt-ttl' + invMasterId);
+
+            // We need to re-initiate the counter
+            invMasterId = dataAllEDTLoadToJsonArray[i].master_id;
+            dataLoadToJsonArray = new Array();
+            dataLoadToJsonArray.push(dataAllEDTLoadToJsonArray[i]);
+          }
+          // Then we need to display the last EDT
+          loadEDTPublic();
+          publicDrawEDT('#main-edt-' + invMasterId, '#edt-ttl' + invMasterId);
+        }
+        
+      }
+      else{
+        // We do nothing as the EDT is empty
+      }
+
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){
       // Do something
