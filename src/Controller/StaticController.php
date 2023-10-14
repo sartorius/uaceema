@@ -205,13 +205,11 @@ class StaticController extends AbstractController
           }
           else{
             $result_query_get_all_edt = array();
+            $techInvMonday = "";
           }
           
           
           $content = $twig->render('Static/alledt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
-                                                                  'firstname' => $_SESSION["firstname"],
-                                                                  'lastname' => $_SESSION["lastname"],
-                                                                  'id' => $_SESSION["id"],
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'week_id' => $week_id,
                                                                   'result_query_get_all_master_id' => $result_query_get_all_master_id,
