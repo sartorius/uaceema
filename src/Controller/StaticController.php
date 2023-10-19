@@ -151,20 +151,36 @@ class StaticController extends AbstractController
     // Be carefull if you have array of array
     $dbconnectioninst = DBConnectionManager::getInstance();
     //$result = $dbconnectioninst->query('select answera from myquery;')->fetch(PDO::FETCH_ASSOC);
-    $query_get_ccr_results_v1 = ' SELECT * FROM uac_ref_concours_result ORDER BY id ASC; ';
+    $query_get_ccr_results_v1 = ' SELECT * FROM uac_ref_concours_result WHERE wave = 1 ORDER BY id ASC; ';
     $logger->debug("Query query_get_ccr_results_v1: " . $query_get_ccr_results_v1);
 
     $result_query_get_ccr_results_v1 = $dbconnectioninst->query($query_get_ccr_results_v1)->fetchAll(PDO::FETCH_ASSOC);
 
-    $query_get_ccr_mention_v1 = ' SELECT DISTINCT(mention_txt) FROM uac_ref_concours_result; ';
+    $query_get_ccr_mention_v1 = ' SELECT DISTINCT(mention_txt) FROM uac_ref_concours_result  WHERE wave = 1; ';
     $logger->debug("Query query_get_ccr_mention_v1: " . $query_get_ccr_mention_v1);
 
     $result_query_get_ccr_mention_v1 = $dbconnectioninst->query($query_get_ccr_mention_v1)->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+    $query_get_ccr_results_v2 = ' SELECT * FROM uac_ref_concours_result WHERE wave = 2 ORDER BY id ASC; ';
+    $logger->debug("Query query_get_ccr_results_v2: " . $query_get_ccr_results_v2);
+
+    $result_query_get_ccr_results_v2 = $dbconnectioninst->query($query_get_ccr_results_v2)->fetchAll(PDO::FETCH_ASSOC);
+
+    $query_get_ccr_mention_v2 = ' SELECT DISTINCT(mention_txt) FROM uac_ref_concours_result  WHERE wave = 2; ';
+    $logger->debug("Query query_get_ccr_mention_v2: " . $query_get_ccr_mention_v2);
+
+    $result_query_get_ccr_mention_v2 = $dbconnectioninst->query($query_get_ccr_mention_v2)->fetchAll(PDO::FETCH_ASSOC);
+
+
+
     $content = $twig->render('Static/resultatconcours.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
                                                                     'result_query_get_ccr_mention_v1' => $result_query_get_ccr_mention_v1,
-                                                                    'result_query_get_ccr_results_v1' => $result_query_get_ccr_results_v1]);
+                                                                    'result_query_get_ccr_results_v1' => $result_query_get_ccr_results_v1,
+                                                                    'result_query_get_ccr_mention_v2' => $result_query_get_ccr_mention_v2,
+                                                                    'result_query_get_ccr_results_v2' => $result_query_get_ccr_results_v2]);
     return new Response($content);
   }
 
