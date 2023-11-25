@@ -31,9 +31,27 @@ CREATE PROCEDURE `MAN_LOAD_MDLUser` ()
 BEGIN
     DECLARE flow_code	CHAR(7);
     DECLARE inv_flow_id	BIGINT;
+
+    DECLARE duplicate_username	SMALLINT;
+    DECLARE duplicate_husername	SMALLINT;
+
+    DECLARE duplicate_email	SMALLINT;
+    DECLARE duplicate_hemail	SMALLINT;
+
+    DECLARE all_duplicate	SMALLINT;
     -- CALL SRV_PRG_Scan();
 
     SELECT 'MANLODU' INTO flow_code;
+
+
+    SELECT 0 INTO duplicate_username;
+    SELECT 0 INTO duplicate_husername;
+    SELECT 0 INTO duplicate_email;
+    SELECT 0 INTO duplicate_hemail;
+
+    SELECT 0 INTO all_duplicate;
+
+
 
     INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update) VALUES (flow_code, 'NEW', CURRENT_DATE, 0, NOW());
     SELECT LAST_INSERT_ID() INTO inv_flow_id;
@@ -71,13 +89,41 @@ BEGIN
       mdl_load_user.last_update = NOW()
       WHERE mdl_load_user.flow_id = inv_flow_id;
 
-    -- At this step we are NEW for each lines
-    UPDATE mdl_load_user SET status = 'QUE', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW';
-    -- cohort id must be in uac_showuser;
-    -- We need to check first the gsheet id versus id then do the load
+    -- Check duplicate if there is no error
+    SELECT count(1) INTO duplicate_username FROM mdl_load_user mlu WHERE mlu.username IN (SELECT mu.username FROM mdl_user mu);
+    SELECT count(1) INTO duplicate_husername FROM mdl_load_user mlu WHERE mlu.username IN (SELECT hmu.username FROM histo_mdl_user hmu);
+    SELECT count(1) INTO duplicate_email FROM mdl_load_user mlu WHERE mlu.email IN (SELECT mu.email FROM mdl_user mu);
+    SELECT count(1) INTO duplicate_hemail FROM mdl_load_user mlu WHERE mlu.email IN (SELECT hmu.email FROM histo_mdl_user hmu);
 
-    -- End of the flow correctly
-    UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Ready for import' WHERE id = inv_flow_id;
+    SELECT duplicate_username + duplicate_husername + duplicate_email + duplicate_hemail INTO all_duplicate;
+
+
+
+    IF (all_duplicate > 0) THEN
+        -- At this step we are NEW for each lines
+        UPDATE mdl_load_user SET status = 'ERU', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW'
+          AND username IN (SELECT mu.username FROM mdl_user mu);
+        UPDATE mdl_load_user SET status = 'ERH', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW'
+          AND username IN (SELECT hmu.username FROM histo_mdl_user hmu);
+
+        UPDATE mdl_load_user SET status = 'ERE', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW'
+          AND email IN (SELECT mu.email FROM mdl_user mu);
+        UPDATE mdl_load_user SET status = 'ERM', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW'
+          AND email IN (SELECT hmu.email FROM histo_mdl_user hmu);
+
+
+        UPDATE uac_working_flow SET status = 'ERR', last_update = NOW(), comment = 'Error duplicate for import' WHERE id = inv_flow_id;
+
+        SELECT 'ERROR Duplicate check mdl_load_user status not NEW';
+    ELSE
+        -- At this step we are NEW for each lines
+        UPDATE mdl_load_user SET status = 'QUE', last_update = NOW() WHERE flow_id = inv_flow_id AND status = 'NEW';
+        -- cohort id must be in uac_showuser;
+        -- We need to check first the gsheet id versus id then do the load
+        -- End of the flow correctly
+        UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Ready for import' WHERE id = inv_flow_id;
+        SELECT 'End successfully';
+    END IF;
 END$$
 -- Remove $$ for OVH
 

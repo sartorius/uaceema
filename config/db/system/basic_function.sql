@@ -113,3 +113,18 @@ BEGIN
 
 	RETURN token_value;
 END$$
+
+
+-- SELECT fSplitStr('1595/DT/IIIèA', '/', 1) as matricule;
+DELIMITER $$
+DROP FUNCTION IF EXISTS fSplitStr$$
+CREATE FUNCTION fSplitStr(
+  x VARCHAR(255),
+  delim VARCHAR(12),
+  pos INT
+)
+RETURNS VARCHAR(255)
+RETURN REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
+       LENGTH(SUBSTRING_INDEX(x, delim, pos -1)) + 1),
+       delim, '');
+$$

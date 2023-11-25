@@ -324,11 +324,6 @@ select * from mdl_user order by 1 asc;
 
 
 
-DELETE FROM mdl_load_user;
-CALL MAN_LOAD_MDLUser();
-CALL MAN_CRT_MDLUser();
-
-
 select * from v_studashboard_log order by creation_date desc;
 
 
@@ -413,3 +408,47 @@ SELECT 15, id FROM v_class_cohort vcc;
 
 INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 16, id FROM v_class_cohort vcc;
+
+
+-- Insert new student
+
+
+DELETE FROM mdl_load_user;
+
+
+CALL MAN_LOAD_MDLUser();
+CALL MAN_CRT_MDLUser();
+
+
+-- SESSION UPDATE students
+
+
+select * from mdl_user mu where mu.email = 'ifarasoanaivo@gmail.com';
+
+
+select * from mdl_user mu where mu.username = 'ANDRRAH328';
+
+
+
+select * from v_class_cohort where niveau = 'L1' and mention = 'GESTION';
+
+select * from uac_showuser where username = 'andrras397';
+1419
+andrras397
+
+
+-- Statistiques
+
+-- Année 2023-24
+-- 407
+select count(1) from mdl_user mu join uac_showuser us ON mu.username = us.username
+					  WHERE us.cohort_id IN (
+						  		select id from v_class_cohort where niveau = 'L1'
+						  )
+
+-- Année 2022-23
+-- 414
+select count(1) from histo_mdl_user hmu join histo_uac_showuser hus ON hmu.username = hus.username
+					  WHERE hus.cohort_id IN (
+						  		select id from v_class_cohort where niveau = 'L1'
+						  )

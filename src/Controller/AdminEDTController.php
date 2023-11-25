@@ -641,7 +641,7 @@ class AdminEDTController extends AbstractController
             $mention_query = " SELECT * FROM uac_ref_mention; ";
             $logger->debug("Show me mention_query: " . $mention_query);
 
-            $allclass_query = " SELECT * FROM v_class_cohort; ";
+            $allclass_query = " SELECT * FROM v_class_cohort ORDER BY short_classe; ";
             $logger->debug("Show me allclass_query: " . $allclass_query);
 
             $count_stu_query = " SELECT COHORT_ID AS COHORT_ID, COUNT(1) AS CPT_STU FROM v_showuser GROUP BY COHORT_ID; ";
