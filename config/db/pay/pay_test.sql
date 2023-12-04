@@ -1,4 +1,4 @@
--- For test uage only
+-- For test usage only
 -- Not to be compiled
 
 -- This query need to avoid duplicate

@@ -17,6 +17,7 @@
 
 
 -- TABLE
+-- UPDATE uac_ref_frais_scolarite SET deadline = DATE_ADD(deadline, INTERVAL 1 YEAR);
 
 DROP TABLE IF EXISTS uac_ref_frais_scolarite;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_frais_scolarite` (

@@ -186,7 +186,7 @@ class StaticController extends AbstractController
 
 
 
-  public function alledt(Environment $twig, LoggerInterface $logger, $week_id)
+  public function gotoalledt(Environment $twig, LoggerInterface $logger, $week_id)
   {
       // This is public with no restriction
       if($week_id == 0){
@@ -225,7 +225,7 @@ class StaticController extends AbstractController
           }
           
           
-          $content = $twig->render('Static/alledt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+          $content = $twig->render('Static/gotoalledt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'week_id' => $week_id,
                                                                   'result_query_get_all_master_id' => $result_query_get_all_master_id,

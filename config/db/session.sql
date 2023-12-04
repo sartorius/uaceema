@@ -22,10 +22,56 @@ symfony server:start
 11:14:32.186 debug	Hash password: lesoleildumatin fcdb5f9e7ac599b87b31eee2833b18a2 -- ravorab367 -- id 15
 11:14:32.186 debug	Hash password: lamangueverteavecpiment bb292e40979127642d72c0018c490965 -- harvelr092 -- id 14
 
+
+11:14:32.186 debug	Hash password: lesoleilrouge 665558ec66273fa1bbe67478f0d98730 -- ratwill001 -- id 1715
+11:14:32.186 debug	Hash password: lezebudelaprairie 8dc3d3cc86666cd30e795b280b35254d -- lalarak002 -- id 1716
+11:14:32.186 debug	Hash password: lamerestbleu dcfdd51f898af72dbc4119e23dedb5b9 -- clairaf004 -- id 1717
+11:14:32.186 debug	Hash password: lecameleonrose 6377de480a2419f54310caeed8a70800 -- haniran005 -- id 1718
+11:14:32.186 debug	Hash password: lebaobabgrand 11879ef36b711f4093fe7a5e49257342 -- tantrab006 -- id 1719
+
 -- Test
 11:14:32.186 debug	Hash password: lerepasdusoirpouletsauce c241d04c2cdadc35a6625b9d8192b7e2 -- ionrako617 -- id 4
 11:14:32.186 debug	Hash password: lepisode1starwarskenobi bb292e40979127642d72c0018c490965 -- tsirako227 -- id 8
 11:14:32.186 debug	Hash password: unnuagedansleciel d064a894fb8645879312b10d366cd604 -- scolari321 -- id 6
+
+
+
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1715, 'ratwill001', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1715@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1716, 'lalarak002', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1716@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1717, 'clairaf004', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1717@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1718, 'haniran005', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1718@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1719, 'tantrab006', '2023-07-20 11:21:56', '2023-07-20 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1719@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- Role
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+  VALUES
+  	(1715, '665558ec66273fa1bbe67478f0d98730', NULL, 50, 'PDT', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+  VALUES
+  	(1716, '8dc3d3cc86666cd30e795b280b35254d', NULL, 51, 'DAF', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+  VALUES
+  	(1717, 'dcfdd51f898af72dbc4119e23dedb5b9', NULL, 51, 'Caisse', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+  VALUES
+  	(1718, '6377de480a2419f54310caeed8a70800', NULL, 51, 'Caisse', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+  VALUES
+  	(1719, '11879ef36b711f4093fe7a5e49257342', NULL, 41, 'Note', 0);
+
 
 
 
@@ -102,8 +148,8 @@ select distinct flow_code from uac_working_flow order by 1 desc;
 -- Day 26/04
 -- Communication L1
 
-
-
+param_does_pay_display
+param_does_pay_public
 
 
 SELECT * FROM uac_assiduite_off;

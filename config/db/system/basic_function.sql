@@ -25,6 +25,21 @@ BEGIN
 END$$
 
 DELIMITER $$
+DROP FUNCTION IF EXISTS fRemoveLineFeed$$
+CREATE FUNCTION fRemoveLineFeed(
+	input VARCHAR(1000)
+)
+RETURNS VARCHAR(1000)
+DETERMINISTIC
+BEGIN
+	RETURN REPLACE(
+	    REPLACE(input, '\r', ' - '),
+	    '\n',
+	    ' - '
+	);
+END$$
+
+DELIMITER $$
 DROP FUNCTION IF EXISTS fCapitalizeStr$$
 CREATE FUNCTION fCapitalizeStr(
 	input VARCHAR(1000)
