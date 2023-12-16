@@ -1484,7 +1484,7 @@ class AdminPayController extends AbstractController
         */
         
 
-        $count_tranche_grid = " SELECT * FROM v_dash_sum_up_tranche_grid; ";
+        $count_tranche_grid = " SELECT * FROM v_dash_sum_up_tranche_grid_fullv; ";
         $logger->debug("Show count_tranche_grid: " . $count_tranche_grid);
         $result_count_tranche_grid = $dbconnectioninst->query($count_tranche_grid)->fetchAll(PDO::FETCH_ASSOC);
 

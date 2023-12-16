@@ -603,6 +603,39 @@ GROUP BY
 			ORDER BY TRANCHE, CATEGORY;
 -- Be carefull NEVER CHANGE this order as it is used in hardcode in graph
 
+-- Because if lines are empty we need to assembl
+DROP TABLE IF EXISTS tech_tranche_line;
+CREATE TABLE IF NOT EXISTS tech_tranche_line (
+  `CATEGORY` VARCHAR(10) NOT NULL,
+  `TRANCHE`  VARCHAR(10) NOT NULL
+);
+
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('RIEN', 'Tranche_1');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('TOUT', 'Tranche_1');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('UNE PARTIE', 'Tranche_1');
+
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('RIEN', 'Tranche_2');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('TOUT', 'Tranche_2');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('UNE PARTIE', 'Tranche_2');
+
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('RIEN', 'Tranche_3');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('TOUT', 'Tranche_3');
+INSERT INTO tech_tranche_line (CATEGORY, TRANCHE) VALUE ('UNE PARTIE', 'Tranche_3');
+
+DROP VIEW IF EXISTS v_dash_sum_up_tranche_grid_fullv;
+CREATE VIEW v_dash_sum_up_tranche_grid_fullv AS
+SELECT
+      IFNULL(v_dash_sum_up_tranche_grid.COUNT_PART, 0) AS COUNT_PART,
+      IFNULL(v_dash_sum_up_tranche_grid.SUM_ALREADY_PAID, 0) AS SUM_ALREADY_PAID,
+      IFNULL(v_dash_sum_up_tranche_grid.SUM_REST_TO_PAY, 0) AS SUM_REST_TO_PAY,
+      IFNULL(v_dash_sum_up_tranche_grid.ALL_TRANCHE_AMOUNT, 0) AS ALL_TRANCHE_AMOUNT,
+      tech_tranche_line.CATEGORY AS CATEGORY,
+      tech_tranche_line.TRANCHE AS TRANCHE
+FROM v_dash_sum_up_tranche_grid
+				  RIGHT JOIN tech_tranche_line ON v_dash_sum_up_tranche_grid.CATEGORY = tech_tranche_line.CATEGORY
+                                      AND v_dash_sum_up_tranche_grid.TRANCHE = tech_tranche_line.TRANCHE
+ORDER BY tech_tranche_line.TRANCHE, tech_tranche_line.CATEGORY;
+
 
 /*
 SELECT COUNT(1) AS COUNT_PART, SUM(vdt.REST_TO_PAY) AS TOTAL_AMOUNT,
