@@ -495,7 +495,7 @@ function loadConcatMvola(){
     $("#jsGridMvola").jsGrid({
         height: "auto",
         width: "100%",
-        noDataContent: "Aucun paiement disponible",
+        noDataContent: "Aucun Mvola disponible",
         pageIndex: 1,
         pageSize: 50,
         pagePrevText: "Prec",
@@ -629,7 +629,7 @@ function runStatDashboardPay(){
 
     //Corlor
     let backgroundColorRefAlt2 = [
-        '#e6b3ff',
+        '#fffff2',
         '#dd99ff',
         '#e6ffcc',
         '#d9ffb3',
@@ -651,7 +651,7 @@ function runStatDashboardPay(){
         '#ffffcc'
     ];
     let borderColorRefAlt2 = [
-        '#550080',
+        '#9f9f9f',
         '#440066',
         '#408000',
         '#336600',
