@@ -720,9 +720,9 @@ class AdminEDTController extends AbstractController
         $mis_query_pp = " SELECT vcc.short_classe AS CLASSE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL, vsu.PAGE AS PAGE from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id "
                           . " JOIN v_showuser vsu ON mu.id = vsu.ID "
-                          . " WHERE ass.status = 'ABS' "
+                          . " WHERE ass.status = 'ABS' AND ass.create_date > (SELECT par_date FROM uac_param WHERE key_code = 'TECYEAR') "
 											    . " GROUP BY mu.firstname, mu.lastname, ass.status, vcc.short_classe, vsu.PAGE ORDER BY COUNT(1) DESC LIMIT 100; ";
-        $logger->debug("Show me mis_query_pp: " . $mis_query_pp);
+        $logger->debug("Show me mis_query_pp 100 last ABS: " . $mis_query_pp);
 
         /*
         $query_report = " SELECT UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, "

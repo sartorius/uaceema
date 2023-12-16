@@ -765,7 +765,7 @@ function prepareJsonDataPayTranche(){
   //let dataCountTrancheTwoJsonArray = "";
   //let dataCountTrancheThreeJsonArray = "";
 
-  // As it is a fixed array, code description is here : https://docs.google.com/spreadsheets/d/15Qf8CIZEBFmaNFs-WrLAhG9Tiziafya3VcXM1DByYho/edit?usp=sharing
+  // As it is a fixed array, code description is here : https://docs.google.com/spreadsheets/d/15Qf8CIZEBFmaNFs-WrLAhG9Tiziafya3VcXM1DByYho/edit?usp=drive_link
   // Be carefull there is no loop
   let myPrepCountTrancheGrid1 = {
     myTranche: 'Tranche 1',

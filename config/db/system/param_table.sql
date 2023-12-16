@@ -86,7 +86,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 -- PROD
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
 
-
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_date) VALUES ('TECYEAR', 'Start of Year', NULL, '2023-11-01');
 
 
 -- Grade
