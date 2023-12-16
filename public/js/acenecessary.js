@@ -10,6 +10,10 @@ function removeAllQuotes(param){
   return param.replace(/"/g, '').replace(/'/g, '');
 }
 
+function getAriaryValue(value){
+  return formatterCurrency.format(value).replace("MGA", "AR").replace(",00", "");
+}
+
 /***********************************************************************************************************/
 function scrollToTop(){
   document.body.scrollTop = document.documentElement.scrollTop = 0;

@@ -384,10 +384,10 @@ function loadConcatTranche(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(parseInt(value) > 0){
-                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+                return '<i class="cell-warn">' + getAriaryValue(value) + '</i>';
             }
             else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return getAriaryValue(value);
             }
           }
         },
@@ -398,10 +398,10 @@ function loadConcatTranche(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(parseInt(value) > 0){
-                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+                return '<i class="cell-warn">' + getAriaryValue(value) + '</i>';
             }
             else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return getAriaryValue(value);
             }
           }
         },
@@ -412,10 +412,10 @@ function loadConcatTranche(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(parseInt(value) > 0){
-                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+                return '<i class="cell-warn">' + getAriaryValue(value) + '</i>';
             }
             else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return getAriaryValue(value);
             }
           }
         }
@@ -452,10 +452,10 @@ function loadConcatMvola(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(parseInt(value) < 0){
-                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+                return '<i class="cell-warn">' + getAriaryValue(value) + '</i>';
             }
             else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return getAriaryValue(value);
             }
           }
         },
@@ -859,7 +859,9 @@ $(document).ready(function() {
     if($('#mg-graph-identifier').text() == 'dash-pay'){
       // Do something
       console.log('in dash-pay');
-      $('#disp-pv-smv').html(formatterCurrency.format(SOLDE_MVOLA).replace("MGA", "AR"));
+      //getAriaryValue(value)
+      //$('#disp-pv-smv').html(formatterCurrency.format(SOLDE_MVOLA).replace("MGA", "AR"));
+      $('#disp-pv-smv').html(getAriaryValue(SOLDE_MVOLA));
       prepareJsonDataPayTranche();
       loadConcatMvola();
       loadConcatTranche();
@@ -870,22 +872,26 @@ $(document).ready(function() {
       // dataTodayNbrCheckPVJsonArray dataTodayPVJsonArray
       for(let i=0; i<dataTodayPVJsonArray.length ; i++){
         if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'C'){
-            $('#disp-pv-csh').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-pv-csh').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            $('#disp-pv-csh').html(getAriaryValue(dataTodayPVJsonArray[i].TOD_AMOUNT));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
             cobCashOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'H'){
-            $('#disp-pv-chq').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-pv-chq').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            $('#disp-pv-chq').html(getAriaryValue(dataTodayPVJsonArray[i].TOD_AMOUNT));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
             cobCheqOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'R'){
-            $('#disp-pv-red').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-pv-red').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            $('#disp-pv-red').html(getAriaryValue(dataTodayPVJsonArray[i].TOD_AMOUNT));
             cobReductionOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
         else if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'T'){
             // Else it must be T
-            $('#disp-pv-ttp').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-pv-ttp').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
+            $('#disp-pv-ttp').html(getAriaryValue(dataTodayPVJsonArray[i].TOD_AMOUNT));
             totalCashCheck = totalCashCheck + parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
             cobVirmTpeOfTheDay = parseInt(dataTodayPVJsonArray[i].TOD_AMOUNT);
         }
@@ -896,11 +902,13 @@ $(document).ready(function() {
 
       for(let i=0; i<dataYearRecapJsonArray.length; i++){
         if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'P'){
-            $('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            $('#disp-py-ben').html(getAriaryValue(dataYearRecapJsonArray[i].UP_AMOUNT));
             cobBenefitOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
         else{
-            $('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            //$('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            $('#disp-py-red').html(getAriaryValue(dataYearRecapJsonArray[i].UP_AMOUNT));
             cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
       }
@@ -908,7 +916,8 @@ $(document).ready(function() {
 
 
       if(totalCashCheck > 0){
-        $('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
+        //$('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
+        $('#disp-pv-tot').html(getAriaryValue(totalCashCheck));
         cobTotalOfTheDay = parseInt(totalCashCheck);
       }
 
