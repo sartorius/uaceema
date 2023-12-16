@@ -584,8 +584,27 @@ SELECT * FROM (
                                                                     AND up.type_of_payment = 'L'
   ) t ORDER BY t.URF_FS_ORDER ASC;
 
+
+-- Be carefull NEVER CHANGE this order as it is used in hardcode in graph
+-- !!! !!! !!! !!! !!!
 DROP VIEW IF EXISTS v_dash_sum_up_tranche_grid;
 CREATE VIEW v_dash_sum_up_tranche_grid AS
+SELECT COUNT(1) AS COUNT_PART, SUM(vdt.ALREADY_PAID) AS SUM_ALREADY_PAID, SUM(vdt.REST_TO_PAY) AS SUM_REST_TO_PAY, SUM(vdt.TRANCHE_AMOUNT) AS ALL_TRANCHE_AMOUNT,
+	CASE WHEN vdt.REST_TO_PAY = 0 THEN 'TOUT' WHEN vdt.REST_TO_PAY = vdt.TRANCHE_AMOUNT THEN 'RIEN' ELSE 'UNE PARTIE' END AS CATEGORY,
+	CASE WHEN vdt.TRANCHE_CODE IN ('L1T1XXX', 'L2L3T1X', 'M1M2T1X') THEN 'Tranche_1'
+			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche_2'
+			ELSE 'Tranche_3' END  AS TRANCHE
+	FROM v_dash_tech_sum_up_tranche vdt
+GROUP BY
+	CASE WHEN vdt.REST_TO_PAY = 0 THEN 'TOUT' WHEN vdt.REST_TO_PAY = vdt.TRANCHE_AMOUNT THEN 'RIEN' ELSE 'UNE PARTIE' END,
+	CASE WHEN vdt.TRANCHE_CODE IN ('L1T1XXX', 'L2L3T1X', 'M1M2T1X') THEN 'Tranche_1'
+			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche_2'
+			ELSE 'Tranche_3' END
+			ORDER BY TRANCHE, CATEGORY;
+-- Be carefull NEVER CHANGE this order as it is used in hardcode in graph
+
+
+/*
 SELECT COUNT(1) AS COUNT_PART, SUM(vdt.REST_TO_PAY) AS TOTAL_AMOUNT,
 	CASE WHEN vdt.REST_TO_PAY = 0 THEN 'TOUT' WHEN vdt.REST_TO_PAY = vdt.TRANCHE_AMOUNT THEN 'RIEN' ELSE 'UNE PARTIE' END AS CATEGORY,
 	CASE WHEN vdt.TRANCHE_CODE IN ('L1T1XXX', 'L2L3T1X', 'M1M2T1X') THEN 'Tranche 1'
@@ -598,6 +617,7 @@ GROUP BY
 			WHEN vdt.TRANCHE_CODE IN ('L1T2XXX', 'L2L3T2X', 'M1M2T2X') THEN 'Tranche 2'
 			ELSE 'Tranche 3' END
 			ORDER BY TRANCHE, CATEGORY;
+*/
 
 DROP VIEW IF EXISTS v_dash_all_reduction;
 CREATE VIEW v_dash_all_reduction AS

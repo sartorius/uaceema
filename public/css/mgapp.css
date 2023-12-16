@@ -740,6 +740,12 @@ textarea[name=inputRef] {
     font-size: 0.7em;
 }
 
+.mgs-hd-ace-note{
+  color: #8e8e8e;
+  font-size: 0.9em;
+  margin-top: 1.6em;
+}
+
 
 .mgs-med-note{
   color: #29417e;

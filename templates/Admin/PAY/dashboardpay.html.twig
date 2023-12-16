@@ -45,42 +45,24 @@
 {% endif %}
 
 
-{% if result_count_tranche_one is defined and result_count_tranche_one is not null %}
-  <script>
-    let dataCountTrancheOneJsonArray =JSON.parse('{{ result_count_tranche_one | json_encode | raw }}');
-  </script>
-{% else %}
-    <script>
-      let dataCountTrancheOneJsonArray = "";
-    </script>
-{% endif %}
-{% if result_count_tranche_two is defined and result_count_tranche_two is not null %}
-  <script>
-    let dataCountTrancheTwoJsonArray =JSON.parse('{{ result_count_tranche_two | json_encode | raw }}');
-  </script>
-{% else %}
-    <script>
-      let dataCountTrancheTwoJsonArray = "";
-    </script>
-{% endif %}
-{% if result_count_tranche_three is defined and result_count_tranche_three is not null %}
-  <script>
-    let dataCountTrancheThreeJsonArray =JSON.parse('{{ result_count_tranche_three | json_encode | raw }}');
-  </script>
-{% else %}
-    <script>
-      let dataCountTrancheThreeJsonArray = "";
-    </script>
-{% endif %}
-
 
 {% if result_count_tranche_grid is defined and result_count_tranche_grid is not null %}
   <script>
     let dataCountTrancheGridJsonArray =JSON.parse('{{ result_count_tranche_grid | json_encode | raw }}');
+    let dataPrepCountTrancheGridJsonArray = new Array();
+
+    let dataCountTrancheOneJsonArray = new Array();
+    let dataCountTrancheTwoJsonArray = new Array();
+    let dataCountTrancheThreeJsonArray = new Array();
   </script>
 {% else %}
     <script>
       let dataCountTrancheGridJsonArray = "";
+      let dataPrepCountTrancheGridJsonArray = "";
+
+      let dataCountTrancheOneJsonArray = "";
+      let dataCountTrancheTwoJsonArray = "";
+      let dataCountTrancheThreeJsonArray = "";
     </script>
 {% endif %}
 
@@ -195,23 +177,27 @@
   </div>
   <div class="col-1">
   </div>
+  <!--New line here-->
+  <div class="col-1">
+  </div>
+  <div class="col-10 mgs-hd-ace-note">
+    <i class="icon-info-circle nav-text"></i>Recette sur l'année : contient toutes les entrées visible dans les Frais de scolarité incluant les tranches, les frais généraux et autres.<br>
+    Réduction sur l'année : contient les réductions en poucentage mais également les exemptions.
+  </div>
+  <div class="col-1">
+  </div>
+
 </div>
+
 
 <div class="row cell-bd-li">
     <div class="col-1">
     </div>
-    <div class="col-6">
-        <h2>Tranche</h2>
+    <div class="col-10">
+        <h2>Tranche : statistiques globales</h2>
         <hr>
         <div id="jsGridTranche">
         </div>
-    </div>
-    <div class="col-4">
-        <h2>Mvola</h2>
-        <hr>
-        <div id="jsGridMvola">
-        </div>
-        <br><div class="mgs-note"><strong>Dernier chargement Mvola : </strong>{{ result_last_mvola[0]['LAST_DATE'] }} à {{ result_last_mvola[0]['LAST_TIME'] }}</div>
     </div>
     <div class="col-1">
     </div>
@@ -220,20 +206,38 @@
 
 
 <div class="row count-tranche">
-  <div class="col-4">
+  <div class="col-1">
+  </div>
+  <div class="col-5">
+      <h2>Mvola</h2>
+      <hr>
+      <div id="jsGridMvola">
+      </div>
+      <br><div class="mgs-note"><strong>Dernier chargement Mvola : </strong>{{ result_last_mvola[0]['LAST_DATE'] }} à {{ result_last_mvola[0]['LAST_TIME'] }}</div>
+  </div>
+  <div class="col-5">
     <h2>Tranche 1 : a déjà payé</h2>
     <hr>
     <canvas id="trancheOne"></canvas>
   </div>
-  <div class="col-4">
+  <div class="col-1">
+  </div>
+</div>
+
+<div class="row count-tranche">
+  <div class="col-1">
+  </div>
+  <div class="col-5">
     <h2>Tranche 2 : a déjà payé</h2>
     <hr>
     <canvas id="trancheTwo"></canvas>
   </div>
-  <div class="col-4">
+  <div class="col-6">
     <h2>Tranche 3 : a déjà payé</h2>
     <hr>
     <canvas id="trancheThree"></canvas>
+  </div>
+  <div class="col-1">
   </div>
 </div>
 <img id="logo-carte" src="{{ path('main') }}img/logotext_black600x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >

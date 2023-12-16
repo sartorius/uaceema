@@ -337,30 +337,76 @@ function generateAllReductionCSV(){
 function loadConcatTranche(){
 
     let refConcatTrancheField = [
-        { name: "COUNT_PART",
-          title: "Nombre étudiant",
+        { name: "myTranche",
+          title: "#",
           type: "number",
-          width: 50,
+          width: 40,
+          align: "right",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm-hd"
+        },
+        { name: "nbTotalStu",
+          title: "Etu.",
+          type: "number",
+          width: 30,
           align: "right",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm"
         },
-        { name: "CATEGORY",
-          title: "Paiement effectué",
-          type: "text",
-          width: 60,
+        { name: "nbTotalNothing",
+          title: "Rien payé",
+          type: "number",
+          width: 40,
+          align: "right",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm"
         },
-        { name: "TRANCHE",
-          title: "Tranche",
-          type: "text",
-          width: 65,
+        { name: "nbTotalPart",
+          title: "Une partie",
+          type: "number",
+          width: 40,
+          align: "right",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm"
         },
-        { name: "TOTAL_AMOUNT",
-          title: "Montant reste à payer",
+        { name: "nbTotalAll",
+          title: "Tout payé",
+          type: "number",
+          width: 40,
+          align: "right",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm"
+        },
+        { name: "amAlreadyRec",
+          title: "Montant reçu",
+          type: "number",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm",
+          itemTemplate: function(value, item) {
+            if(parseInt(value) > 0){
+                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+            }
+            else{
+                return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          }
+        },
+        { name: "amMissingToRec",
+          title: "Montant en attente",
+          type: "number",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm",
+          itemTemplate: function(value, item) {
+            if(parseInt(value) > 0){
+                return '<i class="cell-warn">' + formatterCurrency.format(value).replace("MGA", "AR") + '</i>';
+            }
+            else{
+                return formatterCurrency.format(value).replace("MGA", "AR");
+            }
+          }
+        },
+        { name: "amTotal",
+          title: "Montant total",
           type: "number",
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
@@ -388,7 +434,7 @@ function loadConcatTranche(){
 
         sorting: true,
         paging: true,
-        data: dataCountTrancheGridJsonArray,
+        data: dataPrepCountTrancheGridJsonArray,
         fields: refConcatTrancheField
     });
 
@@ -711,6 +757,100 @@ function runStatDashboardPay(){
 
 }
 
+function prepareJsonDataPayTranche(){
+  //dataCountTrancheGridJsonArray
+  //dataPrepCountTrancheGridJsonArray = "";
+
+  //let dataCountTrancheOneJsonArray = "";
+  //let dataCountTrancheTwoJsonArray = "";
+  //let dataCountTrancheThreeJsonArray = "";
+
+  // As it is a fixed array, code description is here : https://docs.google.com/spreadsheets/d/15Qf8CIZEBFmaNFs-WrLAhG9Tiziafya3VcXM1DByYho/edit?usp=sharing
+  // Be carefull there is no loop
+  let myPrepCountTrancheGrid1 = {
+    myTranche: 'Tranche 1',
+    nbTotalStu: parseInt(dataCountTrancheGridJsonArray[0].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[1].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[2].COUNT_PART),
+    nbTotalNothing: parseInt(dataCountTrancheGridJsonArray[0].COUNT_PART),
+    nbTotalPart: parseInt(dataCountTrancheGridJsonArray[2].COUNT_PART),
+    nbTotalAll: parseInt(dataCountTrancheGridJsonArray[1].COUNT_PART),
+
+    amAlreadyRec: parseInt(dataCountTrancheGridJsonArray[0].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[1].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[2].SUM_ALREADY_PAID),
+    amMissingToRec: parseInt(dataCountTrancheGridJsonArray[0].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[1].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[2].SUM_REST_TO_PAY),
+    amTotal: parseInt(dataCountTrancheGridJsonArray[0].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[1].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[2].ALL_TRANCHE_AMOUNT)
+    };
+  dataPrepCountTrancheGridJsonArray.push(myPrepCountTrancheGrid1);
+
+  let myPrepCountTrancheGrid2 = {
+    myTranche: 'Tranche 2',
+    nbTotalStu: parseInt(dataCountTrancheGridJsonArray[3].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[4].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[5].COUNT_PART),
+    nbTotalNothing: parseInt(dataCountTrancheGridJsonArray[3].COUNT_PART),
+    nbTotalPart: parseInt(dataCountTrancheGridJsonArray[5].COUNT_PART),
+    nbTotalAll: parseInt(dataCountTrancheGridJsonArray[4].COUNT_PART),
+
+    amAlreadyRec: parseInt(dataCountTrancheGridJsonArray[3].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[4].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[5].SUM_ALREADY_PAID),
+    amMissingToRec: parseInt(dataCountTrancheGridJsonArray[3].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[4].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[5].SUM_REST_TO_PAY),
+    amTotal: parseInt(dataCountTrancheGridJsonArray[3].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[4].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[5].ALL_TRANCHE_AMOUNT)
+    };
+  dataPrepCountTrancheGridJsonArray.push(myPrepCountTrancheGrid2);
+
+  let myPrepCountTrancheGrid3 = {
+    myTranche: 'Tranche 3',
+    nbTotalStu: parseInt(dataCountTrancheGridJsonArray[6].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[7].COUNT_PART) + 
+                parseInt(dataCountTrancheGridJsonArray[8].COUNT_PART),
+    nbTotalNothing: parseInt(dataCountTrancheGridJsonArray[6].COUNT_PART),
+    nbTotalPart: parseInt(dataCountTrancheGridJsonArray[8].COUNT_PART),
+    nbTotalAll: parseInt(dataCountTrancheGridJsonArray[7].COUNT_PART),
+
+    amAlreadyRec: parseInt(dataCountTrancheGridJsonArray[6].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[7].SUM_ALREADY_PAID) + 
+                  parseInt(dataCountTrancheGridJsonArray[8].SUM_ALREADY_PAID),
+    amMissingToRec: parseInt(dataCountTrancheGridJsonArray[6].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[7].SUM_REST_TO_PAY) + 
+                    parseInt(dataCountTrancheGridJsonArray[8].SUM_REST_TO_PAY),
+    amTotal: parseInt(dataCountTrancheGridJsonArray[6].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[7].ALL_TRANCHE_AMOUNT) + 
+              parseInt(dataCountTrancheGridJsonArray[8].ALL_TRANCHE_AMOUNT)
+    };
+  dataPrepCountTrancheGridJsonArray.push(myPrepCountTrancheGrid3);
+
+
+  for(let i=0; i<dataCountTrancheGridJsonArray.length; i++){
+    // Get my line Prep Solo
+    let myPrepSoloTranche = {
+      CATEGORY: dataCountTrancheGridJsonArray[i].CATEGORY,
+      COUNT_PART: dataCountTrancheGridJsonArray[i].COUNT_PART
+    };
+
+    switch (dataCountTrancheGridJsonArray[i].TRANCHE) {
+      case 'Tranche_1':
+        dataCountTrancheOneJsonArray.push(myPrepSoloTranche);
+        break;
+      case 'Tranche_2':
+        dataCountTrancheTwoJsonArray.push(myPrepSoloTranche);
+        break;
+      default:
+        dataCountTrancheThreeJsonArray.push(myPrepSoloTranche);
+    }
+  }
+}
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -720,6 +860,7 @@ $(document).ready(function() {
       // Do something
       console.log('in dash-pay');
       $('#disp-pv-smv').html(formatterCurrency.format(SOLDE_MVOLA).replace("MGA", "AR"));
+      prepareJsonDataPayTranche();
       loadConcatMvola();
       loadConcatTranche();
       runStatDashboardPay();

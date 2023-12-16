@@ -1468,6 +1468,7 @@ class AdminPayController extends AbstractController
             $get_solde_mvola = $result_last_master_mvola[0]['core_balance_after'];
         }
 
+        /*
         $count_tranche_one = " SELECT * FROM v_dash_sum_up_tranche_grid WHERE TRANCHE = 'Tranche 1'; ";
         $logger->debug("Show count_tranche_one: " . $count_tranche_one);
         $result_count_tranche_one = $dbconnectioninst->query($count_tranche_one)->fetchAll(PDO::FETCH_ASSOC);
@@ -1480,7 +1481,8 @@ class AdminPayController extends AbstractController
         $logger->debug("Show count_tranche_three: " . $count_tranche_three);
         $result_count_tranche_three = $dbconnectioninst->query($count_tranche_three)->fetchAll(PDO::FETCH_ASSOC);
 
-
+        */
+        
 
         $count_tranche_grid = " SELECT * FROM v_dash_sum_up_tranche_grid; ";
         $logger->debug("Show count_tranche_grid: " . $count_tranche_grid);
@@ -1522,9 +1524,11 @@ class AdminPayController extends AbstractController
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'result_concat_mvola' => $result_concat_mvola,
                                                                 "result_last_mvola"=>$result_last_mvola,
+                                                                /*
                                                                 "result_count_tranche_one"=>$result_count_tranche_one,
                                                                 "result_count_tranche_two"=>$result_count_tranche_two,
                                                                 "result_count_tranche_three"=>$result_count_tranche_three,
+                                                                */
                                                                 "result_count_tranche_grid"=>$result_count_tranche_grid,
                                                                 "get_solde_mvola"=>$get_solde_mvola,
                                                                 "result_today_pv"=>$result_today_pv,

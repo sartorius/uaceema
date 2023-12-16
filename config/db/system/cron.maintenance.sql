@@ -24,11 +24,11 @@ OPTIMIZE TABLE uac_assiduite_noexit;
 
 -- To be reactivated when working in PROD
 
--- OPTIMIZE TABLE uac_facilite_payment;
--- OPTIMIZE TABLE uac_payment;
--- OPTIMIZE TABLE uac_mvola_master;
--- OPTIMIZE TABLE uac_load_mvola;
--- OPTIMIZE TABLE uac_mvola_line;
--- OPTIMIZE TABLE uac_xref_payment_mvola;
+OPTIMIZE TABLE uac_facilite_payment;
+OPTIMIZE TABLE uac_payment;
+OPTIMIZE TABLE uac_mvola_master;
+OPTIMIZE TABLE uac_load_mvola;
+OPTIMIZE TABLE uac_mvola_line;
+OPTIMIZE TABLE uac_xref_payment_mvola;
 
 SELECT NOW() AS END_TIME;
