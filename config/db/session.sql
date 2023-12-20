@@ -498,3 +498,36 @@ select count(1) from histo_mdl_user hmu join histo_uac_showuser hus ON hmu.usern
 					  WHERE hus.cohort_id IN (
 						  		select id from v_class_cohort where niveau = 'L1'
 						  )
+
+
+-- PROD
+
+select * from uac_showuser where username = 'rodrman324'
+-- 7
+
+select * from histo_mdl_user where username IN ('KOLORAN366');
+
+
+select * from histo_mdl_user where email IN ('rakotontsoa51@gmail.com');
+
+
+select * from histo_mdl_user where matricule like '1724%';
+
+select * from histo_mdl_user where matricule like '1975%';
+
+
+select * from histo_mdl_user where lastname = 'FAREZ'
+
+
+select * from mdl_user where email = 'raharisonberthol@gmail.com';
+
+select * from mdl_user where lastname = 'Rahajanantenaina'
+
+select * from mdl_user where username = 'FETRXYX089';
+
+select * from mdl_user where matricule like '1573%'
+
+select * from v_class_cohort where niveau = 'L2' and mention = 'DROIT';
+
+
+select * from uac_showuser where username = 'FETRXYX089';
