@@ -89,7 +89,7 @@ class DiplomaController extends AbstractController
 
     // self::$my_exact_length_page 18
     if(strlen($page) < self::$my_exact_length_page){
-      // Error Code 404
+      // Error Code 404 check
       $logger->debug("dematdiploma (strlen(page) < " . self::$my_exact_length_page . ") ");
       $content = $twig->render('Static/error414.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }

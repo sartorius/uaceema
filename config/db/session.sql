@@ -2,6 +2,7 @@ symfony local:server:stop
 symfony server:start
 
 
+select * from uac_admin where id IN (1716, 1717, 1718);
 
 -- MD5
 11:14:32.186 debug	Hash password: lanatureestverte e716e0cf70d3c6dbd840945d890f074d -- benrand123
@@ -309,6 +310,11 @@ select flow_id, user_id, edt_id, scan_id, status, create_date from uac_assiduite
 select flow_id, user_id, edt_id, scan_id, status, create_date from uac_assiduite_archive;
 
 -- DELETE FROM uac_assiduite;
+
+
+delete from reinscription_load_mdl_user;
+
+CALL MAN_ReInscripstion_Prep(2023);
 
 
 select * from mdl_user;
