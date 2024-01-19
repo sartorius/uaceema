@@ -3,38 +3,39 @@
 # sudo apt-get install yui-compressor
 # mgapp plus utilise
 # yui-compressor public/js/mgapp.js > mgapp.min.js;
+# install uglifyjs
 
-echo 'START';
+echo 'START UGLIFY JS';
 echo 'acenecessary.js';
-yui-compressor public/js/acenecessary.js > public/js/acenecessary.min.js;
+uglifyjs public/js/acenecessary.js -o public/js/acenecessary.min.js;
 echo 'acestu.js';
-yui-compressor public/js/acestu.js > public/js/acestu.min.js;
+uglifyjs public/js/acestu.js -o public/js/acestu.min.js;
 echo 'aceass.js';
 uglifyjs public/js/aceass.js -o public/js/aceass.min.js;
 echo 'acepaybasic.js';
-yui-compressor public/js/acepaybasic.js > public/js/acepaybasic.min.js;
+uglifyjs public/js/acepaybasic.js -o public/js/acepaybasic.min.js;
 echo 'acedashpay.js';
-yui-compressor public/js/acedashpay.js > public/js/acedashpay.min.js;
+uglifyjs public/js/acedashpay.js -o public/js/acedashpay.min.js;
 echo 'aceidentificationcommon.js';
-yui-compressor public/js/aceidentificationcommon.js > public/js/aceidentificationcommon.min.js;
+uglifyjs public/js/aceidentificationcommon.js -o public/js/aceidentificationcommon.min.js;
 echo 'acepay.js';
-yui-compressor public/js/acepay.js > public/js/acepay.min.js;
+uglifyjs public/js/acepay.js -o public/js/acepay.min.js;
 echo 'aceedt.js';
-yui-compressor public/js/aceedt.js > public/js/aceedt.min.js;
+uglifyjs public/js/aceedt.js -o public/js/aceedt.min.js;
 echo 'acepublicedt.js';
-yui-compressor public/js/acepublicedt.js > public/js/acepublicedt.min.js;
+uglifyjs public/js/acepublicedt.js -o public/js/acepublicedt.min.js;
 echo 'acegraadd.js';
-yui-compressor public/js/acegraadd.js > public/js/acegraadd.min.js;
+uglifyjs public/js/acegraadd.js -o public/js/acegraadd.min.js;
 echo 'acegraload.js';
-yui-compressor public/js/acegraload.js > public/js/acegraload.min.js;
+uglifyjs public/js/acegraload.js -o public/js/acegraload.min.js;
 echo 'acegramanager.js';
-yui-compressor public/js/acegramanager.js > public/js/acegramanager.min.js;
+uglifyjs public/js/acegramanager.js -o public/js/acegramanager.min.js;
 echo 'acegradash.js';
-yui-compressor public/js/acegradash.js > public/js/acegradash.min.js;
+uglifyjs public/js/acegradash.js -o public/js/acegradash.min.js;
 echo 'acegraprimitif.js';
-yui-compressor public/js/acegraprimitif.js > public/js/acegraprimitif.min.js;
+uglifyjs public/js/acegraprimitif.js -o public/js/acegraprimitif.min.js;
 echo 'acediploma.js';
-yui-compressor public/js/acediploma.js > public/js/acediploma.min.js;
+uglifyjs public/js/acediploma.js -o public/js/acediploma.min.js;
 echo 'END';
 echo '----------------------------';
 yui-compressor public/css/mgapp.css > public/css/mgapp.min.css;
