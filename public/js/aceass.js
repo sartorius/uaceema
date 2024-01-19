@@ -1839,28 +1839,28 @@ function generateHebdoXLSWorksheet(){
 
   /************************ START HEADER ************************/
   let rowHeader1 = [
-    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader2 = [
-    { v: 'MANAKAMBAHINY', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'MANAKAMBAHINY', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader3 = [
-    { v: 'Service scolarité', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'Service scolarité', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader4 = [
-    { v: 'Version papier', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
-    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
-    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
-    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: 'Version papier', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { DEF_HEADER_CARTOUCHE } },
   ];
   let rowHeader5 = [
-    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader6 = [
-    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader7 = [
-    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
 
   const ws = XLSX.utils.aoa_to_sheet([rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7]);
