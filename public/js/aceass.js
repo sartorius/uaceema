@@ -1851,7 +1851,7 @@ function generateHebdoXLSWorksheet(){
     { v: 'Version papier', t: 's', s: { DEF_HEADER_CARTOUCHE } },
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { DEF_HEADER_CARTOUCHE } },
+    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader5 = [
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
