@@ -1839,6 +1839,7 @@ function generateHebdoXLSWorksheet(){
   
 
   //************************ START HEADER ************************
+  /*
   let rowHeader1 = [
     { v: 'UNIVERSITE ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
@@ -1863,8 +1864,7 @@ function generateHebdoXLSWorksheet(){
   let rowHeader7 = [
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
-  let ws = 0;
-  /*
+  
   const ws = XLSX.utils.aoa_to_sheet([rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7]);
   ws['!cols'] = [{ width: DEF_COL_DFT }];
   //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
@@ -1875,7 +1875,7 @@ function generateHebdoXLSWorksheet(){
   ws['!rows'] = rowDefinition;
   //************************ END HEADER ***********************
   */
-
+  let ws = 0;
   return ws;
 }
 
