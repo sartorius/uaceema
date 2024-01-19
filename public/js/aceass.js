@@ -1843,7 +1843,7 @@ function generateHebdoXLSWorksheet(){
   let rowHeader1 = [
     { v: 'UNIVERSITE ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
-  /*
+  
   let rowHeader2 = [
     { v: 'MANAKAMBAHINY', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
@@ -1875,8 +1875,7 @@ function generateHebdoXLSWorksheet(){
   }
   ws['!rows'] = rowDefinition;
   //************************ END HEADER ***********************
-  */
-  let ws = 0;
+
   return ws;
 }
 
