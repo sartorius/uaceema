@@ -1840,13 +1840,13 @@ function generateHebdoXLSWorksheet(){
 
   /************************ START HEADER ************************/
   let rowHeader1 = [
-    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'UNIVERSITE ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader2 = [
     { v: 'MANAKAMBAHINY', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader3 = [
-    { v: 'Service scolarité', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'Service scolarite', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader4 = [
     { v: 'Version papier', t: 's', s: { DEF_HEADER_CARTOUCHE } },
@@ -1858,7 +1858,7 @@ function generateHebdoXLSWorksheet(){
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader6 = [
-    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'Etat des assiduites du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader7 = [
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
