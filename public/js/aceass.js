@@ -1868,7 +1868,7 @@ function generateHebdoXLSWorksheet(){
   ws['!cols'] = [{ width: DEF_COL_DFT }];
   //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
   const rowDefinition = [];
-  for(let i=0; i<7; i++){
+  for(var i=0; i<7; i++){
     rowDefinition.push(DEF_ROW_DFT_SETUP);
   }
   ws['!rows'] = rowDefinition;
