@@ -1775,8 +1775,9 @@ function generateNoExitReportCSV(){
   document.body.removeChild(link);
 }
 
+/*
 function generateHebdoXLS_todelete(){
-  /*
+  
   var wb = XLSX.utils.table_to_book(document.getElementById('my-main-table'));
   XLSX.writeFile(wb, 'EDT' + invMondayStr.replaceAll('-', '_') + tempClasse.replaceAll(' ', '_').replaceAll('/', '_') + '.xlsx');
   var wb_sans_sheets = XLSX.utils.book_new();
@@ -1799,7 +1800,7 @@ function generateHebdoXLS_todelete(){
 
   XLSX.writeFile(wb, 'test.xlsx');
 
-  */
+  
   const DEF_Size14Vert = { font: { sz: 14 }, alignment: { vertical: 'center', horizontal: 'center' } };
   const DEF_ColW = 30;
 	const DEF_RowH = 60;
@@ -1823,9 +1824,9 @@ function generateHebdoXLS_todelete(){
 
   // STEP 4: Write Excel file to browser
   XLSX.writeFile(wb, "RapportAbsence7j.xlsx");
-
+  
 }
-
+*/
 
 function generateHebdoXLSWorksheet(){
   const DEF_COL_DFT = 30;
