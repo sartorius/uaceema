@@ -10,7 +10,7 @@ yui-compressor public/js/acenecessary.js > public/js/acenecessary.min.js;
 echo 'acestu.js';
 yui-compressor public/js/acestu.js > public/js/acestu.min.js;
 echo 'aceass.js';
-yui-compressor public/js/aceass.js > public/js/aceass.min.js;
+uglifyjs public/js/aceass.js -o public/js/aceass.min.js;
 echo 'acepaybasic.js';
 yui-compressor public/js/acepaybasic.js > public/js/acepaybasic.min.js;
 echo 'acedashpay.js';

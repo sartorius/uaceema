@@ -1841,7 +1841,7 @@ function generateHebdoXLSWorksheet(){
   //************************ START HEADER ************************
   
   let rowHeader1 = [
-    { v: 'UNIVERSITE ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'UNIVERSITE ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   /*
   let rowHeader2 = [
