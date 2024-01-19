@@ -1811,7 +1811,7 @@ function generateHebdoXLS_todelete(){
     { v: "bold & color", t: "s", s: { font: { bold: true, color: { rgb: "FF0000" } } } },
     { v: 'javascript', t: 's', s: { ...DEF_Size14Vert, fill: { fgColor: { rgb: 'ff5900' } }, font: { sz: 18, color: { rgb: 'f1f1f1' } } } },
     { v: "fill: color", t: "s", s: { fill: { fgColor: { rgb: "E9E9E9" } } } },
-    { v: "line\nbreak", t: "s", s: { alignment: { wrapText: true } } },
+    { v: "line\nbreak", t: "s", s: { alignment: { wrapText: true } } }
   ];
 
   // STEP 3: Create worksheet with rows; Add worksheet to workbook
