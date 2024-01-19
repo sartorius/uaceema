@@ -6,6 +6,10 @@
     let dataTagToJsonArray =JSON.parse('{{ stats_late | json_encode | raw }}');
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+    const CONST_PARAM_YEAR = "{{ param_year }}";
+
+
   </script>
 {% else %}
     <script>
@@ -127,6 +131,7 @@
     <button type="button" id="uac-ass-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
     &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Anomalie E/S</button>
     &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours annulés</button>
+    &nbsp;<button type="button" id="uac-abs-pdt-xls" class="btn btn-outline-dark"><i class="icon-file-excel-o"></i>&nbsp;Hebdomadaire</button>
   </div>
   <div class="col-1">
   </div>
@@ -141,7 +146,7 @@
     </div>
   </div>
   <div class="col-6">
-    <h2>Absence par quartier</h2>
+    <h2>Absence par quartier 30 jours</h2>
     <hr>
     <canvas id="statBarMis"></canvas>
   </div>
@@ -153,12 +158,12 @@
   <div class="col-1">
   </div>
   <div class="col-5">
-    <h2>Proportion retard</h2>
+    <h2>Proportion retard 7 jours</h2>
     <hr>
     <canvas id="statPieLate"></canvas>
   </div>
   <div class="col-5">
-    <h2>Anomalie scan des 7 derniers jours</h2>
+    <h2>Anomalie scan des 7 jours</h2>
     <hr>
     <canvas id="statBarNoExit"></canvas>
     <br><div class="mgs-note"><strong>Note</strong> Ce graphique montre le nombre d'anomalie par classe ces 7 derniers jours. Une anomalie est quand un premier scan de la journée est une sortie ou un dernier scan de la journée est une entrée. Ça indique que soit l'étudiant n'est pas passé par le scan en entrant ou en sortant, soit il a été scanné dans le mauvais sens.</div>
@@ -171,4 +176,4 @@
 {# Necessary go to student profile #}
 {% include 'Admin/EDT/_gotostudentprofilefromdash.html.twig' %}
 
-{% include 'RawTemplate/_footer.w.jsgrid.mgchart.html.twig' %}
+{% include 'RawTemplate/_footer.w.jsgrid.mgchart.sheetjs.html.twig' %}

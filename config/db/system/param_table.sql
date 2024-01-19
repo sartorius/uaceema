@@ -252,6 +252,11 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_cohort` (
   -- L3 Groupe 1 & 2
   INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id) VALUES (49, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L3', (SELECT id FROM uac_ref_parcours WHERE title = 'PRIVE'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2'));
 
+  -- L1 Groupe 2 D4
+  INSERT IGNORE INTO uac_cohort (id, mention, niveau, parcours_id, groupe_id)
+  VALUES
+  (50, (SELECT par_code FROM uac_ref_mention WHERE title = 'DROIT'), 'L1', (SELECT id FROM uac_ref_parcours WHERE title = 'D4'), (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 2'));
+
 
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 11;
   UPDATE uac_cohort SET groupe_id = (SELECT id FROM uac_ref_groupe WHERE title = 'Groupe 1') WHERE id = 12;

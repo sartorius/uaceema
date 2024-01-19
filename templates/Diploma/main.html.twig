@@ -21,12 +21,13 @@
               <div class="col-lg-2">
               </div>
               <div class="col-lg-8 dipl-txt">
-                L'université ACEEM certifie que <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> est bien titulaire du diplôme
+                Je, soussigné, Recteur de l'université ACEEM, certifie que <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> est bien titulaire du diplôme
                 {% if diploma['UD_LEVEL'] == 'L' %} Licence{% else %} Master{% endif %}, 
                 de Mention {{ diploma['URM_TITLE'] }}, 
                 intitulé <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 promotion {{ diploma['TITLE_YEAR'] }}
-                depuis l'année {{ diploma['CORE_YEAR'] }}.
+                depuis l'année {{ diploma['CORE_YEAR'] }}.<br>
+                En foi de quoi, la présente attestation lui est délivrée pour servir et valoir ce que de droit.
                 <br><br>
               </div>
               <div class="col-lg-2">
@@ -39,7 +40,8 @@
                 Major {{ diploma['URM_TITLE'] }}, 
                 named <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 school year {{ diploma['TITLE_YEAR'] }}
-                since {{ diploma['CORE_YEAR'] }}.
+                since {{ diploma['CORE_YEAR'] }}.<br>
+                In witness whereof, this certificate is issued to him or her to be used and to have the legal effect as appropriate.
               </div>
               <div class="col-lg-2">
               </div>

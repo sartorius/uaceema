@@ -1775,6 +1775,124 @@ function generateNoExitReportCSV(){
   document.body.removeChild(link);
 }
 
+function generateHebdoXLS_todelete(){
+  /*
+  var wb = XLSX.utils.table_to_book(document.getElementById('my-main-table'));
+  XLSX.writeFile(wb, 'EDT' + invMondayStr.replaceAll('-', '_') + tempClasse.replaceAll(' ', '_').replaceAll('/', '_') + '.xlsx');
+  var wb_sans_sheets = XLSX.utils.book_new();
+  var wb_with_sheet_named_Blatte = XLSX.utils.book_new(worksheet, "Blatte");
+
+  See https://redstapler.co/sheetjs-tutorial-create-xlsx/
+  */
+
+  /*
+  // This is working
+  var wb = XLSX.utils.book_new();
+  wb.Props = { Title: "Rapport Hebdomadaire",
+                Subject: "Absence UACEEM",
+                Author: "UACEEM",
+                CreatedDate: new Date(2018, 12, 19)};
+  wb.SheetNames.push("Sheet1");
+  var ws_data = [['hello', 'world']];
+  var ws = XLSX.utils.aoa_to_sheet(ws_data);
+  wb.Sheets["Sheet1"] = ws;
+
+  XLSX.writeFile(wb, 'test.xlsx');
+
+  */
+  const DEF_Size14Vert = { font: { sz: 14 }, alignment: { vertical: 'center', horizontal: 'center' } };
+  const DEF_ColW = 30;
+	const DEF_RowH = 60;
+  
+  const wb = XLSX.utils.book_new();
+  // STEP 2: Create data rows and styles
+  let row = [
+    { v: "This is courrier 24", t: "s", s: { font: { name: "Courier", sz: 24 }, alignment: { wrapText: true}, border: { bottom: { style: "thin", color: {rgb: "FFCC00"} } } } },
+    { v: "bold & color", t: "s", s: { font: { bold: true, color: { rgb: "FF0000" } } } },
+    { v: 'javascript', t: 's', s: { ...DEF_Size14Vert, fill: { fgColor: { rgb: 'ff5900' } }, font: { sz: 18, color: { rgb: 'f1f1f1' } } } },
+    { v: "fill: color", t: "s", s: { fill: { fgColor: { rgb: "E9E9E9" } } } },
+    { v: "line\nbreak", t: "s", s: { alignment: { wrapText: true } } },
+  ];
+
+  // STEP 3: Create worksheet with rows; Add worksheet to workbook
+  const ws = XLSX.utils.aoa_to_sheet([row]);
+  ws['!cols'] = [{ width: DEF_ColW }, { width: DEF_ColW }, { width: DEF_ColW }, { width: DEF_ColW }, { width: DEF_ColW }];
+  ws['!rows'] = [{ 'hpt': DEF_RowH }];
+
+  XLSX.utils.book_append_sheet(wb, ws, "readme demo");
+
+  // STEP 4: Write Excel file to browser
+  XLSX.writeFile(wb, "RapportAbsence7j.xlsx");
+
+}
+
+
+function generateHebdoXLSWorksheet(){
+  const DEF_COL_DFT = 30;
+	const DEF_ROW_DFT = 20;
+
+  const DEF_HEADER_CARTOUCHE = { font: { sz: 8 }, alignment: { vertical: 'center', horizontal: 'left' } };
+  const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
+
+
+  
+
+  /************************ START HEADER ************************/
+  let rowHeader1 = [
+    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader2 = [
+    { v: 'MANAKAMBAHINY', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader3 = [
+    { v: 'Service scolarité', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader4 = [
+    { v: 'Version papier', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+  ];
+  let rowHeader5 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader6 = [
+    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader7 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet([rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7]);
+  ws['!cols'] = [{ width: DEF_COL_DFT }];
+  //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
+  const rowDefinition = [];
+  for(let i=0; i<7; i++){
+    rowDefinition.push(DEF_ROW_DFT_SETUP);
+  }
+  ws['!rows'] = rowDefinition;
+  /************************ END HEADER ************************/
+
+
+  return ws;
+}
+
+
+function generateHebdoXLS(){
+  const wb = XLSX.utils.book_new();
+
+  //XLSX.utils.book_append_sheet(wb, ws, "paramWorkSheetName");
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "GESTION");
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "DROIT");
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "INFO");
+
+  // STEP 4: Write Excel file to browser
+  XLSX.writeFile(wb, "RapportAbsence7j.xlsx");
+}
+
+
+
+
 function initButtonPublishS1(){
   let i=0;
   let existS1 = false;
@@ -1971,6 +2089,9 @@ $(document).ready(function() {
     });
     $( "#uac-noexit-csv" ).click(function() {
       generateNoExitReportCSV();
+    });
+    $( "#uac-abs-pdt-xls" ).click(function() {
+      generateHebdoXLS();
     });
 
   }

@@ -155,9 +155,10 @@ param_does_pay_public
 
 SELECT * FROM uac_assiduite_off;
 
--- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2023-06-12', DAYOFWEEK('2023-06-12'));
-
-
+-- INSERT INTO uac_assiduite_off (working_date, day_code) VALUES ('2023-06-25', DAYOFWEEK('2023-06-25'));
+-- Delete these
+4	2023-05-27	7	Prob connexion	2023-05-27 10:33:59
+5	2023-06-12	2	NULL	2023-06-12 14:41:29
 
 select * from v_connection_log order by CREATION_DATE desc;
 
@@ -537,3 +538,60 @@ select * from v_class_cohort where niveau = 'L2' and mention = 'DROIT';
 
 
 select * from uac_showuser where username = 'FETRXYX089';
+
+
+
+
+
+
+
+select * from v_class_cohort vcc where mention = 'DROIT' and niveau = 'L1';
+
+
+
+select * from uac_ref_parcours;
+
+
+
+select * from uac_xref_cohort_fsc where cohort_id = 9;
+
+
+
+
+select * from v_class_cohort vcc where mention = 'DROIT' and niveau = 'L1';
+
+
+select CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) AS MAT, mu.*, uas.* from uac_showuser uas join mdl_user mu ON uas.username = mu.username
+where cohort_id = 9;
+
+
+select CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) AS MAT, mu.username, mu.firstname, mu.lastname, mu.matricule, vcc.short_classe
+from uac_showuser uas join mdl_user mu ON uas.username = mu.username join v_class_cohort vcc ON vcc.id = uas.cohort_id
+where cohort_id IN (7, 8, 9)
+ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);
+
+
+
+select CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) AS MAT, mu.username, mu.firstname, mu.lastname, mu.matricule, vcc.short_classe
+from uac_showuser uas join mdl_user mu ON uas.username = mu.username join v_class_cohort vcc ON vcc.id = uas.cohort_id
+where cohort_id IN (7, 8, 9)
+AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) < 1724
+ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);
+
+
+-- L1D3
+select CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) AS MAT, mu.username, mu.firstname, mu.lastname, mu.matricule, vcc.short_classe
+from uac_showuser uas join mdl_user mu ON uas.username = mu.username join v_class_cohort vcc ON vcc.id = uas.cohort_id
+where cohort_id IN (7, 8, 9)
+AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) > 1723
+AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) < 2033
+ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);
+
+
+-- L1D4
+select CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) AS MAT, mu.username, mu.firstname, mu.lastname, mu.matricule, vcc.short_classe
+from uac_showuser uas join mdl_user mu ON uas.username = mu.username join v_class_cohort vcc ON vcc.id = uas.cohort_id
+where cohort_id IN (7, 8, 9)
+AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) > 2032
+-- AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) < 2072
+ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);

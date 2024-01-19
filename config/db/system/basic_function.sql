@@ -143,3 +143,13 @@ RETURN REPLACE(SUBSTRING(SUBSTRING_INDEX(x, delim, pos),
        LENGTH(SUBSTRING_INDEX(x, delim, pos -1)) + 1),
        delim, '');
 $$
+
+-- Return an INT Unsigned for matricule
+DELIMITER $$
+DROP FUNCTION IF EXISTS fGetMatriculeNum$$
+CREATE FUNCTION fGetMatriculeNum(
+  x VARCHAR(255)
+)
+RETURNS INT UNSIGNED
+RETURN CAST(fSplitStr(x, '/', 1) AS UNSIGNED);
+$$

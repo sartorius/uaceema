@@ -1,4 +1,9 @@
 /***********************************************************************************************************/
+Date.prototype.addDays = function(days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+}
 
 const GLOBAL_SEP_ = ";";
 
@@ -62,6 +67,15 @@ function getACEDateStr(param){
     return tdateTime.replaceAll(':', '').replaceAll('-', '').replaceAll(' ', '_');
   }
 }
+
+function getReportACEDateStrFR(paramDay){
+  let today = new Date();
+  let outDay = today.addDays(paramDay);
+  let dateSTR = outDay.getDate().toString().padStart(2, '0')+'/'+(outDay.getMonth()+1).toString().padStart(2, '0')+'/'+outDay.getFullYear();
+
+  return dateSTR;
+}
+
 
 function isNullMvo(param){
   return (param ==  null ? '' : param);

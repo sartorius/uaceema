@@ -706,16 +706,17 @@ class AdminEDTController extends AbstractController
 
 
         $late_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
-									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status IN ('LAT', 'VLA') "
-											    . " GROUP BY mu.city, ass.status; ";
-        $logger->debug("Show me late_query: " . $late_query);
+                          . " AND ass.create_date > DATE_ADD(current_date, INTERVAL -7 DAY) "
+											    . " GROUP BY mu.city; ";
+        $logger->debug("Show me late_query last 7d: " . $late_query);
 
         $mis_query = " SELECT mu.city AS CITY, COUNT(1) AS CPT from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username "
                           . " WHERE ass.status = 'ABS' "
+                          . " AND ass.create_date > DATE_ADD(current_date, INTERVAL -30 DAY) "
 											    . " GROUP BY mu.city, ass.status; ";
-        $logger->debug("Show me mis_query: " . $mis_query);
+        $logger->debug("Show me mis_query last 30d: " . $mis_query);
 
         $mis_query_pp = " SELECT vcc.short_classe AS CLASSE, REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), \"'\", \" \") AS NAME, COUNT(1) AS VAL, vsu.PAGE AS PAGE from uac_assiduite ass JOIN mdl_user mu ON mu.id = ass.user_id "
 									        . " JOIN uac_showuser uas ON mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id "
@@ -761,6 +762,9 @@ class AdminEDTController extends AbstractController
         $query_queued_ass = " SELECT COUNT(1) AS QUEUED_ASS from uac_working_flow where status = 'QUE'; ";
         $logger->debug("Show me query_queued_ass: " . $query_queued_ass);
 
+        $query_param_year = " SELECT par_value AS PARAM_YEAR FROM uac_param WHERE key_code = 'YEARAAA'; ";
+        $logger->debug("Show me query_param_year: " . $query_param_year);
+
 
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_stat_late = $dbconnectioninst->query($late_query)->fetchAll(PDO::FETCH_ASSOC);
@@ -768,32 +772,35 @@ class AdminEDTController extends AbstractController
 
 
         $result_stat_mis = $dbconnectioninst->query($mis_query)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_stat_mis));
+        $logger->debug("Show me result_stat_mis: " . count($result_stat_mis));
 
         $result_stat_mis_pp = $dbconnectioninst->query($mis_query_pp)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_stat_mis_pp));
+        $logger->debug("Show me result_stat_mis_pp: " . count($result_stat_mis_pp));
 
         $result_report = $dbconnectioninst->query($query_report)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_report));
+        $logger->debug("Show me result_report: " . count($result_report));
 
         $result_course_report = $dbconnectioninst->query($query_course_report)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_course_report));
+        $logger->debug("Show me result_course_report: " . count($result_course_report));
 
 
         $result_noexit_report = $dbconnectioninst->query($query_noexit_report)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_noexit_report));
+        $logger->debug("Show me result_noexit_report: " . count($result_noexit_report));
 
         $result_noentry_report = $dbconnectioninst->query($query_noentry_graph)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_noentry_report));
+        $logger->debug("Show me result_noentry_report: " . count($result_noentry_report));
 
         $result_noexit_graph = $dbconnectioninst->query($query_noexit_graph)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_noexit_graph));
+        $logger->debug("Show me result_noexit_graph: " . count($result_noexit_graph));
 
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_lastupd));
+        $logger->debug("Show me result_lastupd: " . count($result_lastupd));
 
         $result_query_queued_ass = $dbconnectioninst->query($query_queued_ass)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me: " . count($result_query_queued_ass));
+        $logger->debug("Show me result_query_queued_ass: " . count($result_query_queued_ass));
+
+        $result_query_param_year = $dbconnectioninst->query($query_param_year)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_param_year: " . count($result_query_param_year));
 
 
         $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -810,6 +817,7 @@ class AdminEDTController extends AbstractController
                                                                   'result_noentry_report'=>$result_noentry_report,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'result_query_queued_ass'=>$result_query_queued_ass,
+                                                                  'param_year' => $result_query_param_year[0]['PARAM_YEAR'],
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
 
