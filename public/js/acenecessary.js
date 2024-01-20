@@ -6,6 +6,28 @@ Date.prototype.addDays = function(days) {
 }
 
 const GLOBAL_SEP_ = ";";
+const DEF_ROW_DFT = 20;
+
+const DEF_HEADER_CARTOUCHE = { font: { sz: 8, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
+const DEF_FOOTER_CARTOUCHE = { font: { sz: 6, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
+
+const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
+const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
+const DEF_CELL_HEADER_HEAVY_FILL = { fgColor: { rgb: '1C1C1C' } };
+const DEF_CELL_ODD_FILL = { fgColor: { rgb: 'F4F7FF' } };
+const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
+                          bottom: { style: "thin", color: {rgb: "383838"} },
+                          left: { style: "thin", color: {rgb: "383838"} },
+                          right: { style: "thin", color: {rgb: "383838"} }
+                        };
+
+const DEF_EMPTY_CELL = { font: { sz: 8, name: 'Arial' }};
+const DEF_HEADER_CELL_HEAVY = { font: { sz: 8, name: 'Arial', bold: true, color: {rgb: "FFFFFF"} }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_HEAVY_FILL} };
+const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
+const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+const DEF_CELL_ODD = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
+const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+
 
 function removeAccentuated(param){
   return param.normalize('NFD').replace(/[\u0300-\u036f]/g, '');

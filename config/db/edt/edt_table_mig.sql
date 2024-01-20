@@ -125,8 +125,8 @@ CREATE VIEW rep_hebdo_ass_global AS
 SELECT
 	 vcc.mention AS MENTION,
 	 vcc.niveau AS NIVEAU,
-	 CASE WHEN vcc.parcours = 'na' THEN '-' ELSE SUBSTRING(vcc.parcours, 1, 15) END AS PARCOURS,
-	 CASE WHEN vcc.groupe = 'na' THEN '-' ELSE SUBSTRING(vcc.groupe, 1, 15) END AS GROUPE,
+	 CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END AS PARCOURS,
+	 CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END AS GROUPE,
 	 UPPER(mu.username) AS USERNAME,
 	 fGetMatriculeNum(mu.matricule) AS MATRICULE,
 	 REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS FULLNAME,
@@ -143,10 +143,39 @@ SELECT
 	  WHERE ass.status IN ('ABS', 'LAT', 'VLA')
 	  AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
 	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
-	  GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE SUBSTRING(vcc.parcours, 1, 15) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE SUBSTRING(vcc.groupe, 1, 15) END, UPPER(mu.username), fGetMatriculeNum(mu.matricule), REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " "), CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END
+	  GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END, UPPER(mu.username), fGetMatriculeNum(mu.matricule), REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " "), CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END
 	  -- HAVING COUNT(1) > 1
 	  ORDER BY vcc.mention, vcc.niveau, PARCOURS, GROUPE, USERNAME, STATUS DESC;
 
+
+DROP VIEW IF EXISTS rep_hebdo_ass_compute_global;
+CREATE VIEW rep_hebdo_ass_compute_global AS
+SELECT
+  vcc.mention AS MENTION,
+  vcc.niveau AS NIVEAU,
+  CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END AS PARCOURS,
+  CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END AS GROUPE,
+  count(1) AS POPULATION,
+  IFNULL(t_late.T_LATE_CPT, 0) AS LATE_OCC,
+  IFNULL(t_mis.T_MIS_CPT, 0) AS MIS_OCC
+FROM v_class_cohort vcc JOIN uac_showuser uas ON uas.cohort_id = vcc.id
+						JOIN mdl_user mu ON mu.username = uas.username
+							 LEFT JOIN (
+      							 SELECT uas.cohort_id AS T_LATE_COHORT_ID, count(1) AS T_LATE_CPT FROM uac_assiduite ass
+        							  JOIN mdl_user mu ON mu.id = ass.user_id AND ass.status IN ('LAT', 'VLA')
+        				   			JOIN uac_showuser uas ON uas.username = mu.username
+                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
+        							GROUP BY uas.cohort_id
+							 ) t_late ON t_late.T_LATE_COHORT_ID = vcc.id
+ 							 LEFT JOIN (
+       							 SELECT uas.cohort_id AS T_MIS_COHORT_ID, count(1) AS T_MIS_CPT FROM uac_assiduite ass
+         							  JOIN mdl_user mu ON mu.id = ass.user_id AND ass.status IN ('ABS')
+         				   			JOIN uac_showuser uas ON uas.username = mu.username
+                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
+         							GROUP BY uas.cohort_id
+ 							 ) t_mis ON t_mis.T_MIS_COHORT_ID = vcc.id
+GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END, t_late.T_LATE_CPT, t_mis.T_MIS_CPT
+HAVING COUNT(1) > 0;
 
 
 DROP VIEW IF EXISTS rep_global_ass_dash;

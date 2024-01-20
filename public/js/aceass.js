@@ -1731,7 +1731,7 @@ function generateHebdoXLS_todelete(){
 }
 */
 
-function generateHebdoXLSWorksheet(paramLines){
+function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
   //const DEF_COL_DFT = 30;
 	const DEF_ROW_DFT = 20;
 
@@ -1740,6 +1740,8 @@ function generateHebdoXLSWorksheet(paramLines){
   
   const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
   const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
+  const DEF_CELL_HEADER_HEAVY_FILL = { fgColor: { rgb: '1C1C1C' } };
+  const DEF_CELL_ODD_FILL = { fgColor: { rgb: 'F4F7FF' } };
   const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
                             bottom: { style: "thin", color: {rgb: "383838"} },
                             left: { style: "thin", color: {rgb: "383838"} },
@@ -1747,8 +1749,10 @@ function generateHebdoXLSWorksheet(paramLines){
                           };
 
   const DEF_EMPTY_CELL = { font: { sz: 8, name: 'Arial' }};
+  const DEF_HEADER_CELL_HEAVY = { font: { sz: 8, name: 'Arial', bold: true, color: {rgb: "FFFFFF"} }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_HEAVY_FILL} };
   const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
   const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+  const DEF_CELL_ODD = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
   const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
   
 
@@ -1784,172 +1788,258 @@ function generateHebdoXLSWorksheet(paramLines){
   
   let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7];
 
-  // Header
-  let rowHeaderLineHeader = [
-    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
-    { v: 'Niveau', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Parcours', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Groupe', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Username', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Matricule', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Nom complet', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Assiduité', t: 's', s: { ...DEF_HEADER_CELL } },
-    { v: 'Occurence', t: 's', s: { ...DEF_HEADER_CELL } }
-  ];
-  rowCollection.push(rowHeaderLineHeader);
+  
 
   //************************ END HEADER ***********************
-  let merge = [];
 
-  const paddingCartouche = 8;
+  // If we are not Global
+  if(paramIsGlobalSheet == 'N'){
 
-  let mrgNiveauRowStart = 0;
-  let mrgNiveauLastRead = "";
+        // Header NOT GLOBAL
+        let rowHeaderLineHeader = [
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: 'Niveau', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Parcours', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Groupe', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Username', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Matricule', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Nom complet', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Assiduité', t: 's', s: { ...DEF_HEADER_CELL } },
+          { v: 'Occurence', t: 's', s: { ...DEF_HEADER_CELL } }
+        ];
+        rowCollection.push(rowHeaderLineHeader);
 
-  let mrgParcoursRowStart = 0;
-  let mrgParcoursLastRead = "";
 
-  let mrgGroupeRowStart = 0;
-  let mrgGroupeLastRead = "";
+        let merge = [];
+      
+        const paddingCartouche = 8;
+      
+        let mrgNiveauRowStart = 0;
+        let mrgNiveauLastRead = "";
+      
+        let mrgParcoursRowStart = 0;
+        let mrgParcoursLastRead = "";
+      
+        let mrgGroupeRowStart = 0;
+        let mrgGroupeLastRead = "";
+      
+        // Now we have to work on the lines !
+        for(let i=0; i<paramLines.length; i++){
+          let rowHeaderLine = [
+            { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+            { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].PARCOURS, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].USERNAME, t: 's', s: { ...DEF_CELL_MONO } },
+            { v: paramLines[i].MATRICULE, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].STATUS, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].OCCURENCE, t: 's', s: { ...DEF_CELL } }
+          ];
+          rowCollection.push(rowHeaderLine);
+      
+          // Now work on the merge !
+          // Niveau
+          //We need to update because we change !
+      
+          // I have to initialise the first Mention
+          if(i == 0){
+            mrgNiveauLastRead = paramLines[i].NIVEAU;
+            mrgParcoursLastRead = paramLines[i].PARCOURS;
+            mrgGroupeLastRead = paramLines[i].GROUPE;
+          }
+          if(mrgNiveauLastRead != paramLines[i].NIVEAU){
+            // We create the merge order : { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
+            // NIVEAU IS COLUMN 1
+            let mrgOrderNiveau = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + i - 1, c: 1 } };
+            merge.push(mrgOrderNiveau);
+            // You also have to merge the other !
+            mrgOrderNiveau = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
+            merge.push(mrgOrderNiveau);
+      
+            mrgOrderNiveau = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+            merge.push(mrgOrderNiveau);
+      
+            mrgNiveauRowStart = i;
+            mrgNiveauLastRead = paramLines[i].NIVEAU;
+            mrgParcoursRowStart = i;
+            mrgParcoursLastRead = paramLines[i].PARCOURS;
+            mrgGroupeRowStart = i;
+            mrgGroupeLastRead = paramLines[i].GROUPE;
+          }
+      
+          if(mrgParcoursLastRead != paramLines[i].PARCOURS){
+            let mrgOrderParcours = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
+            merge.push(mrgOrderParcours);
+      
+            // You also have to merge the other !
+            mrgOrderParcours = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+            merge.push(mrgOrderParcours);
+      
+            mrgParcoursRowStart = i;
+            mrgParcoursLastRead = paramLines[i].PARCOURS;
+            mrgGroupeRowStart = i;
+            mrgGroupeLastRead = paramLines[i].GROUPE;
+          }
+      
+          if(mrgGroupeLastRead != paramLines[i].GROUPE){
+            let mrgOrderGroupe = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+            merge.push(mrgOrderGroupe);
+      
+            mrgGroupeRowStart = i;
+            mrgGroupeLastRead = paramLines[i].GROUPE;
+          }
+          /*
+          if(paramLines[i].MENTION == 'DROIT'){
+            console.log('i: ' + i + '/mrgNiveauLastRead: ' + mrgNiveauLastRead + ' /paramLines[i].NIVEAU: ' + paramLines[i].NIVEAU);
+          }
+          */
+          // Merge the student
+          if((i > 0) &&
+              (paramLines[i-1].USERNAME == paramLines[i].USERNAME)){
+              let mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 4 }, e: { r: paddingCartouche + i, c: 4 } };
+              merge.push(mrgOrderStudent);
+              mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 5 }, e: { r: paddingCartouche + i, c: 5 } };
+              merge.push(mrgOrderStudent);
+              mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 6 }, e: { r: paddingCartouche + i, c: 6 } };
+              merge.push(mrgOrderStudent);
+          }
+        }
+        // We manage last lines
+        let mrgOrderNiveauEnd = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + paramLines.length - 1, c: 1 } };
+        merge.push(mrgOrderNiveauEnd);
+        let mrgOrderParcoursEnd = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + paramLines.length - 1, c: 2 } };
+        merge.push(mrgOrderParcoursEnd);
+        let mrgOrderGroupeEnd = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + paramLines.length - 1, c: 3 } };
+        merge.push(mrgOrderGroupeEnd);
+      
+        let rowFooter1 = [
+          { v: '', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+        ];
+        rowCollection.push(rowFooter1);
+        let rowFooter2 = [
+          { v: 'NB 1 : ireo no isan\'ny Mpianatra nanapaka nandritra ny herinandro fa misy "details" raha mitady ny "parent" na "tuteur" (version papier)', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+        ];
+        rowCollection.push(rowFooter2);
+        let rowFooter3 = [
+          { v: 'NB 2 : ireo mpianatra voasoratra ireo no tena mpanapaka matetika tokony andraisana fepetra amin\'ny CD (version papier) io, efa manomboka milaza sy manontany ireo mpianatra tena manapaka matetika izahay !!!!', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+        ];
+        rowCollection.push(rowFooter3);
+      
+        const ws = XLSX.utils.aoa_to_sheet(rowCollection);
+        ws['!cols'] = [
+          { width: 10 }, //Empty
+          { width: 8 }, //Niveau
+          { width: 20 }, //Parcours
+          { width: 20 }, //Groupe
+          { width: 17 }, //Username
+          { width: 9 }, //Matricule
+          { width: 40 }, //FullName
+          { width: 10 }, //Status
+          { width: 10 }]; //Occurence
+        //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
+        const rowDefinition = [];
+        for(let i=0; i<rowCollection.length; i++){
+          rowDefinition.push(DEF_ROW_DFT_SETUP);
+        }
+        ws['!rows'] = rowDefinition;
 
-  // Now we have to work on the lines !
-  for(let i=0; i<paramLines.length; i++){
-    let rowHeaderLine = [
-      { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
-      { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].PARCOURS, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].USERNAME, t: 's', s: { ...DEF_CELL_MONO } },
-      { v: paramLines[i].MATRICULE, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].STATUS, t: 's', s: { ...DEF_CELL } },
-      { v: paramLines[i].OCCURENCE, t: 's', s: { ...DEF_CELL } }
-    ];
-    rowCollection.push(rowHeaderLine);
 
-    // Now work on the merge !
-    // Niveau
-    //We need to update because we change !
+        //************************ MERGE OPERATION ***********************
+        // Here s = start, r = row, c=col, e= end
+        // Start with 0
+        /*
+        const merge = [
+          { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
+        ];
+        */
+        ws["!merges"] = merge;
 
-    // I have to initialise the first Mention
-    if(i == 0){
-      mrgNiveauLastRead = paramLines[i].NIVEAU;
-      mrgParcoursLastRead = paramLines[i].PARCOURS;
-      mrgGroupeLastRead = paramLines[i].GROUPE;
-    }
-    if(mrgNiveauLastRead != paramLines[i].NIVEAU){
-      // We create the merge order : { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
-      // NIVEAU IS COLUMN 1
-      let mrgOrderNiveau = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + i - 1, c: 1 } };
-      merge.push(mrgOrderNiveau);
-      // You also have to merge the other !
-      mrgOrderNiveau = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
-      merge.push(mrgOrderNiveau);
-
-      mrgOrderNiveau = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
-      merge.push(mrgOrderNiveau);
-
-      mrgNiveauRowStart = i;
-      mrgNiveauLastRead = paramLines[i].NIVEAU;
-      mrgParcoursRowStart = i;
-      mrgParcoursLastRead = paramLines[i].PARCOURS;
-      mrgGroupeRowStart = i;
-      mrgGroupeLastRead = paramLines[i].GROUPE;
-    }
-
-    if(mrgParcoursLastRead != paramLines[i].PARCOURS){
-      let mrgOrderParcours = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
-      merge.push(mrgOrderParcours);
-
-      // You also have to merge the other !
-      mrgOrderParcours = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
-      merge.push(mrgOrderParcours);
-
-      mrgParcoursRowStart = i;
-      mrgParcoursLastRead = paramLines[i].PARCOURS;
-      mrgGroupeRowStart = i;
-      mrgGroupeLastRead = paramLines[i].GROUPE;
-    }
-
-    if(mrgGroupeLastRead != paramLines[i].GROUPE){
-      let mrgOrderGroupe = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
-      merge.push(mrgOrderGroupe);
-
-      mrgGroupeRowStart = i;
-      mrgGroupeLastRead = paramLines[i].GROUPE;
-    }
-    /*
-    if(paramLines[i].MENTION == 'DROIT'){
-      console.log('i: ' + i + '/mrgNiveauLastRead: ' + mrgNiveauLastRead + ' /paramLines[i].NIVEAU: ' + paramLines[i].NIVEAU);
-    }
-    */
-    // Merge the student
-    if((i > 0) &&
-        (paramLines[i-1].USERNAME == paramLines[i].USERNAME)){
-        let mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 4 }, e: { r: paddingCartouche + i, c: 4 } };
-        merge.push(mrgOrderStudent);
-        mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 5 }, e: { r: paddingCartouche + i, c: 5 } };
-        merge.push(mrgOrderStudent);
-        mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 6 }, e: { r: paddingCartouche + i, c: 6 } };
-        merge.push(mrgOrderStudent);
-    }
+        return ws;
   }
-  // We manage last lines
-  let mrgOrderNiveauEnd = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + paramLines.length - 1, c: 1 } };
-  merge.push(mrgOrderNiveauEnd);
-  let mrgOrderParcoursEnd = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + paramLines.length - 1, c: 2 } };
-  merge.push(mrgOrderParcoursEnd);
-  let mrgOrderGroupeEnd = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + paramLines.length - 1, c: 3 } };
-  merge.push(mrgOrderGroupeEnd);
+  else{
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // ********************   GLOBAL   ***********************
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // *******************************************************
+        // Header GLOBAL
+        let rowHeaderLineHeader = [
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: 'Mention', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Niveau', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Parcours', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Groupe', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Total étudiant', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Total retard', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: 'Total absence', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } }
+        ];
+        rowCollection.push(rowHeaderLineHeader);
 
-  let rowFooter1 = [
-    { v: '', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
-  ];
-  rowCollection.push(rowFooter1);
-  let rowFooter2 = [
-    { v: 'NB: ireo no isan\'ny Mpianatra nanapaka nandritra ny herinandro fa misy "details" raha mitady ny "parent" na "tuteur" ( version papier)', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
-  ];
-  rowCollection.push(rowFooter2);
-  let rowFooter3 = [
-    { v: 'NB: ireo mpianatra voasoratra ireo no tena mpanapaka matetika tokony andraisana fepetra amin\'ny CD (version PAPIER ) io, efa manomboka milaza sy manontany ireo mpianatra tena manapaka matetika izahay !!!!', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
-  ];
-  rowCollection.push(rowFooter3);
+        for(let i=0; i<paramLines.length; i++){
+          //is DEF_CELL_ODD
+          if(i % 2 === 0){
+            let rowHeaderLine = [
+              { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+              { v: paramLines[i].MENTION, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].PARCOURS, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].POPULATION, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].LATE_OCC, t: 's', s: { ...DEF_CELL_ODD } },
+              { v: paramLines[i].MIS_OCC, t: 's', s: { ...DEF_CELL_ODD } }
+            ];
+            rowCollection.push(rowHeaderLine);
+          }
+          else{
+              let rowHeaderLine = [
+                { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+                { v: paramLines[i].MENTION, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].PARCOURS, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].POPULATION, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].LATE_OCC, t: 's', s: { ...DEF_CELL } },
+                { v: paramLines[i].MIS_OCC, t: 's', s: { ...DEF_CELL } }
+              ];
+              rowCollection.push(rowHeaderLine);
+          }
+        }
 
-  const ws = XLSX.utils.aoa_to_sheet(rowCollection);
-  ws['!cols'] = [
-    { width: 10 }, //Empty
-    { width: 8 }, //Niveau
-    { width: 20 }, //Parcours
-    { width: 20 }, //Groupe
-    { width: 17 }, //Username
-    { width: 9 }, //Matricule
-    { width: 40 }, //FullName
-    { width: 10 }, //Status
-    { width: 10 }]; //Occurence
-  //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
-  const rowDefinition = [];
-  for(let i=0; i<rowCollection.length; i++){
-    rowDefinition.push(DEF_ROW_DFT_SETUP);
+        const ws = XLSX.utils.aoa_to_sheet(rowCollection);
+        ws['!cols'] = [
+          { width: 10 }, //Empty
+          { width: 40 }, //MENTION
+          { width: 8 }, //NIVEAU
+          { width: 20 }, //PARCOURS
+          { width: 20 }, //GROUPE
+          { width: 20 }, //POPULATION
+          { width: 12 }, //LATE_OCC
+          { width: 12 }]; //MIS_OCC
+        //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
+        const rowDefinition = [];
+        for(let i=0; i<rowCollection.length; i++){
+          rowDefinition.push(DEF_ROW_DFT_SETUP);
+        }
+        ws['!rows'] = rowDefinition;
+
+        return ws;
   }
-  ws['!rows'] = rowDefinition;
-
-
-  //************************ MERGE OPERATION ***********************
-  // Here s = start, r = row, c=col, e= end
-  // Start with 0
-  /*
-  const merge = [
-    { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
-  ];
-  */
-  ws["!merges"] = merge;
-
-  return ws;
 }
 
 
 function generateHebdoXLS(){
   const wb = XLSX.utils.book_new();
+
+  // Create first the global worksheet
+  // dataTagToJsonArrayHebdoGblComputeReport
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(dataTagToJsonArrayHebdoGblComputeReport, 'Y'), 'RESUME');
 
   // We assume that the collection is ordered : dataTagToJsonArrayHebdoGblReport
   let iMentionLines = [];
@@ -1963,7 +2053,7 @@ function generateHebdoXLS(){
       // First we manage existing.
       if(iMention != ''){
         //We avoid empty case
-        XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines), iMention);
+        XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines, 'N'), iMention);
       }
       //console.log("Attach worksheet: " + iMention);
       iMention = dataTagToJsonArrayHebdoGblReport[i].MENTION;
@@ -1973,11 +2063,11 @@ function generateHebdoXLS(){
     iMentionLines.push(dataTagToJsonArrayHebdoGblReport[i]);
   }
   // Because we have to handle the last Mention
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines), iMention);
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines, 'N'), iMention);
   //console.log("Attach worksheet: " + iMention);
 
   // STEP 4: Write Excel file to browser
-  XLSX.writeFile(wb, "RapportAbsence7j.xlsx");
+  XLSX.writeFile(wb, "RapportAbsence7j_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
 }
 
 

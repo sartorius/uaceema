@@ -746,7 +746,8 @@ class AdminEDTController extends AbstractController
         $query_hebdo_global_report = " SELECT * FROM rep_hebdo_ass_global; "; 
         $logger->debug("Show me query_hebdo_global_report: " . $query_hebdo_global_report);
 
-
+        $query_hebdo_global_compute_report = " SELECT * FROM rep_hebdo_ass_compute_global; "; 
+        $logger->debug("Show me query_hebdo_global_compute_report: " . $query_hebdo_global_compute_report);
         
 
         $query_course_report = " SELECT * FROM rep_course_dash; ";
@@ -791,6 +792,9 @@ class AdminEDTController extends AbstractController
         $result_query_hebdo_global_report = $dbconnectioninst->query($query_hebdo_global_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_hebdo_global_report: " . count($result_query_hebdo_global_report));
 
+        $result_query_hebdo_global_compute_report = $dbconnectioninst->query($query_hebdo_global_compute_report)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_hebdo_global_compute_report: " . count($result_query_hebdo_global_compute_report));
+
 
         $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                   'firstname' => $_SESSION["firstname"],
@@ -802,6 +806,7 @@ class AdminEDTController extends AbstractController
                                                                   'result_report'=>$result_report,
                                                                   'result_course_report'=>$result_course_report,
                                                                   'result_query_hebdo_global_report'=>$result_query_hebdo_global_report,
+                                                                  'result_query_hebdo_global_compute_report'=>$result_query_hebdo_global_compute_report,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'result_query_queued_ass'=>$result_query_queued_ass,
                                                                   'param_year' => $result_query_param_year[0]['PARAM_YEAR'],

@@ -84,6 +84,18 @@
     </script>
 {% endif %}
 
+{% if result_query_hebdo_global_compute_report is defined and result_query_hebdo_global_compute_report is not null %}
+  <script>
+
+    let dataTagToJsonArrayHebdoGblComputeReport =JSON.parse('{{ result_query_hebdo_global_compute_report | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataTagToJsonArrayHebdoGblComputeReport = "";
+    </script>
+{% endif %}
+
+
 <div id="mg-graph-identifier">dash-ass</div>
 
 <div class="mgs-note">Date de dernière mise à jour {{ result_lastupd[0]['LASTUPDATE'] }}.<br> Les assiduités sont calculés à 10h/12h/14h/18h (TU+0) pour tous les cours terminés 30min avant.</div>
