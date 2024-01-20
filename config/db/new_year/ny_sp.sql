@@ -89,14 +89,14 @@ BEGIN
       -- COME BACK MDL !
       INSERT INTO mdl_user
       (id, username, last_update, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets)
-      SELECT id, username, last_update, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets
+      SELECT id, username, CURRENT_TIMESTAMP, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets
       FROM histo_mdl_user hmu WHERE hmu.username IN (
           SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO'
       );
 
       -- Update UAC SHOW USER
       INSERT INTO uac_showuser (username, roleid, secret, cohort_id, last_update, create_date)
-      SELECT username, roleid, secret, cohort_id, last_update, create_date FROM histo_uac_showuser huas_main
+      SELECT username, roleid, secret, cohort_id, CURRENT_TIMESTAMP, create_date FROM histo_uac_showuser huas_main
       WHERE huas_main.username IN (
           SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO'
       );

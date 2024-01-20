@@ -743,18 +743,14 @@ class AdminEDTController extends AbstractController
         $query_report = " SELECT * FROM rep_global_ass_dash; "; 
         $logger->debug("Show me query_report: " . $query_report);
 
+        $query_hebdo_global_report = " SELECT * FROM rep_hebdo_ass_global; "; 
+        $logger->debug("Show me query_hebdo_global_report: " . $query_hebdo_global_report);
+
+
+        
 
         $query_course_report = " SELECT * FROM rep_course_dash; ";
         $logger->debug("Show me query_course_report: " . $query_course_report);
-
-        $query_noexit_report = " SELECT * FROM rep_no_exit UNION SELECT * FROM rep_no_entry; ";
-        $logger->debug("Show me query_noexit_report: " . $query_noexit_report);
-
-        $query_noexit_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_exit WHERE TECH_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) GROUP BY CLASSE; ";
-        $logger->debug("Show me query_noexit_graph: " . $query_noexit_graph);
-
-        $query_noentry_graph = " SELECT CLASSE, COUNT(1) AS CPT FROM rep_no_entry WHERE TECH_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY) GROUP BY CLASSE; ";
-        $logger->debug("Show me query_noentry_graph: " . $query_noentry_graph);
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
@@ -783,16 +779,6 @@ class AdminEDTController extends AbstractController
         $result_course_report = $dbconnectioninst->query($query_course_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_course_report: " . count($result_course_report));
 
-
-        $result_noexit_report = $dbconnectioninst->query($query_noexit_report)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me result_noexit_report: " . count($result_noexit_report));
-
-        $result_noentry_report = $dbconnectioninst->query($query_noentry_graph)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me result_noentry_report: " . count($result_noentry_report));
-
-        $result_noexit_graph = $dbconnectioninst->query($query_noexit_graph)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me result_noexit_graph: " . count($result_noexit_graph));
-
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_lastupd: " . count($result_lastupd));
 
@@ -801,6 +787,9 @@ class AdminEDTController extends AbstractController
 
         $result_query_param_year = $dbconnectioninst->query($query_param_year)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_param_year: " . count($result_query_param_year));
+
+        $result_query_hebdo_global_report = $dbconnectioninst->query($query_hebdo_global_report)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_hebdo_global_report: " . count($result_query_hebdo_global_report));
 
 
         $content = $twig->render('Admin/EDT/dashboardass.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -812,9 +801,7 @@ class AdminEDTController extends AbstractController
                                                                   'stats_mis_pp'=>$result_stat_mis_pp,
                                                                   'result_report'=>$result_report,
                                                                   'result_course_report'=>$result_course_report,
-                                                                  'result_noexit_report'=>$result_noexit_report,
-                                                                  'result_noexit_graph'=>$result_noexit_graph,
-                                                                  'result_noentry_report'=>$result_noentry_report,
+                                                                  'result_query_hebdo_global_report'=>$result_query_hebdo_global_report,
                                                                   'result_lastupd'=>$result_lastupd,
                                                                   'result_query_queued_ass'=>$result_query_queued_ass,
                                                                   'param_year' => $result_query_param_year[0]['PARAM_YEAR'],

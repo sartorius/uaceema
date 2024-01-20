@@ -73,49 +73,16 @@
     </script>
 {% endif %}
 
-{% if result_noexit_report is defined and result_noexit_report is not null %}
+{% if result_query_hebdo_global_report is defined and result_query_hebdo_global_report is not null %}
   <script>
-    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
-    let dataTagToJsonArrayNoExitReport =JSON.parse('{{ result_noexit_report | json_encode | raw }}');
-    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
-    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+    let dataTagToJsonArrayHebdoGblReport =JSON.parse('{{ result_query_hebdo_global_report | json_encode | raw }}');
   </script>
 {% else %}
     <script>
-      let dataTagToJsonArrayNoExitReport = "";
+      let dataTagToJsonArrayHebdoGblReport = "";
     </script>
 {% endif %}
-
-{% if result_noexit_graph is defined and result_noexit_graph is not null %}
-  <script>
-    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
-
-    let dataTagToJsonArrayNoExitGraph =JSON.parse('{{ result_noexit_graph | json_encode | raw }}');
-    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
-    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
-  </script>
-{% else %}
-    <script>
-      let dataTagToJsonArrayNoExitGraph = "";
-    </script>
-{% endif %}
-
-{% if result_noentry_report is defined and result_noentry_report is not null %}
-  <script>
-    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
-
-    let dataTagToJsonArrayNoEntryGraph =JSON.parse('{{ result_noentry_report | json_encode | raw }}');
-    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
-    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
-  </script>
-{% else %}
-    <script>
-      let dataTagToJsonArrayNoEntryGraph = "";
-    </script>
-{% endif %}
-
-
 
 <div id="mg-graph-identifier">dash-ass</div>
 
@@ -129,7 +96,6 @@
   </div>
   <div class="col-10">
     <button type="button" id="uac-ass-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
-    &nbsp;<button type="button" id="uac-noexit-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Anomalie E/S</button>
     &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours annulés</button>
     &nbsp;<button type="button" id="uac-abs-pdt-xls" class="btn btn-outline-dark"><i class="icon-file-excel-o"></i>&nbsp;Hebdomadaire</button>
   </div>
@@ -157,16 +123,15 @@
 <div class="row">
   <div class="col-1">
   </div>
-  <div class="col-5">
+  <div class="col-2">
+  </div>
+  <div class="col-6">
     <h2>Proportion retard 7 jours</h2>
     <hr>
     <canvas id="statPieLate"></canvas>
   </div>
-  <div class="col-5">
-    <h2>Anomalie scan des 7 jours</h2>
-    <hr>
-    <canvas id="statBarNoExit"></canvas>
-    <br><div class="mgs-note"><strong>Note</strong> Ce graphique montre le nombre d'anomalie par classe ces 7 derniers jours. Une anomalie est quand un premier scan de la journée est une sortie ou un dernier scan de la journée est une entrée. Ça indique que soit l'étudiant n'est pas passé par le scan en entrant ou en sortant, soit il a été scanné dans le mauvais sens.</div>
+
+  <div class="col-2">
   </div>
   <div class="col-1">
   </div>

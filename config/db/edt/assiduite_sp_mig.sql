@@ -4,6 +4,7 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 
 INSERT IGNORE INTO uac_param (key_code, description, par_time, par_code) VALUES ('LSTCRSD', 'Last course time end of the day', '18:00:00', NULL);
 
+-- This does not delete old assiduite
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_ComptAssdFlow$$
 CREATE PROCEDURE `SRV_CRT_ComptAssdFlow` (IN param DATE)

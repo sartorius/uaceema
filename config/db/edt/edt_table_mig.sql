@@ -119,6 +119,36 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_teacher_mention` (
 
 
 /************************************ View ************************************/
+
+DROP VIEW IF EXISTS rep_hebdo_ass_global;
+CREATE VIEW rep_hebdo_ass_global AS
+SELECT
+	 vcc.mention AS MENTION,
+	 vcc.niveau AS NIVEAU,
+	 CASE WHEN vcc.parcours = 'na' THEN '-' ELSE SUBSTRING(vcc.parcours, 1, 15) END AS PARCOURS,
+	 CASE WHEN vcc.groupe = 'na' THEN '-' ELSE SUBSTRING(vcc.groupe, 1, 15) END AS GROUPE,
+	 UPPER(mu.username) AS USERNAME,
+	 fGetMatriculeNum(mu.matricule) AS MATRICULE,
+	 REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS FULLNAME,
+	 CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END AS STATUS,
+	  COUNT(1) AS OCCURENCE
+	  FROM uac_assiduite ass JOIN mdl_user mu
+                            ON mu.id = ass.user_id
+                            JOIN uac_edt_line uel
+                            ON uel.id = ass.edt_id
+                            JOIN uac_showuser uas
+                            ON mu.username = uas.username
+                            JOIN v_class_cohort vcc
+                            ON vcc.id = uas.cohort_id
+	  WHERE ass.status IN ('ABS', 'LAT', 'VLA')
+	  AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
+	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -7 DAY)
+	  GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE SUBSTRING(vcc.parcours, 1, 15) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE SUBSTRING(vcc.groupe, 1, 15) END, UPPER(mu.username), fGetMatriculeNum(mu.matricule), REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " "), CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END
+	  -- HAVING COUNT(1) > 1
+	  ORDER BY vcc.mention, vcc.niveau, PARCOURS, GROUPE, USERNAME, STATUS DESC;
+
+
+
 DROP VIEW IF EXISTS rep_global_ass_dash;
 CREATE VIEW rep_global_ass_dash AS
 SELECT

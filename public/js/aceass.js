@@ -1505,23 +1505,6 @@ function runStat(){
   }
 
   // Stat of status population
-  let listOfLabelAnomaly = new Array();
-  let listOfDataNoExit = new Array();
-  for(i=0; i<dataTagToJsonArrayNoExitGraph.length; i++){
-    listOfLabelAnomaly.push(dataTagToJsonArrayNoExitGraph[i].CLASSE);
-    listOfDataNoExit.push(dataTagToJsonArrayNoExitGraph[i].CPT);
-  }
-
-  // Stat of status population
-  let listOfDataNoEntry = new Array();
-  for(i=0; i<dataTagToJsonArrayNoEntryGraph.length; i++){
-    if(!listOfLabelAnomaly.includes(dataTagToJsonArrayNoEntryGraph[i].CLASSE)){
-      listOfLabelAnomaly.push(dataTagToJsonArrayNoEntryGraph[i].CLASSE);
-    }
-    listOfDataNoEntry.push(dataTagToJsonArrayNoEntryGraph[i].CPT);
-  }
-
-  // Stat of status population
   let listOfLabelStatMis = new Array();
   let listOfDataStatMis = new Array();
   for(i=0; i<dataTagToJsonArrayMis.length; i++){
@@ -1549,56 +1532,6 @@ function runStat(){
       }
   });
 
-  let ctxClientBarAnomaly = document.getElementById('statBarNoExit');
-
-  const dataAnomaly = {
-    labels: listOfLabelAnomaly,
-    datasets: [
-      {
-        label: 'Sortie manquant',
-        data: listOfDataNoExit,
-        borderColor: '#9E93A4',
-        backgroundColor: '#F2DCFF',
-        order: 1,
-        borderWidth: 0.3
-      },
-      {
-        label: 'Entrée manquant',
-        data: listOfDataNoEntry,
-        borderColor: '#A2A493',
-        backgroundColor: '#EFFFDC',
-        order: 2,
-        borderWidth: 0.3
-      }
-    ]
-  };
-
-  new Chart(ctxClientBarAnomaly, {
-      type: 'bar',
-      data: dataAnomaly,
-      options: {
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'top',
-              },
-              title: {
-                display: true,
-                text: 'Anomalies'
-              }
-            },
-            scales: {
-                yAxes: [{
-                    display: true,
-                    ticks: {
-                        suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
-                        // OR //
-                        beginAtZero: true   // minimum value will be 0.
-                    }
-                }]
-            }
-      }
-  });
 
   let ctxClientBarMis = document.getElementById('statBarMis');
   new Chart(ctxClientBarMis, {
@@ -1745,36 +1678,6 @@ function generateCourseReportCSV(){
   document.body.removeChild(link);
 }
 
-
-
-function generateNoExitReportCSV(){
-	const csvContentType = "data:text/csv;charset=utf-8,";
-  let csvContent = "";
-  const SEP_ = ";"
-
-	let dataString = "Classe" + SEP_ + "Username" + SEP_ + "Matricule" + SEP_ + "Nom" + SEP_ + "Date" + SEP_  + "Jour" + SEP_ + "Raison" + SEP_ + "\n";
-	csvContent += dataString;
-	for(var i=0; i<dataTagToJsonArrayNoExitReport.length; i++){
-		dataString = dataTagToJsonArrayNoExitReport[i].CLASSE + SEP_ + dataTagToJsonArrayNoExitReport[i].USERNAME + SEP_ + dataTagToJsonArrayNoExitReport[i].MATRICULE + SEP_ + dataTagToJsonArrayNoExitReport[i].NAME + SEP_ + dataTagToJsonArrayNoExitReport[i].INVDATE + SEP_ +  dataTagToJsonArrayNoExitReport[i].JOUR + SEP_ +  dataTagToJsonArrayNoExitReport[i].REASON + SEP_ ;
-    // easy close here
-    csvContent += i < dataTagToJsonArrayNoExitReport.length ? dataString+ "\n" : dataString;
-	}
-
-  //console.log('Click on csv');
-	let encodedUri = encodeURI(csvContent);
-  let csvData = new Blob([csvContent], { type: csvContentType });
-
-	let link = document.createElement("a");
-  let csvUrl = URL.createObjectURL(csvData);
-
-  link.href =  csvUrl;
-  link.style = "visibility:hidden";
-  link.download = 'RapportAnomalieScanEntreeSortie7j.csv';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
 /*
 function generateHebdoXLS_todelete(){
   
@@ -1828,53 +1731,218 @@ function generateHebdoXLS_todelete(){
 }
 */
 
-function generateHebdoXLSWorksheet(){
-  const DEF_COL_DFT = 30;
+function generateHebdoXLSWorksheet(paramLines){
+  //const DEF_COL_DFT = 30;
 	const DEF_ROW_DFT = 20;
 
-  const DEF_HEADER_CARTOUCHE = { font: { sz: 8 }, alignment: { vertical: 'center', horizontal: 'left' } };
+  const DEF_HEADER_CARTOUCHE = { font: { sz: 8, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
+  const DEF_FOOTER_CARTOUCHE = { font: { sz: 6, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
+  
   const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
+  const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
+  const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
+                            bottom: { style: "thin", color: {rgb: "383838"} },
+                            left: { style: "thin", color: {rgb: "383838"} },
+                            right: { style: "thin", color: {rgb: "383838"} }
+                          };
 
+  const DEF_EMPTY_CELL = { font: { sz: 8, name: 'Arial' }};
+  const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
+  const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+  const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+  
 
   
 
   //************************ START HEADER ************************
   
   let rowHeader1 = [
-    { v: 'UNIVERSITE ACEEM', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   
   let rowHeader2 = [
-    { v: 'MANAKAMBAHINY', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'MANAKAMBAHINY', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader3 = [
-    { v: 'Service scolarite', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'Service scolarité', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader4 = [
-    { v: 'Version papier', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'Version papier', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader5 = [
-    { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader6 = [
-    { v: 'Etat des assiduites du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader7 = [
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
   ];
   
-  const ws = XLSX.utils.aoa_to_sheet([rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7]);
-  ws['!cols'] = [{ width: DEF_COL_DFT }];
+  let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7];
+
+  // Header
+  let rowHeaderLineHeader = [
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: 'Niveau', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Parcours', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Groupe', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Username', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Matricule', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Nom complet', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Assiduité', t: 's', s: { ...DEF_HEADER_CELL } },
+    { v: 'Occurence', t: 's', s: { ...DEF_HEADER_CELL } }
+  ];
+  rowCollection.push(rowHeaderLineHeader);
+
+  //************************ END HEADER ***********************
+  let merge = [];
+
+  const paddingCartouche = 8;
+
+  let mrgNiveauRowStart = 0;
+  let mrgNiveauLastRead = "";
+
+  let mrgParcoursRowStart = 0;
+  let mrgParcoursLastRead = "";
+
+  let mrgGroupeRowStart = 0;
+  let mrgGroupeLastRead = "";
+
+  // Now we have to work on the lines !
+  for(let i=0; i<paramLines.length; i++){
+    let rowHeaderLine = [
+      { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+      { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].PARCOURS, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].USERNAME, t: 's', s: { ...DEF_CELL_MONO } },
+      { v: paramLines[i].MATRICULE, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].STATUS, t: 's', s: { ...DEF_CELL } },
+      { v: paramLines[i].OCCURENCE, t: 's', s: { ...DEF_CELL } }
+    ];
+    rowCollection.push(rowHeaderLine);
+
+    // Now work on the merge !
+    // Niveau
+    //We need to update because we change !
+
+    // I have to initialise the first Mention
+    if(i == 0){
+      mrgNiveauLastRead = paramLines[i].NIVEAU;
+      mrgParcoursLastRead = paramLines[i].PARCOURS;
+      mrgGroupeLastRead = paramLines[i].GROUPE;
+    }
+    if(mrgNiveauLastRead != paramLines[i].NIVEAU){
+      // We create the merge order : { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
+      // NIVEAU IS COLUMN 1
+      let mrgOrderNiveau = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + i - 1, c: 1 } };
+      merge.push(mrgOrderNiveau);
+      // You also have to merge the other !
+      mrgOrderNiveau = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
+      merge.push(mrgOrderNiveau);
+
+      mrgOrderNiveau = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+      merge.push(mrgOrderNiveau);
+
+      mrgNiveauRowStart = i;
+      mrgNiveauLastRead = paramLines[i].NIVEAU;
+      mrgParcoursRowStart = i;
+      mrgParcoursLastRead = paramLines[i].PARCOURS;
+      mrgGroupeRowStart = i;
+      mrgGroupeLastRead = paramLines[i].GROUPE;
+    }
+
+    if(mrgParcoursLastRead != paramLines[i].PARCOURS){
+      let mrgOrderParcours = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + i - 1, c: 2 } };
+      merge.push(mrgOrderParcours);
+
+      // You also have to merge the other !
+      mrgOrderParcours = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+      merge.push(mrgOrderParcours);
+
+      mrgParcoursRowStart = i;
+      mrgParcoursLastRead = paramLines[i].PARCOURS;
+      mrgGroupeRowStart = i;
+      mrgGroupeLastRead = paramLines[i].GROUPE;
+    }
+
+    if(mrgGroupeLastRead != paramLines[i].GROUPE){
+      let mrgOrderGroupe = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + i - 1, c: 3 } };
+      merge.push(mrgOrderGroupe);
+
+      mrgGroupeRowStart = i;
+      mrgGroupeLastRead = paramLines[i].GROUPE;
+    }
+    /*
+    if(paramLines[i].MENTION == 'DROIT'){
+      console.log('i: ' + i + '/mrgNiveauLastRead: ' + mrgNiveauLastRead + ' /paramLines[i].NIVEAU: ' + paramLines[i].NIVEAU);
+    }
+    */
+    // Merge the student
+    if((i > 0) &&
+        (paramLines[i-1].USERNAME == paramLines[i].USERNAME)){
+        let mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 4 }, e: { r: paddingCartouche + i, c: 4 } };
+        merge.push(mrgOrderStudent);
+        mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 5 }, e: { r: paddingCartouche + i, c: 5 } };
+        merge.push(mrgOrderStudent);
+        mrgOrderStudent = { s: { r: paddingCartouche + i - 1, c: 6 }, e: { r: paddingCartouche + i, c: 6 } };
+        merge.push(mrgOrderStudent);
+    }
+  }
+  // We manage last lines
+  let mrgOrderNiveauEnd = { s: { r: paddingCartouche + mrgNiveauRowStart, c: 1 }, e: { r: paddingCartouche + paramLines.length - 1, c: 1 } };
+  merge.push(mrgOrderNiveauEnd);
+  let mrgOrderParcoursEnd = { s: { r: paddingCartouche + mrgParcoursRowStart, c: 2 }, e: { r: paddingCartouche + paramLines.length - 1, c: 2 } };
+  merge.push(mrgOrderParcoursEnd);
+  let mrgOrderGroupeEnd = { s: { r: paddingCartouche + mrgGroupeRowStart, c: 3 }, e: { r: paddingCartouche + paramLines.length - 1, c: 3 } };
+  merge.push(mrgOrderGroupeEnd);
+
+  let rowFooter1 = [
+    { v: '', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowFooter1);
+  let rowFooter2 = [
+    { v: 'NB: ireo no isan\'ny Mpianatra nanapaka nandritra ny herinandro fa misy "details" raha mitady ny "parent" na "tuteur" ( version papier)', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowFooter2);
+  let rowFooter3 = [
+    { v: 'NB: ireo mpianatra voasoratra ireo no tena mpanapaka matetika tokony andraisana fepetra amin\'ny CD (version PAPIER ) io, efa manomboka milaza sy manontany ireo mpianatra tena manapaka matetika izahay !!!!', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowFooter3);
+
+  const ws = XLSX.utils.aoa_to_sheet(rowCollection);
+  ws['!cols'] = [
+    { width: 10 }, //Empty
+    { width: 8 }, //Niveau
+    { width: 20 }, //Parcours
+    { width: 20 }, //Groupe
+    { width: 17 }, //Username
+    { width: 9 }, //Matricule
+    { width: 40 }, //FullName
+    { width: 10 }, //Status
+    { width: 10 }]; //Occurence
   //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
   const rowDefinition = [];
-  for(let i=0; i<7; i++){
+  for(let i=0; i<rowCollection.length; i++){
     rowDefinition.push(DEF_ROW_DFT_SETUP);
   }
   ws['!rows'] = rowDefinition;
-  //************************ END HEADER ***********************
+
+
+  //************************ MERGE OPERATION ***********************
+  // Here s = start, r = row, c=col, e= end
+  // Start with 0
+  /*
+  const merge = [
+    { s: { r: 8, c: 1 }, e: { r: 10, c: 1 } }
+  ];
+  */
+  ws["!merges"] = merge;
 
   return ws;
 }
@@ -1883,10 +1951,30 @@ function generateHebdoXLSWorksheet(){
 function generateHebdoXLS(){
   const wb = XLSX.utils.book_new();
 
-  //XLSX.utils.book_append_sheet(wb, ws, "paramWorkSheetName");
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "GESTION");
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "DROIT");
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(), "INFO");
+  // We assume that the collection is ordered : dataTagToJsonArrayHebdoGblReport
+  let iMentionLines = [];
+  let iMention = '';
+  for(let i = 0; i< dataTagToJsonArrayHebdoGblReport.length; i++){
+    if(dataTagToJsonArrayHebdoGblReport[i].MENTION == iMention){
+      // We are still in the same mention !!!
+    }
+    else{
+      // We create a new mention !
+      // First we manage existing.
+      if(iMention != ''){
+        //We avoid empty case
+        XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines), iMention);
+      }
+      //console.log("Attach worksheet: " + iMention);
+      iMention = dataTagToJsonArrayHebdoGblReport[i].MENTION;
+      iMentionLines = [];
+    }
+    //Whatever we push it
+    iMentionLines.push(dataTagToJsonArrayHebdoGblReport[i]);
+  }
+  // Because we have to handle the last Mention
+  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines), iMention);
+  //console.log("Attach worksheet: " + iMention);
 
   // STEP 4: Write Excel file to browser
   XLSX.writeFile(wb, "RapportAbsence7j.xlsx");
@@ -2088,9 +2176,6 @@ $(document).ready(function() {
     });
     $( "#uac-course-glb-csv" ).click(function() {
       generateCourseReportCSV();
-    });
-    $( "#uac-noexit-csv" ).click(function() {
-      generateNoExitReportCSV();
     });
     $( "#uac-abs-pdt-xls" ).click(function() {
       generateHebdoXLS();

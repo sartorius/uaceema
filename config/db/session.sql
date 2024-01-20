@@ -595,3 +595,10 @@ where cohort_id IN (7, 8, 9)
 AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) > 2032
 -- AND CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED) < 2072
 ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);
+
+
+
+INSERT INTO uac_showuser (username, roleid, secret, cohort_id)
+VALUES ('johnbon403', 5, 3232294372, 8);
+
+JOHNBON403
