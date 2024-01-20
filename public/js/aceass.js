@@ -1733,6 +1733,7 @@ function generateHebdoXLS_todelete(){
 
 function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
   //const DEF_COL_DFT = 30;
+  /*
 	const DEF_ROW_DFT = 20;
 
   const DEF_HEADER_CARTOUCHE = { font: { sz: 8, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
@@ -1754,7 +1755,7 @@ function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
   const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
   const DEF_CELL_ODD = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
   const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
-  
+  */
 
   
 
@@ -1925,6 +1926,10 @@ function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
           { v: 'NB 2 : ireo mpianatra voasoratra ireo no tena mpanapaka matetika tokony andraisana fepetra amin\'ny CD (version papier) io, efa manomboka milaza sy manontany ireo mpianatra tena manapaka matetika izahay !!!!', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
         ];
         rowCollection.push(rowFooter3);
+        let rowFooter4 = [
+          { v: 'NB 3 : les matricules sont saisies à la main par les étudiants dans un formulaire. Nous ne pouvons les vérifier automatiquement, il y a donc un risque d\'erreur possible sur leur matricule.', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+        ];
+        rowCollection.push(rowFooter4);
       
         const ws = XLSX.utils.aoa_to_sheet(rowCollection);
         ws['!cols'] = [

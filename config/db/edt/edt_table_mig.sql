@@ -175,7 +175,8 @@ FROM v_class_cohort vcc JOIN uac_showuser uas ON uas.cohort_id = vcc.id
          							GROUP BY uas.cohort_id
  							 ) t_mis ON t_mis.T_MIS_COHORT_ID = vcc.id
 GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END, t_late.T_LATE_CPT, t_mis.T_MIS_CPT
-HAVING COUNT(1) > 0;
+HAVING COUNT(1) > 0
+ORDER BY 1, 2, 3, 4;
 
 
 DROP VIEW IF EXISTS rep_global_ass_dash;
