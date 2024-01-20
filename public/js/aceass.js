@@ -1644,7 +1644,7 @@ function generateGlobalAssCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportGlobalAssiduite9j.csv';
+  link.download = 'RapportGlobalAssiduite9j_' + getReportACEDateStrFR(0).replaceAll('/', '_') + '.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -1672,7 +1672,7 @@ function generateCourseReportCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportCoursAnnules30j.csv';
+  link.download = 'RapportCoursAnnules30j_' + getReportACEDateStrFR(0).replaceAll('/', '_') + '.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
