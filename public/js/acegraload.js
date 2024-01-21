@@ -84,13 +84,13 @@ function printPresenceSheet(){
             (i+1).toString()
             );
         doc.text(
-            45, //x oddOffsetX is to define if position 1 or 2
+            63, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             //VSH_LASTNAME VSH_FIRSTNAME
             dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_USERNAME
             );
         doc.text(
-            73, //x oddOffsetX is to define if position 1 or 2
+            44, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             //VSH_LASTNAME VSH_FIRSTNAME
             //We assume the maximum of Matricule is 5 digit
