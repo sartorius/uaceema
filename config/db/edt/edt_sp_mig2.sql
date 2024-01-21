@@ -683,7 +683,7 @@ BEGIN
     SELECT uem.id AS UEM_ID, vcc.short_classe AS VCC_SHORT_CLASS
         FROM uac_edt_master uem JOIN v_class_cohort vcc ON uem.cohort_id = vcc.id
         WHERE monday_ofthew = inv_monday_date
-        AND visibility = 'V' ORDER BY uem.cohort_id ASC;
+        AND visibility = 'V' ORDER BY vcc.short_classe ASC;
 END$$
 -- Remove $$ for OVH
 
@@ -812,7 +812,7 @@ BEGIN
       AND uem.visibility = 'V'
       AND uel.course_status NOT IN ('1', '2')
       -- We need another order because we do not display per line here
-      ORDER BY uem.cohort_id, uel.day_code, uel.hour_starts_at ASC;
+      ORDER BY vcc.short_classe, uel.day_code, uel.hour_starts_at ASC;
     END IF;
 END$$
 -- Remove $$ for OVH

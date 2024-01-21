@@ -449,6 +449,10 @@ function goToPrimitif(paramId, paramName, paramNbrExam){
   $("#nbrExam").val(paramNbrExam);
   $("#mg-goto-primitif-line").submit();
 }
+// Create a new subject via Ajax !
+function createNewGRASubject(){
+  alert('Toto');
+}
 
 // ***************************************************************************************
 

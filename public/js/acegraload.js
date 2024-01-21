@@ -1,4 +1,4 @@
-
+// Add matricule
 function printPresenceSheet(){
 
     console.log('Click on printPresenceSheet');
@@ -26,6 +26,8 @@ function printPresenceSheet(){
     const maxStrL1 = 15;
     const maxStrL2 = 23;
     const maxStrL3 = 35;
+
+    const maxStrMatricule = 6;
     
     doc.addImage(document.getElementById('bg-tmpl'), //img src
                         'PNG', //format
@@ -66,7 +68,7 @@ function printPresenceSheet(){
                  $('#teach-sel-gra').val().substr(0, maxStrL3) + ' - Date : ' + formatterDateFR.format(refDate) + ' - Page ' + pgNbr + ' sur ' + AllPage
                 );
             doc.text(
-                61, //x oddOffsetX is to define if position 1 or 2
+                45, //x oddOffsetX is to define if position 1 or 2
                 15, //y
                 tempInvClass
                 );
@@ -82,10 +84,17 @@ function printPresenceSheet(){
             (i+1).toString()
             );
         doc.text(
-            64, //x oddOffsetX is to define if position 1 or 2
+            45, //x oddOffsetX is to define if position 1 or 2
             23 + pgCount*rawHeight, //y
             //VSH_LASTNAME VSH_FIRSTNAME
             dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_USERNAME
+            );
+        doc.text(
+            73, //x oddOffsetX is to define if position 1 or 2
+            23 + pgCount*rawHeight, //y
+            //VSH_LASTNAME VSH_FIRSTNAME
+            //We assume the maximum of Matricule is 5 digit
+            dataAllStuToJsonArray[parseInt(presenceList[i])].VSH_SMATRICULE.toString().padStart(maxStrMatricule, PADD_CHAR)
             );
         doc.text(
             90, //x oddOffsetX is to define if position 1 or 2

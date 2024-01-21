@@ -1,6 +1,6 @@
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('GRACSBK', 'Default cross bookmark', NULL, '1428.61/-771px/-144px/0');
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRALOAD', 'Integration des notes', NULL, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('YEARAAA', 'Yearly verbose', NULL, '2022-23');
+INSERT IGNORE INTO uac_param (key_code, description, par_int, par_value) VALUES ('YEARAAA', 'Yearly verbose', NULL, '2023-24');
 -- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_START_GraFlowMaster$$
@@ -94,7 +94,7 @@ BEGIN
 
     -- Up to the rule we need to identify the max grade :
     -- Maximum up to session
-    -- Be carefull if we put the first grade to Max if 2 grades have Max 
+    -- Be carefull if we put the first grade to Max if 2 grades have Max
     -- The last grade ?
     -- TO DO : set to be used for the relevant grade
 
