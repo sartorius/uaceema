@@ -217,6 +217,12 @@ createreviewgrades:
 generatereviewexamDB:
     path:       /generatereviewexamDB
     controller: App\Controller\AdminGradeController::generatereviewexamDB
+generateNewSubjectDB:
+    path:       /generateNewSubjectDB
+    controller: App\Controller\AdminGradeController::generateNewSubjectDB
+generateDeleteSubjectDB:
+    path:       /generateDeleteSubjectDB
+    controller: App\Controller\AdminGradeController::generateDeleteSubjectDB
 readonlyexam:
     path:       /readonlyexam
     controller: App\Controller\AdminGradeController::readonlyexam

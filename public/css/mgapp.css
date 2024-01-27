@@ -1772,6 +1772,15 @@ textarea[name=inputRef] {
   font-weight: 800;
   font-style: normal;
 }
+.recap-dirty{
+  color: rgb(0, 127, 40);
+  font-weight: 800;
+  font-style: normal;
+}
+
+.recap-deactivate{
+  color: #6f6f6f;
+}
 
 .recap-nex{
   color: var(--deep-ace-blue);
@@ -2671,4 +2680,47 @@ img.part-img{
 
 .line-btm{
   margin-top: 10px;
+}
+
+#subj-crd-blk{
+  /* padding-left: 17em;
+  padding-top: 40px; */
+  font-size: 0.9em;
+}
+
+.mgs-subjtitle {
+  font-size: 1.9em;
+  color: #383838;
+}
+.pop-up-note{
+  padding-top: 20px;
+  padding-left: 20px;
+  font-size: 0.8em;
+  color: #979797;
+}
+#menu-checkboxbtn{
+  padding-left: 70px;
+  font-size: 1em;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+#parcours-opt{
+  padding-left: 200px;
+}
+#subj-crd-input{
+  resize: none;
+  text-align: center;
+}
+#gra-foot-btn{
+  display: none;
+}
+#confirmation-txt-blk{
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#gra-del-btn-blk{
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 35px;
 }

@@ -280,7 +280,15 @@ function loadAllSubGrid(){
           width: 10,
           align: "left",
           headercss: "cell-ref-uac-sm-hd",
-          css: "cell-ref-uac-sm"
+          css: "cell-ref-uac-sm",
+          itemTemplate: function(value, item) {
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value + '</i>';
+            }
+            else{
+              return value;
+            }
+          }
         },
         { name: "URS_NIVEAU_CODE",
           title: "Niveau",
@@ -288,7 +296,15 @@ function loadAllSubGrid(){
           width: 10,
           align: "center",
           headercss: "cell-ref-uac-sm-hd",
-          css: "cell-ref-uac-sm"
+          css: "cell-ref-uac-sm",
+          itemTemplate: function(value, item) {
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value + '</i>';
+            }
+            else{
+              return value;
+            }
+          }
         },
         { name: "URS_SEMESTER",
           title: "Semestre",
@@ -296,7 +312,15 @@ function loadAllSubGrid(){
           width: 10,
           align: "center",
           headercss: "cell-ref-uac-sm-hd",
-          css: "cell-ref-uac-sm"
+          css: "cell-ref-uac-sm",
+          itemTemplate: function(value, item) {
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value + '</i>';
+            }
+            else{
+              return value;
+            }
+          }
         },
         { name: "URS_CREDIT",
           title: "Crédit",
@@ -306,7 +330,28 @@ function loadAllSubGrid(){
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
-            return value/10;
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value/10 + '</i>';
+            }
+            else{
+              return value/10;
+            }
+          }
+        },
+        { name: "ALL_PARCOURS",
+          title: "Parcours",
+          type: "text",
+          align: "left",
+          width: 30,
+          headercss: "cell-ref-uac-sm-hd",
+          css: "cell-ref-uac-sm",
+          itemTemplate: function(value, item) {
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value.substr(0, 17) + '</i>';
+            }
+            else{
+              return value.substr(0, 17);
+            }
           }
         },
         { name: "URS_SUBJECT_TITLE",
@@ -316,7 +361,27 @@ function loadAllSubGrid(){
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
-            return value.substr(0, 75);
+            if (item.IS_NEW == 'Y'){
+              return '<i class="recap-dirty">' + value.substr(0, 75) + '</i>';
+            }
+            else{
+              return value.substr(0, 75);
+            }
+          }
+        },
+        { name: "URS_ID",
+          title: "&nbsp;",
+          width: 20,
+          type: "text",
+          headercss: "cell-ref-sm-hd",
+          css: "cell-ref-sm-center",
+          itemTemplate: function(value, item) {
+            if(parseInt(item.GRA_EXIST_EXAM_ID) == 0){
+              return '<button class="btn btn-dark tg-del" onclick="deleteSubjectDialog(' + value + ', \'' + item.URS_SUBJECT_TITLE + '\', \'' + item.URS_MENTION_CODE + '/' + item.URS_NIVEAU_CODE + '/' + item.URS_SEMESTER + '/' + item.ALL_PARCOURS + '\')"><i class="icon-trash-o"></i></button>';
+            }
+            else{
+              return '<i class="recap-deactivate icon-trash-o"></i>';
+            }
           }
         }
     ];
@@ -449,9 +514,381 @@ function goToPrimitif(paramId, paramName, paramNbrExam){
   $("#nbrExam").val(paramNbrExam);
   $("#mg-goto-primitif-line").submit();
 }
+
+
+// ***********************************************************
+// ***********************************************************
+// ***********************************************************
 // Create a new subject via Ajax !
+// ***********************************************************
+// ***********************************************************
+// ***********************************************************
+
 function createNewGRASubject(){
-  alert('Toto');
+  fillCartoucheMention();
+  selectNiveau('', '', 'Niveau');
+  tempMentionCode = "";
+  tempMention = "";
+  tempTitle = "";
+  tempCredit = 0;
+  $("#parcours-opt").html(getCheckBoxHTML('na'));
+  $('#subj-crd-input').val('');
+  $('#addpay-ace').val('');
+  clearCartoucheCrdParcours();
+  $('#new-subject-modal').modal('show');
+}
+
+function generateGRANewSubject(){
+  tempTitle = removeAllQuotes($('#addpay-ace').val());
+  tempCredit = $('#subj-crd-input').val().replace(/,/g, '.');
+  $.ajax('/generateNewSubjectDB', {
+      type: 'POST',  // http method
+      data: {
+        tempMentionCode: tempMentionCode,
+        tempNiveauID: tempNiveauID,
+        tempSemestreID: tempSemestreID,
+        tempCredit: tempCredit,
+        tempTitle: tempTitle,
+        tempParcoursArray: JSON.stringify(tempArrayParcoursChecked),
+        token: GET_TOKEN
+      },  // data to submit
+      success: function (data, status, xhr) {
+          //dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE = (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE == null) ? (ticketType + redPc) : (dataAllUSRNToJsonArray[foundiInJson].EXISTING_FACILITE + ',' + ticketType + redPc);
+          // Add the element in the grid
+          /*
+          ALL_PARCOURS
+          : 
+          "na"
+          IS_NEW
+          : 
+          "N"
+          URS_CREDIT
+          : 
+          20
+          URS_MENTION_CODE
+          : 
+          "COMMU"
+          URS_NIVEAU_CODE
+          : 
+          "L1"
+          URS_SEMESTER
+          : 
+          1
+          URS_SUBJECT_TITLE
+          : 
+          "Allemand/Espagnol"
+          raw_data
+          : 
+          "COMMUL11ALLEMAND/ESPAGNOL"
+          */
+          logMyDataBack = data;
+          let listOfParcours = "";
+          for(let i = 0; i<tempArrayParcoursChecked.length; i++){
+            listOfParcours = listOfParcours + tempArrayParcoursChecked[i] + '/';
+          }
+          let newSubjGrid = {
+            URS_ID: logMyDataBack.return_new_subject_id,
+            ALL_PARCOURS: listOfParcours,
+            IS_NEW: 'Y',
+            URS_CREDIT: tempCredit * 10,
+            URS_MENTION_CODE: tempMentionCode,
+            URS_NIVEAU_CODE: tempNiveauID,
+            URS_SEMESTER: tempSemestreID,
+            GRA_EXIST_EXAM_ID: 0,
+            URS_SUBJECT_TITLE: tempTitle,
+            raw_data: (tempMentionCode + tempNiveauID + tempSemestreID + tempTitle).toUpperCase()
+          };
+          dataAllSubjectToJsonArray.unshift(newSubjGrid);
+          filtereddataAllSubjectToJsonArray.unshift(newSubjGrid);
+
+          clearDataAllSub();
+
+          // END
+          $('#msg-alert').html("Le sujet : [" + tempTitle + "] a été créé avec succés.");
+          $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+          $('#ace-alert-msg').show(100);
+          $('#ace-alert-msg').hide(7000);
+          $('#new-subject-modal').modal('hide');
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR162S : " + tempTitle + " enregistrement du nouveau sujet impossible, contactez le support.");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        $('#new-subject-modal').modal('hide');
+      }
+  });
+}
+
+function deleteSubjectFromArray(paramId, paramArrayList){
+  for(let i=0; i<paramArrayList.length; i++){
+    if(paramArrayList[i].URS_ID == paramId){
+      paramArrayList.splice(i, 1);
+      return true;
+    }
+  }
+  return false;
+}
+
+function generateGRADelSubject(){
+  $.ajax('/generateDeleteSubjectDB', {
+      type: 'POST',  // http method
+      data: {
+        tempSubjectIdToDelete: tempSubjectIdToDelete,
+        token: GET_TOKEN
+      },  // data to submit
+      success: function (data, status, xhr) {
+
+          deleteSubjectFromArray(tempSubjectIdToDelete, dataAllSubjectToJsonArray);
+          deleteSubjectFromArray(tempSubjectIdToDelete, filtereddataAllSubjectToJsonArray);
+
+          clearDataAllSub();
+
+          // END
+          $('#msg-alert').html("Le sujet : [" + tempSubjectTitleToDelete + "] a été supprimé avec succés.");
+          $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+          $('#ace-alert-msg').show(100);
+          $('#ace-alert-msg').hide(7000);
+          $('#delete-subj-modal').modal('hide');
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR160S : " + tempSubjectTitleToDelete + " suppression du sujet impossible, contactez le support.");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        $('#delete-subj-modal').modal('hide');
+      }
+  });
+}
+
+function deleteSubjectDialog(paramId, paramTitle, paramClasse){
+  tempSubjectIdToDelete = paramId;
+  tempSubjectTitleToDelete = paramTitle;
+  $('#confirmation-txt-blk').html('Confirmer la suppression du sujet: <strong>' + paramTitle + '</strong><br>Classe(s) : <strong>' + paramClasse + '</strong>');
+  $('#delete-subj-modal').modal('show');
+}
+
+function createNewSubjectAjax(){
+  /*
+  console.log('tempMentionCode: ' + tempMentionCode);
+  console.log('tempNiveauID: ' + tempNiveauID);
+  console.log('tempSemestreID: ' + tempSemestreID);
+  console.log("Credit $('#subj-crd-input').val(): " + $('#subj-crd-input').val());
+  console.log("Title $('#addpay-ace').val(): " + $('#addpay-ace').val());
+  for(let i = 0; i<tempArrayParcoursChecked.length; i++){
+    console.log('Parcours: ' + tempArrayParcoursChecked[i]);
+  }
+  */
+  generateGRANewSubject();
+}
+
+// We validate if at least one is checked. If none then we return error.
+function verifyIfCheckBoxNewSubject(){
+  if(tempArrayParcours.length > 0){
+    for(let i = 0; i<tempArrayParcours.length; i++){
+      if(document.getElementById("par-" + tempArrayParcours[i].parcours).checked){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function getCountStuNumber(param){
+  for(let i = 0; i<dataNewSubjParcoursToJsonArray.length; i++){
+    if(tempArrayParcours[i].parcours == param){
+        return tempArrayParcours[i].countStu;
+    }
+  }
+  return 0;
+}
+
+function checkUncheckOperationNewSubj(){
+  tempArrayParcoursChecked = new Array();
+  let countStuNewSubj = 0;
+  for(let i = 0; i<tempArrayParcours.length; i++){
+    if(document.getElementById("par-" + tempArrayParcours[i].parcours).checked){
+      tempArrayParcoursChecked.push(tempArrayParcours[i].parcours);
+      countStuNewSubj = countStuNewSubj + getCountStuNumber(tempArrayParcours[i].parcours);
+    }
+  }
+  $('#sel-stu-qty').html(countStuNewSubj);
+  verifyIfAllIsFilledNewSubject();
+}
+
+function verifyIfAllIsFilledNewSubject(){
+  let isAllvalid = true;
+
+  if((tempMentionCode == "") && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+  if((tempNiveauID == "") && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+  if((tempSemestreID == "") && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+  if((!testRegexCreditSubj($('#subj-crd-input').val())) && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+  if((removeAllQuotes($('#addpay-ace').val()).length < 1) && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+
+  if((!verifyIfCheckBoxNewSubject()) && (isAllvalid)){
+    isAllvalid = false;
+  }
+
+  // TODO : Then I have to work on the list of parcours to validate.
+  
+  if(isAllvalid){
+    //console.log('New subject can be saved');
+    $('#gra-foot-btn').show(100);
+  }
+  else{
+    //console.log('New subject CANNOT be saved');
+    $('#gra-foot-btn').hide(100);
+  }
+  return 0;
+}
+
+function testRegexCreditSubj(param){
+  const RE = /^[0-9][\.|,]?[0-9]?$/;
+  if(param.length == 0){
+    return true;
+  }
+  else if(RE.test(param)){
+    if(parseFloat(param.replace(',', '.')) < MAX_CREDIT_VALUE){
+      return true;
+    }
+    else{
+        // We are not a or A or we are bigger than 10
+        return false;
+    }
+  }
+  else{
+    return false;
+  }
+}
+
+
+function validateCreditSubj(){
+  if(testRegexCreditSubj($('#subj-crd-input').val())){
+      $('#subj-crd-input').removeClass('err-txtar');
+      if($('#subj-crd-input').val() != ''){
+          $('#subj-crd-input').addClass('ok-txtar');
+      }
+  }
+  else{
+      $('#subj-crd-input').removeClass('ok-txtar').addClass('err-txtar');
+  }
+
+  verifyIfAllIsFilledNewSubject();
+}
+
+function clearCartoucheCrdParcours(){
+  // reset the rest
+  tempCredit = 0;
+  tempInvParcours = 'na';
+  tempArrayParcours = new Array();
+  tempArrayParcoursChecked = new Array();
+  $('#sel-stu-qty').html('0');
+}
+
+function getCheckBoxHTML(paramId){
+  let str = '<div class="form-check">';
+  str = str + '<input class="form-check-input" type="checkbox" onchange="checkUncheckOperationNewSubj()" value="" id="par-' + paramId + '" checked ' + ((paramId == 'na') ? 'disabled' : '') + '>';
+  str = str + '<span id="lab-' + paramId + '" class="form-check-label" for="flexCheckChecked">';
+  str = str + paramId;
+  str = str + '</span>';
+  str = str + '</div>';
+  // Retrieve the value : document.getElementById('par-na').checked
+  return str;
+}
+
+function fillCartoucheParcours(){
+  // fill the parcours box
+  let strHtmlCheckBox = "";
+  for(let i=0; i<dataNewSubjParcoursToJsonArray.length; i++){
+    if((dataNewSubjParcoursToJsonArray[i].mention_code == tempMentionCode)
+        && (dataNewSubjParcoursToJsonArray[i].niveau == tempNiveauID)){
+
+          let myParcours = {parcours: dataNewSubjParcoursToJsonArray[i].parcours, countStu: parseInt(dataNewSubjParcoursToJsonArray[i].CPT_STU)};
+          tempArrayParcours.push(myParcours);
+
+          tempArrayParcoursChecked.push(dataNewSubjParcoursToJsonArray[i].parcours);
+          // input the value
+          strHtmlCheckBox = strHtmlCheckBox + getCheckBoxHTML(dataNewSubjParcoursToJsonArray[i].parcours);
+    }
+  }
+  $("#parcours-opt").html(strHtmlCheckBox);
+}
+
+function selectNiveau(niveauId, semestreId, str){
+  tempNiveauID = niveauId;
+  tempSemestreID = semestreId;
+  tempNiveau = str;
+
+  $("#drp-semestre").html(str);
+  // Do operation of validation
+  clearCartoucheCrdParcours();
+  if(niveauId == 0){
+    $("#parcours-opt").html(getCheckBoxHTML('na'));
+  }
+  else{
+    fillCartoucheParcours();
+  }
+
+  checkUncheckOperationNewSubj();
+  verifyIfAllIsFilledNewSubject();
+}
+
+function fillCartoucheNiveau(){
+  let listNiveau = '';
+  for(let i=0; i<dataNewSubjSemesterToJsonArray.length; i++){
+    if(dataNewSubjSemesterToJsonArray[i].MENTION_CODE == tempMentionCode){
+      listNiveau = listNiveau + '<a class="dropdown-item" onclick="selectNiveau(' + "'" + dataNewSubjSemesterToJsonArray[i].NIVEAU + "'" + ', ' + dataNewSubjSemesterToJsonArray[i].SEMESTRE + ', \'' + dataNewSubjSemesterToJsonArray[i].NIVEAU + '/' + dataNewSubjSemesterToJsonArray[i].SEMESTRE + '\')"  href="#">' + dataNewSubjSemesterToJsonArray[i].NIVEAU + '/' + dataNewSubjSemesterToJsonArray[i].SEMESTRE + '</a>';
+    }
+  }
+  $('#dpsemestre-opt').html(listNiveau);
+}
+
+
+function selectMention(str, strTitle){
+  tempMentionCode = str;
+  tempMention = strTitle;
+
+
+  
+  $('#drp-select').html(strTitle);
+  // Necessary to save the file
+  $("#fMentionCode").val(tempMentionCode);
+
+  //console.log('You have just click on: ' + str);
+  // We reset the dropdown
+
+  selectNiveau('', '', 'Niveau');
+  fillCartoucheNiveau();
+
+  verifyIfAllIsFilledNewSubject();
+}
+
+
+function fillCartoucheMention(){
+  let listMention = '';
+  for(let i=0; i<dataMentionToJsonArray.length; i++){
+      listMention = listMention + '<a class="dropdown-item" onclick="selectMention(\'' + dataMentionToJsonArray[i].par_code + '\', \'' + dataMentionToJsonArray[i].title + '\')"  href="#">' + dataMentionToJsonArray[i].title + '</a>';
+  }
+  $('#dpmention-opt').html(listMention);
+  $('#drp-select').html('Mention');
+
+  // Re-init semestre
+  $('#drp-semestre').html('Semestre');
+  $('#dpsemestre-opt').html('<a class="dropdown-item" href="#">Sélectionnez une mention</a>');
+
 }
 
 // ***************************************************************************************
@@ -464,6 +901,9 @@ $(document).ready(function() {
 
       initAllSubGrid();
       loadAllSubGrid();
+
+      
+      
     }
     else if($('#mg-graph-identifier').text() == 'lin-pri'){
       //Do nothing

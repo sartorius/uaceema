@@ -5,9 +5,12 @@ USE ACEA;
 DELETE FROM uac_load_edt WHERE create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
 DELETE FROM uac_load_scan WHERE create_date < DATE_ADD(current_date, INTERVAL -10 DAY);
 
--- Delete old EDT and master 7 month
-DELETE FROM uac_edt_master WHERE create_date < DATE_ADD(current_date, INTERVAL -210 DAY);
-DELETE FROM uac_edt_line WHERE create_date < DATE_ADD(current_date, INTERVAL -210 DAY);
+-- Delete old EDT and master 9 month
+DELETE FROM uac_assiduite WHERE edt_id IN (SELECT id FROM uac_edt_line WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY));
+DELETE FROM uac_edt_master WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
+DELETE FROM uac_edt_line WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
+DELETE FROM uac_load_jqedt WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
+
 
 -- To be reactivated when working in PROD
 -- DELETE FROM uac_load_mvola where create_date < DATE_ADD(current_date, INTERVAL -40 DAY);

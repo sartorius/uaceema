@@ -101,6 +101,13 @@ BEGIN
           SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO'
       );
 
+      -- Update email to be re-sent again to notify them
+      UPDATE uac_mail user_id SET status = 'NEW'
+        WHERE user_id IN (
+           SELECT id FROM histo_mdl_user hmu WHERE hmu.username IN (SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO')
+        )
+        AND flow_code = 'MLWELCO';
+
       -- UPDATE COHORT
       UPDATE uac_showuser INNER JOIN reinscription_load_mdl_user
                                 ON uac_showuser.username = reinscription_load_mdl_user.username
@@ -127,6 +134,8 @@ BEGIN
         AND school_year = prev_school_year;
 
       UPDATE reinscription_load_mdl_user SET status = 'END' WHERE status = 'NCO';
+
+      SELECT 'Ended successfully - OK' AS END_MSG;
 
     END IF;
 

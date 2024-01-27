@@ -1097,15 +1097,61 @@ class AdminGradeController extends AbstractController{
             $result_query_all_subject = $dbconnectioninst->query($query_all_subject)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_all_subject: " . count($result_query_all_subject));
 
+            // *******************************************************************************
+            // *******************************************************************************
+            // *******************************************************************************
+            // Get the data for new subject
+            // *******************************************************************************
+            // *******************************************************************************
+            // *******************************************************************************
+
+            // Mention
+            $query_subj_mention = " SELECT par_code, title FROM uac_ref_mention; ";
+            $logger->debug("query_subj_mention: " . $query_subj_mention);
+            
+            $result_query_subj_mention = $dbconnectioninst->query($query_subj_mention)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_subj_mention: " . count($result_query_subj_mention));
+
+            // Semester
+            $query_subj_semester = " SELECT DISTINCT vcc.mention_code AS MENTION_CODE, urs.niveau AS NIVEAU, urs.semestre AS SEMESTRE "
+                                    . " FROM uac_ref_semester urs JOIN v_class_cohort vcc ON urs.niveau = vcc.niveau; ";
+            $logger->debug("query_subj_semester: " . $query_subj_semester);
+            
+            $result_query_subj_semester = $dbconnectioninst->query($query_subj_semester)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_subj_semester: " . count($result_query_subj_semester));
+
+            // Parcours
+            $query_subj_parcours = " SELECT vcc.mention_code, vcc.niveau, vcc.parcours, COUNT(1) AS CPT_STU "
+                                    . " FROM v_class_cohort vcc JOIN uac_showuser uas ON vcc.id = uas.cohort_id "
+                                    . " JOIN mdl_user mu ON mu.username = uas.username  "
+                                    . " GROUP BY vcc.mention_code, vcc.niveau, vcc.parcours ORDER BY 1, 2, 3; ";
+            $logger->debug("query_subj_parcours: " . $query_subj_parcours);
+            
+            $result_query_subj_parcours = $dbconnectioninst->query($query_subj_parcours)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_subj_parcours: " . count($result_query_subj_parcours));
+
+            // Classes
+            $query_subj_class = " SELECT id, mention_code, niveau, parcours, groupe FROM v_class_cohort; ";
+            $logger->debug("query_subj_class: " . $query_subj_class);
+            
+            $result_query_subj_class = $dbconnectioninst->query($query_subj_class)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_subj_class: " . count($result_query_subj_class));
+
+            $result_get_token = $this->getDailyTokenGRAStr($logger);
             
             $content = $twig->render('Admin/GRA/managerprimitif.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                    'result_get_token' => $result_get_token,
                                                                     'result_query_all_primitif_level' => $result_query_all_primitif_niv,
                                                                     'result_query_all_subject' => $result_query_all_subject,
-                                                                    'errtype' => '']);
+                                                                    'result_query_subj_mention' => $result_query_subj_mention,
+                                                                    'result_query_subj_semester' => $result_query_subj_semester,
+                                                                    'result_query_subj_parcours' => $result_query_subj_parcours,
+                                                                    'result_query_subj_class' => $result_query_subj_class,
+                                                                    'errtype' => '']); 
         }
         else{
             // Error Code 404
@@ -1115,6 +1161,178 @@ class AdminGradeController extends AbstractController{
     }
 
 
+    public function generateNewSubjectDB(Request $request, LoggerInterface $logger){
+
+
+    // This is optional.
+    // Only include it if the function is reserved for ajax calls only.
+    if (!$request->isXmlHttpRequest()) {
+        return new JsonResponse(array(
+            'status' => 'Error',
+            'message' => 'Error'),
+        400);
+    }
+
+    if(isset($request->request))
+    {
+
+        // Token control
+        $result_get_token = $this->getDailyTokenGRAStr($logger);
+        $param_token = $request->request->get('token');
+
+        if(strcmp($result_get_token, $param_token) !== 0){
+            // We need to out as error
+            // This may be a corrupted action
+            return new JsonResponse(array(
+                'status' => 'Error',
+                'message' => 'Err673GRA ticket corrompu'),
+            400);
+        }
+
+        // Get data from ajax
+
+        $param_mention_code = $request->request->get('tempMentionCode');
+        $logger->debug("param_mention_code: " . $param_mention_code);
+
+        $param_niveau_id = $request->request->get('tempNiveauID');
+        $logger->debug("param_niveau_id: " . $param_niveau_id);
+        
+        $param_semestre_id = $request->request->get('tempSemestreID');
+        $logger->debug("param_semestre_id: " . $param_semestre_id);
+        
+        $param_credit = $request->request->get('tempCredit');
+        $param_credit = intval(floatval($param_credit) * 10);
+        $logger->debug("param_credit: " . $param_credit);
+        
+        $param_title = $request->request->get('tempTitle');
+        $logger->debug("param_title: " . $param_title);
+        
+        $param_jsondata = json_decode($request->request->get('tempParcoursArray'), true);
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+
+        // Retrieve SUBJ ID
+        $query_prepare = " SELECT MAX(id)+1 AS NEW_REF_SUBJ_ID FROM uac_ref_subject; ";
+        $result_query_prepare = $dbconnectioninst->query($query_prepare)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_prepare: " . $result_query_prepare[0]['NEW_REF_SUBJ_ID']);
+        $new_subj_id = $result_query_prepare[0]['NEW_REF_SUBJ_ID'];
+
+        
+        $query_insert_subj = " INSERT IGNORE INTO uac_ref_subject (id, mention_code, niveau_code, semester, subject_title, credit, ue) VALUES ("
+                                . $new_subj_id . ", '" . $param_mention_code . "', '" . $param_niveau_id . "', " . $param_semestre_id . ", '"
+                                . $param_title . "', " . $param_credit . ", 1); ";
+        $logger->debug("query_insert_subj: " . $query_insert_subj);
+        $dbconnectioninst->query($query_insert_subj)->fetchAll(PDO::FETCH_ASSOC);
+
+
+        // Prepare load data
+        $query_part1 = " INSERT INTO uac_load_subject_from_screen (mention_code, niveau_id, semester_id, subject_title, parcours, subject_id) VALUES ('";
+        $query_part2 = $param_mention_code . "', '" . $param_niveau_id . "', " . $param_semestre_id . ", '" . $param_title ;
+
+        $all_query_load = "";
+        // We do not do any update if there is no data to update
+        if(count($param_jsondata) > 0){
+            foreach ($param_jsondata as $read)
+            {
+                $big_query = $query_part1 . $query_part2 . "', '". $read . "'," . $new_subj_id . "); ";
+                $logger->debug("Query insert: " . $big_query);
+                $all_query_load = $all_query_load . $big_query;
+            }
+        }
+        // Perform the load operation
+        $dbconnectioninst->query($all_query_load)->fetchAll(PDO::FETCH_ASSOC);
+
+        // Then we go to migration
+        $query_migrate_to_core = " CALL CLI_CRT_GraNewSubj(" . $new_subj_id . "); ";
+        $logger->debug("query_migrate_to_core: " . $query_migrate_to_core);
+        $dbconnectioninst->query($query_migrate_to_core)->fetchAll(PDO::FETCH_ASSOC);
+        // THEN RUN THE INSERT IN XREF WITH A STORED PROCEDURE
+        /*
+        $query_update_master = "UPDATE uac_gra_master SET status = 'END', last_update = CURRENT_TIMESTAMP, last_agent_id = " . $param_agent_id . ", "
+                                    . " cross_bookmark = '" . $param_crossbookmark . "', cross_browser = '" . $param_browser . "', "
+                                    . " avg_grade = (SELECT TRUNCATE(AVG(grade), 2) FROM uac_gra_grade ugg WHERE ugg.master_id = " . $param_master_id . " and ugg.gra_status = 'P') "
+                                    . " WHERE id = " . $param_master_id . " ; ";
+        $logger->debug("-- query_update_master: " . $query_update_master);
+        $dbconnectioninst->query($query_update_master)->fetchAll(PDO::FETCH_ASSOC);
+        */
+
+        // Send all this back to client
+        return new JsonResponse(array(
+            'status' => 'OK',
+            'param_mention_code' => $param_mention_code,
+            'return_new_subject_id' => $new_subj_id,
+            'message' => 'Tout est OK: '),
+        200);
+    }
+
+    // If we reach this point, it means that something went wrong
+    return new JsonResponse(array(
+        'status' => 'Error',
+        'message' => 'Error generation notation DB'),
+    400);
+    }
+
+
+    public function generateDeleteSubjectDB(Request $request, LoggerInterface $logger){
+
+
+    // This is optional.
+    // Only include it if the function is reserved for ajax calls only.
+    if (!$request->isXmlHttpRequest()) {
+        return new JsonResponse(array(
+            'status' => 'Error',
+            'message' => 'Error'),
+        400);
+    }
+
+    if(isset($request->request))
+    {
+
+        // Token control
+        $result_get_token = $this->getDailyTokenGRAStr($logger);
+        $param_token = $request->request->get('token');
+
+        if(strcmp($result_get_token, $param_token) !== 0){
+            // We need to out as error
+            // This may be a corrupted action
+            return new JsonResponse(array(
+                'status' => 'Error',
+                'message' => 'Err676GRA ticket corrompu'),
+            400);
+        }
+
+        // Get data from ajax
+
+        $param_subj_id_to_delete = $request->request->get('tempSubjectIdToDelete');
+        $logger->debug("param_subj_id_to_delete: " . $param_subj_id_to_delete);
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+
+        // Retrieve SUBJ ID
+        $query_delete_x = " DELETE FROM uac_xref_subject_cohort WHERE subject_id = " . $param_subj_id_to_delete . "; ";
+        $logger->debug("Show me query_delete_x: " . $query_delete_x);
+
+        $dbconnectioninst->query($query_delete_x)->fetchAll(PDO::FETCH_ASSOC);
+
+        $query_delete_main = " DELETE FROM uac_ref_subject WHERE id = " . $param_subj_id_to_delete . "; ";
+        $logger->debug("Show me query_delete_main: " . $query_delete_main);
+
+        $dbconnectioninst->query($query_delete_main)->fetchAll(PDO::FETCH_ASSOC);
+
+        // Send all this back to client
+        return new JsonResponse(array(
+            'status' => 'OK',
+            'param_subj_id_to_delete' => $param_subj_id_to_delete,
+            'message' => 'Tout est OK: '),
+        200);
+    }
+
+    // If we reach this point, it means that something went wrong
+    return new JsonResponse(array(
+        'status' => 'Error',
+        'message' => 'Error generation notation DB'),
+    400);
+    }
 
 
     public function primitifline(Environment $twig, LoggerInterface $logger)

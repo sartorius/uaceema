@@ -43,6 +43,27 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_subject_cohort` (
   PRIMARY KEY (`cohort_id`, `subject_id`));
 
 
+DROP TABLE IF EXISTS uac_ref_semester;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_semester` (
+  `niveau` CHAR(2) NOT NULL,
+  `semestre` INT UNSIGNED NOT NULL,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`niveau`, `semestre`));
+
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L1', 1);
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L1', 2);
+
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L2', 3);
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L2', 4);
+
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L3', 5);
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('L3', 6);
+
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('M1', 7);
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('M1', 8);
+
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('M2', 9);
+INSERT IGNORE INTO uac_ref_semester (`niveau`, `semestre`) VALUES ('M2', 10);
 /****************************************************************************************************/
 /****************************************************************************************************/
 /****************************************************************************************************/
@@ -50,6 +71,23 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_subject_cohort` (
 /****************************************************************************************************/
 /****************************************************************************************************/
 
+DROP TABLE IF EXISTS uac_load_subject_from_screen;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_load_subject_from_screen` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` CHAR(3) NOT NULL DEFAULT 'NEW',
+  `mention_code` CHAR(5) NULL,
+  `niveau_id` CHAR(2) NULL,
+  `semester_id` TINYINT NULL,
+  `parcours` VARCHAR(50) NULL,
+  `subject_title` VARCHAR(200) NULL,
+  `subject_id` INT UNSIGNED NULL DEFAULT NULL,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+-- INSERT INTO uac_load_subject_from_screen (mention_code, niveau_id, semester_id, parcours, subject_title, load_credit) VALUES (mention_code, niveau_id, semester_id, parcours, subject_title, load_credit);
+
+/*
 DO NOT RUN THIS AUTOMTICALLY
 
 UPDATE uac_load_subject

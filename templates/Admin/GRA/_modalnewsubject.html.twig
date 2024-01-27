@@ -1,0 +1,85 @@
+<!-- Modal -->
+<div class="modal fade" id="new-subject-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <strong>Nouveau sujet</strong>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class='popup-box-details'>
+            <div class="menu-dropdown">
+
+                <div class="dropdown btn-ace-menu">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i id="drp-select">Mention</i>
+                    </button>
+                    <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                    </div>
+                </div>
+
+                <div class="dropdown btn-ace-menu">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownSemestre" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i id="drp-semestre">Semestre</i>
+                    </button>
+                    <div id="dpsemestre-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Sélectionnez une mention</a>
+                    </div>
+                </div>
+
+                <div class="btn-ace-menu disp-class-qty">
+                    <i class="icon-group-full nav-text"></i>&nbsp;<i id="sel-stu-qty">0</i>
+                </div>
+            </div>
+            <div id="menu-checkboxbtn">
+                Sélectionner les parcours/groupe :
+                <div id="parcours-opt">
+                    {# 
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Checked checkbox
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            Checked checkbox2
+                        </label>
+                    </div>
+                    #}
+                </div>
+            </div>
+            <hr>
+            <div class="menu-dropdown">
+                <div id="subj-crd-blk">
+                    Entrez le nombre de crédit :
+                    <div id="othg-gra" class="othg-blk-det">
+                        <textarea id="subj-crd-input" rows="1" cols="7" class="othg-txta ok-txtar" onkeyup="validateCreditSubj()"></textarea>
+                    </div>
+                </div>
+                <div class='pop-up-note'>
+                    Le nombre de crédit doit être inférieur à 50. Le nombre de crédit peut changer au moment du jury final. Si l'enseignant ne le connait pas au moment de la création du sujet, il doit donner le nombre de crédit qui peut être approximatif. Il pourra changer cette valeur au moment de la délibération finale.
+                </div>
+            </div>
+            <div>
+                <hr>
+                <br>
+                <div id='scan-mvo-input'>
+                    <input class="form-control mgs-subjtitle" rows="1" id="addpay-ace" name="inputUserName" onkeyup="verifyIfAllIsFilledNewSubject()" placeholder="Titre du sujet d'examen">
+                </div>
+            </div>
+            <br>
+            <br>
+            <div id='gra-foot-btn'>
+                <button onclick="createNewSubjectAjax()" id='btn-crt-sbj' class="btn btn-lg btn-default btn-block">Créer le nouveau sujet</button>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>

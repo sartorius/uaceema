@@ -110,3 +110,26 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+
+
+-- This end review is todo
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_CRT_GraNewSubj$$
+CREATE PROCEDURE `CLI_CRT_GraNewSubj` (IN param_new_subject_id INT)
+BEGIN
+    DECLARE inv_subject_id	BIGINT;
+
+    INSERT IGNORE INTO uac_xref_subject_cohort (cohort_id, subject_id)
+    SELECT vcc.id, param_new_subject_id FROM uac_load_subject_from_screen uls
+				JOIN v_class_cohort vcc ON vcc.mention_code = uls.mention_code
+												AND vcc.niveau = uls.niveau_id
+												AND vcc.parcours = uls.parcours
+                        WHERE subject_id = param_new_subject_id
+                        AND status = 'NEW';
+
+    UPDATE uac_load_subject_from_screen SET status = 'END' WHERE subject_id = param_new_subject_id AND status = 'NEW';
+
+
+END$$
+-- Remove $$ for OVH

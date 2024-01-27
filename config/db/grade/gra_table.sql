@@ -171,14 +171,26 @@ ORDER BY raw_data;
 
 DROP VIEW IF EXISTS v_ref_subject;
 CREATE VIEW v_ref_subject AS
-select
+SELECT
+  urs.id AS URS_ID,
 	urs.mention_code AS URS_MENTION_CODE,
 	urs.niveau_code AS URS_NIVEAU_CODE,
 	urs.semester AS URS_SEMESTER,
 	fEscapeStr(urs.subject_title) AS URS_SUBJECT_TITLE,
 	urs.credit AS URS_CREDIT,
+  	'N' AS IS_NEW,
+	GROUP_CONCAT(vcc.parcours SEPARATOR '/') AS ALL_PARCOURS,
+	 IFNULL(t_gra_exam.EXIST_EXAM_ID, 0) AS GRA_EXIST_EXAM_ID,
 	UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester, fEscapeStr(urs.subject_title))) AS raw_data
-from uac_ref_subject urs ORDER BY CONCAT(urs.mention_code, urs.niveau_code, urs.semester);
+FROM uac_ref_subject urs JOIN uac_xref_subject_cohort x
+							ON urs.id = x.subject_id
+							  JOIN v_class_cohort vcc ON vcc.id = x.cohort_id
+							  		LEFT JOIN (
+							  			SELECT DISTINCT subject_id AS EXIST_EXAM_ID FROM uac_gra_master
+							  		) t_gra_exam ON t_gra_exam.EXIST_EXAM_ID = urs.id
+GROUP BY urs.id, urs.mention_code, urs.niveau_code, urs.semester, fEscapeStr(urs.subject_title), urs.credit, IFNULL(t_gra_exam.EXIST_EXAM_ID, 0),
+UPPER(CONCAT(urs.mention_code, urs.niveau_code, urs.semester, fEscapeStr(urs.subject_title)))
+ORDER BY CONCAT(urs.mention_code, urs.niveau_code, urs.semester);
 
 DROP VIEW IF EXISTS v_tech_gra_ass_line;
 CREATE VIEW v_tech_gra_ass_line AS
