@@ -168,7 +168,7 @@ class AdminGradeController extends AbstractController{
     
         $scale_right = ConnectionManager::whatScaleRight();
         // Must be exactly 8 or more than 99
-        if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+        if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
             $logger->debug("Firstname: " . $_SESSION["firstname"]);
             $logger->debug("****************************************************************");
 
