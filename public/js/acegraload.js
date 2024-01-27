@@ -67,9 +67,10 @@ function printPresenceSheet(){
                 23 + pageLimit*rawHeight, //y
                  $('#teach-sel-gra').val().substr(0, maxStrL3) + ' - Date : ' + formatterDateFR.format(refDate) + ' - Page ' + pgNbr + ' sur ' + AllPage
                 );
+            doc.setFontSize(8);
             doc.text(
                 45, //x oddOffsetX is to define if position 1 or 2
-                15, //y
+                13, //y
                 tempInvClass
                 );
         }
