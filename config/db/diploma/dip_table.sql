@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_dip_year` (
 PRIMARY KEY (`core_year`));
 
 INSERT IGNORE INTO uac_ref_dip_year (core_year, long_name, title) VALUES (2022, '2021-22', 'Tsara Joro');
+INSERT IGNORE INTO uac_ref_dip_year (core_year, long_name, title) VALUES (2023, '2022-23', 'Soa Fianatra');
 
 -- Data for set up
 INSERT IGNORE INTO uac_ref_dip_type (id, par_code, title, mention_code) VALUES (1,'PV','DROIT PRIVE', 'DROIT');
@@ -96,6 +97,7 @@ SELECT
 	urdy.long_name AS FULL_YEAR,
 	urdy.title AS TITLE_YEAR,
   fEscapeLineFeed(fEscapeStr(UPPER(CONCAT(
+    urdy.core_year,
     ud.lastname,
     ud.firstname,
     ud.code_name,

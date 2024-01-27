@@ -42,12 +42,16 @@
         <h1>EDT Semaine S{{ week_id }}</h1>
         <hr>
         {% if result_query_get_all_master_id|length > 0 %}
-        Voici la liste des emplois du temps publié(s) de cette semaine :<br>
-        {% for el in result_query_get_all_master_id %}
-            <button type="button" class="btn btn-dark btn-list-ace" onclick="goToAllEDT({{ el.UEM_ID }})">{{ el.VCC_SHORT_CLASS }}</button> <br>
-        {% endfor %}
+            Voici la liste des emplois du temps publié(s) de cette semaine :<br>
+            {% for el in result_query_get_all_master_id %}
+                <button type="button" class="btn btn-dark btn-list-ace" onclick="goToAllEDT({{ el.UEM_ID }})">{{ el.VCC_SHORT_CLASS }}</button> <br>
+            {% endfor %}
+            <hr>
+            <div class="mgs-note">
+                <i class="icon-exclamation-circle nav-icon-fa-sm nav-text"></i>NA : "Non applicable" indique qu'aucun titre de l'emploi du temps n'a été renseigné.
+            </div>
         {% else %}
-        Aucun emploi du temps n'a été publié pour cette semaine.
+            Aucun emploi du temps n'a été publié pour cette semaine.
         {% endif %}
         </div>
     </div>
@@ -73,5 +77,6 @@
         </div>
     {% endfor %}
 {% endif %}
+
 
 {% include 'RawTemplate/SPE/_footeralledtpublic.html.twig' %}

@@ -131,10 +131,10 @@ function loadAllDiplomaGrid(){
       { name: "UD_CODENAME",
         title: "Code",
         type: "text",
-        width: 30,
+        width: 25,
         align: "left",
         headercss: "cell-ref-uac-sm-hd",
-        css: "cell-ref-uac-sm"
+        css: "cell-recap-l-num"
       },
       { name: "UD_SECRET",
         title: "Secret",
@@ -142,7 +142,7 @@ function loadAllDiplomaGrid(){
         width: 35,
         align: "right",
         headercss: "cell-ref-uac-sm-hd",
-        css: "cell-ref-uac-sm"
+        css: "cell-recap-l-num"
       },
       { name: "URDT_MENTION_CODE",
         title: "Mention",

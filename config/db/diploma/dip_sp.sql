@@ -27,6 +27,9 @@ BEGIN
         UPDATE uac_dip ud SET ud.code_name = RPAD(SUBSTRING(UPPER(REPLACE(REPLACE(lastname, ' ', ''), '-', '')), 1, code_name_size), code_name_size, "X") WHERE secret IS NULL;
         -- Add secret
         UPDATE uac_dip SET secret = 7000 + FLOOR(RAND()*1000), last_update = NOW() WHERE secret IS NULL;
+
+        UPDATE uac_load_dip uld SET status = 'END' WHERE uld.status = 'INP' AND load_year IN (param_year);
+        SELECT 'Procedure SRV_CRT_Diploma End successfully';
         -- End of the correct process
     ELSE
         SELECT 'ERR SRV_CRT_Diploma uac_load_dip Some error has been found';
