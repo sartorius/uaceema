@@ -1212,7 +1212,7 @@ class AdminGradeController extends AbstractController{
         $dbconnectioninst = DBConnectionManager::getInstance();
 
         // Retrieve SUBJ ID
-        $query_prepare = " SELECT MAX(id)+1 AS NEW_REF_SUBJ_ID FROM uac_ref_subject; ";
+        $query_prepare = " SELECT IFNULL(MAX(id)+1, 1) AS NEW_REF_SUBJ_ID FROM uac_ref_subject; ";
         $result_query_prepare = $dbconnectioninst->query($query_prepare)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_prepare: " . $result_query_prepare[0]['NEW_REF_SUBJ_ID']);
         $new_subj_id = $result_query_prepare[0]['NEW_REF_SUBJ_ID'];
