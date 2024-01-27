@@ -2079,19 +2079,19 @@ function generateHebdoXLS(){
 
 
 function initButtonPublishS1(){
-  let i=0;
-  let existS1 = false;
+  let draftS1ToPublish = 0;
 
-  while ((i<dataAllEDTToJsonArray.length) && !existS1){
+  for(let i=0; i<dataAllEDTToJsonArray.length; i++){
     if((dataAllEDTToJsonArray[i].s == 'S1') && (dataAllEDTToJsonArray[i].visibility ==  "D")){
-      existS1 = true;
+      draftS1ToPublish = draftS1ToPublish + 1;
     }
-    i++;
   }
-
-  if(existS1){
+  
+  $("#nb-dft-S1").html(draftS1ToPublish);
+  if(draftS1ToPublish > 0){
     console.log('We found an S1 to display');
     //document.getElementById("pub-s1").disabled = false;
+    
     $("#pub-s1").prop('disabled', false);
   }
   else{
