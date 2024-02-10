@@ -901,7 +901,7 @@ function loadAssRecapGrid(){
               val = '<i class="recap-mis">Absent(e)</i>';
             }
             else if(value == 'QUI'){
-              val = '<i class="recap-qui">Quitté</i>';
+              val = '<i class="recap-qui">Qav.</i>';
             }
             else if(value == 'NEX'){
               val = '<i class="recap-nex"><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Sortie</i>';
@@ -1018,7 +1018,7 @@ function loadAssRecapGrid(){
             val = '<i class="recap-mis">Absent(e)</i>';
           }
           else if(value == 'QUI'){
-            val = '<i class="recap-qui">Quitté</i>';
+            val = '<i class="recap-qui">Qav.</i>';
           }
           else if(value == 'NEX'){
             val = '<i class="recap-nex"><i class="icon-exclamation-triangle nav-text"></i>&nbsp;Sortie</i>';
