@@ -2,6 +2,7 @@ USE ACEA;
 
 -- This is run automatically by cron
 -- Automatic generic flow
+SELECT NOW() AS START_TIME;
 DELETE FROM uac_load_edt WHERE create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
 DELETE FROM uac_load_scan WHERE create_date < DATE_ADD(current_date, INTERVAL -10 DAY);
 
@@ -11,6 +12,10 @@ DELETE FROM uac_edt_master WHERE create_date < DATE_ADD(current_date, INTERVAL -
 DELETE FROM uac_edt_line WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
 DELETE FROM uac_load_jqedt WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
 
+-- Delete old Load Mvola
+DELETE FROM uac_load_mvola WHERE status = 'DUP' AND create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
+
+SELECT 'END OF DELETE PURGE' AS FBACK_MSG;
 
 -- To be reactivated when working in PROD
 -- DELETE FROM uac_load_mvola where create_date < DATE_ADD(current_date, INTERVAL -40 DAY);

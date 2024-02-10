@@ -1679,7 +1679,7 @@ function generateCourseReportCSV(){
 }
 
 /*
-function generateHebdoXLS_todelete(){
+function generateGlobalPsdXLS_todelete(){
   
   var wb = XLSX.utils.table_to_book(document.getElementById('my-main-table'));
   XLSX.writeFile(wb, 'EDT' + invMondayStr.replaceAll('-', '_') + tempClasse.replaceAll(' ', '_').replaceAll('/', '_') + '.xlsx');
@@ -1731,7 +1731,7 @@ function generateHebdoXLS_todelete(){
 }
 */
 
-function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
+function generateGlobalPsdXLSWorksheet(paramLines, paramIsGlobalSheet){
   //const DEF_COL_DFT = 30;
   /*
 	const DEF_ROW_DFT = 20;
@@ -1781,7 +1781,7 @@ function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
     { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader6 = [
-    { v: 'État des assiduités du ' + getReportACEDateStrFR(-7) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'État des assiduités du ' + getReportACEDateStrFR(-30) + ' au ' + getReportACEDateStrFR(0), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   let rowHeader7 = [
     { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
@@ -2039,18 +2039,19 @@ function generateHebdoXLSWorksheet(paramLines, paramIsGlobalSheet){
 }
 
 
-function generateHebdoXLS(){
+function generateGlobalPsdXLS(){
   const wb = XLSX.utils.book_new();
 
   // Create first the global worksheet
-  // dataTagToJsonArrayHebdoGblComputeReport
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(dataTagToJsonArrayHebdoGblComputeReport, 'Y'), 'RESUME');
+  // dataTagToJsonArrayExcelGblComputeReport
+  XLSX.utils.book_append_sheet(wb, generateGlobalPsdXLSWorksheet(dataTagToJsonArrayExcelGblComputeReport, 'Y'), 'RESUME');
 
-  // We assume that the collection is ordered : dataTagToJsonArrayHebdoGblReport
+  // We assume that the collection is ordered : dataTagToJsonArrayExcelGblReport
   let iMentionLines = [];
   let iMention = '';
-  for(let i = 0; i< dataTagToJsonArrayHebdoGblReport.length; i++){
-    if(dataTagToJsonArrayHebdoGblReport[i].MENTION == iMention){
+  const LIMIT_WORKSHEET_SIZE = 25;
+  for(let i = 0; i< dataTagToJsonArrayExcelGblReport.length; i++){
+    if(dataTagToJsonArrayExcelGblReport[i].MENTION == iMention){
       // We are still in the same mention !!!
     }
     else{
@@ -2058,21 +2059,21 @@ function generateHebdoXLS(){
       // First we manage existing.
       if(iMention != ''){
         //We avoid empty case
-        XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines, 'N'), iMention);
+        XLSX.utils.book_append_sheet(wb, generateGlobalPsdXLSWorksheet(iMentionLines, 'N'), iMention.substring(0, LIMIT_WORKSHEET_SIZE));
       }
       //console.log("Attach worksheet: " + iMention);
-      iMention = dataTagToJsonArrayHebdoGblReport[i].MENTION;
+      iMention = dataTagToJsonArrayExcelGblReport[i].MENTION;
       iMentionLines = [];
     }
     //Whatever we push it
-    iMentionLines.push(dataTagToJsonArrayHebdoGblReport[i]);
+    iMentionLines.push(dataTagToJsonArrayExcelGblReport[i]);
   }
   // Because we have to handle the last Mention
-  XLSX.utils.book_append_sheet(wb, generateHebdoXLSWorksheet(iMentionLines, 'N'), iMention);
+  XLSX.utils.book_append_sheet(wb, generateGlobalPsdXLSWorksheet(iMentionLines, 'N'), iMention.substring(0, LIMIT_WORKSHEET_SIZE));
   //console.log("Attach worksheet: " + iMention);
 
   // STEP 4: Write Excel file to browser
-  XLSX.writeFile(wb, "RapportAbsence7j_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
+  XLSX.writeFile(wb, "RapportAbsence30j_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
 }
 
 
@@ -2273,7 +2274,7 @@ $(document).ready(function() {
       generateCourseReportCSV();
     });
     $( "#uac-abs-pdt-xls" ).click(function() {
-      generateHebdoXLS();
+      generateGlobalPsdXLS();
     });
 
   }

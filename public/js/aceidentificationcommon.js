@@ -1,3 +1,4 @@
+/*
 function renderAmount(param){
 	var len = param.toString().length;
 	var result = '';
@@ -12,7 +13,7 @@ function renderAmount(param){
 	}
 	return result + ' AR';
 }
-
+*/
 /***********************************************************************************************************/
 
 function loadRefPayGrid(){
@@ -102,6 +103,59 @@ function loadRefPayGrid(){
         data: dataREFPAYToJsonArray,
         fields: refPayField
     });
+}
+
+function loadRefPayGridDiscount(){
+
+  refPayFieldDiscount = [
+      { name: "DIS_DESC_DISP",
+        title: 'Discount',
+        type: "text",
+        align: "center",
+        width: 10,
+        headercss: "cell-ref-sm-hd",
+        css: "cell-ref-sm"
+      },
+      { name: "GENUINE_AMOUNT",
+        title: 'Montant standard',
+        type: "number",
+        align: "right",
+        width: 20,
+        headercss: "cell-ref-sm-hd",
+        css: "cell-ref-sm",
+        itemTemplate: function(value, item) {
+          return formatterCurrency.format(value).replace("MGA", "AR");
+        }
+      },
+      { name: "FINAL_AMOUNT",
+        title: 'Montant final',
+        type: "number",
+        align: "right",
+        width: 20,
+        headercss: "cell-ref-sm-hd",
+        css: "cell-ref-sm",
+        itemTemplate: function(value, item) {
+          return formatterCurrency.format(value).replace("MGA", "AR");
+        }
+      }
+  ];
+
+  $("#jsGridRefDiscountPay").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucun discount disponible",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+
+      sorting: true,
+      paging: true,
+      data: dataAllDispDiscountToJsonArray,
+      fields: refPayFieldDiscount
+  });
 }
 
 /***********************************************************************************************************/
@@ -276,6 +330,7 @@ function clearFoundUser(){
   dataPaymentForUserJsonArray = new Array();
   dataLeftOperationForUserJsonArray = new Array();
   payUniLeftOperationForUserJsonArray = new Array();
+  payShortCutOperationForUserJsonArray = new Array();
   $(".init-deactive").addClass('deactive-btn');
 }
 
@@ -370,7 +425,21 @@ function addPayReductionExists(val){
       }
     }
     return 'na';
+}
+
+// Fill once for good the data in the discount
+// Duplicate code for Management MVO in acepaybasic
+function displayDiscount(){
+  if(dataAllDispDiscountToJsonArray.length > 0){
+    $("#disc-case-n").html(renderAmount(dataAllDispDiscountToJsonArray[0].GENUINE_AMOUNT));
+    for(let j=0; j < dataAllDispDiscountToJsonArray.length; j++){
+      $("#disc-case-" + dataAllDispDiscountToJsonArray[j].DIS_CASE.toLowerCase()).html(renderAmount(dataAllDispDiscountToJsonArray[j].FINAL_AMOUNT));
+    }
   }
+  else{
+    console.log('Reading discount ref: Err1890');
+  }
+}
 
 // Common element
 function addPayClear(){
@@ -404,6 +473,7 @@ function addPayClear(){
   lblDate = '';
   invAmountToPay = 0;
   invFscId = 0;
+  invShortCutDiscountId = 0;
   invTypeOfPayment = 'C';
   invOperation = 'F';
   ticketRefToDelete = '';
@@ -775,8 +845,12 @@ function displayHistoryPayment(){
                 else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'R'){
                     typeOfPayment = '/REDUCTION';
                 }
+                else if(dataPaymentForUserJsonArray[i].UP_TYPE_OF_PAYMENT == 'E'){
+                    typeOfPayment = '/EXEMPTION';
+                }
                 else{
                     //Do nothing
+                    typeOfPayment = '';
                 }
                 recAmount = (('Paiement' + typeOfPayment + ' :' + renderAmount(dataPaymentForUserJsonArray[i].UP_INPUT_AMOUNT.toString()))).padStart(maxLgRecap, paddChar);
                 myRecap.push(recAmount);
@@ -819,6 +893,7 @@ $(document).ready(function() {
       // Do something
       console.log('in ref-pay');
       loadRefPayGrid();
+      loadRefPayGridDiscount();
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){
       // Do something

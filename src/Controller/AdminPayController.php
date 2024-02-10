@@ -49,11 +49,20 @@ class AdminPayController extends AbstractController
 
 
 
+        $alldisplay_discount_query = " SELECT *, fCapitalizeStr(DIS_DESC) AS DIS_DESC_DISP FROM v_all_display_discount; ";
+        $logger->debug("Show me alldisplay_discount_query: " . $alldisplay_discount_query);
+        $result_alldisplay_discount_query = $dbconnectioninst->query($alldisplay_discount_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_alldisplay_discount_query: " . count($result_alldisplay_discount_query));
+        
+
+
+
         $content = $twig->render('Admin/PAY/refpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
                                                                 'id' => $_SESSION["id"],
                                                                 'result_ref_pay'=>$result_ref_pay,
+                                                                'result_alldisplay_discount_query'=>$result_alldisplay_discount_query,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 
@@ -104,7 +113,17 @@ class AdminPayController extends AbstractController
         $result_allope_query = $dbconnectioninst->query($allope_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me: " . count($result_allope_query));
 
+        $alldisplay_discount_query = " SELECT * FROM v_all_display_discount; ";
+        $logger->debug("Show me alldisplay_discount_query: " . $alldisplay_discount_query);
+        $result_alldisplay_discount_query = $dbconnectioninst->query($alldisplay_discount_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_alldisplay_discount_query: " . count($result_alldisplay_discount_query));
 
+        $allsetup_discount_query = " SELECT * FROM v_all_detail_discount; ";
+        $logger->debug("Show me allsetup_discount_query: " . $allsetup_discount_query);
+        $result_allsetup_discount_query = $dbconnectioninst->query($allsetup_discount_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_allsetup_discount_query: " . count($result_allsetup_discount_query));
+
+        
 
         $content = $twig->render('Admin/PAY/addpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -113,6 +132,8 @@ class AdminPayController extends AbstractController
                                                                 'result_all_usrn'=>$result_all_usrn,
                                                                 'result_all_reduc'=>$result_all_reduc,
                                                                 'result_allope_query'=>$result_allope_query,
+                                                                'result_alldisplay_discount_query'=>$result_alldisplay_discount_query,
+                                                                'result_allsetup_discount_query'=>$result_allsetup_discount_query,
                                                                 'result_get_token'=>$result_get_token,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
@@ -155,6 +176,7 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
           $param_user_id = $request->request->get('foundUserId');
           $param_ticket_ref = $request->request->get('ticketRef');
           $param_ticket_type = $request->request->get('ticketType');
@@ -165,7 +187,7 @@ class AdminPayController extends AbstractController
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
+          $query_value = " CALL CLI_CRT_PayAddFacilite( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_ticket_type . "', " . $param_red_pc . ", " . $param_inv_fsc_id . ")";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -223,6 +245,7 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
           $param_user_id = $request->request->get('foundUserId');
           $param_type_of_payment = $request->request->get('invTypeOfPayment');
           $param_ticket_ref = $request->request->get('ticketRef');
@@ -230,7 +253,7 @@ class AdminPayController extends AbstractController
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddCertificatSco(" . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_type_of_payment . "'); ";
+          $query_value = " CALL CLI_CRT_PayAddCertificatSco(" . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_type_of_payment . "'); ";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -288,6 +311,7 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
           $param_user_id = $request->request->get('foundUserId');
           $param_type_of_payment = $request->request->get('invTypeOfPayment');
           $param_ticket_ref = $request->request->get('ticketRef');
@@ -296,7 +320,7 @@ class AdminPayController extends AbstractController
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CRT_PayAddOpeMulti(" . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_type_of_payment . "', '" . $param_type_of_operation . "'); ";
+          $query_value = " CALL CLI_CRT_PayAddOpeMulti(" . $param_agent_id .", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_type_of_payment . "', '" . $param_type_of_operation . "'); ";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -418,11 +442,12 @@ class AdminPayController extends AbstractController
 
           // Get data from ajax
           $param_ticket_ref = $request->request->get('ticketRef');
+          $param_agent_id = $request->request->get('currentAgentIdStr');
 
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_CAN_PayCanPaymentPerRef('" . $param_ticket_ref . "'); ";
+          $query_value = " CALL CLI_CAN_PayCanPaymentPerRef(" . $param_agent_id . ", '" . $param_ticket_ref . "'); ";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -480,13 +505,14 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
           $param_user_id = $request->request->get('foundUserId');
           $param_ticket_ref = $request->request->get('ticketRef');
 
 
           //echo $param_jsondata[0]['username'];
           //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-          $query_value = " CALL CLI_VAL_PayAddRedValidate( " . $param_user_id . ", '" . $param_ticket_ref . "')";
+          $query_value = " CALL CLI_VAL_PayAddRedValidate( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "')";
 
           $logger->debug("Show me query_value: " . $query_value);
 
@@ -544,40 +570,68 @@ class AdminPayController extends AbstractController
           }
 
           // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
           $param_user_id = $request->request->get('foundUserId');
           $param_ticket_ref = $request->request->get('ticketRef');
           $param_amount = $request->request->get('invAmountToPay');
           $param_fsc_id = $request->request->get('invFscId');
+          $param_short_cut_discount_id = $request->request->get('invShortCutDiscountId');
           $param_type_of_payment = $request->request->get('invTypeOfPayment');
           
 
-          $pay_uni_left_array = json_decode($request->request->get('payUniLeftOperationForUserJsonArray'), true);
+          $pay_multi_ope_array = json_decode($request->request->get('payMultiOperationForUserJsonArray'), true);
 
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
 
-          if(($param_amount == 0) && ($param_fsc_id ==  0)){
-                // In that case when amount and fsc id are 0 both then we are on total mode
-                foreach ($pay_uni_left_array as $read)
-                {
-                    $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $read['typeOfPayment'] . "')";
-                    $logger->debug("Left Operation show me query_value: " . $query_value);
-                    $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          // If we are zero then there is no shortcut
+          // Else we have to handle several payments
+          if($param_short_cut_discount_id == 0){
 
+                if(($param_amount == 0) && ($param_fsc_id ==  0)){
+                    // In that case when amount and fsc id are 0 both then we are on total mode
+                    foreach ($pay_multi_ope_array as $read)
+                    {
+                        $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $param_type_of_payment . "')";
+                        $logger->debug("Left Operation show me query_value: " . $query_value);
+                        $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+    
+                        $logger->debug("Show me count: " . count($result));
+                    }
+                }
+                else{
+                    //echo $param_jsondata[0]['username'];
+                    //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+                    $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
+                    $logger->debug("Show me unique query_value: " . $query_value);
+                    $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+    
                     $logger->debug("Show me count: " . count($result));
                 }
+            
           }
           else{
-                //echo $param_jsondata[0]['username'];
-                //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-                $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
-                $logger->debug("Show me query_value: " . $query_value);
+            //We are tarif transfert
+            // TODO fill the different operation
+            $logger->debug("We are in shortcut discount case");
+            // In that case when amount and fsc id are 0 both then we are on total mode
+            foreach ($pay_multi_ope_array as $read)
+            {
+                // We have to manage exemption here
+                // If the payment is an exemption then we keep it as E. Else it is the payment type proposed by the agent
+                $inv_type_payment_exemption = $param_type_of_payment;
+                if($read['typeOfPayment'] ==  'E'){
+                    $inv_type_payment_exemption = 'E';
+                }
+                $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $inv_type_payment_exemption . "')";
+                $logger->debug("Left Operation show me query_value: " . $query_value);
                 $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
 
                 $logger->debug("Show me count: " . count($result));
-          }
+            }
 
+          }
 
           // Send all this back to client
           return new JsonResponse(array(
@@ -685,6 +739,8 @@ class AdminPayController extends AbstractController
           // Get data from ajax
           $param_username = $request->request->get('paramFoundUsername');
           $param_mvo_id = $request->request->get('paramMvoId');
+          $param_inv_case_operation = $request->request->get('paramInvCaseOperation');
+          $param_agent_id = $request->request->get('currentAgentIdStr');
 
           //Be carefull if you have array of array
           $dbconnectioninst = DBConnectionManager::getInstance();
@@ -712,7 +768,7 @@ class AdminPayController extends AbstractController
           else{
                 //echo $param_jsondata[0]['username'];
                 //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-                $query_value = " CALL CLI_CRT_LineAttribuerMvola( '" . $param_username . "', " . $param_mvo_id . ", 'Y'); ";
+                $query_value = " CALL CLI_CRT_LineAttribuerMvola(" . $param_agent_id . ", '" . $param_username . "', " . $param_mvo_id . ", 'Y', '" . $param_inv_case_operation . "'); ";
                 $logger->debug("Show me query_value: " . $query_value);
                 $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
     
@@ -1270,7 +1326,7 @@ class AdminPayController extends AbstractController
                             //`SRV_CRT_EDT` (IN param_filename VARCHAR(300), IN param_monday_date DATE, IN param_mention VARCHAR(100), IN param_niveau CHAR(2), IN param_uaparcours VARCHAR(100), IN param_uagroupe VARCHAR(100))
                             //$import_query = "CALL SRV_CRT_EDT('" . $filename_to_log_in . "', '" . $monday . "', '" . $mention . "', '" . $niveau . "', '" . $parcours . "', '" . $groupe . "')";
                             
-                            $import_query = "CALL SRV_CRT_CRAMvola('" . $header_account_phone . "', '"
+                            $import_query = "CALL SRV_CRT_CRAMvola(" . $_SESSION["id"] . ", '" . $header_account_phone . "', '"
                                                                         . $header_account_name . "', '"
                                                                         . date_format($header_start_date, "Y-m-d") . "', '"
                                                                         . date_format($header_end_date, "Y-m-d") . "', "
@@ -1359,15 +1415,29 @@ class AdminPayController extends AbstractController
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
         $logger->debug("query_all_edt: " . $query_all_mvo);
 
-
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_mvo = $dbconnectioninst->query($query_all_mvo)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me query_all_mvo: " . count($result_all_mvo));
 
-        $allusrn_query = " SELECT vsh.ID AS ID, UPPER(vsh.USERNAME) AS USERNAME, CONCAT(vsh.FIRSTNAME, ' ', vsh.LASTNAME) AS VSH_NAME, vsh.SHORTCLASS AS CLASS FROM v_showuser vsh; ";
+        $allusrn_query = " SELECT * FROM v_all_usr_mvola_case_inscription; ";
         $logger->debug("Show me allusrn_query: " . $allusrn_query);
         $result_all_usrn = $dbconnectioninst->query($allusrn_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_all_usrn: " . count($result_all_usrn));
+
+        $alldisplay_discount_query = " SELECT * FROM v_all_display_discount; ";
+        $logger->debug("Show me alldisplay_discount_query: " . $alldisplay_discount_query);
+        $result_alldisplay_discount_query = $dbconnectioninst->query($alldisplay_discount_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_alldisplay_discount_query: " . count($result_alldisplay_discount_query));
+
+        $allfixed_fares_query = " SELECT * FROM uac_ref_frais_scolarite urf WHERE id IN (1, 2, 3, 14) ORDER BY id ASC; ";
+        $logger->debug("Show me allfixed_fares_query: " . $allfixed_fares_query);
+        $result_allfixed_fares_query = $dbconnectioninst->query($allfixed_fares_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_allfixed_fares_query: " . count($result_allfixed_fares_query));
+
+        $allsetup_discount_query = " SELECT * FROM v_all_detail_discount ORDER BY DIS_ID; ";
+        $logger->debug("Show me allsetup_discount_query: " . $allsetup_discount_query);
+        $result_allsetup_discount_query = $dbconnectioninst->query($allsetup_discount_query)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_allsetup_discount_query: " . count($result_allsetup_discount_query));
 
         $content = $twig->render('Admin/PAY/managermvo.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -1376,6 +1446,9 @@ class AdminPayController extends AbstractController
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'result_get_token'=>$result_get_token,
                                                                 'all_mvo' => $result_all_mvo,
+                                                                'result_alldisplay_discount_query' => $result_alldisplay_discount_query,
+                                                                'result_allfixed_fares_query' => $result_allfixed_fares_query,
+                                                                'result_allsetup_discount_query' => $result_allsetup_discount_query,
                                                                 'result_all_usrn' => $result_all_usrn,
                                                                 'errtype' => '']);
 
@@ -1499,7 +1572,7 @@ class AdminPayController extends AbstractController
         $logger->debug("Show today_nbr_check_pv: " . $today_nbr_check_pv);
         $result_today_nbr_check_pv = $dbconnectioninst->query($today_nbr_check_pv)->fetchAll(PDO::FETCH_ASSOC);
 
-        $rep_year_recap = " SELECT SUM(up.input_amount) AS UP_AMOUNT, CASE WHEN up.type_of_payment IN ('R', 'E') THEN 'R' ELSE 'P' END AS UP_TYPE_OF_PAYMENT FROM uac_payment up GROUP BY CASE WHEN up.type_of_payment IN ('R', 'E') THEN 'R' ELSE 'P' END; ";
+        $rep_year_recap = " SELECT * FROM v_rep_year_recap; ";
         $logger->debug("Show rep_year_recap: " . $rep_year_recap);
         $result_rep_year_recap = $dbconnectioninst->query($rep_year_recap)->fetchAll(PDO::FETCH_ASSOC);
 

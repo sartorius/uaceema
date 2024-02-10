@@ -1,8 +1,24 @@
 -- Display EDT for Administration
--- Migrated with param agent
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_CRT_PayAddPayment$$
+CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_input_amount INT, IN param_type_payment CHAR(1))
+BEGIN
+    DECLARE inv_status	CHAR(1);
+    -- END OF DECLARE
+
+    SELECT 'P' INTO inv_status;
+
+    -- Set the correct status value
+    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
+    VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, CURRENT_TIMESTAMP);
+
+END$$
+-- Remove $$ for OVH
+
+-- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddFacilite$$
-CREATE PROCEDURE `CLI_CRT_PayAddFacilite` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_ticket_type CHAR(1), IN param_red_pc TINYINT, IN param_fsc_id INT)
+CREATE PROCEDURE `CLI_CRT_PayAddFacilite` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_ticket_type CHAR(1), IN param_red_pc TINYINT, IN param_fsc_id INT)
 BEGIN
     DECLARE inv_status	CHAR(1);
     DECLARE inv_fac_id	BIGINT;
@@ -22,8 +38,8 @@ BEGIN
     -- We need to create the line for Commitment Letter
     IF param_ticket_type = 'L' THEN
         -- Set the correct status value
-        INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
-            VALUES (param_user_id, param_fsc_id, 'P', param_ticket_ref, 0, param_ticket_type, CURRENT_TIMESTAMP, inv_fac_id);
+        INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
+            VALUES (param_agent_id, param_user_id, param_fsc_id, 'P', param_ticket_ref, 0, param_ticket_type, CURRENT_TIMESTAMP, inv_fac_id);
     END IF;
 
 END$$
@@ -32,26 +48,8 @@ END$$
 -- Display EDT for Administration
 -- Migrated with param agent
 DELIMITER $$
-DROP PROCEDURE IF EXISTS CLI_CRT_PayAddPayment$$
-CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_input_amount INT, IN param_type_payment CHAR(1))
-BEGIN
-    DECLARE inv_status	CHAR(1);
-    -- END OF DECLARE
-
-    SELECT 'P' INTO inv_status;
-
-    -- Set the correct status value
-    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
-    VALUES (param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, CURRENT_TIMESTAMP);
-
-END$$
--- Remove $$ for OVH
-
--- Display EDT for Administration
--- Migrated with param agent
-DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddCertificatSco$$
-CREATE PROCEDURE `CLI_CRT_PayAddCertificatSco` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_type_payment CHAR(1))
+CREATE PROCEDURE `CLI_CRT_PayAddCertificatSco` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_type_payment CHAR(1))
 BEGIN
     DECLARE inv_fsc_id	INT;
     DECLARE inv_amount	INT;
@@ -64,8 +62,8 @@ BEGIN
                                                            WHERE vsh.ID = param_user_id;
 
     -- Set the correct status value
-    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
-        VALUES (param_user_id, inv_fsc_id, 'P', param_ticket_ref, inv_amount, param_type_payment, CURRENT_TIMESTAMP);
+    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
+        VALUES (param_agent_id, param_user_id, inv_fsc_id, 'P', param_ticket_ref, inv_amount, param_type_payment, CURRENT_TIMESTAMP);
 
 END$$
 -- Remove $$ for OVH
@@ -77,7 +75,7 @@ END$$
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddOpeMulti$$
-CREATE PROCEDURE `CLI_CRT_PayAddOpeMulti` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_type_payment CHAR(1), IN param_type_of_operation CHAR(1))
+CREATE PROCEDURE `CLI_CRT_PayAddOpeMulti` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_type_payment CHAR(1), IN param_type_of_operation CHAR(1))
 BEGIN
     DECLARE inv_fsc_id	INT;
     DECLARE inv_amount	INT;
@@ -99,18 +97,19 @@ BEGIN
                                                            WHERE vsh.ID = param_user_id;
 
     -- Set the correct status value
-    INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
-        VALUES (param_user_id, inv_fsc_id, 'P', param_ticket_ref, inv_amount, param_type_payment, CURRENT_TIMESTAMP);
+    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
+        VALUES (param_agent_id, param_user_id, inv_fsc_id, 'P', param_ticket_ref, inv_amount, param_type_payment, CURRENT_TIMESTAMP);
 
 END$$
 -- Remove $$ for OVH
+
 
 
 -- Display EDT for Administration
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_VAL_PayAddRedValidate$$
-CREATE PROCEDURE `CLI_VAL_PayAddRedValidate` (IN param_user_id BIGINT, IN param_ticket_ref CHAR(10))
+CREATE PROCEDURE `CLI_VAL_PayAddRedValidate` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10))
 BEGIN
     DECLARE param_red_pc	TINYINT;
     DECLARE param_id_red	BIGINT;
@@ -201,15 +200,15 @@ BEGIN
 
               IF i_part_amount >= (split_amount_to_reduce + inc_i_already_paid + inc_leftover_amount_to_reduce) THEN
                   -- Set the correct status value
-                  INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
-                    VALUES (param_user_id, inv_fsc_id, 'P', param_ticket_ref, (split_amount_to_reduce + inc_leftover_amount_to_reduce), 'R', CURRENT_TIMESTAMP, param_id_red);
+                  INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
+                    VALUES (param_agent_id, param_user_id, inv_fsc_id, 'P', param_ticket_ref, (split_amount_to_reduce + inc_leftover_amount_to_reduce), 'R', CURRENT_TIMESTAMP, param_id_red);
                   -- As it has been used we remove the leftover
                   SET inc_leftover_amount_to_reduce = 0;
                   SET actual_full_reduction = actual_full_reduction + (split_amount_to_reduce + inc_leftover_amount_to_reduce);
               ELSE
                   -- INSERT the MAXIMUM and keep the rest
-                  INSERT INTO uac_payment (user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
-                    VALUES (param_user_id, inv_fsc_id, 'P', param_ticket_ref, (i_part_amount - inc_i_already_paid), 'R', CURRENT_TIMESTAMP, param_id_red);
+                  INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date, facilite_id)
+                    VALUES (param_agent_id, param_user_id, inv_fsc_id, 'P', param_ticket_ref, (i_part_amount - inc_i_already_paid), 'R', CURRENT_TIMESTAMP, param_id_red);
                   -- We keep the left over here
                   SET inc_leftover_amount_to_reduce = (split_amount_to_reduce - (i_part_amount - inc_i_already_paid) + inc_leftover_amount_to_reduce);
                   SET actual_full_reduction = actual_full_reduction + (i_part_amount - inc_i_already_paid);
@@ -234,20 +233,31 @@ END$$
 -- Remove $$ for OVH
 -- CLI_VAL_PayAddRedValidate
 
+
+
 -- Display EDT for Administration
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CAN_PayCanPaymentPerRef$$
-CREATE PROCEDURE `CLI_CAN_PayCanPaymentPerRef` (IN param_ticket_ref CHAR(10))
+CREATE PROCEDURE `CLI_CAN_PayCanPaymentPerRef` (IN param_agent_id BIGINT, IN param_ticket_ref CHAR(10))
 BEGIN
-    DECLARE is_mvola      SMALLINT UNSIGNED;
-    DECLARE inv_mvola_id  BIGINT;
+    DECLARE is_mvola            SMALLINT UNSIGNED;
+    DECLARE inv_mvola_id        BIGINT;
+
+    DECLARE one_payment_id      BIGINT;
+    DECLARE old_agent_id        BIGINT;
+    DECLARE old_agent_username  CHAR(10);
 
     SET is_mvola = 0;
     -- Check first the Mvola Case
     SELECT COUNT(1) INTO is_mvola FROM uac_xref_payment_mvola x WHERE x.payment_id IN (
       SELECT id FROM uac_payment WHERE payment_ref = param_ticket_ref
     );
+
+    -- Take the maximum id
+    SELECT MAX(id) INTO one_payment_id FROM uac_payment WHERE payment_ref = param_ticket_ref;
+    SELECT agent_id INTO old_agent_id FROM uac_payment WHERE id = one_payment_id;
+    SELECT username INTO old_agent_username FROM v_showadmin WHERE mu_id = old_agent_id;
 
     IF (is_mvola > 0) THEN
       -- We are in Mvol Case
@@ -273,8 +283,9 @@ BEGIN
     UPDATE uac_payment up SET
       up.status = 'C',
       up.ref_fsc_id = 0,
-      up.comment = CONCAT('Annulation: ', CONVERT(up.input_amount, CHAR), 'AR'),
+      up.comment = CONCAT('Annulation: [', CONVERT(up.input_amount, CHAR), 'AR] ori. ', UPPER(IFNULL(old_agent_username, 'Automatique'))),
       up.input_amount =  0,
+      up.agent_id = param_agent_id,
       up.last_update = CURRENT_TIMESTAMP
       WHERE payment_ref = param_ticket_ref
       -- We do not cancel Reduction or Letter of Commitment
@@ -286,60 +297,10 @@ END$$
 
 
 -- Use this SP to get the sum up of tranche
-DELIMITER $$
-DROP PROCEDURE IF EXISTS CLI_PAY_GetSumUpTranche$$
-CREATE PROCEDURE `CLI_PAY_GetSumUpTranche` (IN param_username CHAR(10))
-BEGIN
-    -- Sum Up Tranche
-    SELECT * FROM (
-      SELECT
-        vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-        FROM v_original_to_pay_for_user vop
-        LEFT JOIN uac_payment up ON vop.REF_ID = up.ref_fsc_id
-                                AND up.user_id = vop.VSH_ID
-                                AND up.type_of_payment = 'L'
-        WHERE vop.VSH_USERNAME = param_username
-        AND vop.TRANCHE_CODE NOT IN (
-            SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu
-            WHERE tvpu.VSH_USERNAME = param_username)
-            UNION  SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-            FROM v_left_to_pay_for_user vpu  LEFT JOIN uac_payment up ON vpu.REF_ID = up.ref_fsc_id
-                                                                      AND up.user_id = vpu.VSH_ID
-                                                                      AND up.type_of_payment = 'L'
-            WHERE VSH_USERNAME = param_username
-    ) t ORDER BY t.URF_FS_ORDER ASC;
-
-END$$
-
-
-
-
-
-
-
--- ***********************************************************************************
--- ***********************************************************************************
--- ***********************************************************************************
--- MVOLA
--- ***********************************************************************************
--- ***********************************************************************************
--- ***********************************************************************************
-
-
--- MVOLA
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MINAMOU', 'Minimum amount to pay', 100, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLOAD', 'Integration Mvola', NULL, NULL);
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLUPD', 'Last update Mvola', NULL, NULL);
--- INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('TELMVOL', 'Mvola phone number', NULL, '346776199');
--- PROD
-INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('MVOLTEL', 'Mvola phone number', NULL, '344960000');
-
-
--- Use this SP to get the sum up of tranche
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_LineAttribuerMvola$$
-CREATE PROCEDURE `CLI_CRT_LineAttribuerMvola` (IN param_username CHAR(10), IN param_mvola_id BIGINT, IN param_attribution CHAR(1))
+CREATE PROCEDURE `CLI_CRT_LineAttribuerMvola` (IN param_agent_id BIGINT, IN param_username CHAR(10), IN param_mvola_id BIGINT, IN param_attribution CHAR(1), IN param_case_operation CHAR(1))
 BEGIN
 
       -- Loop variable
@@ -354,11 +315,27 @@ BEGIN
       DECLARE uac_param_min_amount INT;
       DECLARE uac_param_frais_mvola INT;
 
+      -- did_pay_DTSTENT did_pay_DRTINSC did_pay_FRAIGEN
+      DECLARE did_pay_DTSTENT BIGINT UNSIGNED;
+      DECLARE did_pay_DRTINSC BIGINT UNSIGNED;
+      DECLARE did_pay_FRAIGEN BIGINT UNSIGNED;
+
+      DECLARE full_fare_DTSTENT BIGINT UNSIGNED;
+      DECLARE full_fare_DRTINSC BIGINT UNSIGNED;
+      DECLARE full_fare_FRAIGEN BIGINT UNSIGNED;
+
+      DECLARE discount_ATSTENT_amt BIGINT UNSIGNED;
+      DECLARE discount_ARTINSC_amt BIGINT UNSIGNED;
+      DECLARE discount_TTSTENT_amt BIGINT UNSIGNED;
+      DECLARE discount_TRTINSC_amt BIGINT UNSIGNED;
+
       -- Paiement tranche avec Mvola
       -- Attribution tranche avec Mvola
       DECLARE inv_description     VARCHAR(12);
 
+      DECLARE inv_payment_ref     CHAR(10);
 
+      -- param_case_operation can be 0 (nothing) N (nouveau) A (ancien) T (transfert)
 
       -- run the loop now of Frais Fixe and Tranche now
       -- Loop inside the loop
@@ -370,19 +347,34 @@ BEGIN
       DECLARE in_loop_username    VARCHAR(10);
       DECLARE nbr_of_unpaid_t     SMALLINT UNSIGNED;
       DECLARE i_t                 SMALLINT UNSIGNED;
+      DECLARE inv_transac_ref     VARCHAR(20);
+      DECLARE nbr_of_transac_ref  SMALLINT UNSIGNED;
       DECLARE in_loop_t_ref_id    INT UNSIGNED;
       DECLARE in_loop_t_amount    INT;
 
+      DECLARE no_operation        INT;
+      DECLARE debug_msg           VARCHAR(300);
 
 
+      SET debug_msg = '';
       -- Update these set up as they are necessary
       SELECT amount INTO uac_param_frais_mvola FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
       SELECT par_int INTO uac_param_min_amount FROM uac_param WHERE key_code = 'MINAMOU';
 
+      SELECT CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(param_mvola_id, 5, '0'), 'P') INTO inv_payment_ref;
+
         -- We need to create the mvola line
+        -- In case of automatic integration file with SRV_CRT_CRAMvola the uac_mvola_line is created automatically
         IF (param_attribution = 'Y') THEN
           SET inv_description = 'Attribution ';
           SELECT ID INTO in_loop_user_id FROM v_showuser WHERE USERNAME = param_username;
+          -- Handle the transac ref if debit
+          SELECT transac_ref INTO inv_transac_ref FROM uac_load_mvola WHERE id = param_mvola_id;
+          SELECT COUNT(1) INTO nbr_of_transac_ref FROM uac_mvola_line WHERE transac_ref = inv_transac_ref;
+          IF (nbr_of_transac_ref > 0) THEN
+            SET inv_transac_ref = CONCAT(inv_transac_ref, '-', nbr_of_transac_ref);
+          END IF;
+
           -- Unique Credit here
           INSERT IGNORE INTO uac_mvola_line (
             id,
@@ -403,7 +395,7 @@ BEGIN
           	 id,
              'NEW',
           	 master_id,
-          	 transac_ref,
+          	 inv_transac_ref,
           	 mvo_type,
           	 from_phone,
           	 to_phone,
@@ -417,7 +409,7 @@ BEGIN
           WHERE id = param_mvola_id;
 
         ELSE
-          SET inv_description = 'Paiement ';
+          SET inv_description = 'Fichier Mvola ';
 
         END IF;
 
@@ -443,8 +435,10 @@ BEGIN
           SET in_loop_amount =  in_loop_amount - uac_param_frais_mvola;
           SELECT id INTO in_loop_fsc_id FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
 
+          -- We consider that whatever the operation is we will always be greater than FRMVOLA
           -- Insert here the frais
           INSERT INTO uac_payment (
+            agent_id,
             user_id,
             ref_fsc_id,
             status,
@@ -455,10 +449,11 @@ BEGIN
             comment
           )
           VALUES (
+            param_agent_id,
             in_loop_user_id,
             in_loop_fsc_id,
             'P',
-            CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(param_mvola_id, 5, '0'), 'P'),
+            inv_payment_ref,
             uac_param_frais_mvola,
             'M',
             in_loop_paydate,
@@ -482,8 +477,436 @@ BEGIN
 
           -- ****************************************
           -- Perform the loop here for payment U here
+          -- param_case_operation can be 0 (nothing) N (nouveau) A (ancien) T (transfert)
+          -- We consider that in case of A or T, DTSTENT and DRTINSC are paid together
+          -- We consider that FRAIGEN must be paid in once
+          -- did_pay_DTSTENT did_pay_DRTINSC did_pay_FRAIGEN
+          -- If we are 0 we go straight to the tranche
           -- xxx
           -- ****************************************
+
+          SELECT IFNULL(SUM(input_amount), 0) INTO did_pay_DTSTENT
+          FROM uac_payment WHERE ref_fsc_id IN (1) AND status = 'P' AND user_id = in_loop_user_id;
+
+          SELECT IFNULL(SUM(input_amount), 0) INTO did_pay_DRTINSC
+          FROM uac_payment WHERE ref_fsc_id IN (2) AND status = 'P' AND user_id = in_loop_user_id;
+
+          SELECT IFNULL(SUM(input_amount), 0) INTO did_pay_FRAIGEN
+          FROM uac_payment WHERE ref_fsc_id IN (3) AND status = 'P' AND user_id = in_loop_user_id;
+
+          SELECT amount INTO discount_ATSTENT_amt FROM uac_ref_frais_scolarite_discount WHERE code = "ATSTENT";
+          SELECT amount INTO discount_ARTINSC_amt FROM uac_ref_frais_scolarite_discount WHERE code = "ARTINSC";
+          SELECT amount INTO discount_TTSTENT_amt FROM uac_ref_frais_scolarite_discount WHERE code = "TTSTENT";
+          SELECT amount INTO discount_TRTINSC_amt FROM uac_ref_frais_scolarite_discount WHERE code = "TRTINSC";
+
+          SELECT amount INTO full_fare_DTSTENT FROM uac_ref_frais_scolarite WHERE id IN (1);
+          SELECT amount INTO full_fare_DRTINSC FROM uac_ref_frais_scolarite WHERE id IN (2);
+          SELECT amount INTO full_fare_FRAIGEN FROM uac_ref_frais_scolarite WHERE id IN (3);
+
+          SET debug_msg = CONCAT(debug_msg, '/', param_case_operation, '/discount_TTSTENT_amt/', CAST(discount_TTSTENT_amt as CHAR(10)));
+          SET debug_msg = CONCAT(debug_msg, '/discount_TRTINSC_amt/', CAST(discount_TRTINSC_amt as CHAR(10)));
+          SET debug_msg = CONCAT(debug_msg, '/full_fare_DTSTENT/', CAST(full_fare_DTSTENT as CHAR(10)));
+          SET debug_msg = CONCAT(debug_msg, '/in_loop_amount 1/', CAST(in_loop_amount as CHAR(10)));
+
+          IF (param_case_operation = 'N') THEN
+              -- In that case we can compensate whatever case we have
+              -- WE ARE IN CASE N
+              -- Droit test entretien ou concours
+              IF (did_pay_DTSTENT = 0) AND (in_loop_amount >= full_fare_DTSTENT) THEN
+
+                  INSERT INTO uac_payment (
+                    agent_id,
+                    user_id,
+                    ref_fsc_id,
+                    status,
+                    payment_ref,
+                    input_amount,
+                    type_of_payment,
+                    pay_date,
+                    comment
+                  )
+                  VALUES (
+                    param_agent_id,
+                    in_loop_user_id,
+                    1, --  this is DTSTENT
+                    'P',
+                    inv_payment_ref,
+                    full_fare_DTSTENT,
+                    'M',
+                    in_loop_paydate,
+                    CONCAT(inv_description, ' frais fixe Mvola')
+                  );
+                  SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                  -- Update the xref
+                  INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                  -- Update in loop amount
+                  SET in_loop_amount = in_loop_amount - full_fare_DTSTENT;
+              END IF;
+              -- WE ARE IN CASE N
+              -- Droit inscription
+              IF (did_pay_DRTINSC = 0) AND (in_loop_amount >= full_fare_DRTINSC) THEN
+
+                  INSERT INTO uac_payment (
+                    agent_id,
+                    user_id,
+                    ref_fsc_id,
+                    status,
+                    payment_ref,
+                    input_amount,
+                    type_of_payment,
+                    pay_date,
+                    comment
+                  )
+                  VALUES (
+                    param_agent_id,
+                    in_loop_user_id,
+                    2, --  this is DRTINSC
+                    'P',
+                    inv_payment_ref,
+                    full_fare_DRTINSC,
+                    'M',
+                    in_loop_paydate,
+                    CONCAT(inv_description, ' frais fixe Mvola')
+                  );
+                  SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                  -- Update the xref
+                  INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                  -- Update in loop amount
+                  SET in_loop_amount = in_loop_amount - full_fare_DRTINSC;
+              END IF;
+              -- END OF NORMAL CASE
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+          ELSEIF (param_case_operation = 'A') THEN
+              -- In that case we must have zero input
+              -- WE ARE IN CASE A
+              -- Droit test entretien ou concours
+              IF (did_pay_DTSTENT = 0) AND (in_loop_amount >= (full_fare_DTSTENT - discount_ATSTENT_amt)) THEN
+
+
+                  IF ((full_fare_DTSTENT - discount_ATSTENT_amt) > 0) THEN
+                        INSERT INTO uac_payment (
+                          agent_id,
+                          user_id,
+                          ref_fsc_id,
+                          status,
+                          payment_ref,
+                          input_amount,
+                          type_of_payment,
+                          pay_date,
+                          comment
+                        )
+                        VALUES (
+                          param_agent_id,
+                          in_loop_user_id,
+                          1, --  this is DTSTENT
+                          'P',
+                          inv_payment_ref,
+                          (full_fare_DTSTENT - discount_ATSTENT_amt),
+                          'M',
+                          in_loop_paydate,
+                          CONCAT(inv_description, ' frais fixe Mvola')
+                        );
+                        SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                        -- Update the xref
+                        INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                        SET in_loop_amount = in_loop_amount - (full_fare_DTSTENT - discount_ATSTENT_amt);
+                  END IF;
+
+                  IF (discount_ATSTENT_amt > 0) THEN
+                      -- Exemption
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        1, --  this is DTSTENT
+                        'P',
+                        inv_payment_ref,
+                        discount_ATSTENT_amt,
+                        'E',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+                  END IF;
+
+                  -- After an exemption we do not need to update in loop amount
+              END IF;
+              -- WE ARE IN CASE A
+              -- Droit inscription
+              IF (did_pay_DRTINSC = 0) AND (in_loop_amount >= (full_fare_DRTINSC - discount_ARTINSC_amt)) THEN
+
+                  IF ((full_fare_DRTINSC - discount_ARTINSC_amt) > 0) THEN
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        2, --  this is DRTINSC
+                        'P',
+                        inv_payment_ref,
+                        (full_fare_DRTINSC - discount_ARTINSC_amt),
+                        'M',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                      -- Update in loop amount
+                      SET in_loop_amount = in_loop_amount - (full_fare_DRTINSC - discount_ARTINSC_amt);
+                  END IF;
+
+                  IF (discount_ARTINSC_amt > 0) THEN
+                        INSERT INTO uac_payment (
+                          agent_id,
+                          user_id,
+                          ref_fsc_id,
+                          status,
+                          payment_ref,
+                          input_amount,
+                          type_of_payment,
+                          pay_date,
+                          comment
+                        )
+                        VALUES (
+                          param_agent_id,
+                          in_loop_user_id,
+                          2, --  this is DRTINSC
+                          'P',
+                          inv_payment_ref,
+                          discount_ARTINSC_amt,
+                          'E',
+                          in_loop_paydate,
+                          CONCAT(inv_description, ' frais fixe Mvola')
+                        );
+                        SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                        -- Update the xref
+                        INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+                  END IF;
+              END IF;
+              -- END OF ANCIEN CASE
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+
+          ELSEIF (param_case_operation = 'T') THEN
+              -- In that case we must have zero input
+              -- WE ARE IN CASE T
+              -- Droit test entretien ou concours
+              IF (did_pay_DTSTENT = 0) AND (in_loop_amount >= (full_fare_DTSTENT - discount_TTSTENT_amt)) THEN
+
+                  IF ((full_fare_DTSTENT - discount_TTSTENT_amt) > 0) THEN
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        1, --  this is DTSTENT
+                        'P',
+                        inv_payment_ref,
+                        (full_fare_DTSTENT - discount_TTSTENT_amt),
+                        'M',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe avec Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                      -- Update in loop amount
+                      SET in_loop_amount = in_loop_amount - (full_fare_DTSTENT - discount_TTSTENT_amt);
+                  END IF;
+
+                  IF (discount_TTSTENT_amt > 0) THEN
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        1, --  this is DTSTENT
+                        'P',
+                        inv_payment_ref,
+                        discount_TTSTENT_amt,
+                        'E',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+                  END IF;
+              END IF;
+              -- WE ARE IN CASE T
+              -- Droit inscription
+              IF (did_pay_DRTINSC = 0) AND (in_loop_amount >= (full_fare_DRTINSC - discount_TRTINSC_amt)) THEN
+
+                  IF ((full_fare_DRTINSC - discount_TRTINSC_amt) > 0) THEN
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        2, --  this is DRTINSC
+                        'P',
+                        inv_payment_ref,
+                        (full_fare_DRTINSC - discount_TRTINSC_amt),
+                        'M',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+                      -- Update in loop amount
+                      SET in_loop_amount = in_loop_amount - (full_fare_DRTINSC - discount_TRTINSC_amt);
+                  END IF;
+
+                  -- There is no insert of exemption as it is zero
+                  IF (discount_TRTINSC_amt > 0) THEN
+                      INSERT INTO uac_payment (
+                        agent_id,
+                        user_id,
+                        ref_fsc_id,
+                        status,
+                        payment_ref,
+                        input_amount,
+                        type_of_payment,
+                        pay_date,
+                        comment
+                      )
+                      VALUES (
+                        param_agent_id,
+                        in_loop_user_id,
+                        2, --  this is DRTINSC
+                        'P',
+                        inv_payment_ref,
+                        discount_TRTINSC_amt,
+                        'E',
+                        in_loop_paydate,
+                        CONCAT(inv_description, ' frais fixe Mvola')
+                      );
+                      SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+                      -- Update the xref
+                      INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+                  END IF;
+              END IF;
+
+              -- END OF TRANSFERT CASE
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+              -- **********************************************************************************
+          ELSE
+            -- Then we are zero. We do nothing
+            SELECT 1 INTO no_operation;
+          END IF;
+
+
+          SET debug_msg = CONCAT(debug_msg, '/in_loop_amount 2/', CAST(in_loop_amount as CHAR(10)));
+          -- WE NEED FRAIS GENERAUX
+          -- **********************************************************************************
+          -- **********************************************************************************
+          -- **********************************************************************************
+          -- **********************************************************************************
+          -- **********************************************************************************
+          -- **********************************************************************************
+          IF (did_pay_FRAIGEN = 0) AND (in_loop_amount >= full_fare_FRAIGEN) THEN
+
+              INSERT INTO uac_payment (
+                agent_id,
+                user_id,
+                ref_fsc_id,
+                status,
+                payment_ref,
+                input_amount,
+                type_of_payment,
+                pay_date,
+                comment
+              )
+              VALUES (
+                param_agent_id,
+                in_loop_user_id,
+                3, --  this is DTSTENT
+                'P',
+                inv_payment_ref,
+                full_fare_FRAIGEN,
+                'M',
+                in_loop_paydate,
+                CONCAT(inv_description, ' frais fixe Mvola')
+              );
+              SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
+              -- Update the xref
+              INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, param_mvola_id);
+
+              -- Update in loop amount
+              SET in_loop_amount = in_loop_amount - full_fare_FRAIGEN;
+          END IF;
+          -- If paid or not enough we go on tranche
+          -- END OF FRAIS FIXE
+          /*
           SET i_u = 0;
                       WHILE (i_u < nbr_of_unpaid_u)
                             AND (in_loop_amount > 0)
@@ -507,6 +930,7 @@ BEGIN
                             IF (in_loop_amount > in_loop_u_amount) THEN
                                 -- Then create the payment
                                 INSERT INTO uac_payment (
+                                  agent_id,
                                   user_id,
                                   ref_fsc_id,
                                   status,
@@ -517,10 +941,11 @@ BEGIN
                                   comment
                                 )
                                 VALUES (
+                                  param_agent_id,
                                   in_loop_user_id,
                                   in_loop_u_ref_id,
                                   'P',
-                                  CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(param_mvola_id, 5, '0'), 'P'),
+                                  inv_payment_ref,
                                   in_loop_u_amount,
                                   'M',
                                   in_loop_paydate,
@@ -540,9 +965,15 @@ BEGIN
 
                         SET i_u = i_u + 1;
                       END WHILE;
+          */
 
-
-
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
+          -- ************************************************************************************************************************
           -- in_loop_username replace by param_username
           -- nbr_of_unpaid_t
           -- i_t
@@ -615,6 +1046,7 @@ BEGIN
 
                               -- Then create the payment
                               INSERT INTO uac_payment (
+                                agent_id,
                                 user_id,
                                 ref_fsc_id,
                                 status,
@@ -625,14 +1057,15 @@ BEGIN
                                 comment
                               )
                               VALUES (
+                                param_agent_id,
                                 in_loop_user_id,
                                 in_loop_t_ref_id,
                                 'P',
-                                CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(param_mvola_id, 5, '0'), 'P'),
+                                inv_payment_ref,
                                 CASE WHEN (in_loop_amount > in_loop_t_amount) THEN in_loop_t_amount ELSE in_loop_amount END,
                                 'M',
                                 in_loop_paydate,
-                                CONCAT(inv_description, ' frais tranche avec Mvola')
+                                CONCAT(inv_description, ' frais tranche Mvola')
                               );
                               SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
                               -- Update the xref
@@ -653,6 +1086,7 @@ BEGIN
                   -- It will be saved has solde excedent to not be used
                   IF (in_loop_amount > 0) THEN
                       INSERT INTO uac_payment (
+                        agent_id,
                         user_id,
                         ref_fsc_id,
                         status,
@@ -663,14 +1097,15 @@ BEGIN
                         comment
                       )
                       VALUES (
+                        param_agent_id,
                         in_loop_user_id,
                         (SELECT MAX(id) FROM uac_ref_frais_scolarite WHERE code = 'UNUSEDM'),
                         'P',
-                        CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(param_mvola_id, 5, '0'), 'P'),
+                        inv_payment_ref,
                         in_loop_amount,
                         'M',
                         in_loop_paydate,
-                        'Solde excedent Mvola'
+                        CONCAT(inv_description, 'Solde excedent Mvola')
                       );
                       SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
                       -- Update the xref
@@ -679,10 +1114,12 @@ BEGIN
                       SET in_loop_amount = 0;
                   END IF;
 
+        SET debug_msg = CONCAT(debug_msg, '/in_loop_amount 3/', CAST(in_loop_amount as CHAR(10)));
         -- END the line
         IF (param_attribution = 'N') THEN
             UPDATE uac_mvola_line uml
               SET uml.status = 'END',
+              uml.comment = CONCAT('Auto. ', param_username, ' ', uml.comment),
               uml.update_date = CURRENT_TIMESTAMP
               WHERE uml.id = param_mvola_id AND status = 'INP';
         ELSE
@@ -700,7 +1137,10 @@ BEGIN
             WHERE ulm.id = param_mvola_id AND ulm.status = 'NUD';
         END IF;
 
+        -- SELECT debug_msg AS return_debug_msg;
+
 END$$
+
 
 -- This SP will pay the amount from MVOLA
 -- It will take first the Frai Mvola then pay Frais fixe
@@ -708,7 +1148,8 @@ END$$
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS SRV_CRT_CRAMvola$$
-CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_account_phone VARCHAR(20),
+CREATE PROCEDURE `SRV_CRT_CRAMvola` (IN param_agent_id BIGINT,
+                                      IN param_account_phone VARCHAR(20),
                                       IN param_account_name VARCHAR(100),
                                       IN param_start_date VARCHAR(10),
                                       IN param_end_date VARCHAR(10),
@@ -741,39 +1182,27 @@ BEGIN
     DECLARE inv_working_mvola_id BIGINT;
     DECLARE in_loop_username    VARCHAR(10);
 
+    DECLARE transac_ref_duplicate VARCHAR(20);
+
+
 
     DECLARE in_loop_user_id     BIGINT;
-    /*
-    DECLARE in_loop_amount      INT;
-    DECLARE in_loop_paydate     DATETIME;
-    DECLARE in_loop_fsc_id      INT;
-    DECLARE in_loop_xref_pay_id BIGINT;
-
-
-
-    -- run the loop now of Frais Fixe and Tranche now
-    -- Loop inside the loop
-    DECLARE nbr_of_unpaid_u     SMALLINT UNSIGNED;
-    DECLARE i_u                 SMALLINT UNSIGNED;
-    DECLARE in_loop_u_ref_id    INT UNSIGNED;
-    DECLARE in_loop_u_amount    INT;
-
-    DECLARE nbr_of_unpaid_t     SMALLINT UNSIGNED;
-    DECLARE i_t                 SMALLINT UNSIGNED;
-    DECLARE in_loop_t_ref_id    INT UNSIGNED;
-    DECLARE in_loop_t_amount    INT;
-    */
 
 
     SELECT NOW() INTO param_last_update;
     SELECT 'MVOLOAD' INTO inv_flow_code;
     SELECT COUNT(1) INTO concurrent_flow FROM uac_working_flow WHERE status = 'NEW' AND flow_code = inv_flow_code;
 
+    -- Necessary for check minimum amount
+    SELECT amount INTO uac_param_frais_mvola FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
+    SELECT par_int INTO uac_param_min_amount FROM uac_param WHERE key_code = 'MINAMOU';
+
+
     IF concurrent_flow > 0 THEN
         -- A flow is running we input a CAN line
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, last_update, comment) VALUES (inv_flow_code, 'CAN', CURRENT_DATE, 0, NOW(), 'Concurrent flow running');
 
-        SELECT 5 AS CODE_SP, 'ERR892MV Fichier encore en cours integration. ' AS FEEDBACK_SP;
+        SELECT 5 AS CODE_SP, 'ERR892MV un fichier encore en cours integration uac_working_flow flow_code MVOLOAD' AS FEEDBACK_SP;
     ELSE
 
         INSERT INTO uac_working_flow (flow_code, status, working_date, working_part, filename, last_update) VALUES (inv_flow_code, 'NEW', CURRENT_DATE, 0, param_filename, NOW());
@@ -914,6 +1343,50 @@ BEGIN
                     SELECT transac_ref FROM uac_mvola_line
                   );
 
+        -- Work on the specific case where we need to update if there are droit payed or not
+        -- If not paid we need to set as NUD + comment
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Droit DTSTENT inscription indéfini',
+                status = 'NUD',
+                update_date = NOW()
+                  WHERE status = 'INP'
+                  AND master_id = inv_master_id
+                  -- We handle here the Credit only
+                  AND CAST(load_amount AS SIGNED) > 0
+                  AND core_user_id NOT IN (
+                    SELECT user_id FROM uac_payment
+                    WHERE status = 'P'
+                    AND ref_fsc_id IN (
+                      SELECT id FROM uac_ref_frais_scolarite WHERE code IN ('DTSTENT')
+                    )
+                  );
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Droit DRTINSC inscription indéfini',
+                status = 'NUD',
+                update_date = NOW()
+                  WHERE status = 'INP'
+                  AND master_id = inv_master_id
+                  -- We handle here the Credit only
+                  AND CAST(load_amount AS SIGNED) > 0
+                  AND core_user_id NOT IN (
+                    SELECT user_id FROM uac_payment
+                    WHERE status = 'P'
+                    AND ref_fsc_id IN (
+                      SELECT id FROM uac_ref_frais_scolarite WHERE code IN ('DRTINSC')
+                    )
+                  );
+
+        UPDATE uac_load_mvola SET
+                reject_reason = 'Montant insuffisant Frais et minimum',
+                status = 'INV',
+                update_date = NOW()
+                  WHERE status = 'NUD'
+                  AND master_id = inv_master_id
+                  -- We handle here the Credit only
+                  AND CAST(load_amount AS SIGNED) > 0
+                  AND CAST(load_amount AS SIGNED) < (uac_param_frais_mvola + uac_param_min_amount);
+
+
         /************************************************************************************/
         /************************************************************************************/
         /************************************************************************************/
@@ -1018,8 +1491,6 @@ BEGIN
           CASE WHEN core_amount > 0 THEN 'C' ELSE 'D' END
         FROM uac_load_mvola WHERE status = 'INP' AND master_id = inv_master_id;
 
-        SELECT amount INTO uac_param_frais_mvola FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
-        SELECT par_int INTO uac_param_min_amount FROM uac_param WHERE key_code = 'MINAMOU';
 
         -- We would need it again when we treat the payment
         -- STILL Need to be created in mvola line because we need to show it to the student
@@ -1057,272 +1528,10 @@ BEGIN
 
           -- We call here the main operation !
           -- Line by line we will loop
-          CALL CLI_CRT_LineAttribuerMvola(in_loop_username, inv_working_mvola_id, 'N');
-
-          /*
-
-          -- Update the line on which we are working on
-          UPDATE uac_mvola_line uml
-            SET uml.status = 'INP'
-            WHERE uml.id = inv_working_mvola_id AND status = 'NEW';
-
-            -- DECLARE in_loop_user_id     BIGINT;
-            -- DECLARE in_loop_amount      INT;
-            -- DECLARE in_loop_paydate     DATETIME;
-            SELECT
-              uml.user_id,
-              uml.core_amount,
-              uml.core_cra_datetime
-                INTO
-                in_loop_user_id,
-                in_loop_amount,
-                in_loop_paydate
-              FROM uac_mvola_line uml WHERE uml.id = inv_working_mvola_id;
-
-            -- Pay the frais Mvola
-            SET in_loop_amount =  in_loop_amount - uac_param_frais_mvola;
-            SELECT id INTO in_loop_fsc_id FROM uac_ref_frais_scolarite WHERE code = 'FRMVOLA';
-
-            -- Insert here the frais
-            INSERT INTO uac_payment (
-              user_id,
-              ref_fsc_id,
-              status,
-              payment_ref,
-              input_amount,
-              type_of_payment,
-              pay_date,
-              comment
-            )
-            VALUES (
-              in_loop_user_id,
-              in_loop_fsc_id,
-              'P',
-              CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(inv_working_mvola_id, 5, '0'), 'P'),
-              uac_param_frais_mvola,
-              'M',
-              in_loop_paydate,
-              'Frais transaction Mvola'
-            );
-            SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
-            -- Update the xref
-            INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, inv_working_mvola_id);
-
-            -- run the loop now of Frais Fixe and Tranche now
-            -- Loop inside the loop
-            -- nbr_of_unpaid_u
-            -- i_u
-            -- in_loop_u_ref_id
-            -- in_loop_u_amount
-
-            SELECT COUNT(1) INTO nbr_of_unpaid_u FROM v_histopayment_for_user vpu
-              WHERE vpu.VSH_USER_ID = in_loop_user_id
-              AND vpu.REF_TYPE = 'U'
-              AND vpu.UP_ID IS NULL;
-
-            -- ****************************************
-            -- Perform the loop here for payment U here
-            -- xxx
-            -- ****************************************
-            SET i_u = 0;
-                        WHILE (i_u < nbr_of_unpaid_u)
-                              AND (in_loop_amount > 0)
-                              DO
-
-                              -- Retrieve the ref id first
-                              SELECT MIN(REF_ID) INTO in_loop_u_ref_id
-                              FROM v_histopayment_for_user vpu
-                                WHERE vpu.VSH_USER_ID = in_loop_user_id
-                                AND vpu.REF_TYPE = 'U'
-                                AND vpu.UP_ID IS NULL;
-
-                              -- Retrieve the amount  first
-                              SELECT REF_AMOUNT INTO in_loop_u_amount
-                              FROM v_histopayment_for_user vpu
-                                WHERE vpu.VSH_USER_ID = in_loop_user_id
-                                AND vpu.REF_TYPE = 'U'
-                                AND vpu.UP_ID IS NULL
-                                AND vpu.REF_ID = in_loop_u_ref_id;
-
-                              IF (in_loop_amount > in_loop_u_amount) THEN
-                                  -- Then create the payment
-                                  INSERT INTO uac_payment (
-                                    user_id,
-                                    ref_fsc_id,
-                                    status,
-                                    payment_ref,
-                                    input_amount,
-                                    type_of_payment,
-                                    pay_date,
-                                    comment
-                                  )
-                                  VALUES (
-                                    in_loop_user_id,
-                                    in_loop_u_ref_id,
-                                    'P',
-                                    CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(inv_working_mvola_id, 5, '0'), 'P'),
-                                    in_loop_u_amount,
-                                    'M',
-                                    in_loop_paydate,
-                                    'Paiement frais fixe avec Mvola'
-                                  );
-                                  SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
-                                  -- Update the xref
-                                  INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, inv_working_mvola_id);
-                                  SET in_loop_amount = in_loop_amount - in_loop_u_amount;
-
-                              -- ELSE
-                                -- We keep the amount for future in Tranche
-                                -- Do nothing
-                                -- SELECT 1;
-                              END IF;
+          -- We nee to check here if there is already Droits Incription test ou concours are paid
+          CALL CLI_CRT_LineAttribuerMvola(param_agent_id, in_loop_username, inv_working_mvola_id, 'N', '0');
 
 
-                          SET i_u = i_u + 1;
-                        END WHILE;
-
-
-
-            -- in_loop_username
-            -- nbr_of_unpaid_t
-            -- i_t
-            -- in_loop_t_ref_id
-            -- in_loop_t_amount
-
-            -- ****************************************
-            -- Perform the loop here for payment T here
-            -- ****************************************
-            SELECT USERNAME INTO in_loop_username FROM v_showuser WHERE ID = in_loop_user_id;
-            SELECT COUNT(1) INTO nbr_of_unpaid_t FROM (
-              SELECT vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                FROM v_original_to_pay_for_user vop
-                  LEFT JOIN uac_payment up
-                    ON vop.REF_ID = up.ref_fsc_id
-                    AND up.user_id = vop.VSH_ID AND up.type_of_payment = 'L'
-                    WHERE vop.VSH_USERNAME = in_loop_username
-                    AND vop.TRANCHE_CODE NOT IN (
-                      SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu
-                      WHERE tvpu.VSH_USERNAME = in_loop_username)
-                      UNION
-                      SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                      FROM v_left_to_pay_for_user vpu
-                      LEFT JOIN uac_payment up
-                      ON vpu.REF_ID = up.ref_fsc_id AND up.user_id = vpu.VSH_ID AND up.type_of_payment = 'L'
-                      WHERE VSH_USERNAME = in_loop_username) t WHERE t.REST_TO_PAY > 0;
-
-            SET i_t = 0;
-                    WHILE (i_t < nbr_of_unpaid_t)
-                          AND (in_loop_amount > 0)
-                          DO
-
-                          -- Retrieve the first ref id
-                          SELECT MIN(REF_ID) INTO in_loop_t_ref_id FROM (
-                            SELECT vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                              FROM v_original_to_pay_for_user vop
-                                LEFT JOIN uac_payment up
-                                  ON vop.REF_ID = up.ref_fsc_id
-                                  AND up.user_id = vop.VSH_ID AND up.type_of_payment = 'L'
-                                  WHERE vop.VSH_USERNAME = in_loop_username
-                                  AND vop.TRANCHE_CODE NOT IN (
-                                    SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu
-                                    WHERE tvpu.VSH_USERNAME = in_loop_username)
-                                    UNION
-                                    SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                                    FROM v_left_to_pay_for_user vpu
-                                    LEFT JOIN uac_payment up
-                                    ON vpu.REF_ID = up.ref_fsc_id AND up.user_id = vpu.VSH_ID AND up.type_of_payment = 'L'
-                                    WHERE VSH_USERNAME = in_loop_username) t WHERE t.REST_TO_PAY > 0;
-
-                            -- Retrieve the loop t amount
-                            SELECT REST_TO_PAY INTO in_loop_t_amount FROM (
-                              SELECT vop.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                                FROM v_original_to_pay_for_user vop
-                                  LEFT JOIN uac_payment up
-                                    ON vop.REF_ID = up.ref_fsc_id
-                                    AND up.user_id = vop.VSH_ID AND up.type_of_payment = 'L'
-                                    WHERE vop.VSH_USERNAME = in_loop_username
-                                    AND vop.TRANCHE_CODE NOT IN (
-                                      SELECT tvpu.TRANCHE_CODE FROM v_left_to_pay_for_user tvpu
-                                      WHERE tvpu.VSH_USERNAME = in_loop_username)
-                                      UNION
-                                      SELECT vpu.*, IFNULL(up.type_of_payment, 'N') AS COMMITMENT_LETTER
-                                      FROM v_left_to_pay_for_user vpu
-                                      LEFT JOIN uac_payment up
-                                      ON vpu.REF_ID = up.ref_fsc_id AND up.user_id = vpu.VSH_ID AND up.type_of_payment = 'L'
-                                      WHERE VSH_USERNAME = in_loop_username) t WHERE t.REST_TO_PAY > 0 AND t.REF_ID = in_loop_t_ref_id;
-
-                                -- Then create the payment
-                                INSERT INTO uac_payment (
-                                  user_id,
-                                  ref_fsc_id,
-                                  status,
-                                  payment_ref,
-                                  input_amount,
-                                  type_of_payment,
-                                  pay_date,
-                                  comment
-                                )
-                                VALUES (
-                                  in_loop_user_id,
-                                  in_loop_t_ref_id,
-                                  'P',
-                                  CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(inv_working_mvola_id, 5, '0'), 'P'),
-                                  CASE WHEN (in_loop_amount > in_loop_t_amount) THEN in_loop_t_amount ELSE in_loop_amount END,
-                                  'M',
-                                  in_loop_paydate,
-                                  'Paiement tranche avec Mvola'
-                                );
-                                SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
-                                -- Update the xref
-                                INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, inv_working_mvola_id);
-                                -- We need to manage the rest of amount
-                                IF (in_loop_amount > in_loop_t_amount) THEN
-                                    SET in_loop_amount = in_loop_amount - in_loop_t_amount;
-                                ELSE
-                                    SET in_loop_amount = 0;
-                                END IF;
-
-                      SET i_t = i_t + 1;
-                    END WHILE;
-
-
-                    -- HANDLE TOO MUCH AMOUNT OF MONEY !!!
-                    -- In this case if we have still too much money from the student then we have to save it somewhere
-                    -- It will be saved has solde excedent to not be used
-                    IF (in_loop_amount > 0) THEN
-                        INSERT INTO uac_payment (
-                          user_id,
-                          ref_fsc_id,
-                          status,
-                          payment_ref,
-                          input_amount,
-                          type_of_payment,
-                          pay_date,
-                          comment
-                        )
-                        VALUES (
-                          in_loop_user_id,
-                          (SELECT MAX(id) FROM uac_ref_frais_scolarite WHERE code = 'UNUSEDM'),
-                          'P',
-                          CONCAT(SUBSTRING(DATE_FORMAT(CURRENT_TIMESTAMP, "%Y"), 4, 1), DATE_FORMAT(CURRENT_TIMESTAMP, "%j"), LPAD(inv_working_mvola_id, 5, '0'), 'P'),
-                          in_loop_amount,
-                          'M',
-                          in_loop_paydate,
-                          'Solde excedent Mvola'
-                        );
-                        SELECT LAST_INSERT_ID() INTO in_loop_xref_pay_id;
-                        -- Update the xref
-                        INSERT INTO uac_xref_payment_mvola (payment_id, mvola_id) VALUES (in_loop_xref_pay_id, inv_working_mvola_id);
-                        -- Make sure the amount has been used fully
-                        SET in_loop_amount = 0;
-                    END IF;
-
-          -- END the line
-          UPDATE uac_mvola_line uml
-            SET uml.status = 'END'
-            WHERE uml.id = inv_working_mvola_id AND status = 'INP';
-
-            */
           -- END Do the operation
           SET i = i + 1;
         END WHILE;
@@ -1386,23 +1595,3 @@ BEGIN
 
 END$$
 -- End of SRV_CRT_CRAMvola
--- Remove $$ for OVH
-
-/*
-delete from uac_mvola_master;
-
-delete from uac_load_mvola;
-
-delete from uac_mvola_line;
-
-delete from uac_payment where id in ( select payment_id from uac_xref_payment_mvola );
-delete from uac_xref_payment_mvola;
-update uac_working_flow set status = 'CAN' where flow_code = 'MVOLOAD'
-
-TRUNCATE TABLE uac_facilite_payment;
-TRUNCATE TABLE uac_payment;
-TRUNCATE TABLE uac_mvola_master;
-TRUNCATE TABLE uac_load_mvola;
-TRUNCATE TABLE uac_mvola_line;
-TRUNCATE TABLE uac_xref_payment_mvola;
-UPDATE uac_working_flow SET status = 'CAN' WHERE flow_code = 'MVOLOAD';

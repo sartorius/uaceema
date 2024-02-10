@@ -19,7 +19,17 @@
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     const getToken = '{{ result_get_token }}';
 
+    const CURRENT_AGENT_ID_STR = '{{ id }}';
 
+
+    // DISCOUNT
+    let dataAllDispDiscountToJsonArray = JSON.parse('{{ result_alldisplay_discount_query | json_encode | raw }}');
+    let dataAllSetUpDiscountToJsonArray = JSON.parse('{{ result_allsetup_discount_query | json_encode | raw }}');
+    let dataAllFixedFaresToJsonArray = JSON.parse('{{ result_allfixed_fares_query | json_encode | raw }}');
+    
+    let invMVOAmountNUD = 0;
+    // case can be N: Normal, A: Ancien, T: Transfert, 0: nothing
+    let invCaseOperation = '0';
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
@@ -37,7 +47,7 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <h2>Manager Mvola</h2>
+    <h1>Manager Mvola</h1>
     <hr>
   </div>
   <div class="col-1">
@@ -101,9 +111,10 @@
             <div id='assign-mvo'>
             <hr>
                 <div class='pop-up-title'><i class="icon-map-signs"></i>&nbsp;Attribuer ce paiement à un étudiant</div>
-                <i class="recap-mis"><span class="icon-exclamation-triangle nav-icon-fa nav-text"></span></i>&nbsp;Confirmez bien les informations en bleu avant d'attribuer le Mvola. Rappelez à l'étudiant que des frais additionnels Mvola vont être prélevés automatiquement.<br>
-                <i class="recap-mis"><span class="icon-exclamation-triangle nav-icon-fa nav-text"></span></i>&nbsp;Si l'étudiant <strong>est un ancien</strong>, vous devez absolument faire une exemption du droit de [test ou entretien] sinon ça sera débité automatiquement.
-                
+                <i class="recap-mis"><span class="icon-exclamation-triangle nav-icon-fa nav-text"></span></i>&nbsp;Confirmez bien les informations en bleu avant d'attribuer le Mvola. Rappelez à l'étudiant que des frais additionnels Mvola [<i id="frais-mvola-disp"></i>] vont être prélevés automatiquement.<br>
+                <br>
+                <div id="warn-pay-msg" class="blue-txt">
+                </div>
                 <br>
                 <span class="icon-person nav-icon-fa nav-text"></span>&nbsp;<i id="last-read-bc" class="mgs-addpay-lg"></i><br>
                 
@@ -111,6 +122,26 @@
                     <input class="form-control mgs-readacebc" rows="1" id="addpay-ace" name="inputUserName" placeholder="Scannez username">
                 </div>
                 <div id='scan-mvo-btn'>
+                    <div id="att-case-pan" class="pay-big-blk">
+                          <div id="warn-partial-dic" class="mgs-note">
+                              
+                          </div>
+                          <div id="btn-case-1" class="drt-big-btn pay-md-btn-txt drt-opt-btn-std init-deactive drt-shortcut">
+                            <br>Droits<br>nouveau &nbsp;<i class="icon-suitcase nav-text"></i><br>
+                            <i class="med-btn-txt btn-amt-col">(<i id="disc-case-n">AMTC AR</i>)</i><br>
+                            <i class="med-btn-txt btn-left-amt-col">Reste: <i id="disc-left-case-n">AMTC AR</i></i>
+                          </div>
+                          <div id="btn-case-2" class="drt-big-btn pay-md-btn-txt drt-opt-btn-exp init-deactive drt-shortcut">
+                            <br>Droits exemption<br>ancien &nbsp;<i class="icon-android-list nav-text"></i><br>
+                            <i class="med-btn-txt btn-amt-col">(<i id="disc-case-a">AMTC AR</i>)</i><br>
+                            <i class="med-btn-txt btn-left-amt-col">Reste: <i id="disc-left-case-a">AMTC AR</i></i>
+                          </div>
+                          <div id="btn-case-3" class="drt-big-btn pay-md-btn-txt drt-opt-btn-exp init-deactive drt-shortcut">
+                            <br>Droits exemption<br>transfert &nbsp;<i class="icon-map-signs nav-text"></i><br>
+                            <i class="med-btn-txt btn-amt-col">(<i id="disc-case-t">AMTC AR</i>)</i><br>
+                            <i class="med-btn-txt btn-left-amt-col">Reste: <i id="disc-left-case-t">AMTC AR</i></i>
+                          </div>
+                    </div>
                     <button onclick="generateAttribuerMvo()" id='btn-attmvo' class="btn btn-lg btn-default btn-block">Attribuer à <i id='ctrl-name'></i></button>
                     <button onclick="resetMvoAttribuer()" id='btn-canattmvo' class="btn btn-md btn-outline-dark btn-block">Annuler</button>
                 </div>

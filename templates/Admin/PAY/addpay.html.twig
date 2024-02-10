@@ -10,7 +10,14 @@
     let dataAllUSRNToJsonArray = JSON.parse('{{ result_all_usrn | json_encode | raw }}');
     let dataAllREDUCToJsonArray = JSON.parse('{{ result_all_reduc | json_encode | raw }}');
     let dataAllOPEToJsonArray = JSON.parse('{{ result_allope_query | json_encode | raw }}');
+
+    // DISCOUNT
+    let dataAllDispDiscountToJsonArray = JSON.parse('{{ result_alldisplay_discount_query | json_encode | raw }}');
+    let dataAllSetUpDiscountToJsonArray = JSON.parse('{{ result_allsetup_discount_query | json_encode | raw }}');
     
+
+
+     
     
     let myTicket = new Array();
     let myRecap = new Array();
@@ -50,6 +57,7 @@
     let dataPaymentForUserJsonArray = new Array();
     let dataLeftOperationForUserJsonArray = new Array();
     let payUniLeftOperationForUserJsonArray = new Array();
+    let payShortCutOperationForUserJsonArray = new Array();
     let dataSumPerTranche = new Array();
 
 
@@ -61,6 +69,12 @@
     let maxManualAmount = 0;
     // This will be used to define which fisc ID is involved
     let invFscId = 0;
+
+    // This will be used which shortcut discount is used
+    // 1 is normal
+    // 2 is ancient
+    // 3 is transfert
+    let invShortCutDiscountId = 0;
     // C for Cash and H for Check
     let invTypeOfPayment = 'C';
     // F for Facilite or P for Payment
@@ -82,6 +96,8 @@
       //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
     const formatterDateFR = new Intl.DateTimeFormat('fr-FR');
+
+    const CURRENT_AGENT_ID_STR = '{{ id }}';
 
 
   </script>
@@ -231,6 +247,21 @@
               <br><i id="id-uni-left">UNI4</i><br>
               Totalité restante<br>
             </div>
+            <hr>
+            <h3>Raccourcis</h3>
+            <div id="btn-case-1" class="drt-big-btn pay-md-btn-txt drt-opt-btn-std init-deactive drt-shortcut">
+              <br>Droits<br>nouveau &nbsp;<i class="icon-suitcase nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="disc-case-n">AMTC AR</i></i>
+            </div>
+            <div id="btn-case-2" class="drt-big-btn pay-md-btn-txt drt-opt-btn-exp init-deactive drt-shortcut">
+              <br>Droits exemption<br>ancien &nbsp;<i class="icon-android-list nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="disc-case-a">AMTC AR</i></i>
+            </div>
+            <div id="btn-case-3" class="drt-big-btn pay-md-btn-txt drt-opt-btn-exp init-deactive drt-shortcut">
+              <br>Droits exemption<br>transfert &nbsp;<i class="icon-map-signs nav-text"></i><br>
+              <i class="med-btn-txt btn-amt-col"><i id="disc-case-t">AMTC AR</i></i>
+            </div>
+            <br><br><br>
 
       </div>
 

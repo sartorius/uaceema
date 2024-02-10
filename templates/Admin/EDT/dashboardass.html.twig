@@ -73,25 +73,25 @@
     </script>
 {% endif %}
 
-{% if result_query_hebdo_global_report is defined and result_query_hebdo_global_report is not null %}
+{% if result_query_excel_global_report is defined and result_query_excel_global_report is not null %}
   <script>
 
-    let dataTagToJsonArrayHebdoGblReport =JSON.parse('{{ result_query_hebdo_global_report | json_encode | raw }}');
+    let dataTagToJsonArrayExcelGblReport =JSON.parse('{{ result_query_excel_global_report | json_encode | raw }}');
   </script>
 {% else %}
     <script>
-      let dataTagToJsonArrayHebdoGblReport = "";
+      let dataTagToJsonArrayExcelGblReport = "";
     </script>
 {% endif %}
 
-{% if result_query_hebdo_global_compute_report is defined and result_query_hebdo_global_compute_report is not null %}
+{% if result_query_excel_global_compute_report is defined and result_query_excel_global_compute_report is not null %}
   <script>
 
-    let dataTagToJsonArrayHebdoGblComputeReport =JSON.parse('{{ result_query_hebdo_global_compute_report | json_encode | raw }}');
+    let dataTagToJsonArrayExcelGblComputeReport =JSON.parse('{{ result_query_excel_global_compute_report | json_encode | raw }}');
   </script>
 {% else %}
     <script>
-      let dataTagToJsonArrayHebdoGblComputeReport = "";
+      let dataTagToJsonArrayExcelGblComputeReport = "";
     </script>
 {% endif %}
 
@@ -109,7 +109,7 @@
   <div class="col-10">
     <button type="button" id="uac-ass-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
     &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours annulés</button>
-    &nbsp;<button type="button" id="uac-abs-pdt-xls" class="btn btn-outline-dark"><i class="icon-file-excel-o"></i>&nbsp;Hebdomadaire</button>
+    &nbsp;<button type="button" id="uac-abs-pdt-xls" class="btn btn-outline-dark"><i class="icon-file-excel-o"></i>&nbsp;Global</button>
   </div>
   <div class="col-1">
   </div>

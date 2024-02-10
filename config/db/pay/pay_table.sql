@@ -39,79 +39,79 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_frais_scolarite` (
 
 -- DELETE FROM uac_ref_frais_scolarite;
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (1, 'DTSTENT', 'Droit test ou entretien', 'Droit test ou entretien', 1, 50000, 'A', '2022-12-05', 'U');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (2, 'DRTINSC', 'Droit inscription', 'Droit inscription', 2, 150000, 'A', '2022-12-19', 'U');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (3, 'FRAIGEN', 'Frais généraux', 'Frais généraux', 3, 200000, 'A', '2022-12-19', 'U');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (13, 'CERTSCO', 'Certificat Scolarité', 'Certificat Scolarité', 4, 600, 'A', '2023-12-31', 'M');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (4, 'L1T1XXX', 'L1 Tranche 1 sur 3', 'L1 Tranche 1 sur 3', 20, 800000, 'A', '2023-01-31', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (5, 'L1T2XXX', 'L1 Tranche 2 sur 3', 'L1 Tranche 2 sur 3', 21, 850000, 'A', '2023-04-30', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (6, 'L1T3XXX', 'L1 Tranche 3 sur 3', 'L1 Tranche 3 sur 3', 22, 850000, 'A', '2023-07-31', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (7, 'L2L3T1X', 'L2/L3 Tranche 1 sur 3', 'L2/L3 Tranche 1 sur 3', 23, 850000, 'A', '2023-01-31', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (8, 'L2L3T2X', 'L2/L3 Tranche 2 sur 3', 'L2/L3 Tranche 2 sur 3', 24, 850000, 'A', '2023-04-30', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (9, 'L2L3T3X', 'L2/L3 Tranche 3 sur 3', 'L2/L3 Tranche 3 sur 3', 25, 850000, 'A', '2023-07-31', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (10, 'M1M2T1X', 'M1/M2 Tranche 1 sur 3', 'M1/M2 Tranche 1 sur 3', 26, 950000, 'A', '2023-04-30', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (11, 'M1M2T2X', 'M1/M2 Tranche 2 sur 3', 'M1/M2 Tranche 2 sur 3', 27, 950000, 'A', '2023-07-31', 'T');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (12, 'M1M2T3X', 'M1/M2 Tranche 3 sur 3', 'M1/M2 Tranche 3 sur 3', 28, 950000, 'A', '2023-09-30', 'T');
 
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (14, 'FRMVOLA', 'Frais additionnel écolage Mvola', 'Frais additionnel écolage Mvola', 90, 9000, 'A', '2023-12-31', 'F');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (1000, 'UNUSEDM', 'Solde excedentaire Mvola', 'Solde excedentaire Mvola', 100, 0, 'A', '2023-12-31', 'F');
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (0, 'CANCELX', 'Paiement annulé', 'Paiement annulé', 100, 0, 'A', '2023-12-31', 'F');
 
 --
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (15, 'CERTIFC', 'Certification', 'Certification', 50, 200, 'A', '2023-12-31', 'M');
 
 
-INSERT INTO uac_ref_frais_scolarite
+INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
 (16, 'CARTEET', 'Carte étudiant', 'Carte étudiant', 50, 1000, 'A', '2023-12-31', 'M');
 
@@ -128,53 +128,53 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_xref_cohort_fsc` (
 -- DELETE FROM uac_xref_cohort_fsc;
 
 -- Insert data for each level
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 1, id FROM v_class_cohort vcc;
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 2, id FROM v_class_cohort vcc;
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 3, id FROM v_class_cohort vcc;
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 13, id FROM v_class_cohort vcc;
 
 -- Insert Tranche for L1
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 4, id FROM v_class_cohort vcc where vcc.niveau = 'L1';
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 5, id FROM v_class_cohort vcc where vcc.niveau = 'L1';
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 6, id FROM v_class_cohort vcc where vcc.niveau = 'L1';
 
 -- Insert Tranche for L2/L3
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 7, id FROM v_class_cohort vcc where vcc.niveau IN ('L2', 'L3');
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 8, id FROM v_class_cohort vcc where vcc.niveau IN ('L2', 'L3');
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 9, id FROM v_class_cohort vcc where vcc.niveau IN ('L2', 'L3');
 
 -- Insert Tranche for M1/M2
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 10, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 11, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 12, id FROM v_class_cohort vcc where vcc.niveau IN ('M1', 'M2');
 
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 15, id FROM v_class_cohort vcc;
 
-INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 16, id FROM v_class_cohort vcc;
 
 -- REDUCTION FACILITE PAYMENT

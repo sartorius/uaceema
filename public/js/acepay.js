@@ -5,6 +5,7 @@ function generateFaciliteDBAndPrint(){
   $.ajax('/generatefaciliteDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         foundUserId: foundUserId,
         ticketRef: tempTicketRef,
         redPc: redPc,
@@ -43,6 +44,7 @@ function generateCertificatScoDBAndPrint(){
   $.ajax('/generateCertificatScoDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         foundUserId: foundUserId,
         invTypeOfPayment: invTypeOfPayment,
         ticketRef: tempTicketRef,
@@ -70,6 +72,7 @@ function generateOpeMultiDBAndPrint(param){
   $.ajax('/generateOpeMultiDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         foundUserId: foundUserId,
         invTypeOfPayment: invTypeOfPayment,
         ticketRef: tempTicketRef,
@@ -95,6 +98,7 @@ function generateValidateRedDBAndPrint(){
   $.ajax('/generateValidateRedDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         foundUserId: foundUserId,
         ticketRef: ticketRefToValidate,
         token: getToken
@@ -135,16 +139,24 @@ function generateValidateRedDBAndPrint(){
 function generatePayDBAndPrint(){
   let tempTicketRef = ticketRef + ticketType;
 
+  let arrayOperationToPass = payUniLeftOperationForUserJsonArray;
+  if(parseInt(invShortCutDiscountId) > 0){
+    arrayOperationToPass = payShortCutOperationForUserJsonArray;
+  }
+
 
   $.ajax('/generatepaymentDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         foundUserId: foundUserId,
         ticketRef: tempTicketRef,
         invAmountToPay: invAmountToPay,
         invFscId: invFscId,
+        // If this is used then we are doing a shortcut
+        invShortCutDiscountId: invShortCutDiscountId,
         invTypeOfPayment: invTypeOfPayment,
-        payUniLeftOperationForUserJsonArray: JSON.stringify(payUniLeftOperationForUserJsonArray),
+        payMultiOperationForUserJsonArray: JSON.stringify(arrayOperationToPass),
         token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
@@ -253,6 +265,7 @@ function generateCancelPaymentDBAndPrint(){
   $.ajax('/generateCancelPaymentDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         ticketRef: ticketRefPayment,
         token: getToken
       },  // data to submit
@@ -442,6 +455,8 @@ function setUniButtonsAndListener(){
   let totalUniLeftPay = 0;
   let atLeastOneFraisFixeIsOpen = 0;
 
+  let areAllDroitsShortCutAvailable = 'Y';
+
   
 
 
@@ -474,7 +489,7 @@ function setUniButtonsAndListener(){
 
         let myUniPayment = {
           fscId: dataPaymentForUserJsonArray[i].REF_ID.toString(),
-          typeOfPayment: 'C',
+          typeOfPayment: 'Z',
           inputAmount: dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()
           };
         payUniLeftOperationForUserJsonArray.push(myUniPayment);
@@ -484,6 +499,21 @@ function setUniButtonsAndListener(){
         $('#id-rawuniamt-' + invRefLineUnique).html('0');
         $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
         $( "#btn-uni-" + invRefLineUnique).addClass('deactive-btn');
+        
+        // *************************************************************************************
+        // *************************************************************************************
+        // *************************************************************************************
+        // *********** Specific hardcode because of shortcut droits
+        // *************************************************************************************
+        // *************************************************************************************
+        // *************************************************************************************
+        // We are on the first line up droit
+        // We are Droit test entretien ou inscription
+        if((invRefLineUnique == 1) 
+            || (invRefLineUnique == 2)){
+              areAllDroitsShortCutAvailable = 'N';
+        }
+        // *************************************************************************************
       }
       invRefLineUnique = invRefLineUnique + 1;
     }
@@ -499,6 +529,23 @@ function setUniButtonsAndListener(){
 
   }
 
+  // *************************************************************************************
+  // *************************************************************************************
+  // *************************************************************************************
+  // *********** Specific hardcode because of shortcut droits
+  // *************************************************************************************
+  // *************************************************************************************
+  // *************************************************************************************
+  // We are on the first line up droit
+  // We are Droit test entretien ou inscription
+  if(areAllDroitsShortCutAvailable == 'Y'){
+    $('.drt-shortcut').removeClass('deactive-btn');
+  }
+  else{
+    $('.drt-shortcut').addClass('deactive-btn');
+  }
+  // *************************************************************************************
+
   for(let k=1; k<4; k++){
       // Add listener
       $("#btn-uni-" + k).off('click');
@@ -511,6 +558,110 @@ function setUniButtonsAndListener(){
         $("#addp-pay-uni").hide(100);
         $("#addp-type-pay").show(300);
       });
+  }
+
+  for(let m=1; m<4; m++){
+    // Add listener
+    $("#btn-case-" + m).off('click');
+    $( "#btn-case-" + m).click(function() {
+
+        // Do specific operation of DROIT HERE
+        /*
+        invAmountToPay = parseInt($('#id-rawuniamt-' + k).html());
+        invFscId = parseInt($('#id-fscuni-' + k).html());
+        //console.log('You click on: ' + k + '/' + invAmountToPay);
+
+        logInAddPay(renderAmount(invAmountToPay));
+        */
+        // Get inspiration from pay the rest ! option left !
+        // We go for a discount cases
+        invFscId = 0;
+        invShortCutDiscountId = m;
+        if(m == 1){
+          // Nouveau
+          // 200 000AR
+          logInAddPay('Droit NOUVEAU');
+          logInAddPay(renderAmount(dataAllDispDiscountToJsonArray[0].GENUINE_AMOUNT));
+
+          let myPaymentDTSTENT = {
+            fscId: dataAllSetUpDiscountToJsonArray[0].FSC_ID.toString(),
+            // This will display the fsc id 1
+            typeOfPayment: 'Z',
+            inputAmount: dataAllSetUpDiscountToJsonArray[0].REF_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentDTSTENT);
+
+          let myPaymentDRTINSC = {
+            fscId: dataAllSetUpDiscountToJsonArray[1].FSC_ID.toString(),
+            // This will display the fsc id 2
+            typeOfPayment: 'Z',
+            inputAmount: dataAllSetUpDiscountToJsonArray[1].REF_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentDRTINSC);
+
+
+        }
+        else if(m == 2){
+          // Ancien
+          // 100 000AR
+          logInAddPay('Droit ANCIEN avec exemption');
+          logInAddPay(renderAmount(dataAllDispDiscountToJsonArray[0].FINAL_AMOUNT));
+
+
+
+          let myPaymentExemptDTSTENT = {
+            fscId: dataAllSetUpDiscountToJsonArray[0].FSC_ID.toString(),
+            // This will display the fsc id 1
+            typeOfPayment: 'E',
+            inputAmount: dataAllSetUpDiscountToJsonArray[0].DIS_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentExemptDTSTENT);
+
+          let myPaymentExemptDRTINSC = {
+            fscId: dataAllSetUpDiscountToJsonArray[1].FSC_ID.toString(),
+            // This will display the fsc id 2
+            typeOfPayment: 'E',
+            inputAmount: dataAllSetUpDiscountToJsonArray[1].DIS_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentExemptDRTINSC);
+
+          let myPaymentDRTINSC = {
+            fscId: dataAllSetUpDiscountToJsonArray[1].FSC_ID.toString(),
+            // This will display the fsc id 2
+            typeOfPayment: 'Z',
+            inputAmount: dataAllSetUpDiscountToJsonArray[1].FINAL_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentDRTINSC);
+
+        }
+        else{
+          //m == 3
+          // Transfert
+          // 150 000AR
+          logInAddPay('Droit TRANSFERT avec exemption');
+          logInAddPay(renderAmount(dataAllDispDiscountToJsonArray[1].FINAL_AMOUNT));
+
+          let myPaymentExemptDTSTENT = {
+            fscId: dataAllSetUpDiscountToJsonArray[2].FSC_ID.toString(),
+            // This will display the fsc id 1
+            typeOfPayment: 'E',
+            inputAmount: dataAllSetUpDiscountToJsonArray[2].DIS_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentExemptDTSTENT);
+
+          let myPaymentDRTINSC = {
+            fscId: dataAllSetUpDiscountToJsonArray[3].FSC_ID.toString(),
+            // This will display the fsc id 2
+            typeOfPayment: 'Z',
+            inputAmount: dataAllSetUpDiscountToJsonArray[3].FINAL_AMOUNT.toString()
+          };
+          payShortCutOperationForUserJsonArray.push(myPaymentDRTINSC);
+
+        }
+        $("#addp-pay-uni").hide(100);
+        $("#addp-type-pay").show(300);
+    });
+
   }
 
   //If the left is more than one then we open the button
@@ -540,6 +691,8 @@ $(document).ready(function() {
       // Initialisation
       $("#id-amo-note").html(INVALID_AMOUNT);
 
+      // Initialise discount
+      displayDiscount();
 
       /** START : Specific to add pay */
       $( "#btn-clear-addpay" ).click(function() {

@@ -2176,7 +2176,8 @@ img.part-img{
   font-weight: 400;
   margin-top: 15px;
 }
-.pay-big-btn{
+.pay-big-btn,
+.drt-big-btn{
   width: 30%;
   display: inline-block;
   border-radius: 5px;
@@ -2215,6 +2216,9 @@ img.part-img{
 .pay-big-btn-txt{
   font-size: 1em;
 }
+.pay-md-btn-txt{
+  font-size: 0.85em;
+}
 
 .pay-opt-btn-txt{
   font-size: 1.2em;
@@ -2232,9 +2236,16 @@ img.part-img{
 .btn-amt-col{
   color: gold;
 }
+.btn-left-amt-col{
+  color: rgb(255, 255, 255);
+}
 .pay-big-btn:hover{
   transform: scale(1.05);
   color: var(--main-gray-75);
+  cursor: pointer;
+}
+.drt-big-btn:hover{
+  background-color: var(--main-gray-25);
   cursor: pointer;
 }
 .msg-center-sm-notif{
@@ -2261,6 +2272,12 @@ img.part-img{
 }
 .red-opt-btn-ope{
   background-color: #003c0e;
+}
+.drt-opt-btn-std{
+  background-color: #3c3c3c;
+}
+.drt-opt-btn-exp{
+  background-color: #00356f; 
 }
 .red-opt-btn-2{
   background-color: #66496E;
@@ -2386,7 +2403,10 @@ img.part-img{
   padding-bottom: 1.5em;
   margin-bottom: 2.5em;
 }
-
+.disp-amt-mono{
+  font-family: "Roboto Mono" !important;
+  font-style: normal !important;
+}
 .line-pv-res{
   color: #0000d3;
 }
@@ -2723,4 +2743,9 @@ img.part-img{
   padding-left: 30px;
   padding-right: 30px;
   padding-bottom: 35px;
+}
+
+#att-case-pan{
+  margin-top: 10px;
+  margin-bottom: 20px;
 }

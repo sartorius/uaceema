@@ -14,7 +14,7 @@
     let cobSoldeMvola = 0;
       
     */
-
+/*
 function renderAmount(param){
     var len = param.toString().length;
     var result = '';
@@ -29,7 +29,7 @@ function renderAmount(param){
     }
     return result + '.AR';
 }
-
+*/
 
 function generateRecetteJourneeCSV(){
   const csvContentType = "data:text/csv;charset=utf-8,";
@@ -905,6 +905,11 @@ $(document).ready(function() {
             //$('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
             $('#disp-py-ben').html(getAriaryValue(dataYearRecapJsonArray[i].UP_AMOUNT));
             cobBenefitOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
+        }
+        else if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'E'){
+            //$('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
+            $('#disp-py-exm').html(getAriaryValue(dataYearRecapJsonArray[i].UP_AMOUNT));
+            cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
         else{
             //$('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));

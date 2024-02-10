@@ -177,6 +177,24 @@ function getVerboseExamStatus(param, isText){
 
 /***********************************************************************************************************/
 
+function renderAmount(param){
+	var len = param.toString().length;
+	var result = '';
+	var k = 0;
+	for(var i=0;i<len+1;i++){
+		result = param.toString().substr(len-i,1) + result;
+		if(k == 3){
+			result = ' ' + result;
+			k = 0;
+		}
+		k++;
+	}
+	return result + ' AR';
+}
+
+
+/***********************************************************************************************************/
+
 
 function showHeaderAlertMsg(msg, isPrimary){
   $('#msg-alert').html(msg);

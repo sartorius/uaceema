@@ -330,7 +330,7 @@ SELECT *
   WHERE TABLE_SCHEMA = 'ACEA'
  ORDER BY TABLE_ROWS DESC
 
- 
+
 -- SESSION PROD
 
 
@@ -607,4 +607,32 @@ ORDER BY CAST(fSplitStr(mu.matricule, '/', 1) AS UNSIGNED);
 INSERT INTO uac_showuser (username, roleid, secret, cohort_id)
 VALUES ('johnbon403', 5, 3232294372, 8);
 
+
+Revoir les diff un peu : _rawlargescreenedtheader.html.twig
+
 JOHNBON403
+
+
+invShortCutDiscountId
+
+generatepaymentDB
+
+
+MAN_MIG_GenPayTranche
+
+uac_payment
+
+generatefaciliteDB
+
+generatePayDBAndPrint
+generatepaymentDB
+
+currentAgentIdStr: CURRENT_AGENT_ID_STR,
+$param_agent_id = $request->request->get('currentAgentIdStr');
+
+
+193542034P
+
+
+SP qui attribue et qui doit gérer les case
+CLI_CRT_LineAttribuerMvola

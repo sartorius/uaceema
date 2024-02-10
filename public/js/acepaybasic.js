@@ -11,8 +11,10 @@ function generateAttribuerMvo(){
   $.ajax('/generateattribuerMvoDB', {
       type: 'POST',  // http method
       data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
         paramFoundUsername: foundUsername,
         paramMvoId: foundMvolaId,
+        paramInvCaseOperation: invCaseOperation,
         token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
@@ -82,6 +84,7 @@ function generateAllPayCSV(){
                     + "Montant de référence" + SEP_ 
                     + "Limite de paiement" + SEP_
                     + "Classe" + SEP_ 
+                    + "Username" + SEP_ 
                     + "Prénom" + SEP_ 
                     + "Nom" + SEP_ 
                     + "Matricule" + SEP_ 
@@ -89,6 +92,7 @@ function generateAllPayCSV(){
                     + "Expéditeur Mvola" + SEP_ 
                     + "Libellé Mvola" + SEP_ 
                     + "Ticket réduction" + SEP_ 
+                    + "Agent" + SEP_ 
                     + "Pourcentage réduction" + SEP_ 
                     + "Réduction status" + SEP_ + "\n";
 	csvContent += dataString;
@@ -105,6 +109,7 @@ function generateAllPayCSV(){
                 + isNullMvo(involvedArray[i].REF_AMOUNT) + SEP_ 
                 + isNullMvo(involvedArray[i].REF_DDL) + SEP_ 
                 + isNullMvo(involvedArray[i].VSH_SHORT_CLASS) + SEP_ 
+                + isNullMvo(involvedArray[i].VSH_USERNAME) + SEP_ 
                 + isNullMvo(involvedArray[i].VSH_FIRSTNAME) + SEP_ 
                 + isNullMvo(involvedArray[i].VSH_LASTNAME) + SEP_ 
                 + isNullMvo(involvedArray[i].VSH_MATRICULE) + SEP_ 
@@ -112,6 +117,7 @@ function generateAllPayCSV(){
                 + isNullMvo(involvedArray[i].MVO_FROM_PHONE) + SEP_
                 + isNullMvo(involvedArray[i].MVO_DETAILS_A) + SEP_ 
                 + isNullMvo(involvedArray[i].UFP_TICKET) + SEP_ 
+                + isNullMvo(involvedArray[i].LAST_AGENT_ID) + SEP_ 
                 + isNullMvo(involvedArray[i].UFP_POURCENTAGE_REDUCTION) + SEP_ 
                 + isNullMvo(involvedArray[i].UFP_STATUS) + SEP_ ;
             // easy close here
@@ -239,7 +245,8 @@ function showPopUpPay(param){
     detailsMsg = detailsMsg + '<strong>Classe &nbsp;:&nbsp;</strong>' + param.VSH_SHORT_CLASS + '<br>';
     detailsMsg = detailsMsg + '<strong>Prénom &nbsp;:&nbsp;</strong>' + param.VSH_FIRSTNAME + '<br>';
     detailsMsg = detailsMsg + '<strong>Nom &nbsp;:&nbsp;</strong>' + param.VSH_LASTNAME + '<br>';
-    detailsMsg = detailsMsg + '<strong>Matricule &nbsp;:&nbsp;</strong>' + param.VSH_MATRICULE + '<br>';
+    detailsMsg = detailsMsg + '<strong>Matricule &nbsp;:&nbsp;</strong>' + param.VSH_MATRICULE + '<br><br>';
+    detailsMsg = detailsMsg + '<strong>Agent &nbsp;:&nbsp;</strong>' + param.LAST_AGENT_ID + '<br>';
 
     if(param.MVO_TRANSACTION != ''){
         detailsMvo = detailsMvo + '<strong>Transaction &nbsp;:&nbsp;</strong>' + param.MVO_TRANSACTION + '<br>';
@@ -371,7 +378,7 @@ function loadAllPAYGrid(){
         { name: "UP_TYPE_OF_PAYMENT",
           title: "Type",
           type: "text",
-          width: 40,
+          width: 65,
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
@@ -392,6 +399,7 @@ function loadAllPAYGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm"
         },
+        /*
         { name: "UFP_TICKET",
           title: "Ticket",
           width: 45,
@@ -399,6 +407,7 @@ function loadAllPAYGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-mono"
         },
+        */
         { name: "UP_ID",
           title: "Voir",
           width: 20,
@@ -628,10 +637,12 @@ function showPopUpMvola(param, paramAjaxFeedback){
     detailsMsg = detailsMsg + '<strong>Status &nbsp;:&nbsp;</strong>' + verboseStatus(param.STATUS_TRANSACTION) + '<br>';
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + param.TYPE_TRANSACTION + '<br>';
     if(param.STATUS_TRANSACTION == 'NUD'){
+      invMVOAmountNUD = parseInt(param.MONTANT_TRANSACTION);
       detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '</i><br>';
       detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong> ' + param.TELEPHONE_EXPEDITEUR.replace(/\D+/g, '').replace(/(\d{3})(\d{2})(\d{2})(\d{3})/, '$1 $2 $3 $4') + ' </i><br>';
     }
     else{
+      invMVOAmountNUD = 0;
       detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '<br>';
       detailsMsg = detailsMsg + '<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '<br>';
     };
@@ -778,19 +789,197 @@ function resetMvoAttribuer(){
       $('#last-read-bc').html('');
       $("#btn-attmvo").hide(100);
       $("#btn-canattmvo").hide(100);
+      $("#att-case-pan").hide(100);
+      $("#warn-partial-dic").html("");
+      $('#warn-pay-msg').html("");
 }
 
 function mngMvoPayUserExists(val){
+  // reinitialize the case operation 
+  invCaseOperation = '0';
+
+  let userPaidDTSTENT = 0;
+  let userPaidDRTINSC = 0;
+  let userPaidFRAIGEN = 0;
+
+  const FRAIS_DTSTENT = dataAllFixedFaresToJsonArray[0].amount;
+  const FRAIS_DRTINSC = dataAllFixedFaresToJsonArray[1].amount;
+  const FRAIS_FRAIGEN = dataAllFixedFaresToJsonArray[2].amount;
+  const FRAIS_FRMVOLA = dataAllFixedFaresToJsonArray[3].amount;
+
+  const MSG_WARN_MIN_AMT = "<i class='icon-file-broken'></i>&nbsp;Certaines options sont indisponibles car montant insufissant.<br>";
+  const MSG_WARN_NORM_ONLY = "<i class='icon-cubes'></i>&nbsp;Certaines options sont indisponibles car seul le cas [nouveau] est possible.<br>";
+  const MSG_FRAIS_GENERAUX = "<i class='icon-puzzle-piece'></i>&nbsp;Les frais généraux FRAIGEN [" + renderAmount(FRAIS_FRAIGEN) + "] doivent être payés en une seule fois. Si le montant disponible ne suffit pas, ils vont automatiquement payer la prochaine tranche disponible. Ils faudra alors payer les frais généraux séparément.<br>";
+
   for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
-    if (dataAllUSRNToJsonArray[i].USERNAME === val){
+    if ((dataAllUSRNToJsonArray[i].USERNAME === val)
+                 && (dataAllUSRNToJsonArray[i].USED_ON_SCREEN == 'N')){
+      
+      // We remove the flag
+      dataAllUSRNToJsonArray[i].USED_ON_SCREEN =  'Y';
       $('#fnd-usrn').html(dataAllUSRNToJsonArray[i].USERNAME);
 
       $('#addpay-ace').val('');
       $('#scan-mvo-input').hide(100);
       $('#ctrl-name').html(dataAllUSRNToJsonArray[i].VSH_NAME + ' - ' + dataAllUSRNToJsonArray[i].CLASS);
-      $("#btn-attmvo").show(100);
       $("#btn-canattmvo").show(100);
+      
+
+      userPaidDTSTENT = parseInt(dataAllUSRNToJsonArray[i].c_DTSTENT_CPT);
+      userPaidDRTINSC = parseInt(dataAllUSRNToJsonArray[i].c_DRTINSC_CPT);
+      userPaidFRAIGEN = parseInt(dataAllUSRNToJsonArray[i].c_FRAIGEN_CPT);
+
+      let warnPayBlueMsg = "";
+      let displayWarnMinimumAmountMsg = 'N';
+      /* 
+      userPaidDTSTENT/userPaidDRTINSC
+      0/0 >>> Open all cases >>> Y
+      + FRAIGEN
+      0/1 >>> Open all cases >>> Y
+      + FRAIGEN
+      1/0 >>> Open all cases >>> Y
+      + FRAIGEN
+      1/1 >>> Close all cases >>> N
+      + FRAIGEN
+      dataAllFixedFaresToJsonArray
+
+      */
+
+      // *********************************************************************************
+      // *********************************************************************************
+      // *********************************************************************************
+      // *********************************************************************************
+      // *********************************************************************************
+      // *********************************************************************************
+      // Manage the discount button behavor
+
+      // Show specific to the cases
+      // Do something witht the amount : invMVOAmountNUD
+      // All cases are closed
+      console.log('userPaidDTSTENT: ' + userPaidDTSTENT);
+      console.log('userPaidDRTINSC: ' + userPaidDRTINSC);
+      if((userPaidDTSTENT > 0) && (userPaidDRTINSC > 0)){
+          // DISPLAY BAR PAY
+          $("#btn-attmvo").show(100);
+          // The discount panel is here
+          $("#att-case-pan").hide(100);
+          $("#warn-partial-dic").html("");
+      }
+      else{
+
+        /* 
+        userPaidDTSTENT/userPaidDRTINSC
+        0/0 >>> Open all cases >>> Y
+        + FRAIGEN
+        0/1 >>> We close A and T because we must be normal only. If we are A or T, we pay in once.
+        + FRAIGEN
+        1/0 >>> We close A and T because we must be normal only. If we are A or T, we pay in once.
+        + FRAIGEN
+        */
+        // TO DO
+        // The strategy may be to identify the open frais not yet paid which are zero and open them
+        // Do the case by case DTSTENT DRTINSC
+        const CURRENT_LEFT_NORMAL_AMT = FRAIS_DTSTENT + FRAIS_DRTINSC + FRAIS_FRMVOLA - parseInt(userPaidDTSTENT) - parseInt(userPaidDRTINSC);
+        $('#disc-left-case-n').html(renderAmount(CURRENT_LEFT_NORMAL_AMT));
+
+        // For the rest I need to do remove part by part
+        // FRAIS_FRMVOLA to add at the end
+        // dataAllSetUpDiscountToJsonArray
+        let currentLeftDTSTENTNormalBased =  FRAIS_DTSTENT - parseInt(userPaidDTSTENT);
+        let currentLeftDRTINSCNormalBased =  FRAIS_DRTINSC - parseInt(userPaidDRTINSC);
+
+        let currentLeftDTSTENTAncienBased =  currentLeftDTSTENTNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[0].DIS_AMOUNT);
+        let currentLeftDRTINSCAncienBased =  currentLeftDRTINSCNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[1].DIS_AMOUNT);
+
+        const CURRENT_LEFT_ANCIEN_AMT = (currentLeftDTSTENTAncienBased + currentLeftDRTINSCAncienBased + FRAIS_FRMVOLA) > 0 ? currentLeftDTSTENTAncienBased + currentLeftDRTINSCAncienBased + FRAIS_FRMVOLA : 0;
+        $('#disc-left-case-a').html(renderAmount(CURRENT_LEFT_ANCIEN_AMT));
+
+        let currentLeftDTSTENTTransfertBased =  currentLeftDTSTENTNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[2].DIS_AMOUNT);
+        let currentLeftDRTINSCTransfertBased =  currentLeftDRTINSCNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[3].DIS_AMOUNT);
+
+        const CURRENT_LEFT_TRANSFERT_AMT = (currentLeftDTSTENTTransfertBased + currentLeftDRTINSCTransfertBased + FRAIS_FRMVOLA) > 0 ? currentLeftDTSTENTTransfertBased + currentLeftDRTINSCTransfertBased + FRAIS_FRMVOLA : 0;
+        $('#disc-left-case-t').html(renderAmount(CURRENT_LEFT_TRANSFERT_AMT));
+
+        
+        // NOUVEAU
+        // We remove the already paid always
+        if((invMVOAmountNUD >= (CURRENT_LEFT_NORMAL_AMT)) &&
+                  (CURRENT_LEFT_NORMAL_AMT > FRAIS_FRMVOLA)){
+          // Check if we can show Normal
+          console.log('1 N');
+          $("#btn-case-1").removeClass('deactive-btn');
+        }
+        else{
+          console.log('0 N');
+          displayWarnMinimumAmountMsg = 'Y';
+          $("#btn-case-1").addClass('deactive-btn');
+        }
+
+        if(userPaidDTSTENT > 0){
+          $("#warn-partial-dic").html('<span class="icon-exclamation-triangle nav-icon-fa nav-text"></span>&nbsp;ATTENTION : Des droits concours ou entretien DTSTENT [' + renderAmount(userPaidDTSTENT) + '] ont déjà été réglé, il ne reste que les droits inscription DRTINSC à régler. Veuillez vérifier dans le dashboard via le manager étudiant.');
+          
+        }
+        if(userPaidDRTINSC > 0){
+          $("#warn-partial-dic").html('<span class="icon-exclamation-triangle nav-icon-fa nav-text"></span>&nbsp;ATTENTION : Des droits inscription DRTINSC [' + renderAmount(userPaidDRTINSC) + '] ont déjà été réglé, il ne reste que les droits concours ou entretien DTSTENT à régler. Veuillez vérifier dans le dashboard via le manager étudiant.');
+
+        }
+        
+        if((userPaidDTSTENT > 0) || (userPaidDRTINSC > 0)){
+          console.log('0 A');
+          $("#btn-case-2").addClass('deactive-btn');
+          console.log('0 T');
+          $("#btn-case-3").addClass('deactive-btn');
+          warnPayBlueMsg = warnPayBlueMsg + MSG_WARN_NORM_ONLY;
+        }
+        else{
+            // Aucun des deux n'est payé
+            // ANCIEN
+            if((invMVOAmountNUD >= (CURRENT_LEFT_ANCIEN_AMT)) &&
+                    (CURRENT_LEFT_ANCIEN_AMT > FRAIS_FRMVOLA)){
+            // Check if we can show Ancien
+            console.log('1 A');
+            $("#btn-case-2").removeClass('deactive-btn');
+            }
+            else{
+              $("#btn-case-2").addClass('deactive-btn');
+              displayWarnMinimumAmountMsg = 'Y';
+            }
+            // TRANSFERT
+            if((invMVOAmountNUD >= (CURRENT_LEFT_TRANSFERT_AMT))&&
+                    (CURRENT_LEFT_TRANSFERT_AMT > FRAIS_FRMVOLA)){
+            // Check if we can show Transfert
+            console.log('1 T');
+            $("#btn-case-3").removeClass('deactive-btn');
+            }
+            else{
+              $("#btn-case-3").addClass('deactive-btn');
+              displayWarnMinimumAmountMsg = 'Y';
+            }
+        }
+
+        $("#btn-attmvo").hide(100);
+        // The discount panel is here
+        $("#att-case-pan").show(100);
+      }
+      if(displayWarnMinimumAmountMsg == 'Y'){
+        warnPayBlueMsg = warnPayBlueMsg + MSG_WARN_MIN_AMT;
+      }
+      console.log('userPaidFRAIGEN: ' + userPaidFRAIGEN);
+      if(userPaidFRAIGEN == 0){
+        warnPayBlueMsg = warnPayBlueMsg + MSG_FRAIS_GENERAUX;
+      }
+      $('#warn-pay-msg').html(warnPayBlueMsg);
+
       return true;
+    }
+    else if((dataAllUSRNToJsonArray[i].USERNAME === val)){
+      // We need to say that the student has already get an attribution we need to reload the page
+      resetMvoAttribuer();
+      $('#warn-pay-msg').html("<i class='icon-file-broken'></i>&nbsp;Un mvola a déjà été attribué a cet étudiant, rechargez/rafraîchissez la page.<br>");
+      return false;
+    }
+    else{
+      // Do nothing
     }
   }
   resetMvoAttribuer();
@@ -857,6 +1046,53 @@ function verifyMvoContentScan(){
 }
 
 
+// Fill once for good the data in the discount
+// Duplicate code for Add pay in aceidentificationcommon
+function displayMVODiscount(){
+  const FRAIS_FRMVOLA = dataAllFixedFaresToJsonArray[3].amount;
+  if(dataAllDispDiscountToJsonArray.length > 0){
+    $("#disc-case-n").html(renderAmount(parseInt(dataAllDispDiscountToJsonArray[0].GENUINE_AMOUNT) + parseInt(FRAIS_FRMVOLA)));
+    for(let j=0; j < dataAllDispDiscountToJsonArray.length; j++){
+      $("#disc-case-" + dataAllDispDiscountToJsonArray[j].DIS_CASE.toLowerCase()).html(renderAmount(parseInt(dataAllDispDiscountToJsonArray[j].FINAL_AMOUNT) + parseInt(FRAIS_FRMVOLA)));
+    }
+  }
+  else{
+    console.log('Reading discount ref: Err1890');
+  }
+}
+
+function initializeMVODiscountButton(){
+  for(let m=1; m<4; m++){
+    // Add listener
+    $("#btn-case-" + m).off('click');
+    $( "#btn-case-" + m).click(function() {
+
+        if(m == 1){
+          // Nouveau
+          // 200 000AR
+          invCaseOperation = 'N';
+          console.log('You clicked on the case N');
+        }
+        else if(m == 2){
+          // Ancien
+          // 100 000AR
+          invCaseOperation = 'A';
+          console.log('You clicked on the case A');
+        }
+        else{
+          //m == 3
+          // Transfert
+          // 150 000AR
+          invCaseOperation = 'T';
+          console.log('You clicked on the case T');
+        }
+        generateAttribuerMvo();
+    });
+
+  }
+}
+
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -868,6 +1104,10 @@ $(document).ready(function() {
       loadAllMVOGrid();
       initAllMVOGrid();
       
+      // Init Discount
+      displayMVODiscount();
+      initializeMVODiscountButton();
+      $("#frais-mvola-disp").html(renderAmount(parseInt(dataAllFixedFaresToJsonArray[3].amount)));
       // Do something
       $( "#addpay-ace" ).keyup(function() {
         verifyMvoContentScan();

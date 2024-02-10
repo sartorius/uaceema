@@ -98,7 +98,7 @@ function printBatchStudentCard(limit, maxIs){
         doc.text(
           15 + columnSeter*(cardWidth), //x oddOffsetX is to define if position 1 or 2
           57 + rowSeter * cardHeight, //y
-          'uaceem.com - aceemgroupe.com - PRVO 26B Manakambahiny Antananarivo 101');
+          ' uaceem.com - Groupe ACEEM - PRVO 26B Manakambahiny Antananarivo 101 ');
 
 
          // We have reach the 2nd column so we need to carriege return

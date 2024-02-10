@@ -5,6 +5,8 @@
     //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
 
     let dataREFPAYToJsonArray =JSON.parse('{{ result_ref_pay | json_encode | raw }}');
+    // DISCOUNT
+    let dataAllDispDiscountToJsonArray = JSON.parse('{{ result_alldisplay_discount_query | json_encode | raw }}');
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
 
@@ -35,7 +37,7 @@
   <div class="col-1">
   </div>
   <div class="col-10">
-    <h2>Frais de scolarité</h2>
+    <h1>Frais de scolarité</h1>
     <hr>
   </div>
   <div class="col-1">
@@ -43,13 +45,34 @@
 </div>
 
 <div class="row">
-  <div class="col-3">
+  <div class="col-1">
   </div>
   <div class="col-6">
+    <h2>Frais standard</h2>
     <div id="jsGridRefPay">
     </div>
   </div>
-  <div class="col-3">
+  <div class="col-4">
+    <h2>Discount</h2>
+    <div id="jsGridRefDiscountPay">
+    </div>
+    <br>
+    <div class="mgs-note">
+      <strong>Général</strong><br>
+      Les discounts ne concernent que les frais "Droit test ou entretien" [DTSTENT] + "Droit inscription" [DRTINSC]. Quand un discount est accordé, le montant exempté est automatiquement créé en paiement d'exemption. Exemple : si un étudiant doit payer 100 000 AR au lieu de 200 000 AR, il va payer 100 000 AR avec le moyent de paiement de son choix et ensuite on aura 100 000 AR en exemption.<br>
+      <strong>Nouveau</strong><br>
+       Ce sont les étudiants qui entrent pour la première fois à l'Université ACEEM.<br>
+      <strong>Ancien</strong><br>
+       Ce sont les étudiants qui étaient déjà inscrits à l'Université l'an dernier en tant que passant ou doublant.<br>
+      <strong>Transfert</strong><br>
+       Ce sont les étudiants qui viennent du groupe ACEEM.<br>
+      <strong>Exemption</strong><br>
+       Lorsque l'étudiant ne paye pas comme par exemple s'il est redoublant ou s'il y a des crédits déjà obtenus, on enregistre un paiement avec le mode "Exemption" pour indiquer qu'il s'est bien acquité de ces frais de scolarité mais qu'il n'a pas eu à les payer.<br>
+      <strong>Réduction</strong><br>
+       L'administration de l'Université a accordé une réduction à un étudiant, elle est appliquée sur ses frais de scolarité.
+    </div>
+  </div>
+  <div class="col-1">
   </div>
 </div>
 
