@@ -81,6 +81,10 @@ function getBrowserId(){
   return browserName;
 }
 
+function getCapitalize(param){
+  return param.charAt(0).toUpperCase() + param.slice(1).toLowerCase();
+}
+
 // param can be : F for French /T for Technical/S for String Technical
 function getACEDateStr(param){
   let today = new Date();

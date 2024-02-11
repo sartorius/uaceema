@@ -609,7 +609,3 @@ VALUES ('johnbon403', 5, 3232294372, 8);
 
 
 Revoir les diff un peu : _rawlargescreenedtheader.html.twig
-
-
-
-cobExemptionOfTheYear

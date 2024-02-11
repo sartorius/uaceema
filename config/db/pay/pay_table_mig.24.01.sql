@@ -154,3 +154,14 @@ GROUP BY
 CASE WHEN up.type_of_payment IN ('R') THEN 'R'
   WHEN up.type_of_payment IN ('E') THEN 'E'
   ELSE 'P' END;
+
+DROP VIEW IF EXISTS v_rep_month_per_mention;
+CREATE VIEW v_rep_month_per_mention AS
+SELECT mention AS VCC_MENTION, SUM(up.input_amount) AS UP_AMOUNT FROM uac_payment up
+	JOIN mdl_user mu ON up.user_id = mu.id
+						AND up.status = 'P'
+							 AND up.type_of_payment NOT IN ('R', 'E')
+							 AND up.pay_date > DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)
+	JOIN uac_showuser uas ON uas.username = mu.username
+	 JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id
+	 GROUP BY mention;

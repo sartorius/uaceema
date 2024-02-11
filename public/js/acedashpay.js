@@ -906,9 +906,38 @@ function generateResumePayWorksheet(){
       { v: 'Non attribué Mvola : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
       { v: renderAmountExcel(NON_ATTR_MVOLA), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
     ];
+    let rowHeader8 = [
+      { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader9 = [
+      { v: 'État des paiements du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader10 = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    ];
     
-    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderRecYear, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear];
+    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderRecYear, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear, rowHeader8, rowHeader9, rowHeader10];
 
+    if(dataRepMonthMentionJsonArray.length == 0){
+      let rowHeader10 = [
+        { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+      ];
+      rowCollection.push(rowHeader10);
+      let rowHeader11 = [
+        { v: 'Pas de paiement enregistré ', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      ];
+      rowCollection.push(rowHeader11);
+    }
+    else{
+      for(let i=0; i<dataRepMonthMentionJsonArray.length; i++){
+          let rowHeaderExemptionYear = [
+            { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+            { v: getCapitalize(dataRepMonthMentionJsonArray[i].VCC_MENTION) + ' : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+            { v: renderAmountExcel(dataRepMonthMentionJsonArray[i].UP_AMOUNT), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+          ];
+          rowCollection.push(rowHeaderExemptionYear);
+      }
+    }
        
 
     //************************ END HEADER ***********************
@@ -916,7 +945,7 @@ function generateResumePayWorksheet(){
     const ws = XLSX.utils.aoa_to_sheet(rowCollection);
     ws['!cols'] = [
       { width: 10 }, //Details documents
-      { width: 40 }, //Header resume
+      { width: 45 }, //Header resume
       { width: 25 }, //Val resume
       { width: 20 }, //na
       { width: 20 }, //na

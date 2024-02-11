@@ -131,6 +131,17 @@
 {% endif %}
 
 
+{% if result_query_rep_month_mention is defined and result_query_rep_month_mention is not null %}
+  <script>
+    let dataRepMonthMentionJsonArray =JSON.parse('{{ result_query_rep_month_mention | json_encode | raw }}');
+  </script>
+{% else %}
+    <script>
+      let dataRepMonthMentionJsonArray = new Array();
+    </script>
+{% endif %}
+
+
 <div id="mg-graph-identifier">dash-pay</div>
 
 {# Message here if necessary #}

@@ -1602,6 +1602,12 @@ class AdminPayController extends AbstractController
         $result_query_nud_mvola = $dbconnectioninst->query($query_nud_mvola)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_nud_mvola: " . count($result_query_nud_mvola));
 
+        $query_rep_month_mention = " SELECT * FROM v_rep_month_per_mention; ";
+        $logger->debug("Show me query_rep_month_mention: " . $query_rep_month_mention);
+
+        $result_query_rep_month_mention = $dbconnectioninst->query($query_rep_month_mention)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_rep_month_mention: " . count($result_query_rep_month_mention));
+
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
@@ -1622,6 +1628,7 @@ class AdminPayController extends AbstractController
                                                                 "result_rep_year_recap"=>$result_rep_year_recap,
                                                                 "result_rep_all_tranche"=>$result_rep_all_tranche,
                                                                 "result_rep_rec_journee"=>$result_rep_rec_journee,
+                                                                "result_query_rep_month_mention"=>$result_query_rep_month_mention,
                                                                 "param_non_attr_mvola"=>$result_query_nud_mvola[0]['NUD_AMOUNT'],
                                                                 'param_year' => $result_query_param_year[0]['PARAM_YEAR'],
                                                                 'errtype' => '']);
