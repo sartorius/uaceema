@@ -850,6 +850,209 @@ function prepareJsonDataPayTranche(){
     }
   }
 }
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+
+function generateResumePayWorksheet(){
+
+    //************************ START HEADER ************************
+    
+    let rowHeader1 = [
+      { v: 'A', t: 's', s: { ...DEF_HEADER_CARTOUCHE_LOGO } },
+      { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    
+    let rowHeader2 = [
+      { v: 'MANAKAMBAHINY', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader3 = [
+      { v: 'Service caisse', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader4 = [
+      { v: 'Version papier', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+      { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+      { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader5 = [
+      { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader6 = [
+      //{ v: 'État des frais de scolarité du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      { v: 'État des frais de scolarité en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader7 = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeaderRecYear = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Recette sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(cobBenefitOfTheYear), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderRedYear = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Réduction sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(cobReductionOfTheYear), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderExemptionYear = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Exemption sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(cobExemptionOfTheYear), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderNUDYear = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Non attribué Mvola : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(NON_ATTR_MVOLA), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    
+    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderRecYear, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear];
+
+       
+
+    //************************ END HEADER ***********************
+
+    const ws = XLSX.utils.aoa_to_sheet(rowCollection);
+    ws['!cols'] = [
+      { width: 10 }, //Details documents
+      { width: 40 }, //Header resume
+      { width: 25 }, //Val resume
+      { width: 20 }, //na
+      { width: 20 }, //na
+      { width: 20 }, //na
+      { width: 20 }, //na
+      { width: 20 }]; //na
+    //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
+    const rowDefinition = [];
+    for(let i=0; i<rowCollection.length; i++){
+      rowDefinition.push(DEF_ROW_DFT_SETUP);
+    }
+    ws['!rows'] = rowDefinition;
+
+    return ws;
+}
+
+function generateTranchePayWorksheet(paramLines){
+
+  //************************ START HEADER ************************
+  
+  let rowHeader1 = [
+    { v: 'A', t: 's', s: { ...DEF_HEADER_CARTOUCHE_LOGO } },
+    { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  
+  let rowHeader2 = [
+    { v: 'MANAKAMBAHINY', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader3 = [
+    { v: 'Service caisse', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader4 = [
+    { v: 'Version papier', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } },
+    { v: 'AU: ' + CONST_PARAM_YEAR, t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader5 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader6 = [
+    { v: 'État des tranches en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  let rowHeader7 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+
+  let rowHeaderTranche = [
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '#', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Étudiant', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Rien payé', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Une partie', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Tout payé', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Montant reçu', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Montant en attente', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Montant total', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } }
+  ];
+  
+  let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderTranche];
+
+
+  for(let i=0; i<paramLines.length; i++){
+      //is DEF_CELL_ODD
+      if(i % 2 === 0){
+        let rowHeaderLine = [
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: paramLines[i].myTranche, t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: paramLines[i].nbTotalStu, t: 's', s: { ...DEF_CELL_ODD } },
+          { v: paramLines[i].nbTotalNothing, t: 's', s: { ...DEF_CELL_ODD } },
+          { v: paramLines[i].nbTotalPart, t: 's', s: { ...DEF_CELL_ODD } },
+          { v: paramLines[i].nbTotalAll, t: 's', s: { ...DEF_CELL_ODD } },
+          { v: renderAmountExcel(paramLines[i].amAlreadyRec), t: 's', s: { ...DEF_NBR_CELL_ODD } },
+          { v: renderAmountExcel(paramLines[i].amMissingToRec), t: 's', s: { ...DEF_NBR_CELL_ODD } },
+          { v: renderAmountExcel(paramLines[i].amTotal), t: 's', s: { ...DEF_NBR_CELL_ODD } }
+        ];
+        rowCollection.push(rowHeaderLine);
+      }
+      else{
+          let rowHeaderLine = [
+            { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+            { v: paramLines[i].myTranche, t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+            { v: paramLines[i].nbTotalStu, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].nbTotalNothing, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].nbTotalPart, t: 's', s: { ...DEF_CELL } },
+            { v: paramLines[i].nbTotalAll, t: 's', s: { ...DEF_CELL } },
+            { v: renderAmountExcel(paramLines[i].amAlreadyRec), t: 's', s: { ...DEF_NBR_CELL } },
+            { v: renderAmountExcel(paramLines[i].amMissingToRec), t: 's', s: { ...DEF_NBR_CELL } },
+            { v: renderAmountExcel(paramLines[i].amTotal), t: 's', s: { ...DEF_NBR_CELL } }
+          ];
+          rowCollection.push(rowHeaderLine);
+      }
+  }
+
+
+  //************************ END HEADER ***********************
+
+  const ws = XLSX.utils.aoa_to_sheet(rowCollection);
+  ws['!cols'] = [
+    { width: 10 }, //Details documents
+    { width: 10 }, //Header resume
+    { width: 10 }, //Val resume
+    { width: 10 }, //na
+    { width: 10 }, //na
+    { width: 10 }, //na
+    { width: 20 }, //na
+    { width: 20 }, //na
+    { width: 20 }]; //na
+  //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
+  const rowDefinition = [];
+  for(let i=0; i<rowCollection.length; i++){
+    rowDefinition.push(DEF_ROW_DFT_SETUP);
+  }
+  ws['!rows'] = rowDefinition;
+
+  return ws;
+}
+
+
+function generateGlobalPaymentExcel(){
+  const wb = XLSX.utils.book_new();
+
+  // Create first the global worksheet
+  // dataTagToJsonArrayExcelGblComputeReport
+  XLSX.utils.book_append_sheet(wb, generateResumePayWorksheet(), 'AU' + CONST_PARAM_YEAR);
+
+  XLSX.utils.book_append_sheet(wb, generateTranchePayWorksheet(dataPrepCountTrancheGridJsonArray), 'Tranche');
+
+  // STEP 4: Write Excel file to browser
+  XLSX.writeFile(wb, "RapportGlobalPaiement1m_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
+}
+
+
+
+
+
+
 
 /***********************************************************************************************************/
 
@@ -900,6 +1103,12 @@ $(document).ready(function() {
         }
       }
 
+      // ********************************************************************
+      // ********************************************************************
+      // ********************************************************************
+      // ********************************************************************
+      // Here we set the resume set up Excel 
+
       for(let i=0; i<dataYearRecapJsonArray.length; i++){
         if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'P'){
             //$('#disp-py-ben').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
@@ -909,7 +1118,7 @@ $(document).ready(function() {
         else if(dataYearRecapJsonArray[i].UP_TYPE_OF_PAYMENT == 'E'){
             //$('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
             $('#disp-py-exm').html(getAriaryValue(dataYearRecapJsonArray[i].UP_AMOUNT));
-            cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
+            cobExemptionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
         else{
             //$('#disp-py-red').html(formatterCurrency.format(dataYearRecapJsonArray[i].UP_AMOUNT).replace("MGA", "AR"));
@@ -918,6 +1127,8 @@ $(document).ready(function() {
         }
       }
       
+      // ************* Specific case of the NUD Mvola
+      $('#disp-pv-nud').html(renderAmount(NON_ATTR_MVOLA));
 
 
       if(totalCashCheck > 0){
@@ -925,6 +1136,7 @@ $(document).ready(function() {
         $('#disp-pv-tot').html(getAriaryValue(totalCashCheck));
         cobTotalOfTheDay = parseInt(totalCashCheck);
       }
+
 
       if(dataTodayNbrCheckPVJsonArray.length == 1){
         $('#disp-pv-nbr-chq').html(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK);
@@ -936,6 +1148,7 @@ $(document).ready(function() {
 
       cobArray.push('RECETTE.ANNEE....' + (renderAmount(cobBenefitOfTheYear.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('REDUCTION.ANNEE..' + (renderAmount(cobReductionOfTheYear.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('EXEMPTION.ANNEE..' + (renderAmount(cobExemptionOfTheYear.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('SOLDE.MVOLA......' + (renderAmount(SOLDE_MVOLA.toString())).padStart(maxLgRecap, paddChar));
 
       cobArray.push('REDUCTION.AUJ....' + (renderAmount(cobReductionOfTheDay.toString())).padStart(maxLgRecap, paddChar));

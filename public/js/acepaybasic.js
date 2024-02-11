@@ -6,7 +6,7 @@ function generateAttribuerMvo(){
   $('#loading').show(50);
   let foundUsername = $('#fnd-usrn').html();
   let foundMvolaId = $('#fnd-mvoid').html();
-  console.log("foundUsername: " + foundUsername);
+  //console.log("foundUsername: " + foundUsername);
 
   $.ajax('/generateattribuerMvoDB', {
       type: 'POST',  // http method
@@ -38,7 +38,7 @@ function generateAttribuerMvo(){
               }
               else{
                   //We did not found it
-                  console.log('Err : getRawPaymentDetail ' + param + '/' + i);
+                  //console.log('Err : getRawPaymentDetail ' + param + '/' + i);
               };
               $('#msg-alert').html("Attribution: " + foundUsername + " réalisée avec succés. Vous pouvez vérifier dans le dashboard.");
               $('#type-alert').removeClass('alert-danger').addClass('alert-primary');
@@ -856,8 +856,8 @@ function mngMvoPayUserExists(val){
       // Show specific to the cases
       // Do something witht the amount : invMVOAmountNUD
       // All cases are closed
-      console.log('userPaidDTSTENT: ' + userPaidDTSTENT);
-      console.log('userPaidDRTINSC: ' + userPaidDRTINSC);
+      //console.log('userPaidDTSTENT: ' + userPaidDTSTENT);
+      //console.log('userPaidDRTINSC: ' + userPaidDRTINSC);
       if((userPaidDTSTENT > 0) && (userPaidDRTINSC > 0)){
           // DISPLAY BAR PAY
           $("#btn-attmvo").show(100);
@@ -906,11 +906,11 @@ function mngMvoPayUserExists(val){
         if((invMVOAmountNUD >= (CURRENT_LEFT_NORMAL_AMT)) &&
                   (CURRENT_LEFT_NORMAL_AMT > FRAIS_FRMVOLA)){
           // Check if we can show Normal
-          console.log('1 N');
+          //console.log('1 N');
           $("#btn-case-1").removeClass('deactive-btn');
         }
         else{
-          console.log('0 N');
+          //console.log('0 N');
           displayWarnMinimumAmountMsg = 'Y';
           $("#btn-case-1").addClass('deactive-btn');
         }
@@ -925,9 +925,9 @@ function mngMvoPayUserExists(val){
         }
         
         if((userPaidDTSTENT > 0) || (userPaidDRTINSC > 0)){
-          console.log('0 A');
+          //console.log('0 A');
           $("#btn-case-2").addClass('deactive-btn');
-          console.log('0 T');
+          //console.log('0 T');
           $("#btn-case-3").addClass('deactive-btn');
           warnPayBlueMsg = warnPayBlueMsg + MSG_WARN_NORM_ONLY;
         }
@@ -937,7 +937,7 @@ function mngMvoPayUserExists(val){
             if((invMVOAmountNUD >= (CURRENT_LEFT_ANCIEN_AMT)) &&
                     (CURRENT_LEFT_ANCIEN_AMT > FRAIS_FRMVOLA)){
             // Check if we can show Ancien
-            console.log('1 A');
+            //console.log('1 A');
             $("#btn-case-2").removeClass('deactive-btn');
             }
             else{
@@ -948,7 +948,7 @@ function mngMvoPayUserExists(val){
             if((invMVOAmountNUD >= (CURRENT_LEFT_TRANSFERT_AMT))&&
                     (CURRENT_LEFT_TRANSFERT_AMT > FRAIS_FRMVOLA)){
             // Check if we can show Transfert
-            console.log('1 T');
+            //console.log('1 T');
             $("#btn-case-3").removeClass('deactive-btn');
             }
             else{
@@ -964,7 +964,7 @@ function mngMvoPayUserExists(val){
       if(displayWarnMinimumAmountMsg == 'Y'){
         warnPayBlueMsg = warnPayBlueMsg + MSG_WARN_MIN_AMT;
       }
-      console.log('userPaidFRAIGEN: ' + userPaidFRAIGEN);
+      //console.log('userPaidFRAIGEN: ' + userPaidFRAIGEN);
       if(userPaidFRAIGEN == 0){
         warnPayBlueMsg = warnPayBlueMsg + MSG_FRAIS_GENERAUX;
       }
@@ -1071,20 +1071,20 @@ function initializeMVODiscountButton(){
           // Nouveau
           // 200 000AR
           invCaseOperation = 'N';
-          console.log('You clicked on the case N');
+          //console.log('You clicked on the case N');
         }
         else if(m == 2){
           // Ancien
           // 100 000AR
           invCaseOperation = 'A';
-          console.log('You clicked on the case A');
+          //console.log('You clicked on the case A');
         }
         else{
           //m == 3
           // Transfert
           // 150 000AR
           invCaseOperation = 'T';
-          console.log('You clicked on the case T');
+          //console.log('You clicked on the case T');
         }
         generateAttribuerMvo();
     });

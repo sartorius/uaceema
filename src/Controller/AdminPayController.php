@@ -1577,10 +1577,10 @@ class AdminPayController extends AbstractController
         $result_rep_year_recap = $dbconnectioninst->query($rep_year_recap)->fetchAll(PDO::FETCH_ASSOC);
 
 
+
         $rep_all_red = " SELECT * FROM v_dash_all_reduction; ";
         $logger->debug("Show rep_all_red: " . $rep_all_red);
         $result_rep_all_red = $dbconnectioninst->query($rep_all_red)->fetchAll(PDO::FETCH_ASSOC);
-        
         
         $rep_all_tranche = " SELECT * FROM v_dash_all_tranche; ";
         $logger->debug("Show rep_all_tranche: " . $rep_all_tranche);
@@ -1589,6 +1589,18 @@ class AdminPayController extends AbstractController
         $rep_rec_journee = " SELECT * FROM v_recette_journee; ";
         $logger->debug("Show rep_rec_journee: " . $rep_rec_journee);
         $result_rep_rec_journee = $dbconnectioninst->query($rep_rec_journee)->fetchAll(PDO::FETCH_ASSOC);
+
+        $query_param_year = " SELECT par_value AS PARAM_YEAR FROM uac_param WHERE key_code = 'YEARAAA'; ";
+        $logger->debug("Show me query_param_year: " . $query_param_year);
+
+        $result_query_param_year = $dbconnectioninst->query($query_param_year)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_param_year: " . count($result_query_param_year));
+
+        $query_nud_mvola = " SELECT IFNULL(SUM(CAST(load_amount AS UNSIGNED)), 0) AS NUD_AMOUNT FROM uac_load_mvola WHERE status = 'NUD' AND load_amount IS NOT NULL; ";
+        $logger->debug("Show me query_nud_mvola: " . $query_nud_mvola);
+
+        $result_query_nud_mvola = $dbconnectioninst->query($query_nud_mvola)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_nud_mvola: " . count($result_query_nud_mvola));
 
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -1610,6 +1622,8 @@ class AdminPayController extends AbstractController
                                                                 "result_rep_year_recap"=>$result_rep_year_recap,
                                                                 "result_rep_all_tranche"=>$result_rep_all_tranche,
                                                                 "result_rep_rec_journee"=>$result_rep_rec_journee,
+                                                                "param_non_attr_mvola"=>$result_query_nud_mvola[0]['NUD_AMOUNT'],
+                                                                'param_year' => $result_query_param_year[0]['PARAM_YEAR'],
                                                                 'errtype' => '']);
                                                                 
 

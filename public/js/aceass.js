@@ -1762,6 +1762,7 @@ function generateGlobalPsdXLSWorksheet(paramLines, paramIsGlobalSheet){
   //************************ START HEADER ************************
   
   let rowHeader1 = [
+    { v: 'A', t: 's', s: { ...DEF_HEADER_CARTOUCHE_LOGO } },
     { v: 'UNIVERSITÉ ACEEM', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   

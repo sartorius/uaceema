@@ -8,11 +8,15 @@ Date.prototype.addDays = function(days) {
 const GLOBAL_SEP_ = ";";
 const DEF_ROW_DFT = 20;
 
+const DEF_HEADER_CARTOUCHE_LOGO = { font: { sz: 20, name: 'Aceem' }, alignment: { vertical: 'center', horizontal: 'center' } };
 const DEF_HEADER_CARTOUCHE = { font: { sz: 8, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
 const DEF_FOOTER_CARTOUCHE = { font: { sz: 6, name: 'Arial' }, alignment: { vertical: 'center', horizontal: 'left' } };
 
+
+
 const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
 const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
+const DEF_CELL_HEADER_WHITE = { fgColor: { rgb: 'FFFFFF' } };
 const DEF_CELL_HEADER_HEAVY_FILL = { fgColor: { rgb: '1C1C1C' } };
 const DEF_CELL_ODD_FILL = { fgColor: { rgb: 'F4F7FF' } };
 const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
@@ -26,7 +30,15 @@ const DEF_HEADER_CELL_HEAVY = { font: { sz: 8, name: 'Arial', bold: true, color:
 const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
 const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
 const DEF_CELL_ODD = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
+
+const DEF_NBR_CELL = { font: { sz: 7, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER} };
+const DEF_NBR_CELL_ODD = { font: { sz: 7, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
+
+
 const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
+
+const DEF_RESUME_HDR_CELL = { font: { sz: 9, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
+const DEF_RESUME_VAL_CELL = { font: { sz: 9, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_WHITE} };
 
 
 function removeAccentuated(param){
@@ -96,6 +108,70 @@ function getReportACEDateStrFR(paramDay){
   let dateSTR = outDay.getDate().toString().padStart(2, '0')+'/'+(outDay.getMonth()+1).toString().padStart(2, '0')+'/'+outDay.getFullYear();
 
   return dateSTR;
+}
+
+function getReportACEMonthYearStrFR(paramIntervalMonth){
+  let today = new Date();
+  let outDay = today.addDays(0);
+
+  let getMonth = (parseInt(outDay.getMonth())+1) + paramIntervalMonth;
+  getMonth = (getMonth < 1) ? (getMonth + 12) : getMonth;
+  let getReturnValue = '';
+  switch(getMonth) {
+    case 1:
+      getReturnValue = 'janvier ';
+      // code block
+      break;
+    case 2:
+      getReturnValue = 'février ';
+      // code block
+      break;
+    case 3:
+      getReturnValue = 'mars ';
+      // code block
+      break;
+    case 4:
+      getReturnValue = 'avril ';
+      // code block
+      break;
+    case 5:
+      getReturnValue = 'mai ';
+      // code block
+      break;
+    case 6:
+      getReturnValue = 'juin ';
+      // code block
+      break;
+    case 7:
+      getReturnValue = 'juillet ';
+      // code block
+      break;
+    case 8:
+      getReturnValue = 'aout ';
+      // code block
+      break;
+    case 9:
+      getReturnValue = 'septembre ';
+      // code block
+      break;
+    case 10:
+      getReturnValue = 'octobre ';
+      // code block
+      break;
+    case 11:
+      getReturnValue = 'novembre ';
+      // code block
+      break;
+    case 12:
+      getReturnValue = 'décembre ';
+      // code block
+      break;
+    default:
+      getReturnValue = 'err2917P ';
+      // code block
+  }
+
+  return getReturnValue +outDay.getFullYear();
 }
 
 
@@ -192,6 +268,9 @@ function renderAmount(param){
 	return result + ' AR';
 }
 
+function renderAmountExcel(param){
+  return renderAmount(param) + ' ';
+}
 
 /***********************************************************************************************************/
 
