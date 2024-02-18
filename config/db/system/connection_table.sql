@@ -83,7 +83,10 @@ SELECT
            mu.annee_bac AS YEAR_BAC,
            DATE_FORMAT(mu.datedenaissance, "%d/%m/%Y") AS BIRTHDAY,
            DATE_FORMAT(mu.datedenaissance, "%m") AS MONTHBDAY,
-           vcc.short_classe AS SHORTCLASS
+           vcc.short_classe AS SHORTCLASS,
+           IFNULL(mu.autre_prenom, '') AS OTHER_FIRSTNAME,
+           IFNULL(mu.phone_par2, '') AS PARENT_ALT_PHONE,
+           IFNULL(mu.city_par1, '') AS PARENT_CITY
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
                   JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id;
 

@@ -48,11 +48,81 @@
 {# We handle here the JQ EDT #}
 {% if sp_result is defined and sp_result is not null %}
     <script>
+      const UNCHANGED_VALUE = 'NA';
+
       const modeIsJQ = "{{ modeIsJQ }}";
       const PARAM_DOES_PAY_DISPLAY = "{{ param_does_pay_display }}";
       const PARAM_DOES_PAY_PUBLIC = "{{ param_does_pay_public }}";
       const FROM_ADMIN = "{{ from_admin }}";
+      const CURRENT_AGENT_ID_STR = "{{ agent_id }}";
+      const GET_TOKEN = '{{ result_get_token }}';
+      const WRITE_ACCESS = '{{ write_access }}';
+      const GENDER_H_F = '{{ profile['GENRE'] }}';
 
+      const MAX_NOTE_LENGTH = 230;
+
+      const FOUND_USERNAME = '{{ profile['USERNAME']|upper }}';
+      const FOUND_USER_ID = '{{ profile['ID'] }}';
+
+
+      const DATA_GET_ALL_MENTION_ToJsonArray = JSON.parse('{{ result_query_get_all_mention | json_encode | raw }}');
+      const DATA_GET_ALL_CLASS_ToJsonArray = JSON.parse('{{ result_query_get_all_classes | json_encode | raw }}');
+      const PROFILE_ToJsonArray = JSON.parse('{{ profile | json_encode | raw }}');
+
+      
+      let tempClasseID = {{ profile['COHORT_ID'] }};
+      let tempClasseIDCONST = {{ profile['COHORT_ID'] }};
+
+      let tempMentionCode = UNCHANGED_VALUE;
+      let tempClasse = UNCHANGED_VALUE;
+
+
+      let invModifyLastname = "{{ profile['LASTNAME'] }}";
+      let invModifyLastnameCONST = "{{ profile['LASTNAME'] }}";
+
+      let invModifyFirstname = "{{ profile['FIRSTNAME']|capitalize }}";
+      let invModifyFirstnameCONST = "{{ profile['FIRSTNAME']|capitalize }}";
+
+      let invModifyOtherFirstname = "{{ profile['OTHER_FIRSTNAME']|capitalize }}";
+      let invModifyOtherFirstnameCONST = "{{ profile['OTHER_FIRSTNAME']|capitalize }}";
+
+      let invModifyMatricule = "{{ profile['MATRICULE'] }}";
+      let invModifyMatriculeCONST = "{{ profile['MATRICULE'] }}";
+
+      let invModifyTelStu = "{{ profile['PHONE'] }}";
+      let invModifyTelStuCONST = "{{ profile['PHONE'] }}";
+
+      let invModifyTelPar1 = "{{ profile['PARENT_PHONE'] }}";
+      let invModifyTelPar1CONST = "{{ profile['PARENT_PHONE'] }}";
+
+      let invModifyTelPar2 = "{{ profile['PARENT_ALT_PHONE'] }}";
+      let invModifyTelPar2CONST = "{{ profile['PARENT_ALT_PHONE'] }}";
+
+      {% if result_query_user_ass_info|length > 0 %}
+          let invModifyLivingConfiguration = "{{ result_query_user_ass_info[0]['living_configuration'] }}";
+          let invModifyLivingConfigurationCONST = "{{ result_query_user_ass_info[0]['living_configuration'] }}";
+
+          let invModifyNoteOfStu = "{{ result_query_user_ass_info[0]['assiduite_info'] }}";
+          let invModifyNoteOfStuCONST = "{{ result_query_user_ass_info[0]['assiduite_info'] }}";
+      {% else %}
+          let invModifyLivingConfiguration = "F";
+          let invModifyLivingConfigurationCONST = "F";
+
+          let invModifyNoteOfStu = "";
+          let invModifyNoteOfStuCONST = "";
+      {% endif %}
+
+
+      
+       
+      
+      
+      
+      
+      
+      
+      
+  
       const formatterCurrency = new Intl.NumberFormat('fr-FR', {
         style: 'currency',
         currency: 'MGA'
@@ -153,37 +223,66 @@
 
 
         <div class="user-title">
-            {{ profile['FIRSTNAME']|capitalize }} {{ profile['LASTNAME'] }}
+            <i id="stpf-firstname" class="nrm-txt">{{ profile['FIRSTNAME']|capitalize }}</i> <i id="stpf-lastname" class="nrm-txt">{{ profile['LASTNAME'] }}</i>
         </div>
         <div class="user-subtitle">
-            {{ profile['SHORTCLASS'] }}
+            <i id="stpf-shortclasse" class="nrm-txt">{{ profile['SHORTCLASS'] }}</i>
         </div>
 
 
         {% if from_admin == 'N' %}
               {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
               {# Do something message #}
-              <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Vérifiez que ces informations suivantes sont correctes.</div>
+              <div  class="mgs-note-warnprof"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Vérifiez que ces informations suivantes sont correctes. Votre nom, prénom, classe et les informations en bleues peuvent être modifiées à la scolarité.</div>
         {% endif %}
         <hr>
         <div class="card-parent">
               <div class="carte-profile blc-inline">
-                <span class="icon-tag nav-icon-fa-sm nav-text"></span> {{ profile['USERNAME']|upper }} <br>
-                <span class="icon-phone-square nav-icon-fa-sm nav-text"></span> {{ profile['PHONE'] }} <br>
-                <span class="icon-ticket nav-icon-fa-sm nav-text"></span> {{ profile['MATRICULE'] }}
+                <span class="carte-noedit icon-tag nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['USERNAME']|upper }} </i><br>
+                <span class="icon-phone-square nav-icon-fa-sm nav-text"></span>
+                {% if profile['PHONE'] is not null %} 
+                    <i id="stpf-telstu" class="nrm-txt">{{ profile['PHONE']|slice(0, 3) }} {{ profile['PHONE']|slice(3, 2) }} {{ profile['PHONE']|slice(5, 2) }} {{ profile['PHONE']|slice(7, 3) }}</i>
+                {% endif %}<br>
+                <span class="icon-ticket nav-icon-fa-sm nav-text"></span> <i id="stpf-matricule" class="nrm-txt">{{ profile['MATRICULE'] }} </i><br>
+                {% if ((profile['OTHER_FIRSTNAME'] is not null) and (profile['OTHER_FIRSTNAME']|length > 0)) %} 
+                    <i id="stpf-othfirstname" class="nrm-txt"><span class="icon-id-card nav-icon-fa-sm nav-text"></span>&nbsp;{{ profile['OTHER_FIRSTNAME']|upper|slice(0, 30) }}</i>
+                {% else %}
+                  <i id="stpf-othfirstname" class="nrm-txt">&nbsp;</i>
+                {% endif %}
+              </div> 
+
+              <div class="carte-profile blc-inline">
+                <span class="carte-noedit icon-envelope-o nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['EMAIL']|slice(0, 35)|lower }}  </i><br>
+                <span class="carte-noedit icon-envelope-square nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['ADDRESS']|slice(0, 30) }}  </i><br>
+                <span class="carte-noedit icon-thumb-tack nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['CITY']|upper }}  </i><br>
+                {% if result_query_user_ass_info|length > 0 %} 
+                  {% if (result_query_user_ass_info[0]['living_configuration'] == 'F') %} 
+                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
+                  {% elseif (result_query_user_ass_info[0]['living_configuration'] == 'C') %}
+                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en colocation</i>
+                  {% else %}
+                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit seul{% if profile['GENRE'] == 'F' %}e{% endif %}</i>
+                  {% endif %}
+                {% else %}
+                  {# Default case #}
+                  <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
+                {% endif %}
               </div>
 
               <div class="carte-profile blc-inline">
-                <span class="icon-envelope-o nav-icon-fa-sm nav-text"></span> {{ profile['EMAIL']|lower }} <br>
-                <span class="icon-envelope-square nav-icon-fa-sm nav-text"></span> {{ profile['ADDRESS']|slice(0, 30) }} <br>
-                <span class="icon-thumb-tack nav-icon-fa-sm nav-text"></span> {{ profile['CITY']|upper }}
-              </div>
 
-              <div class="carte-profile blc-inline">
-
-                <span class="icon-birthday-cake nav-icon-fa-sm nav-text"></span> &nbsp;{{ profile['GENRE'] }}&nbsp;{{ profile['AGE'] }}ans, né{% if profile['GENRE'] == 'F' %}e{% endif %} le {{ profile['BIRTHDAY'] }}<br>
-                <span class="icon-certificate nav-icon-fa-sm nav-text"></span> {{ profile['BAC'] }} <br>
-                <span class="icon-medkit nav-icon-fa-sm nav-text"></span> {{ profile['PARENT_PHONE'] }}
+                <span class="carte-noedit icon-birthday-cake nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  &nbsp;{{ profile['GENRE'] }}&nbsp;{{ profile['AGE'] }}ans, né{% if profile['GENRE'] == 'F' %}e{% endif %} le {{ profile['BIRTHDAY'] }}</i><br>
+                <span class="carte-noedit icon-certificate nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  {{ profile['BAC'] }} </i><br>
+                <span class="icon-medkit nav-icon-fa-sm nav-text"></span>
+                {% if profile['PARENT_PHONE'] is not null %} 
+                    <i id="stpf-telpar1" class="nrm-txt">{{ profile['PARENT_PHONE']|slice(0, 3) }} {{ profile['PARENT_PHONE']|slice(3, 2) }} {{ profile['PARENT_PHONE']|slice(5, 2) }} {{ profile['PARENT_PHONE']|slice(7, 3) }}</i>
+                {% endif %}<br>
+                {% if ((profile['PARENT_ALT_PHONE'] is not null) and (profile['PARENT_ALT_PHONE']|length > 0)) %} 
+                    <i id="stpf-telpar2" class="nrm-txt"><span class="icon-medkit nav-icon-fa-sm nav-text"></span>&nbsp;
+                    {{ profile['PARENT_ALT_PHONE']|slice(0, 3) }} {{ profile['PARENT_ALT_PHONE']|slice(3, 2) }} {{ profile['PARENT_ALT_PHONE']|slice(5, 2) }} {{ profile['PARENT_ALT_PHONE']|slice(7, 3) }}</i>
+                {% else %}
+                    <i id="stpf-telpar2" class="nrm-txt">&nbsp;</i>
+                {% endif %}
               </div>
         </div>
         {% if from_admin == 'S' %}
@@ -191,6 +290,18 @@
         <div class="disp-link carte-profile card-parent">
             <span class="icon-key-1 nav-icon-fa-sm nav-text"></span>&nbsp;{{ current_url }}/profile/{{ profile['PAGE'] }}
         </div>
+        {% endif %}
+
+        {% if write_access == 'Y' %}
+            <div class="row prof-modify">
+              <div class="col-3">
+              </div>
+              <div class="col-6">
+                <button type="button" onclick="modifyProfile()" class="btn btn-outline-dark btn-md btn-block"><i class="icon-pencil-square-o"></i>&nbsp;Modifier</button>
+              </div>
+              <div class="col-3">
+              </div>
+            </div>
         {% endif %}
         <hr>
 
@@ -230,8 +341,21 @@
           <br>
           <div class="pr-title"><span class="icon-bar-chart nav-icon-fa nav-text"></span>&nbsp;Assiduité : statistiques</div>
           
+          <div class="edt-status-gray nrm-txt"><span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Remarque concernant l'étudiant</div>
+          <div id='stpf-noteass' class="mgs-note-nopad nrm-txt">
+            {% if result_query_user_ass_info|length > 0 %} 
+              {% if (result_query_user_ass_info[0]['assiduite_info']|length > 0) %}
+                  {{ result_query_user_ass_info[0]['assiduite_info'] }}
+              {% else %}
+                  NA
+              {% endif %}
+            {% else %}
+                  NA
+            {% endif %}
+          </div>
+
           <div  class="mgs-note-warnprof">
-            <span class="icon-exclamation-circle nav-icon-fa-sm nav-text"></span>&nbsp;Les statistiques se font par rapport à votre classe à partir de votre date d'inscription.
+            Les statistiques se font par rapport à votre classe à partir de votre date d'inscription.
             {% if result_query_stat_ass|length > 0 %}
               &nbsp;Nombre d'étudiants dans la classe : {{ result_query_stat_ass[0]['CLS_COUNT'] }}.
             {% endif %}
@@ -448,4 +572,5 @@
               {% include 'Profile/_gradeblock.html.twig' %}
 {% endif %}
 
+{% include 'Profile/_mainpopupmodalmodify.html.twig' %}
 {% include 'RawTemplate/SPE/_footeredtpublic.html.twig' %}

@@ -1,0 +1,102 @@
+<!-- Modal -->
+<div class="modal fade" id="stu-details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div id="stu-contener" class="modal-content">
+      <div class="modal-header">
+        <strong>Modifier&nbsp;<i id='title-stu-details' class='nrm-txt'>{{ profile['USERNAME']|upper }}</i></strong>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class='popup-box-details'>
+            <i class="icon-person"></i>&nbsp;Détails modifiables<br>
+                <div class="mgs-note-nopad">
+                  Les informations en gris sont facultatives.
+                </div>
+                <div id="disp-err-msg" class="mgs-note-nopad-err">
+                </div>
+                <div id='pro-details-stu'>
+                    <div class="edt-status-gray nrm-txt">Nom de famille</div>
+                    <textarea id="pf-lastname" class="prof-note-input" placeholder="Entrez le nom de famille" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                    
+                    <div class="menu-dropdown">
+                      <div class="split-mod-prof">
+                          <i class="edt-status-gray nrm-txt">Premier prénom</i><br>
+                          <textarea id="pf-firstname" class="prof-note-input" placeholder="Entrez le premier prénom" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                      <div>
+                          <i class="edt-status-light nrm-txt">Autres prénoms</i><br>
+                          <textarea id="pf-othfirstname" class="prof-note-input" placeholder="Aucun" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                    </div>
+                    <div class="menu-dropdown">
+                      <div class="split-mod-prof">
+                          <i class="edt-status-gray nrm-txt">Matricule</i><br>
+                          <textarea id="pf-matricule" class="prof-note-input" placeholder="Entrez le matricule" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                      <div>
+                          <i class="edt-status-gray nrm-txt">Téléphone</i><br>
+                          <textarea id="pf-telstu" class="prof-note-input" placeholder="Entrez le téléphone de l'étudiant" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                    </div>
+                    <div class="menu-dropdown">
+                      <div class="split-mod-prof">
+                          <i class="edt-status-gray nrm-txt">Téléphone 1 parent/tuteur</i><br>
+                          <textarea id="pf-telpar1" class="prof-note-input" placeholder="Entrez le téléphone 1" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                      <div>
+                          <i class="edt-status-light nrm-txt">Téléphone 2 parent/tuteur</i><br>
+                          <textarea id="pf-telpar2" class="prof-note-input" placeholder="Aucun" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                    </div>
+                    <div class="menu-dropdown">
+                        <div id='modal-crs-status'>
+                          <i class="edt-status-gray nrm-txt">L'étudiant vit </i><br>
+                          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                            <button id="stt-f" type="button" value="F" class="btn btn-outline-secondary stt-group active">En famille</button>
+                            <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">En collocation</button>
+                            <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group">Seul{% if profile['GENRE'] == 'F' %}e{% endif %}</button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="pro-class-sel menu-dropdown">
+                        
+                        <div class="dropdown btn-ace-menu">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i id="drp-select">Mention</i>
+                            </button>
+                            <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                            </div>
+                        </div>
+
+                        <div class="dropdown btn-ace-menu">
+                            <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i id="selected-class">Classe</i>
+                            </button>
+                            <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="#">Sélectionnez une mention</a>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="edt-status-gray nrm-txt">Classe de l'étudiant : </i><br>
+                    <i id="inv-class-txt" class="edt-status nrm-txt"></i><br>
+                </div>
+                <br>
+            <hr>
+            <i class="icon-clock-o"></i>&nbsp;Remarques (visibles de l'étudiant)
+            <br>
+            <div id='pro-details-ass'>
+                <div class="edt-status-light nrm-txt">Nombre de caractère(s) restant(s) : <i id="noteass-length"></i></div>
+                <textarea id="pf-noteass" class="prof-note-input" placeholder="Entrez une note vis à vis de l'étudiant." style="resize: none;"  name="w3review" rows="3" cols="67" onKeyUp='manageNoteAssiduite()'></textarea>
+            </div>
+            <div id="profile-save-btn">
+              <button type="button" onclick="generateProfileModifyDB()" class="btn btn-default btn-lg btn-block"><i class="icon-floppy-disk"></i>&nbsp;Enregistrer</button>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>

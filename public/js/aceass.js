@@ -1827,6 +1827,14 @@ function generateGlobalPsdXLSWorksheet(paramLines, paramIsGlobalSheet){
       
         // Now we have to work on the lines !
         for(let i=0; i<paramLines.length; i++){
+          
+          let fullNameCell;
+          if(paramLines[i].LIVING_CONFIG == 'A'){
+            fullNameCell = { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL_YELLOW } };
+          }
+          else{
+            fullNameCell = { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL } };
+          }
           let rowHeaderLine = [
             { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
             { v: paramLines[i].NIVEAU, t: 's', s: { ...DEF_CELL } },
@@ -1834,7 +1842,7 @@ function generateGlobalPsdXLSWorksheet(paramLines, paramIsGlobalSheet){
             { v: paramLines[i].GROUPE, t: 's', s: { ...DEF_CELL } },
             { v: paramLines[i].USERNAME, t: 's', s: { ...DEF_CELL_MONO } },
             { v: paramLines[i].MATRICULE, t: 's', s: { ...DEF_CELL } },
-            { v: paramLines[i].FULLNAME, t: 's', s: { ...DEF_CELL } },
+            fullNameCell,
             { v: paramLines[i].STATUS, t: 's', s: { ...DEF_CELL } },
             { v: paramLines[i].OCCURENCE, t: 's', s: { ...DEF_CELL } }
           ];
@@ -1931,6 +1939,11 @@ function generateGlobalPsdXLSWorksheet(paramLines, paramIsGlobalSheet){
           { v: 'NB 3 : les matricules sont saisies à la main par les étudiants dans un formulaire. Nous ne pouvons les vérifier automatiquement, il y a donc un risque d\'erreur possible sur leur matricule.', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
         ];
         rowCollection.push(rowFooter4);
+
+        let rowFooter5 = [
+          { v: 'NB 4 : Les noms en jaune sont les étudiants qui ont déclaré vivre seul(e).', t: 's', s: { ...DEF_FOOTER_CARTOUCHE } }
+        ];
+        rowCollection.push(rowFooter5);
       
         const ws = XLSX.utils.aoa_to_sheet(rowCollection);
         ws['!cols'] = [
@@ -2203,6 +2216,19 @@ $(document).ready(function() {
         behavior: 'smooth'
       });
     });
+    
+    /****************************************************/
+    /****************************************************/
+    /******************  Modif profile  *****************/
+    /****************************************************/
+    /****************************************************/
+    //fillCartoucheMentionProfile();
+    // Refresh status
+    $( ".stt-group" ).click(function() {
+      updateProfStatus(this.id);
+    });
+
+
     /****************************************************/
     /****************************************************/
     /****************** START : PAYMENT *****************/

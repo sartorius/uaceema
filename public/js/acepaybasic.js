@@ -234,14 +234,14 @@ function showPopUpPay(param){
     $('#title-pay-details').html(param.UP_PAYMENT_REF);
     detailsMsg = detailsMsg + '<strong>Username &nbsp;:&nbsp;</strong>' + param.VSH_USERNAME + '<br>';
     detailsMsg = detailsMsg + '<strong>Date heure paiement &nbsp;:&nbsp;</strong>' + param.UP_PAY_DATETIME + '<br>';
-    detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.UP_INPUT_AMOUNT).replace("MGA", "AR") + '<br>';
+    detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + renderAmount(param.UP_INPUT_AMOUNT) + '<br>';
     detailsMsg = detailsMsg + '<strong>Status &nbsp;:&nbsp;</strong>' + verboseStatusOfPayment(param.UP_STATUS) + '<br>';
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + verboseTypeOfPayment(param.UP_TYPE_OF_PAYMENT) + '<br>';
     detailsMsg = detailsMsg + '<strong>Commentaire &nbsp;:&nbsp;</strong>' + isNullMvo(param.UP_COMMENT) + '<br><br>';
     detailsMsg = detailsMsg + '<strong>Code de référence &nbsp;:&nbsp;</strong>' + param.REF_CODE + '<br>';
     detailsMsg = detailsMsg + '<strong>Description Paiement &nbsp;:&nbsp;</strong>' + param.REF_DESCRIPTION + '<br>';
     detailsMsg = detailsMsg + '<strong>Limite Paiement &nbsp;:&nbsp;</strong>' + param.REF_DDL + '<br>';
-    detailsMsg = detailsMsg + '<strong>Montant de référence &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.REF_AMOUNT).replace("MGA", "AR") + '<br><br>';
+    detailsMsg = detailsMsg + '<strong>Montant de référence &nbsp;:&nbsp;</strong>' + renderAmount(param.REF_AMOUNT) + '<br><br>';
     detailsMsg = detailsMsg + '<strong>Classe &nbsp;:&nbsp;</strong>' + param.VSH_SHORT_CLASS + '<br>';
     detailsMsg = detailsMsg + '<strong>Prénom &nbsp;:&nbsp;</strong>' + param.VSH_FIRSTNAME + '<br>';
     detailsMsg = detailsMsg + '<strong>Nom &nbsp;:&nbsp;</strong>' + param.VSH_LASTNAME + '<br>';
@@ -344,7 +344,7 @@ function loadAllPAYGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
-            return formatterCurrency.format(value).replace("MGA", "AR");
+            return renderAmount(value);
           }
         },
         { name: "UP_PAY_DATE",

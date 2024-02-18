@@ -1044,15 +1044,15 @@ function generateTranchePayWorksheet(paramLines){
 
   const ws = XLSX.utils.aoa_to_sheet(rowCollection);
   ws['!cols'] = [
-    { width: 10 }, //Details documents
-    { width: 10 }, //Header resume
-    { width: 10 }, //Val resume
-    { width: 10 }, //na
-    { width: 10 }, //na
-    { width: 10 }, //na
-    { width: 20 }, //na
-    { width: 20 }, //na
-    { width: 20 }]; //na
+    { width: 5 }, //Details documents
+    { width: 8 }, //Header resume
+    { width: 8 }, //Val resume
+    { width: 8 }, //na
+    { width: 8 }, //na
+    { width: 8 }, //na
+    { width: 17 }, //na
+    { width: 17 }, //na
+    { width: 17 }]; //na
   //ws['!rows'] = [{ 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }, { 'hpt': DEF_ROW_DFT }];
   const rowDefinition = [];
   for(let i=0; i<rowCollection.length; i++){

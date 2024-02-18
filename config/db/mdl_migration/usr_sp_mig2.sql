@@ -41,3 +41,75 @@ BEGIN
 
 END$$
 -- Remove $$ for OVH
+
+-- Display average score according to his/her application time
+DELIMITER $$
+DROP PROCEDURE IF EXISTS CLI_STU_Modify$$
+CREATE PROCEDURE `CLI_STU_Modify` (IN param_agent_id BIGINT,
+                                   IN param_user_id BIGINT,
+                                   IN param_living_conf CHAR(1),
+                                   IN param_cohort_id INT,
+                                   IN param_lastname VARCHAR(100),
+                                   IN param_firstname VARCHAR(100),
+                                   IN param_othfirstname VARCHAR(50),
+                                   IN param_matricule VARCHAR(45),
+                                   IN param_phone1 VARCHAR(20),
+                                   IN param_phone_par1 VARCHAR(20),
+                                   IN param_phone_par2 VARCHAR(20),
+                                   IN param_ass_info VARCHAR(250))
+BEGIN
+    DECLARE inv_username	      CHAR(10);
+    DECLARE count_uac_user_info	SMALLINT;
+
+    DECLARE inv_phone_par2	VARCHAR(20);
+    DECLARE inv_ass_info	VARCHAR(250);
+    -- END OF DECLARE
+
+    IF param_phone_par2 = "" THEN
+      SET inv_phone_par2 = NULL;
+    ELSE
+      SET inv_phone_par2 = param_phone_par2;
+    END IF;
+
+    IF param_ass_info = "" THEN
+      SET inv_ass_info = NULL;
+    ELSE
+      SET inv_ass_info = param_ass_info;
+    END IF;
+
+
+    -- MDL USER
+    UPDATE mdl_user SET
+      last_update = CURRENT_TIMESTAMP,
+      lastname = UPPER(param_lastname),
+      firstname = fCapitalizeStr(param_firstname),
+      autre_prenom = fCapitalizeStr(param_othfirstname),
+      matricule = param_matricule,
+      phone1 = param_phone1,
+      phone_par1 = param_phone_par1,
+      phone_par2 = inv_phone_par2
+    WHERE id = param_user_id;
+
+    -- UAC SHOW USER
+    SELECT username INTO inv_username FROM mdl_user WHERE id = param_user_id;
+    UPDATE uac_showuser SET
+      last_update = CURRENT_TIMESTAMP,
+      cohort_id = param_cohort_id
+    WHERE username = inv_username;
+
+    -- UAC INFOS
+    SELECT COUNT(1) INTO count_uac_user_info FROM uac_user_info WHERE id = param_user_id;
+    IF count_uac_user_info > 0 THEN
+       -- We need to do an update
+       UPDATE uac_user_info SET
+         last_update = CURRENT_TIMESTAMP,
+         agent_id = param_agent_id,
+         assiduite_info = inv_ass_info,
+         living_configuration = param_living_conf
+       WHERE id = param_user_id;
+    ELSE
+       -- We need to do an insert
+       INSERT INTO uac_user_info (id, living_configuration, assiduite_info, agent_id) VALUES (param_user_id, param_living_conf, inv_ass_info, param_agent_id);
+    END IF;
+END$$
+-- Remove $$ for OVH

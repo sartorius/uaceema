@@ -129,7 +129,9 @@ SELECT
 	 CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END AS GROUPE,
 	 UPPER(mu.username) AS USERNAME,
 	 fGetMatriculeNum(mu.matricule) AS MATRICULE,
-	 REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS FULLNAME,
+   REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " ") AS FULLNAME,
+   IFNULL(uui.living_configuration, 'F') AS LIVING_CONFIG,
+   IFNULL(uui.assiduite_info, 'NA') AS ASS_NOTE,
 	 CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END AS STATUS,
 	  COUNT(1) AS OCCURENCE
 	  FROM uac_assiduite ass JOIN mdl_user mu
@@ -140,14 +142,26 @@ SELECT
                             ON mu.username = uas.username
                             JOIN v_class_cohort vcc
                             ON vcc.id = uas.cohort_id
+                            LEFT JOIN uac_user_info uui
+                            ON uui.id = mu.id
 	  WHERE ass.status IN ('ABS', 'LAT', 'VLA')
 	  AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
 	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -30 DAY)
-	  GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END, UPPER(mu.username), fGetMatriculeNum(mu.matricule), REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " "), CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END
+	  GROUP BY
+      vcc.mention,
+      vcc.niveau,
+      CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END,
+      CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END,
+      UPPER(mu.username),
+      fGetMatriculeNum(mu.matricule),
+      REPLACE(CONCAT(mu.firstname, ' ', mu.lastname), "'", " "),
+      IFNULL(uui.living_configuration, 'F'),
+      IFNULL(uui.assiduite_info, 'NA'),
+      CASE WHEN ass.status = 'ABS' THEN 'Absent(e)' WHEN ass.status IN ('LAT', 'VLA') THEN 'Retard' ELSE 'ERR267' END
 	  -- HAVING COUNT(1) > 1
 	  ORDER BY vcc.mention, vcc.niveau, PARCOURS, GROUPE, USERNAME, STATUS DESC;
 
-
+-- This one is for resume page
 DROP VIEW IF EXISTS rep_excel_ass_compute_global;
 CREATE VIEW rep_excel_ass_compute_global AS
 SELECT
@@ -164,14 +178,14 @@ FROM v_class_cohort vcc JOIN uac_showuser uas ON uas.cohort_id = vcc.id
       							 SELECT uas.cohort_id AS T_LATE_COHORT_ID, count(1) AS T_LATE_CPT FROM uac_assiduite ass
         							  JOIN mdl_user mu ON mu.id = ass.user_id AND ass.status IN ('LAT', 'VLA')
         				   			JOIN uac_showuser uas ON uas.username = mu.username
-                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -30 DAY)
+                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -30 DAY) AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
         							GROUP BY uas.cohort_id
 							 ) t_late ON t_late.T_LATE_COHORT_ID = vcc.id
  							 LEFT JOIN (
        							 SELECT uas.cohort_id AS T_MIS_COHORT_ID, count(1) AS T_MIS_CPT FROM uac_assiduite ass
          							  JOIN mdl_user mu ON mu.id = ass.user_id AND ass.status IN ('ABS')
          				   			JOIN uac_showuser uas ON uas.username = mu.username
-                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -30 DAY)
+                        JOIN uac_edt_line uel ON uel.id = ass.edt_id AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -30 DAY) AND uel.day NOT IN (SELECT working_date FROM uac_assiduite_off)
          							GROUP BY uas.cohort_id
  							 ) t_mis ON t_mis.T_MIS_COHORT_ID = vcc.id
 GROUP BY vcc.mention, vcc.niveau, CASE WHEN vcc.parcours = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.parcours, 1, 18)) END, CASE WHEN vcc.groupe = 'na' THEN '-' ELSE UPPER(SUBSTRING(vcc.groupe, 1, 18)) END, t_late.T_LATE_CPT, t_mis.T_MIS_CPT

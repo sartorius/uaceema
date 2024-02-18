@@ -609,3 +609,28 @@ VALUES ('johnbon403', 5, 3232294372, 8);
 
 
 Revoir les diff un peu : _rawlargescreenedtheader.html.twig
+
+
+032 79 78 874
+
+ACEA.mdl_user_info
+
+1234/SS/IIèA
+
+0341233737
+
+	$('#stpf-lastname').hmtl(invModifyLastname);
+  $('#stpf-firstname').hmtl(invModifyFirstname);
+  $('#stpf-othfirstname').hmtl(invModifyOtherFirstname);
+  $('#stpf-matricule').hmtl(invModifyMatricule);
+  $('#stpf-telstu').hmtl(invModifyTelStu);
+  $('#stpf-telpar1').hmtl(invModifyTelPar1);
+  $('#stpf-telpar2').hmtl(invModifyTelPar2);
+  $('#stpf-noteass').hmtl(invModifyNoteOfStu);
+
+
+  $('#stpf-shortclasse').hmtl(invModifyFirstname);
+	$('#stpf-livingconf').hmtl(invModifyFirstname);
+
+
+1234randriambolhiadddddna@gmail.com

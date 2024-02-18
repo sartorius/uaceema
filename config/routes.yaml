@@ -244,3 +244,6 @@ managerdiploma:
 dematdiploma:
     path:       /dematdiploma/{page}
     controller: App\Controller\DiplomaController::dematdiploma
+generateProfileModifyDB:
+    path:       /generateProfileModifyDB
+    controller: App\Controller\ProfileController::generateProfileModifyDB

@@ -19,6 +19,8 @@ const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
 const DEF_CELL_HEADER_WHITE = { fgColor: { rgb: 'FFFFFF' } };
 const DEF_CELL_HEADER_HEAVY_FILL = { fgColor: { rgb: '1C1C1C' } };
 const DEF_CELL_ODD_FILL = { fgColor: { rgb: 'F4F7FF' } };
+const DEF_CELL_YELLOW_FILL = { fgColor: { rgb: 'FFF97F' } };
+const DEF_CELL_PINK_FILL = { fgColor: { rgb: 'FFE4E7' } };
 const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
                           bottom: { style: "thin", color: {rgb: "383838"} },
                           left: { style: "thin", color: {rgb: "383838"} },
@@ -30,6 +32,9 @@ const DEF_HEADER_CELL_HEAVY = { font: { sz: 8, name: 'Arial', bold: true, color:
 const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
 const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
 const DEF_CELL_ODD = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
+
+const DEF_CELL_YELLOW = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_YELLOW_FILL} };
+const DEF_CELL_PINK = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_PINK_FILL} };
 
 const DEF_NBR_CELL = { font: { sz: 7, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER} };
 const DEF_NBR_CELL_ODD = { font: { sz: 7, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_ODD_FILL} };
@@ -51,6 +56,15 @@ function removeAllQuotes(param){
 
 function getAriaryValue(value){
   return formatterCurrency.format(value).replace("MGA", "AR").replace(",00", "");
+}
+
+function getMGPhoneFormat(str){
+  if(str.length == 10){
+    return str.substring(0, 3) + " " + str.substring(3, 5) + " " + str.substring(5, 7) + " " + str.substring(7);
+  }
+  else{
+    return "ERR1892T"
+  }
 }
 
 /***********************************************************************************************************/

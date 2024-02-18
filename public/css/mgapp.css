@@ -322,6 +322,22 @@ h4 {
   font-size: 0.8em;
 }
 
+
+.mgs-note-nopad{
+  text-align: justify;
+  color: #868686;
+  padding-right: 40px;
+  font-size: 0.9em;
+}
+
+
+.mgs-note-nopad-err{
+  text-align: justify;
+  color: var(--err-ace-color);
+  padding-right: 40px;
+  font-size: 1em;
+}
+
 .mgs-note-warn-md{
   text-align: justify;
   color: var(--main-ace-color);
@@ -708,6 +724,10 @@ textarea[name=inputRef] {
 
 .carte-profile{
     color: var(--main-ace-color);
+}
+
+.carte-noedit{
+  color: var(--main-gray-50);
 }
 
 .card-parent{
@@ -1575,6 +1595,7 @@ textarea[name=inputRef] {
 }
 
 #past-msg-edt,
+#profile-save-btn,
 #exist-msg-edt{
   display: none;
 }
@@ -1663,6 +1684,18 @@ textarea[name=inputRef] {
   font-size: 16px;
   font-weight: 500;
   color: var(--light-violet-80);
+}
+.edt-status-gray{
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--main-gray-50);
+}
+.edt-status-light{
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--main-gray-25);
 }
 .aj-succ{
   color: var(--main-ace-color) !important;
@@ -2748,4 +2781,39 @@ img.part-img{
 #att-case-pan{
   margin-top: 10px;
   margin-bottom: 20px;
+}
+
+.prof-modify{
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+.nrm-txt{
+  font-style: normal;
+}
+
+#profile-save-btn{
+  padding-left: 3.5em;
+  padding-right: 3.5em;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+.prof-note-input{
+  padding: 10px;
+  font-size: 20px;
+  color:rgb(106, 76, 131);
+  margin-bottom: 20px;
+}
+.split-mod-prof{
+  margin-right: 3.4em;
+}
+.pro-class-sel{
+  margin-top: 2em;
+}
+@-moz-document url-prefix() {
+  #stu-contener{
+    width: 110%;
+  }
+  .split-mod-prof{
+    margin-right: 2.5em;
+  }
 }

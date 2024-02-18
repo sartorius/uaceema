@@ -635,6 +635,371 @@ function generateAllMngStudentReportCSV(){
 
 }
 
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+//***********************************************************************************************************
+function generateProfileModifyDB(){
+  $('#stu-details-modal').modal('hide');
+
+  invModifyLastname = removeAllQuotes($('#pf-lastname').val().trim());
+  invModifyFirstname = removeAllQuotes($('#pf-firstname').val().trim());
+  invModifyOtherFirstname = removeAllQuotes($('#pf-othfirstname').val().trim());
+  invModifyMatricule = $('#pf-matricule').val();
+  invModifyTelStu = $('#pf-telstu').val();
+  invModifyTelPar1 = $('#pf-telpar1').val();
+  invModifyTelPar2 = $('#pf-telpar2').val();
+  invModifyNoteOfStu = removeAllQuotes($('#pf-noteass').val());
+
+  $.ajax('/generateProfileModifyDB', {
+      type: 'POST',  // http method
+      data: {
+        currentAgentIdStr: CURRENT_AGENT_ID_STR,
+        foundUserId: FOUND_USER_ID,
+        paramLivinConf: invModifyLivingConfiguration.toUpperCase(),
+        paramCohortId: tempClasseID,
+        paramLastname: invModifyLastname,
+        paramFirstname: invModifyFirstname,
+        paramOthfirstname: invModifyOtherFirstname,
+        paramMatricule: invModifyMatricule,
+        paramPhone1: invModifyTelStu,
+        paramPhonePar1: invModifyTelPar1,
+        paramPhonePar2: invModifyTelPar2,
+        paramNoteStu: invModifyNoteOfStu,
+        token: GET_TOKEN
+      },  // data to submit
+      success: function (data, status, xhr) {
+        $('#msg-alert').html(FOUND_USERNAME + " a été modifié avec succés.");
+        $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+        $('#ace-alert-msg').hide(1000*7);
+
+        $('#stpf-lastname').html(invModifyLastname);
+        $('#stpf-firstname').html(invModifyFirstname);
+        if(invModifyOtherFirstname.length > 0){
+          $('#stpf-othfirstname').html('<span class="icon-id-card nav-icon-fa-sm nav-text"></span>&nbsp;' + invModifyOtherFirstname.toUpperCase());
+        }
+        else{
+          $('#stpf-othfirstname').html('&nbsp;');
+        }
+        $('#stpf-matricule').html(invModifyMatricule);
+        $('#stpf-telstu').html(invModifyTelStu);
+        $('#stpf-telpar1').html(getMGPhoneFormat(invModifyTelPar1));
+
+        if(invModifyTelPar2.length > 0){
+          $('#stpf-telpar2').html('<span class="icon-medkit nav-icon-fa-sm nav-text"></span>&nbsp;' + getMGPhoneFormat(invModifyTelPar2));
+        }
+        else{
+          $('#stpf-telpar2').html('&nbsp;');
+        }
+        
+        $('#stpf-noteass').html(invModifyNoteOfStu == '' ? 'NA' : invModifyNoteOfStu);
+
+        $('#stpf-shortclasse').html(getClassShortClasse(tempClasseID));
+        if(invModifyLivingConfiguration ==  'F'){
+	          $('#stpf-livingconf').html('Vit en famille');
+        }
+        else if(invModifyLivingConfiguration == 'C'){
+          $('#stpf-livingconf').html('Vit en colocation');
+        }
+        else{
+          $('#stpf-livingconf').html('Vit seul' + (GENDER_H_F == 'F' ? 'e' : ''));
+        }
+
+        // Reset with the new value
+        tempClasseIDCONST = tempClasseID;
+        invModifyLastnameCONST = invModifyLastname;
+        invModifyFirstnameCONST = invModifyFirstname;
+        invModifyOtherFirstnameCONST = invModifyOtherFirstname;
+        invModifyMatriculeCONST = invModifyMatricule;
+        invModifyTelStuCONST = invModifyTelStu;
+        invModifyTelPar1CONST = invModifyTelPar1;
+        invModifyTelPar2CONST = invModifyTelPar2;
+        invModifyLivingConfigurationCONST = invModifyLivingConfiguration;
+        invModifyNoteOfStuCONST = invModifyNoteOfStu;
+
+      },
+      error: function (jqXhr, textStatus, errorMessage) {
+        $('#msg-alert').html("ERR617P: " + FOUND_USERNAME + " modification du profil impossible, contactez le support. ");
+        $('#type-alert').removeClass('alert-primary').addClass('alert-danger');
+        $('#ace-alert-msg').show(100);
+      }
+  });
+}
+
+function fillCartoucheMentionProfile(){
+  let listMention = '';
+  for(let i=0; i<DATA_GET_ALL_MENTION_ToJsonArray.length; i++){
+      listMention = listMention + '<a class="dropdown-item" onclick="selectMentionProfile(\'' + DATA_GET_ALL_MENTION_ToJsonArray[i].par_code + '\', \'' + DATA_GET_ALL_MENTION_ToJsonArray[i].title + '\')"  href="#">' + DATA_GET_ALL_MENTION_ToJsonArray[i].title + '</a>';
+  }
+  $('#dpmention-opt').html(listMention);
+}
+
+function selectMentionProfile(str, strTitle){
+  tempMentionCode = str;
+  tempMention = strTitle;
+  $('#drp-select').html(strTitle);
+  //console.log('You have just click on: ' + str);
+  // We reset the dropdown
+  selectClasseProfile(0, 'Classe', 0);
+  fillCartoucheClasseProfile();
+}
+
+function fillCartoucheClasseProfile(){
+  let listClasse = '';
+  for(let i=0; i<DATA_GET_ALL_CLASS_ToJsonArray.length; i++){
+    if(DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_MENTION_CODE == tempMentionCode){
+      listClasse = listClasse + '<a class="dropdown-item" onclick="selectClasseProfile(' + DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_ID + ', \'' + DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_SHORT_CLASSE + '\')"  href="#">' + DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_SHORT_CLASSE + '</a>';
+    }
+  }
+  $('#dpclasse-opt').html(listClasse);
+}
+
+function getClassShortClasse(paramId){
+  for(let i=0; i<DATA_GET_ALL_CLASS_ToJsonArray.length; i++){
+    if(DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_ID == paramId){
+      return DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_SHORT_CLASSE;
+    }
+  }
+  return 'ERR892CD'
+}
+
+function selectClasseProfile(classeId, str){
+  tempClasseID = classeId;
+  tempClasse = str;
+  $("#selected-class").html(str);
+  if(classeId == 0){
+    $("#inv-class-txt").html('');
+  }
+  else{
+    $("#inv-class-txt").html(str);
+  }
+  manageSaveChangeProfBtn();
+}
+
+function updateProfStatus(activeId){
+  invModifyLivingConfiguration = $('#' + activeId).val();
+  $('.stt-group').removeClass('active');  // Remove any existing active classes
+  $('#' + activeId).addClass('active'); // Add the class to the nth element
+  manageSaveChangeProfBtn();
+}
+
+function manageNoteAssiduite(){
+  let readInputText = $("#pf-noteass").val();
+  //console.log('in verifyTextAreaSaveBtn: ' + readInputText);
+  let textInputLength = readInputText.length;
+  $("#noteass-length").html((MAX_NOTE_LENGTH-textInputLength) < 0 ? 0 : (MAX_NOTE_LENGTH-textInputLength));
+
+  if(textInputLength > MAX_NOTE_LENGTH){
+    $("#pf-noteass").val(readInputText.substring(0, MAX_NOTE_LENGTH));
+  }
+
+  manageSaveChangeProfBtn();
+}
+
+
+function manageSaveChangeProfBtn(){
+  let canBeSave = 'Y';
+
+  //console.log('See 1 canBeSave: ' + canBeSave);
+  if(($('#pf-lastname').val().length > 0) 
+          && (canBeSave == 'Y')){
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if($('#pf-lastname').val().length == 0){
+      $("#disp-err-msg").html('Le nom de famille ne peux être vide.');
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 2 canBeSave: ' + canBeSave);
+  if(($('#pf-firstname').val().trim().length > 0) 
+          && (!(/\s/.test($('#pf-firstname').val().trim())))
+          && (canBeSave == 'Y')){
+    // If we dont have the exclamation we should be OK
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if($('#pf-firstname').val().trim().length == 0){
+      $("#disp-err-msg").html('Le prénom ne peux être vide.');
+    }
+    else if((/\s/.test($('#pf-firstname').val().trim()))){
+      $("#disp-err-msg").html('Le premier prénom est le prénom d\'usage ne peut contenir un espace. Ajoutez les autres prénoms dans le champs Autre prénoms.');
+    }
+    else{
+      //Do nothing
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 3 canBeSave: ' + canBeSave);
+  if(($('#pf-matricule').val().length > 0) 
+          && (/[0-9]+\/(GE|DT|ECO|CO|IE|RI|SS|BBA)\/(IèA|IIèA|IIIèA|IVèA|VèA)/.test($('#pf-matricule').val()))
+          && (canBeSave == 'Y')){
+    // If we dont have the exclamation we should be OK
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if($('#pf-matricule').val().length == 0){
+      $("#disp-err-msg").html('Le matricule ne peux être vide.');
+    }
+    else if(!(/[0-9]+\/(GE|DT|ECO|CO|IE|RI|SS|BBA)\/(IèA|IIèA|IIIèA|IVèA|VèA)/.test($('#pf-matricule').val()))){
+      $("#disp-err-msg").html('Le matricule n\'est pas au format NN/XX/IIèA ou NN/XX/IIIèA<br>NN > Nombre<br>XX > DT: Droit; ECO: Économie; CO: Communication; IE: Informatique & Électronique; RI: Relations Internationales & Diplomatie; SS: Sciences de la Santé; BBA: Bachelor of Business Administration.');
+    }
+    else{
+      //Do nothing
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 4 canBeSave: ' + canBeSave);
+  if(($('#pf-telstu').val().length > 0) 
+          && (/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telstu').val()))
+          && (canBeSave == 'Y')){
+    // If we dont have the exclamation we should be OK
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if($('#pf-telstu').val().length == 0){
+      $("#disp-err-msg").html('Le téléphone de l\'étudiant ne peux être vide.');
+    }
+    else if(!(/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telstu').val()))){
+      $("#disp-err-msg").html('Le téléphone de l\'étudiant n\'est pas au format 03XNNNNNNN');
+    }
+    else{
+      //Do nothing
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 5 canBeSave: ' + canBeSave);
+  if(($('#pf-telpar1').val().length > 0) 
+          && (/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telpar1').val()))
+          && (canBeSave == 'Y')){
+    // If we dont have the exclamation we should be OK
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if($('#pf-telpar1').val().length == 0){
+      $("#disp-err-msg").html('Le téléphone 1 du parent/tuteur ne peux être vide.');
+    }
+    else if(!(/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telpar1').val()))){
+      $("#disp-err-msg").html('Le téléphone 1 n\'est pas au format 03XNNNNNNN');
+    }
+    else{
+      //Do nothing
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 6 canBeSave: ' + canBeSave);
+  if((($('#pf-telpar2').val().length > 0) 
+          && (/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telpar2').val()))
+          && (canBeSave == 'Y'))
+      || (($('#pf-telpar2').val().length == 0)
+            && (canBeSave == 'Y')
+          )
+          ){
+    // If we dont have the exclamation we should be OK
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if(($('#pf-telpar2').val().length > 0)
+        && (!(/(033|034|032|037|038)[0-9]{7}$/.test($('#pf-telpar2').val())))
+      ){
+      $("#disp-err-msg").html('Le téléphone 2 n\'est pas au format 03XNNNNNNN');
+    }
+    else{
+      //Do nothing
+    }
+    canBeSave = 'N';
+  }
+
+  if((tempClasseID > 0)
+    && (canBeSave == 'Y')){
+    $("#disp-err-msg").html('');
+  }
+  else{
+    if((tempClasseID == 0)){
+      $("#disp-err-msg").html('Veuillez choisir une classe pour cet étudiant');
+    }
+    canBeSave = 'N';
+  }
+
+  //console.log('See 7 canBeSave: ' + canBeSave);
+  // ----------------------
+  //Final decition here
+  if(canBeSave == 'Y'){
+    $('#profile-save-btn').show(100);
+  }
+  else{
+    $('#profile-save-btn').hide(100);
+  }
+}
+
+function hydrateMyProfile(){
+  // Retrieve the constant in case of close or cancel case
+  tempClasseID = tempClasseIDCONST;
+  invModifyLastname = invModifyLastnameCONST;
+  invModifyFirstname = invModifyFirstnameCONST;
+  invModifyOtherFirstname = invModifyOtherFirstnameCONST;
+  invModifyMatricule = invModifyMatriculeCONST;
+  invModifyTelStu = invModifyTelStuCONST;
+  invModifyTelPar1 = invModifyTelPar1CONST;
+  invModifyTelPar2 = invModifyTelPar2CONST;
+  invModifyLivingConfiguration = invModifyLivingConfigurationCONST;
+  invModifyNoteOfStu = invModifyNoteOfStuCONST;
+
+  manageNoteAssiduite();
+  const KEEP_TEMP_CLASSE_ID = tempClasseID;
+  let keepTempClasse = "";
+  $('#pf-lastname').val(invModifyLastname);
+  $('#pf-firstname').val(invModifyFirstname);
+  $('#pf-othfirstname').val(invModifyOtherFirstname);
+  $('#pf-matricule').val(invModifyMatricule);
+  $('#pf-telstu').val(invModifyTelStu);
+  $('#pf-telpar1').val(invModifyTelPar1);
+  $('#pf-telpar2').val(invModifyTelPar2);
+  if(invModifyNoteOfStu.length > 0){
+      $('#pf-noteass').val(invModifyNoteOfStu);
+  }
+
+  updateProfStatus('stt-'+invModifyLivingConfiguration.toLowerCase());
+  fillCartoucheMentionProfile();
+  //console.log('Hydrate tempClasseID 1: ' + tempClasseID);
+  for(let i=0; i<DATA_GET_ALL_CLASS_ToJsonArray.length; i++){
+    if(DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_ID == tempClasseID){
+      tempMentionCode = DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_MENTION_CODE;
+      tempClasse = DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_SHORT_CLASSE;
+      keepTempClasse = tempClasse;
+
+      selectMentionProfile(tempMentionCode, DATA_GET_ALL_CLASS_ToJsonArray[i].VCC_MENTION_TITLE);
+      //console.log('Hydrate tempClasseID 2: ' + tempClasseID);
+      tempClasseID = KEEP_TEMP_CLASSE_ID;
+      tempClasse = keepTempClasse;
+      selectClasseProfile(tempClasseID, tempClasse);
+      return true;
+    }
+  }
+  return false;
+}
+
+function modifyProfile(){
+  //console.log('You clicked on modifyProfile');
+  hydrateMyProfile();
+  $('#stu-details-modal').modal('show');
+}
+
+
+
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {

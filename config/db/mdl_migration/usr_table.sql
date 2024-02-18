@@ -85,3 +85,23 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`));
+
+-- this is to notify if we have data infos for the user;
+DROP TABLE IF EXISTS uac_user_info;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_user_info` (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `living_configuration` CHAR(1) NOT NULL DEFAULT 'F' COMMENT 'C is for Colocation, F is for Family, A is for Alone',
+  `assiduite_info` VARCHAR(250) NULL,
+  `agent_id` BIGINT UNSIGNED NOT NULL,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+/*
+diarand072
+INSERT INTO uac_user_info (`id`, `living_configuration`, `agent_id`) VALUES (94, 'F', 11);
+julitot262
+INSERT INTO uac_user_info (`id`, `living_configuration`, `agent_id`) VALUES (284, 'C', 11);
+miadbru636
+INSERT INTO uac_user_info (`id`, `living_configuration`, `agent_id`) VALUES (658, 'A', 11);

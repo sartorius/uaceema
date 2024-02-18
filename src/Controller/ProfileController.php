@@ -7,14 +7,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
 use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
 
-class ProfileController extends AbstractController
-{
+class ProfileController extends AbstractController{
+  private static $my_exact_access_right = 41;
+
   public function show(Environment $twig, LoggerInterface $logger, $page, $week)
   {
 
@@ -22,6 +24,10 @@ class ProfileController extends AbstractController
     $logger->debug("This page: " . $page);
     // Usually this means N for No
     $from_admin = 'N';
+    $write_access = 'N';
+    $result_query_get_all_classes = [];
+    $result_query_get_all_mention = [];
+    $agent_id = 0;
 
     //Check if we are coming from POST
     if(isset($_POST["poststu_page"]))
@@ -87,13 +93,39 @@ class ProfileController extends AbstractController
 
             // log the connection :
             $dashorigin = "'S', NULL";
-
+            $result_get_token = "NA";
             //Check if we are coming from POST
             if($from_admin == 'Y')
             {
                 // It is from Admin
                 $dashorigin = "'A', " . $_SESSION["id"];
             };
+
+            // S is from Student Manager
+            // I need to retrieve session information
+            if($from_admin == 'S'){
+              if (session_status() == PHP_SESSION_NONE) {
+                  session_start();
+              }
+          
+              $scale_right = ConnectionManager::whatScaleRight();
+              if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+                  $result_get_token = $this->getDailyTokenPayStr($logger);
+                  $write_access = 'Y';
+
+                  $agent_id = $_SESSION["id"];
+                  $query_get_all_mention = " SELECT * FROM uac_ref_mention; ";
+                  $logger->debug("Query query_get_all_mention: " . $query_get_all_mention);
+                  $result_query_get_all_mention = $dbconnectioninst->query($query_get_all_mention)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show result_query_get_all_mention: " . count($result_query_get_all_mention));
+
+                  $query_get_all_classes = " SELECT vcc.id AS VCC_ID, vcc.mention_code AS VCC_MENTION_CODE, vcc.mention AS VCC_MENTION_TITLE, vcc.short_classe AS VCC_SHORT_CLASSE FROM v_class_cohort vcc ORDER BY vcc.short_classe; ";
+                  $logger->debug("Query query_get_all_classes: " . $query_get_all_classes);
+                  $result_query_get_all_classes = $dbconnectioninst->query($query_get_all_classes)->fetchAll(PDO::FETCH_ASSOC);
+                  $logger->debug("Show result_query_get_all_classes: " . count($result_query_get_all_classes));
+              }
+            }
+            
             $query_add_log = " INSERT INTO uac_studashboard_log(user_id, origin, admin_id) VALUE ( " . $result[0]['ID'] . ", " . $dashorigin . ");";
             $dbconnectioninst->query($query_add_log)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -300,9 +332,14 @@ class ProfileController extends AbstractController
             /***********************************************************************************************************************************************************/
             /***********************************************************************************************************************************************************/
 
+            $query_user_ass_info = " SELECT * FROM uac_user_info WHERE id =" . $result[0]['ID'] . "; ";
+            $logger->debug("Show me query_user_ass_info: " . $query_user_ass_info);
 
+            $result_query_user_ass_info = $dbconnectioninst->query($query_user_ass_info)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_user_ass_info: " . count($result_query_user_ass_info));
 
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
+                                      'agent_id' => $agent_id,
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
                                       'recap_assiduites'=>$result_assiduite_recap, 'from_admin' => $from_admin,
                                       'modeIsJQ' => $modeIsJQ,
@@ -311,17 +348,21 @@ class ProfileController extends AbstractController
                                       "week"=>$week, "page"=>$page, "prec_maxweek"=>$prec_maxweek, "next_maxweek"=>$next_maxweek,
                                       "result_query_queued_ass"=>$result_query_queued_ass,
                                       "result_query_msg_ass"=>$result_query_msg_ass,
-                                      "result_list_bdaymonth"=>$result_list_bdaymonth,/*,
-                                      "week_p_one"=>$week_p_one, "week_p_two"=>$week_p_two */
+                                      "result_list_bdaymonth"=>$result_list_bdaymonth,
                                       "param_does_pay_display"=>$param_does_pay_display,
                                       "param_does_pay_public"=>$param_does_pay_public,
                                       "result_histo_pay"=>$result_histo_pay,
                                       "resultSumPerTranche"=>$resultSumPerTranche,
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,
+                                      "result_query_get_all_classes"=>$result_query_get_all_classes,
+                                      "result_query_get_all_mention"=>$result_query_get_all_mention,
                                       "result_query_stat_ass"=>$result_query_stat_ass,
                                       "param_does_gra_module"=>$param_does_gra_module,
                                       "param_does_gra_public"=>$param_does_gra_public,
+                                      'result_get_token'=>$result_get_token,
+                                      'write_access'=>$write_access,
+                                      "result_query_user_ass_info"=>$result_query_user_ass_info,
                                       "result_query_all_grade"=>$result_query_all_grade
                                     ]);
       }
@@ -338,11 +379,96 @@ class ProfileController extends AbstractController
   }
 
 
+  public function generateProfileModifyDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err672 ticket corrompu'),
+              400);
+          }
+
+          // TOKEN IS OK
+
+          // Get data from ajax
+          $param_agent_id = $request->request->get('currentAgentIdStr');
+          $param_user_id = $request->request->get('foundUserId');
+          $param_living_conf = $request->request->get('paramLivinConf');
+          $param_cohort_id = $request->request->get('paramCohortId');
+          $param_lastname = $request->request->get('paramLastname');
+          $param_firstname = $request->request->get('paramFirstname');
+          $param_othfirstname = $request->request->get('paramOthfirstname');
+          $param_matricule = $request->request->get('paramMatricule');
+          $param_phone1 = $request->request->get('paramPhone1');
+          $param_phone_par1 = $request->request->get('paramPhonePar1');
+          $param_phone_par2 = $request->request->get('paramPhonePar2');
+          $param_ass_info = $request->request->get('paramNoteStu');
+          //echo $param_jsondata[0]['username'];
+          $query_call_modify = " CALL CLI_STU_Modify(" . $param_agent_id . ", " . $param_user_id . ", '" . $param_living_conf . "', " . $param_cohort_id . ", '"
+                    . $param_lastname . "', '" . $param_firstname . "', '" . $param_othfirstname . "', '" . $param_matricule . "', '". $param_phone1 . "', '"
+                    . $param_phone_par1 . "', '" . $param_phone_par2 . "', '" . $param_ass_info . "');";
+          $logger->debug("Show me query_call_modify: " . $query_call_modify);
+
+ 
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+          $resultquery_call_modify = $dbconnectioninst->query($query_call_modify)->fetchAll(PDO::FETCH_ASSOC);
+
+          $logger->debug("Show me count resultquery_call_modify: " . count($resultquery_call_modify));
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'result' => $resultquery_call_modify,
+              'message' => 'Tout est OK: '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Err134P récupération payments'),
+      400);
+  }
+
+
   public function didiapply(Environment $twig, LoggerInterface $logger)
   {
 
     $content = $twig->render('Profile/didiapply.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     return new Response($content);
+  }
+
+  // We use the pay token
+  private function getDailyTokenPayStr(LoggerInterface $logger){
+    // Get me the token !
+    $get_token_query = "SELECT fGetDailyTokenPayment() AS TOKEN;";
+    $logger->debug("Show me get_token_query: " . $get_token_query);
+    $dbconnectioninst = DBConnectionManager::getInstance();
+    $result_get_token = $dbconnectioninst->query($get_token_query)->fetchAll(PDO::FETCH_ASSOC);
+    $logger->debug("result_get_token: " . $result_get_token[0]["TOKEN"]);
+
+    return $result_get_token[0]["TOKEN"];
   }
 
   public function verifyapplication(Environment $twig, LoggerInterface $logger)
