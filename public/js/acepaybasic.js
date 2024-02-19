@@ -802,10 +802,10 @@ function mngMvoPayUserExists(val){
   let userPaidDRTINSC = 0;
   let userPaidFRAIGEN = 0;
 
-  const FRAIS_DTSTENT = dataAllFixedFaresToJsonArray[0].amount;
-  const FRAIS_DRTINSC = dataAllFixedFaresToJsonArray[1].amount;
-  const FRAIS_FRAIGEN = dataAllFixedFaresToJsonArray[2].amount;
-  const FRAIS_FRMVOLA = dataAllFixedFaresToJsonArray[3].amount;
+  const FRAIS_DTSTENT = parseInt(dataAllFixedFaresToJsonArray[0].amount);
+  const FRAIS_DRTINSC = parseInt(dataAllFixedFaresToJsonArray[1].amount);
+  const FRAIS_FRAIGEN = parseInt(dataAllFixedFaresToJsonArray[2].amount);
+  const FRAIS_FRMVOLA = parseInt(dataAllFixedFaresToJsonArray[3].amount);
 
   const MSG_WARN_MIN_AMT = "<i class='icon-file-broken'></i>&nbsp;Certaines options sont indisponibles car montant insufissant.<br>";
   const MSG_WARN_NORM_ONLY = "<i class='icon-cubes'></i>&nbsp;Certaines options sont indisponibles car seul le cas [nouveau] est possible.<br>";
@@ -879,7 +879,7 @@ function mngMvoPayUserExists(val){
         // TO DO
         // The strategy may be to identify the open frais not yet paid which are zero and open them
         // Do the case by case DTSTENT DRTINSC
-        const CURRENT_LEFT_NORMAL_AMT = FRAIS_DTSTENT + FRAIS_DRTINSC + FRAIS_FRMVOLA - parseInt(userPaidDTSTENT) - parseInt(userPaidDRTINSC);
+        const CURRENT_LEFT_NORMAL_AMT = parseInt(FRAIS_DTSTENT) + parseInt(FRAIS_DRTINSC) + parseInt(FRAIS_FRMVOLA) - parseInt(userPaidDTSTENT) - parseInt(userPaidDRTINSC);
         $('#disc-left-case-n').html(renderAmount(CURRENT_LEFT_NORMAL_AMT));
 
         // For the rest I need to do remove part by part
@@ -891,13 +891,13 @@ function mngMvoPayUserExists(val){
         let currentLeftDTSTENTAncienBased =  currentLeftDTSTENTNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[0].DIS_AMOUNT);
         let currentLeftDRTINSCAncienBased =  currentLeftDRTINSCNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[1].DIS_AMOUNT);
 
-        const CURRENT_LEFT_ANCIEN_AMT = (currentLeftDTSTENTAncienBased + currentLeftDRTINSCAncienBased + FRAIS_FRMVOLA) > 0 ? currentLeftDTSTENTAncienBased + currentLeftDRTINSCAncienBased + FRAIS_FRMVOLA : 0;
+        const CURRENT_LEFT_ANCIEN_AMT = (parseInt(currentLeftDTSTENTAncienBased) + parseInt(currentLeftDRTINSCAncienBased) + parseInt(FRAIS_FRMVOLA)) > 0 ? parseInt(currentLeftDTSTENTAncienBased) + parseInt(currentLeftDRTINSCAncienBased) + parseInt(FRAIS_FRMVOLA) : 0;
         $('#disc-left-case-a').html(renderAmount(CURRENT_LEFT_ANCIEN_AMT));
 
-        let currentLeftDTSTENTTransfertBased =  currentLeftDTSTENTNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[2].DIS_AMOUNT);
-        let currentLeftDRTINSCTransfertBased =  currentLeftDRTINSCNormalBased - parseInt(dataAllSetUpDiscountToJsonArray[3].DIS_AMOUNT);
+        let currentLeftDTSTENTTransfertBased =  parseInt(currentLeftDTSTENTNormalBased) - parseInt(dataAllSetUpDiscountToJsonArray[2].DIS_AMOUNT);
+        let currentLeftDRTINSCTransfertBased =  parseInt(currentLeftDRTINSCNormalBased) - parseInt(dataAllSetUpDiscountToJsonArray[3].DIS_AMOUNT);
 
-        const CURRENT_LEFT_TRANSFERT_AMT = (currentLeftDTSTENTTransfertBased + currentLeftDRTINSCTransfertBased + FRAIS_FRMVOLA) > 0 ? currentLeftDTSTENTTransfertBased + currentLeftDRTINSCTransfertBased + FRAIS_FRMVOLA : 0;
+        const CURRENT_LEFT_TRANSFERT_AMT = (parseInt(currentLeftDTSTENTTransfertBased) + parseInt(currentLeftDRTINSCTransfertBased) + parseInt(FRAIS_FRMVOLA)) > 0 ? parseInt(currentLeftDTSTENTTransfertBased) + parseInt(currentLeftDRTINSCTransfertBased) + parseInt(FRAIS_FRMVOLA) : 0;
         $('#disc-left-case-t').html(renderAmount(CURRENT_LEFT_TRANSFERT_AMT));
 
         

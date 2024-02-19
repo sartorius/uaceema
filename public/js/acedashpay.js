@@ -1183,7 +1183,7 @@ $(document).ready(function() {
       cobArray.push('REDUCTION.AUJ....' + (renderAmount(cobReductionOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('CASH.AUJ.........' + (renderAmount(cobCashOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('CHEQUE.AUJ.......' + (renderAmount(cobCheqOfTheDay.toString())).padStart(maxLgRecap, paddChar));
-      cobArray.push('NBR.CHEQUE.AUJ...' + (renderAmount(cobNbrCheqOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('NBR.CHEQUE.AUJ...' + (cobNbrCheqOfTheDay.toString()).padStart(maxLgRecap, paddChar));
       cobArray.push('VIR/TPE.AUJ......' + (renderAmount(cobVirmTpeOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('TOTAL.AUJ........' + (renderAmount(totalCashCheck.toString())).padStart(maxLgRecap, paddChar));
 

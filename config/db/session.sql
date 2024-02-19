@@ -634,3 +634,12 @@ ACEA.mdl_user_info
 
 
 1234randriambolhiadddddna@gmail.com
+
+-- A tester en test
+SITRRAF267
+
+
+$("#btn-case-3").removeClass('deactive-btn');
+$("#btn-case-3").addClass('deactive-btn');
+
+$("#btn-type-e").removeClass('deactive-btn');

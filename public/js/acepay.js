@@ -658,6 +658,7 @@ function setUniButtonsAndListener(){
           payShortCutOperationForUserJsonArray.push(myPaymentDRTINSC);
 
         }
+        $("#btn-type-e").addClass('deactive-btn');
         $("#addp-pay-uni").hide(100);
         $("#addp-type-pay").show(300);
     });

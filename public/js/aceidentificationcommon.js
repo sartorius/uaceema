@@ -505,6 +505,9 @@ function commonOperationIfFoundUsername(paramUsername){
 
 function verityAddComContentScan(){
 
+  //Reset exemption here
+  $("#btn-type-e").removeClass('deactive-btn');
+
   $('#type-alert').addClass('alert-primary').removeClass('alert-danger');
   $('#ace-alert-msg').hide(100);
   // Do something
