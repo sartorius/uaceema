@@ -184,7 +184,7 @@ function loadHistoPayGrid(){
           },
           { name: "UP_INPUT_AMOUNT",
             title: "Payé",
-            type: "number",
+            type: "text",
             width: 60,
             align: "right",
             headercss: "cell-ref-sm-hd",
@@ -263,7 +263,7 @@ function loadHistoPayGrid(){
           },
           { name: "UP_INPUT_AMOUNT",
             title: "Déja payé",
-            type: "number",
+            type: "text",
             width: 60,
             align: "right",
             headercss: "cell-ref-sm-hd",
@@ -330,7 +330,7 @@ function loadHistoPayGrid(){
           },
           { name: "REF_AMOUNT",
             title: "Ref.",
-            type: "number",
+            type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
@@ -340,7 +340,7 @@ function loadHistoPayGrid(){
                 return renderAmount('0');
               }
               else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return renderAmount(value);
               }
             }
           },
@@ -387,13 +387,13 @@ function loadSumUpGrid(){
           },
           { name: "REST_TO_PAY",
             title: "Reste à payer",
-            type: "number",
+            type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              return formatterCurrency.format(value).replace("MGA", "AR");
+              return renderAmount(value);
             }
           },
           { name: "NEGATIVE_IS_LATE",
@@ -432,35 +432,35 @@ function loadSumUpGrid(){
           },
           { name: "TRANCHE_AMOUNT",
             title: "Montant",
-            type: "number",
+            type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              return formatterCurrency.format(value).replace("MGA", "AR");
+              return renderAmount(value);
             }
           },
           { name: "ALREADY_PAID",
             title: "Déjà payé",
-            type: "number",
+            type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              return formatterCurrency.format(value).replace("MGA", "AR");
+              return renderAmount(value);
             }
           },
           { name: "REST_TO_PAY",
             title: "Reste à payer",
-            type: "number",
+            type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              return formatterCurrency.format(value).replace("MGA", "AR");
+              return renderAmount(value);
             }
           },
           { name: "TRANCHE_DDL",
