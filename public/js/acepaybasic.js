@@ -638,12 +638,12 @@ function showPopUpMvola(param, paramAjaxFeedback){
     detailsMsg = detailsMsg + '<strong>Type &nbsp;:&nbsp;</strong>' + param.TYPE_TRANSACTION + '<br>';
     if(param.STATUS_TRANSACTION == 'NUD'){
       invMVOAmountNUD = parseInt(param.MONTANT_TRANSACTION);
-      detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '</i><br>';
+      detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Montant &nbsp;:&nbsp;</strong>' + renderAmount(param.MONTANT_TRANSACTION) + '</i><br>';
       detailsMsg = detailsMsg + '<i class="line-pv-res"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong> ' + param.TELEPHONE_EXPEDITEUR.replace(/\D+/g, '').replace(/(\d{3})(\d{2})(\d{2})(\d{3})/, '$1 $2 $3 $4') + ' </i><br>';
     }
     else{
       invMVOAmountNUD = 0;
-      detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.MONTANT_TRANSACTION).replace("MGA", "AR") + '<br>';
+      detailsMsg = detailsMsg + '<strong>Montant &nbsp;:&nbsp;</strong>' + renderAmount(param.MONTANT_TRANSACTION) + '<br>';
       detailsMsg = detailsMsg + '<strong>Expéditeur/Cash Point&nbsp;:&nbsp;</strong>' + param.TELEPHONE_EXPEDITEUR + '<br>';
     };
     detailsMsg = detailsMsg + '<strong>Destinataire &nbsp;:&nbsp;</strong>' + param.TELEPHONE_DESTINATAIRE + '<br>';
@@ -658,8 +658,8 @@ function showPopUpMvola(param, paramAjaxFeedback){
 
     detailsFile = detailsFile + '<strong>Fichier CSV &nbsp;:&nbsp;</strong>' + param.NOM_FICHIER + '<br>';
     detailsFile = detailsFile + '<strong>Date heure intégration fichier &nbsp;:&nbsp;</strong>' + param.DATE_HEURE_INTEGRATION + '<br>';
-    detailsFile = detailsFile + '<strong>Solde fichier avant &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.SOLDE_FICHIER_AVANT).replace("MGA", "AR") + '<br>';
-    detailsFile = detailsFile + '<strong>Solde fichier après &nbsp;:&nbsp;</strong>' + formatterCurrency.format(param.SOLDE_FICHIER_APRES).replace("MGA", "AR") + '<br>';
+    detailsFile = detailsFile + '<strong>Solde fichier avant &nbsp;:&nbsp;</strong>' + renderAmount(param.SOLDE_FICHIER_AVANT) + '<br>';
+    detailsFile = detailsFile + '<strong>Solde fichier après &nbsp;:&nbsp;</strong>' + renderAmount(param.SOLDE_FICHIER_APRES) + '<br>';
     
     $('#mvo-details-txt').html(detailsMsg);
     $('#mvo-file-txt').html(detailsFile + "<br><br>");
@@ -726,7 +726,7 @@ function loadAllMVOGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
-            return formatterCurrency.format(value).replace("MGA", "AR");
+            return renderAmount(value);
           }
         },
         { name: "TELEPHONE_EXPEDITEUR",

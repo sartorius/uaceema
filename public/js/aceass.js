@@ -191,10 +191,10 @@ function loadHistoPayGrid(){
             css: "cell-ref-xs",
             itemTemplate: function(value, item) {
               if(value == null){
-                return formatterCurrency.format('0').replace("MGA", "AR");
+                return renderAmount('0');
               }
               else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return renderAmount(value);
               }
             }
           },
@@ -270,10 +270,10 @@ function loadHistoPayGrid(){
             css: "cell-ref-xs",
             itemTemplate: function(value, item) {
               if(value == null){
-                return formatterCurrency.format('0').replace("MGA", "AR");
+                return renderAmount('0');
               }
               else{
-                return formatterCurrency.format(value).replace("MGA", "AR");
+                return renderAmount(value);
               }
             }
           },
@@ -337,7 +337,7 @@ function loadHistoPayGrid(){
             css: "cell-ref-xs",
             itemTemplate: function(value, item) {
               if(value == null){
-                return formatterCurrency.format('0').replace("MGA", "AR");
+                return renderAmount('0');
               }
               else{
                 return formatterCurrency.format(value).replace("MGA", "AR");

@@ -43,7 +43,7 @@ function loadRefPayGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
-            return formatterCurrency.format(value).replace("MGA", "AR");
+            return renderAmount(value);
           }
         },
         { name: "type",
@@ -124,7 +124,7 @@ function loadRefPayGridDiscount(){
         headercss: "cell-ref-sm-hd",
         css: "cell-ref-sm",
         itemTemplate: function(value, item) {
-          return formatterCurrency.format(value).replace("MGA", "AR");
+          return renderAmount(value);
         }
       },
       { name: "FINAL_AMOUNT",
@@ -135,7 +135,7 @@ function loadRefPayGridDiscount(){
         headercss: "cell-ref-sm-hd",
         css: "cell-ref-sm",
         itemTemplate: function(value, item) {
-          return formatterCurrency.format(value).replace("MGA", "AR");
+          return renderAmount(value);
         }
       }
   ];
