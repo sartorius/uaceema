@@ -54,6 +54,8 @@ function removeAllQuotes(param){
   return param.replace(/"/g, '').replace(/'/g, '');
 }
 
+// Depreciated !!!
+// Use the renderAmount instead !
 function getAriaryValue(value){
   return formatterCurrency.format(value).replace("MGA", "AR").replace(",00", "");
 }
@@ -272,9 +274,9 @@ function getVerboseExamStatus(param, isText){
 /***********************************************************************************************************/
 
 function renderAmount(param){
-	var len = param.toString().length;
-	var result = '';
-	var k = 0;
+	let len = param.toString().length;
+	let result = '';
+	let k = 0;
 	for(var i=0;i<len+1;i++){
 		result = param.toString().substr(len-i,1) + result;
 		if(k == 3){
@@ -283,7 +285,7 @@ function renderAmount(param){
 		}
 		k++;
 	}
-	return result + ' AR';
+	return result.replace(",00", "") + ' AR';
 }
 
 function renderAmountExcel(param){
