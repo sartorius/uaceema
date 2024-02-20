@@ -575,6 +575,7 @@ class AdminPayController extends AbstractController
           $param_ticket_ref = $request->request->get('ticketRef');
           $param_amount = $request->request->get('invAmountToPay');
           $param_fsc_id = $request->request->get('invFscId');
+          $param_comment = $request->request->get('invComment');
           $param_short_cut_discount_id = $request->request->get('invShortCutDiscountId');
           $param_type_of_payment = $request->request->get('invTypeOfPayment');
           
@@ -593,7 +594,7 @@ class AdminPayController extends AbstractController
                     // In that case when amount and fsc id are 0 both then we are on total mode
                     foreach ($pay_multi_ope_array as $read)
                     {
-                        $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $param_type_of_payment . "')";
+                        $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $param_type_of_payment . "', '" . $param_comment . "')";
                         $logger->debug("Left Operation show me query_value: " . $query_value);
                         $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
     
@@ -603,7 +604,7 @@ class AdminPayController extends AbstractController
                 else{
                     //echo $param_jsondata[0]['username'];
                     //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
-                    $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "')";
+                    $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $param_fsc_id . "', " . $param_amount . ", '" . $param_type_of_payment . "', '" . $param_comment . "')";
                     $logger->debug("Show me unique query_value: " . $query_value);
                     $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
     
@@ -624,7 +625,7 @@ class AdminPayController extends AbstractController
                 if($read['typeOfPayment'] ==  'E'){
                     $inv_type_payment_exemption = 'E';
                 }
-                $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $inv_type_payment_exemption . "')";
+                $query_value = " CALL CLI_CRT_PayAddPayment( " . $param_agent_id . ", " . $param_user_id . ", '" . $param_ticket_ref . "', '" . $read['fscId'] . "', " . $read['inputAmount'] . ", '" . $inv_type_payment_exemption . "', '" . $param_comment . "')";
                 $logger->debug("Left Operation show me query_value: " . $query_value);
                 $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
 

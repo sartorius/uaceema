@@ -332,6 +332,11 @@ function clearFoundUser(){
   payUniLeftOperationForUserJsonArray = new Array();
   payShortCutOperationForUserJsonArray = new Array();
   $(".init-deactive").addClass('deactive-btn');
+
+  // Comment
+  invComment = '';
+  $('#pay-com').val(invComment);
+  $('#paycom-length').html(MAX_COMENT_LIMIT);
 }
 
 function addPayUserExists(val){

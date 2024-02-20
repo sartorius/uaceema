@@ -1,16 +1,25 @@
 -- Display EDT for Administration
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddPayment$$
-CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_input_amount INT, IN param_type_payment CHAR(1))
+CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_agent_id BIGINT, IN param_user_id BIGINT, IN param_ticket_ref CHAR(10), IN param_fsc_id INT, IN param_input_amount INT, IN param_type_payment CHAR(1), IN param_comment VARCHAR(45))
 BEGIN
     DECLARE inv_status	CHAR(1);
+    DECLARE inv_comment VARCHAR(35);
     -- END OF DECLARE
+    -- param_comment
 
     SELECT 'P' INTO inv_status;
 
+    IF param_comment = '' THEN
+        SET inv_comment = NULL;
+    ELSE
+        SET inv_comment = param_comment;
+    END IF;
+
+
     -- Set the correct status value
-    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, pay_date)
-    VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, CURRENT_TIMESTAMP);
+    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, comment, pay_date)
+      VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, inv_comment, CURRENT_TIMESTAMP);
 
 END$$
 -- Remove $$ for OVH

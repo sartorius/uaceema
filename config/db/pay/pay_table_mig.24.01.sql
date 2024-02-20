@@ -84,7 +84,7 @@ SELECT
 							 	 	LEFT JOIN uac_mvola_line uml ON uml.id = xref.mvola_id
 							 	 	LEFT JOIN uac_facilite_payment ufp ON ufp.id = up.facilite_id
                   LEFT JOIN v_showadmin adm ON up.agent_id = adm.mu_id
-							 ORDER BY up.pay_date DESC;
+							 ORDER BY up.last_update DESC;
 
 
 DROP VIEW IF EXISTS v_all_display_discount;

@@ -156,6 +156,7 @@ function generatePayDBAndPrint(){
         // If this is used then we are doing a shortcut
         invShortCutDiscountId: invShortCutDiscountId,
         invTypeOfPayment: invTypeOfPayment,
+        invComment: invComment,
         payMultiOperationForUserJsonArray: JSON.stringify(arrayOperationToPass),
         token: getToken
       },  // data to submit
@@ -682,6 +683,21 @@ function setUniButtonsAndListener(){
 
 }
 
+function manageCommentPay(){
+  let readInputText = removeAllQuotes($("#pay-com").val());
+  //console.log('in verifyTextAreaSaveBtn: ' + readInputText);
+  let textInputLength = readInputText.length;
+  $("#paycom-length").html((MAX_COMENT_LIMIT-textInputLength) < 0 ? 0 : (MAX_COMENT_LIMIT-textInputLength));
+
+  if(textInputLength > MAX_COMENT_LIMIT){
+    $("#pay-com").val(readInputText.substring(0, MAX_COMENT_LIMIT));
+  }
+  else{
+    $("#pay-com").val(readInputText);
+  }
+}
+
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -706,6 +722,15 @@ $(document).ready(function() {
       // Handle here all type of payment
       for(let i=0; i<TYPE_OF_PAYMENT_CODE_ARRAY.length; i++){
           $("#btn-type-" + TYPE_OF_PAYMENT_CODE_ARRAY[i]).click(function() {
+            // Handle comment first
+            if(($('#pay-com').val() !== null) && ($('#pay-com').val().trim().length > 0)){
+              invComment = $('#pay-com').val().trim();
+              logInAddPay('c:' + invComment);
+            }
+            else{
+              invComment = '';
+            }
+
             invTypeOfPayment = TYPE_OF_PAYMENT_CODE_ARRAY[i].toString().toUpperCase();
             logInAddPay('*** ' + TYPE_OF_PAYMENT_LBL_ARRAY[i] + ' ***');
             $("#addp-type-pay").hide(100);
@@ -769,7 +794,7 @@ $(document).ready(function() {
 
       // Add a payment unique
       $( "#btn-adduni" ).click(function() {
-        console.log("You click on #btn-adduni");
+        //console.log("You click on #btn-adduni");
         invOperation = 'P';
         logInAddPay('Opération PAIEMENT Frais Fixe');
   

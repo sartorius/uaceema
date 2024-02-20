@@ -23,6 +23,9 @@
     let myRecap = new Array();
     const getToken = '{{ result_get_token }}';
 
+    const MAX_COMENT_LIMIT = 30;
+    let invComment = '';
+
     let foundiInJson = 0;
     let foundUserName = '';
     let foundMatricule = '';
@@ -288,6 +291,11 @@
             <div id="btn-type-e" class="type-med-btn pay-part-btn-txt pay-type-btn-t-v">
               <br>EXEMPTION&nbsp;
               <i class="icon-puzzle-piece nav-text"></i><br>
+            </div>
+
+            <div id='pay-details-note'>
+                <div class="edt-status-light nrm-txt">Caractère(s) restant(s) : <i id="paycom-length">xx</i></div>
+                <textarea id="pay-com" class="pay-com-input" placeholder="Entrez un commentaire si besoin" style="resize: none;"  name="w3review" rows="1" cols="32" onKeyUp='manageCommentPay()'></textarea>
             </div>
 
       </div>

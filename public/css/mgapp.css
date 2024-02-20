@@ -2817,3 +2817,13 @@ img.part-img{
     margin-right: 2.5em;
   }
 }
+
+.pay-com-input{
+  padding: 10px;
+  font-size: 20px;
+  color:rgb(106, 76, 131);
+  margin-bottom: 20px;
+}
+#pay-details-note{
+  margin-top: 40px;
+}
