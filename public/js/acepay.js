@@ -212,12 +212,13 @@ function generateDeleteRedDBAndPrint(){
 }
 
 
-function getPaymentDetailsDB(){
+function getPaymentDetailsDB(param){
 
   $.ajax('/getPaymentDetailsDB', {
       type: 'POST',  // http method
       data: {
         ticketRef: ticketRefPayment,
+        paramDetails: param,
         token: getToken
       },  // data to submit
       success: function (data, status, xhr) {
@@ -845,6 +846,7 @@ $(document).ready(function() {
         logInAddPay("et ce jusqu'à");
         logInAddPay("la fin de l'année en cours.");
         logInAddPay(MSG_FOOTER_CSCO);
+        logInAddPay(renderAmount(getAllOPEAmount('CERTSCO')));
   
         $("#addp-mainop").hide(100);
         $("#addp-type-pay").show(300);
@@ -860,10 +862,10 @@ $(document).ready(function() {
         logInAddPay('***');
         logInAddPay('***');
         logInAddPay('*** CERTIFICATION DOCUMENT ***');
+        logInAddPay(renderAmount(getAllOPEAmount('CERTIFC')));
         logInAddPay('***');
         logInAddPay('***');
-        logInAddPay(MSG_FOOTER_CSCO);
-  
+
         $("#addp-mainop").hide(100);
         $("#addp-type-pay").show(300);
   
@@ -878,9 +880,27 @@ $(document).ready(function() {
         logInAddPay('***');
         logInAddPay('***');
         logInAddPay('*** CARTE ETUDIANT ***');
+        logInAddPay(renderAmount(getAllOPEAmount('CARTEET')));
         logInAddPay('***');
         logInAddPay('***');
-        logInAddPay(MSG_FOOTER_CSCO);
+  
+        $("#addp-mainop").hide(100);
+        $("#addp-type-pay").show(300);
+  
+      });
+
+      // CHANGEMENT DE FILIÈRE
+      $( "#btn-chg-fil" ).click(function() {
+        //console.log("#btn-cert-sco");
+        invOperation = 'Y';
+        updateTicketType('Y');
+        //Reset the ticket
+        logInAddPay('***');
+        logInAddPay('***');
+        logInAddPay('*** CHANGEMENT FILIERE ***');
+        logInAddPay(renderAmount(getAllOPEAmount('CHGFILL')));
+        logInAddPay('***');
+        logInAddPay('***');
   
         $("#addp-mainop").hide(100);
         $("#addp-type-pay").show(300);
@@ -1026,6 +1046,11 @@ $(document).ready(function() {
         else if(invOperation == 'A'){
           // Delete and print
           // Carte étudiant
+          generateOpeMultiDBAndPrint(invOperation);
+        }
+        else if(invOperation == 'Y'){
+          // Delete and print
+          // Change filiere
           generateOpeMultiDBAndPrint(invOperation);
         }
         else if(invOperation == 'T'){

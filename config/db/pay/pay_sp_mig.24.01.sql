@@ -80,7 +80,8 @@ END$$
 
 -- Display EDT for Administration
 -- A is for Carte Etudiant
--- T is for Certification
+-- T is for Certification of document
+-- Y is for Change of filiere
 -- Migrated with param agent
 DELIMITER $$
 DROP PROCEDURE IF EXISTS CLI_CRT_PayAddOpeMulti$$
@@ -94,8 +95,11 @@ BEGIN
     IF (param_type_of_operation = 'A') THEN
       -- Carte etudiant
       SET inv_code = 'CARTEET';
+    ELSEIF (param_type_of_operation = 'Y') THEN
+      -- Change filiere
+      SET inv_code = 'CHGFILL';
     ELSE
-      -- Certification
+      -- Certification de document
       SET inv_code = 'CERTIFC';
     END IF;
 
@@ -289,10 +293,16 @@ BEGIN
 
     END IF;
 
+    -- We need to do in 2 times because one of the update depends in another
+    UPDATE uac_payment up SET
+      up.comment = CONCAT('Annulation: [', CONVERT(up.input_amount, CHAR), 'AR] ori. ', UPPER(IFNULL(old_agent_username, 'Auto.')))
+      WHERE payment_ref = param_ticket_ref
+      -- We do not cancel Reduction or Letter of Commitment
+      AND type_of_payment NOT IN ('R', 'L');
+
     UPDATE uac_payment up SET
       up.status = 'C',
       up.ref_fsc_id = 0,
-      up.comment = CONCAT('Annulation: [', CONVERT(up.input_amount, CHAR), 'AR] ori. ', UPPER(IFNULL(old_agent_username, 'Automatique'))),
       up.input_amount =  0,
       up.agent_id = param_agent_id,
       up.last_update = CURRENT_TIMESTAMP

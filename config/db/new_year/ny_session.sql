@@ -28,6 +28,12 @@ DELETE FROM uac_showuser  WHERE username IN (
     SELECT huas.username FROM histo_uac_showuser huas WHERE huas.school_year = 2023
 );
 
+
+
+
+DELETE FROM mdl_user WHERE username = 'NJARRAK759';
+DELETE FROM uac_showuser  WHERE username = 'NJARRAK759';
+
 -- OPTIMIZE TABLE mdl_user
 -- OPTIMIZE TABLE uac_showuser
 

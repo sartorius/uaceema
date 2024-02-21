@@ -339,6 +339,17 @@ function clearFoundUser(){
   $('#paycom-length').html(MAX_COMENT_LIMIT);
 }
 
+// CERTSCO CERTIFC CHGFILL CARTEET
+function getAllOPEAmount(paramCode){
+  for(let i=0; i < dataAllOPEToJsonArray.length; i++){
+    if(dataAllOPEToJsonArray[i].code == paramCode){
+      return dataAllOPEToJsonArray[i].amount;
+    }
+  }
+  return 'ERR6239';
+}
+
+
 function addPayUserExists(val){
   for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
     if (dataAllUSRNToJsonArray[i].USERNAME === val){
@@ -360,6 +371,10 @@ function addPayUserExists(val){
           case 'CERTIFC':
             // code block
             $("#cert-cer-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
+            break;
+          case 'CHGFILL':
+            // code block
+            $("#chg-fil-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
             break;
           default:
             $("#cart-etu-am").html(renderAmount(dataAllOPEToJsonArray[j].amount));
@@ -588,7 +603,17 @@ function verityAddComContentScan(){
                 ticketRefPayment = readInput;
                 // xxx
                 // Need to retrieve the payment in DB
-                getPaymentDetailsDB();
+                getPaymentDetailsDB('PAY');
+
+            }
+            else if(/[0-9]{9}[S|T|A|Y]/.test(readInput)){
+                //We deal here with Payment cancellation
+                console.log('Format Payment OK readInput: ' + readInput);
+                scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Format Paiement valide&nbsp;</i>';
+                ticketRefPayment = readInput;
+                // xxx
+                // Need to retrieve the payment in DB
+                getPaymentDetailsDB('MULTI');
 
             }
             else{

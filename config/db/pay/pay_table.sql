@@ -108,13 +108,16 @@ INSERT IGNORE INTO uac_ref_frais_scolarite
 
 INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(15, 'CERTIFC', 'Certification', 'Certification', 50, 200, 'A', '2023-12-31', 'M');
+(15, 'CERTIFC', 'Certification', 'Certification', 50, 200, 'A', '2024-12-31', 'M');
 
 
 INSERT IGNORE INTO uac_ref_frais_scolarite
 (`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
-(16, 'CARTEET', 'Carte étudiant', 'Carte étudiant', 50, 1000, 'A', '2023-12-31', 'M');
+(16, 'CARTEET', 'Carte étudiant', 'Carte étudiant', 50, 1000, 'A', '2024-12-31', 'M');
 
+INSERT IGNORE INTO uac_ref_frais_scolarite
+(`id`, `code`, `title`, `description`, `fs_order`, `amount`, `status`, `deadline`, `type`) VALUES
+(17, 'CHGFILL', 'Changement filière', 'Changement filière', 50, 50000, 'A', '2024-12-31', 'M');
 
 
 -- Cross ref table
@@ -176,6 +179,9 @@ SELECT 15, id FROM v_class_cohort vcc;
 
 INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 16, id FROM v_class_cohort vcc;
+
+INSERT IGNORE INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
+SELECT 17, id FROM v_class_cohort vcc;
 
 -- REDUCTION FACILITE PAYMENT
 DROP TABLE IF EXISTS uac_facilite_payment;
@@ -292,6 +298,41 @@ CREATE VIEW v_histopayment_for_user AS
                                                       AND ref.type IN ('T', 'U')
                      LEFT JOIN uac_payment up ON up.user_id = vsh.ID
                                                     AND up.ref_fsc_id = xref.fsc_id;
+
+DROP VIEW IF EXISTS v_multiope_payment;
+CREATE VIEW v_multiope_payment AS
+SELECT
+    up.id AS UP_ID,
+      vsh.ID AS VSH_USER_ID,
+      vsh.USERNAME AS VSH_USERNAME,
+      up.status AS UP_STATUS,
+      up.payment_ref AS UP_PAYMENT_REF,
+      up.facilite_id AS UP_FACILITE_ID,
+      up.input_amount AS UP_INPUT_AMOUNT,
+      up.type_of_payment AS UP_TYPE_OF_PAYMENT,
+      up.comment AS UP_COMMENT,
+      up.pay_date AS UP_PAY_DATE,
+      DATE_FORMAT(up.pay_date, '%d/%m/%Y') AS UP_PAY_DATE_READ,
+      up.create_date AS UP_CREATE_DATE,
+      up.last_update AS UP_LAST_UPDATE,
+      xref.fsc_id AS REF_ID,
+      ref.code AS REF_CODE,
+      ref.title AS REF_TITLE,
+      ref.amount AS REF_AMOUNT,
+      ref.deadline AS REF_DEADLINE,
+      DATEDIFF(ref.deadline, CURRENT_DATE) AS NEGATIVE_IS_LATE,
+      ref.type AS REF_TYPE,
+      ref.fs_order AS REF_FS_ORDER,
+      vsh.COHORT_ID AS COHORT_ID
+    FROM uac_xref_cohort_fsc xref JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id
+                     JOIN uac_ref_frais_scolarite ref ON ref.id = xref.fsc_id
+                                                      -- We include only multiple
+                                                      AND ref.type IN ('M')
+                     JOIN uac_payment up ON up.user_id = vsh.ID
+                                                    AND up.ref_fsc_id = xref.fsc_id;
+
+
+
 -- Only the Mvola frais and excedent
 DROP VIEW IF EXISTS v_histo_frais_for_user;
 CREATE VIEW v_histo_frais_for_user AS

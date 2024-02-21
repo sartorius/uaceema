@@ -678,12 +678,21 @@ class AdminPayController extends AbstractController
               400);
           }
 
-          // Get data from ajax
+          // Get data from ajax 
           $param_ticket_ref = $request->request->get('ticketRef');
+          $param_details = $request->request->get('paramDetails');
           //echo $param_jsondata[0]['username'];
-          $query_getpaydetails = " SELECT vsh.FIRSTNAME AS FIRSTNAME, vsh.LASTNAME AS LASTNAME, vsh.MATRICULE AS MATRICULE, vsh.SHORTCLASS AS SHORTCLASS, vpu.* "
-                    . " FROM v_histopayment_for_user vpu JOIN v_showuser vsh ON vsh.ID = vpu.VSH_USER_ID "
-                    . " WHERE UP_PAYMENT_REF = '" . $param_ticket_ref . "'; ";
+          if($param_details == 'PAY'){
+            $query_getpaydetails = " SELECT vsh.FIRSTNAME AS FIRSTNAME, vsh.LASTNAME AS LASTNAME, vsh.MATRICULE AS MATRICULE, vsh.SHORTCLASS AS SHORTCLASS, vpu.* "
+                      . " FROM v_histopayment_for_user vpu JOIN v_showuser vsh ON vsh.ID = vpu.VSH_USER_ID "
+                      . " WHERE UP_PAYMENT_REF = '" . $param_ticket_ref . "'; ";
+          }
+          else{
+            // == 'MULTI'
+            $query_getpaydetails = " SELECT vsh.FIRSTNAME AS FIRSTNAME, vsh.LASTNAME AS LASTNAME, vsh.MATRICULE AS MATRICULE, vsh.SHORTCLASS AS SHORTCLASS, vpu.* "
+                      . " FROM v_multiope_payment vpu JOIN v_showuser vsh ON vsh.ID = vpu.VSH_USER_ID "
+                      . " WHERE UP_PAYMENT_REF = '" . $param_ticket_ref . "'; ";
+          }
           $logger->debug("Show me query_getpay: " . $query_getpaydetails);
 
  
