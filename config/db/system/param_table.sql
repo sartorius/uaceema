@@ -320,6 +320,20 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_room` (
 
 
 
+
+DROP TABLE IF EXISTS uac_calendar;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_calendar` (
+  `id` SMALLINT UNSIGNED NOT NULL,
+  `calendar` CHAR(7) NOT NULL,
+  `semester` CHAR(1) NOT NULL,
+  `display_date` VARCHAR(60) NOT NULL,
+  `display_info` VARCHAR(250) NOT NULL,
+  `observation` VARCHAR(250) NULL,
+  `is_displayed` CHAR(1) NOT NULL DEFAULT 'Y',
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
 /*************
 SELECTION COHORT !
 
@@ -353,5 +367,6 @@ INSERT IGNORE INTO tech_number (id) VALUES (4);
 INSERT IGNORE INTO tech_number (id) VALUES (5);
 INSERT IGNORE INTO tech_number (id) VALUES (6);
 INSERT IGNORE INTO tech_number (id) VALUES (7);
+
 
 -- ----------------------------------------------------------------------------------------------------------------------------

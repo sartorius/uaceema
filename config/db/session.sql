@@ -611,29 +611,11 @@ VALUES ('johnbon403', 5, 3232294372, 8);
 Revoir les diff un peu : _rawlargescreenedtheader.html.twig
 
 
-032 79 78 874
-
-ACEA.mdl_user_info
-
-1234/SS/IIèA
-
-0341233737
-
-	$('#stpf-lastname').hmtl(invModifyLastname);
-  $('#stpf-firstname').hmtl(invModifyFirstname);
-  $('#stpf-othfirstname').hmtl(invModifyOtherFirstname);
-  $('#stpf-matricule').hmtl(invModifyMatricule);
-  $('#stpf-telstu').hmtl(invModifyTelStu);
-  $('#stpf-telpar1').hmtl(invModifyTelPar1);
-  $('#stpf-telpar2').hmtl(invModifyTelPar2);
-  $('#stpf-noteass').hmtl(invModifyNoteOfStu);
 
 
-  $('#stpf-shortclasse').hmtl(invModifyFirstname);
-	$('#stpf-livingconf').hmtl(invModifyFirstname);
+getAllOPEAmount
 
 
-1234randriambolhiadddddna@gmail.com
-
-
-Annulation: [500000000000AR] ori. AUTOMATIQUE
+INSERT INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1769, 'volarab769', '2024-02-22 11:21:56', '2024-02-22 11:21:56', 'Generique', 'ADMINSTRATEUR', 'admin1769@ehow.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '2003-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);

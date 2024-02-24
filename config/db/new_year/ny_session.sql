@@ -79,3 +79,24 @@ SELECT username, roleid, secret, cohort_id, last_update, create_date FROM histo_
 
 DELETE FROM histo_mdl_user WHERE username IN ('sebalaz305', 'tokiraz267', 'antsrak314', 'tologau411');
 DELETE FROM histo_uac_showuser WHERE username IN ('sebalaz305', 'tokiraz267', 'antsrak314', 'tologau411');
+
+
+select CONCAT(niveau, ' - ', mention, '/', parcours, '/', groupe, ' (', short_classe, ')') AS DISPLAY from v_class_cohort
+WHERE niveau IN ('M1', 'M2') ORDER BY short_classe;
+
+
+/*
+https://www.the-qrcode-generator.com/
+
+M1 - COMMUNICATION/Communication Multisectorielle/na (M1/COMMU/Commu/na)
+M1 - DROIT/PRIVE/na (M1/DROIT/PRIVE/na)
+M1 - DROIT/PUBLIC/na (M1/DROIT/PUBLI/na)
+M1 - GESTION/FACG/na (M1/GESTI/FACG/na)
+M1 - GESTION/MMCI/na (M1/GESTI/MMCI/na)
+M1 - RELATIONS INTERNATIONALES DIPLOMATIQUES/na/na (M1/RELAT/na/na)
+M2 - COMMUNICATION/Communication Multisectorielle/na (M2/COMMU/Commu/na)
+M2 - DROIT/PRIVE/na (M2/DROIT/PRIVE/na)
+M2 - DROIT/PUBLIC/na (M2/DROIT/PUBLI/na)
+M2 - GESTION/FACG/na (M2/GESTI/FACG/na)
+M2 - GESTION/MMCI/na (M2/GESTI/MMCI/na)
+M2 - RELATIONS INTERNATIONALES DIPLOMATIQUES/na/na (M2/RELAT/na/na)

@@ -2,7 +2,7 @@
 /***********************************************************************************************************/
 
 $(document).ready(function() {
-  console.log('We are in ACE-STU');
+  console.log('We are in ACE-TEMP');
 
   if($('#mg-graph-identifier').text() == 'xxx'){
     // Do something on cartz
