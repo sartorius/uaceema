@@ -1046,7 +1046,7 @@ function generateTrancheFFPayWorksheet(paramLines, param2Lines){
   rowCollection.push(rowHeader8);
 
   let rowHeader9 = [
-    { v: 'État des frais fixes en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    { v: 'État des frais fixes (frais de test ou entretien, inscription et frais généraux) en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
   rowCollection.push(rowHeader9);
 
