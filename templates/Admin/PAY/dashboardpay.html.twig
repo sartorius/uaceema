@@ -7,6 +7,8 @@
 
     let dataConcatMvolaJsonArray =JSON.parse('{{ result_concat_mvola | json_encode | raw }}');
 
+    let dataSumUpFFJsonArray =JSON.parse('{{ result_query_get_sumup_ff | json_encode | raw }}');
+
     const NON_ATTR_MVOLA = "{{ param_non_attr_mvola }}";
     const CONST_PARAM_YEAR = "{{ param_year }}";
     // Create our number formatter.
@@ -174,6 +176,8 @@
     Réduction aujourd'hui :<br>
     Compte courant Mvola :<br>
     Non attribué Mvola :<br>
+    Frais fixes tout payé :<br>
+    Frais fixes non payé :<br>
   </div>
   <div class="col-2 cell-1-pv">
     <i id="disp-py-ben" class="disp-amt-mono">na</i><br>
@@ -182,10 +186,12 @@
     <i id="disp-pv-red" class="line-pv-res disp-amt-mono">na</i><br>
     <i id="disp-pv-smv" class="disp-amt-mono">na</i><br>
     <i id="disp-pv-nud" class="disp-amt-mono">na</i><br>
+    <i id="disp-pv-ffok" class="disp-amt-mono">0</i><br>
+    <i id="disp-pv-ffko" class="disp-amt-mono">0</i><br>
   </div>
   <div class="col-2 cell-1-pv">
     Cash :<br>
-    <i id="disp-pv-nbr-chq">0</i>&nbsp;Chèque<i id="orth-pv-nbr-chq"></i> :<br>
+    <span id="disp-pv-nbr-chq">0</span>&nbsp;Chèque<i id="orth-pv-nbr-chq"></i> :<br>
     Transfert/TPE :<br>
     <strong>Total :</strong><br>
   </div>

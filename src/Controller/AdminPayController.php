@@ -1618,6 +1618,12 @@ class AdminPayController extends AbstractController
         $result_query_rep_month_mention = $dbconnectioninst->query($query_rep_month_mention)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_rep_month_mention: " . count($result_query_rep_month_mention));
 
+        $query_get_sumup_ff = " SELECT FF_COUNT, COUNT(1) AS COUNT from v_scan_for_late_user GROUP BY FF_COUNT ORDER BY FF_COUNT ASC; ";
+        $logger->debug("Show me query_get_sumup_ff: " . $query_get_sumup_ff);
+
+        $result_query_get_sumup_ff = $dbconnectioninst->query($query_get_sumup_ff)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_get_sumup_ff: " . count($result_query_get_sumup_ff));
+
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
@@ -1639,6 +1645,7 @@ class AdminPayController extends AbstractController
                                                                 "result_rep_all_tranche"=>$result_rep_all_tranche,
                                                                 "result_rep_rec_journee"=>$result_rep_rec_journee,
                                                                 "result_query_rep_month_mention"=>$result_query_rep_month_mention,
+                                                                "result_query_get_sumup_ff"=>$result_query_get_sumup_ff,
                                                                 "param_non_attr_mvola"=>$result_query_nud_mvola[0]['NUD_AMOUNT'],
                                                                 'param_year' => $result_query_param_year[0]['PARAM_YEAR'],
                                                                 'errtype' => '']);

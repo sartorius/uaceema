@@ -122,7 +122,7 @@ BEGIN
         -- We need to check first the gsheet id versus id then do the load
         -- End of the flow correctly
         UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Ready for import' WHERE id = inv_flow_id;
-        SELECT 'End successfully';
+        SELECT 'MAN_LOAD_MDLUser: End successfully';
     END IF;
 END$$
 -- Remove $$ for OVH
@@ -175,8 +175,17 @@ BEGIN
     -- Add secret
     UPDATE uac_showuser SET secret = 3000000000 + FLOOR(RAND()*1000000000), last_update = NOW() WHERE secret IS NULL;
 
+    -- This link is not necessary so we insert if it does not exist
+    -- We do not insert if it is En Famille
+    INSERT IGNORE INTO uac_user_info (id, living_configuration, assiduite_info, agent_id, last_update, create_date)
+    SELECT id, CASE WHEN str_living_configuration = 'En collocation' THEN 'C' ELSE 'A' END, NULL, 11, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+    FROM mdl_load_user WHERE status = 'QUE' AND flow_id = inv_flow_id
+    AND NOT(str_living_configuration = 'En famille');
+
 
     -- End of the flow correctly
     UPDATE uac_working_flow SET status = 'END', last_update = NOW(), comment = 'Done for import' WHERE id = inv_flow_id;
+
+    SELECT 'MAN_CRT_MDLUser: End successfully';
 END$$
 -- Remove $$ for OVH

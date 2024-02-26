@@ -71,6 +71,25 @@ SELECT 2023, username, roleid, secret, cohort_id, last_update, create_date FROM 
     select uas.username from uac_showuser uas JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L1', 'L3')
 );
 
+
+-- this is to notify if we have data infos for the user;
+DROP TABLE IF EXISTS histo_uac_user_info;
+CREATE TABLE IF NOT EXISTS histo_uac_user_info (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `living_configuration` CHAR(1) NOT NULL DEFAULT 'F' COMMENT 'C is for Colocation, F is for Family, A is for Alone',
+  `assiduite_info` VARCHAR(250) NULL,
+  `agent_id` BIGINT UNSIGNED NOT NULL,
+  `school_year` SMALLINT unsigned NOT NULL,
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
+
+
+INSERT IGNORE INTO histo_uac_user_info (school_year, id, living_configuration, assiduite_info, agent_id, last_update, create_date)
+SELECT 2023, id, living_configuration, assiduite_info, agent_id, last_update, create_date FROM uac_user_info uui WHERE uui.id IN (
+  select mu.id from uac_showuser uas JOIN mdl_user mu on mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L1', 'L3')
+)
+
 -- Then delete
 
 /*
@@ -95,6 +114,7 @@ CREATE TABLE `reinscription_load_mdl_user` (
   `old_cohort_id` int(11) DEFAULT NULL,
   `current_cohort_id` int(11) DEFAULT NULL,
   `has_debt` char(1) NOT NULL DEFAULT 'N',
+  `str_living_configuration` VARCHAR(50), -- if null then "en famille"
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)

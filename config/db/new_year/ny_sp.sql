@@ -101,6 +101,20 @@ BEGIN
           SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO'
       );
 
+      -- Check if we have user infos involved
+      INSERT INTO uac_user_info (id, living_configuration, assiduite_info, agent_id, last_update, create_date)
+      SELECT id, living_configuration, assiduite_info, agent_id, CURRENT_TIMESTAMP, create_date FROM histo_uac_user_info huui
+      WHERE huui.id IN (
+          SELECT id FROM reinscription_load_mdl_user WHERE status = 'NCO'
+      );
+
+      -- This link is not necessary so we insert if it does not exist
+      -- We do not insert if it is En Famille
+      INSERT IGNORE INTO uac_user_info (id, living_configuration, assiduite_info, agent_id, last_update, create_date)
+      SELECT id, CASE WHEN str_living_configuration = 'En collocation' THEN 'C' ELSE 'A' END, NULL, 11, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+      FROM reinscription_load_mdl_user rlm WHERE rlm.status = 'NCO'
+      AND NOT(str_living_configuration = 'En famille');
+
       -- Update email to be re-sent again to notify them
       UPDATE uac_mail user_id SET status = 'NEW'
         WHERE user_id IN (
@@ -130,6 +144,12 @@ BEGIN
       DELETE FROM histo_uac_showuser
         WHERE username IN (
           SELECT username FROM reinscription_load_mdl_user WHERE status = 'NCO'
+        )
+        AND school_year = prev_school_year;
+
+      DELETE FROM histo_uac_user_info
+        WHERE id IN (
+          SELECT id FROM reinscription_load_mdl_user WHERE status = 'NCO'
         )
         AND school_year = prev_school_year;
 

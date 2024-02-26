@@ -401,6 +401,46 @@ SELECT
 												AND urf.type = 'T'
 				JOIN v_showuser vsh ON vsh.COHORT_ID = xref.cohort_id ORDER BY urf.fs_order ASC;
 
+
+-- scan view for student if late or not
+DROP VIEW IF EXISTS v_scan_for_late_user;
+CREATE VIEW v_scan_for_late_user AS
+SELECT vo.VSH_USERNAME AS SCUSN, IFNULL(vl.REST_TO_PAY, vo.REST_TO_PAY) AS SCRTP, IFNULL(up.type_of_payment, 'N') AS SCLE, IFNULL(vo.NEGATIVE_IS_LATE, 0) AS SCNLATE, CASE WHEN t_FFCOUNT = 3 THEN 'OK' ELSE 'KO' END AS FF_COUNT
+		FROM v_original_to_pay_for_user vo
+				   LEFT JOIN (
+				   		SELECT uas.username AS t_FFUSERNAME, COUNT(DISTINCT up.ref_fsc_id) t_FFCOUNT FROM uac_showuser uas
+							JOIN mdl_user mu ON mu.username = uas.username
+							JOIN uac_payment up ON up.user_id = mu.id
+											AND up.ref_fsc_id IN (1, 2, 3)
+											AND up.status = 'P'
+					GROUP BY uas.username
+				   ) t_frais_fixe ON t_frais_fixe.t_FFUSERNAME = vo.VSH_USERNAME
+				LEFT JOIN uac_payment up ON vo.REF_ID = up.ref_fsc_id
+                                AND up.user_id = vo.VSH_ID
+                                AND up.type_of_payment = 'L'
+				LEFT JOIN v_left_to_pay_for_user vl
+							ON vo.VSH_USERNAME = vl.VSH_USERNAME
+							AND vo.REF_ID = vl.REF_ID
+								  WHERE 1=1
+								  AND IFNULL(vl.REST_TO_PAY, vo.REST_TO_PAY) > 0
+                  AND (vo.VSH_USERNAME, IFNULL(vo.NEGATIVE_IS_LATE, 0)) IN (
+                    SELECT t_min.MIN_USERNAME, t_min.MIN_NEG FROM (
+                        SELECT vo.VSH_USERNAME AS MIN_USERNAME, MIN(IFNULL(vo.NEGATIVE_IS_LATE, 0)) AS MIN_NEG
+                    		FROM v_original_to_pay_for_user vo
+                    				LEFT JOIN v_left_to_pay_for_user vl
+                    							ON vo.VSH_USERNAME = vl.VSH_USERNAME
+                    							AND vo.REF_ID = vl.REF_ID
+                    								  WHERE 1=1
+                    								  AND IFNULL(vl.REST_TO_PAY, vo.REST_TO_PAY) > 0
+                    								  GROUP BY vo.VSH_USERNAME
+                    ) t_min
+                  ) ORDER BY vo.VSH_USERNAME;
+
+
+
+
+
+
 -- ***********************************************************************************
 -- ***********************************************************************************
 -- ***********************************************************************************

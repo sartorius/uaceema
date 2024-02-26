@@ -1,6 +1,6 @@
 
 select count(1) from histo_mdl_user;
-
+-- Part 1
 INSERT IGNORE INTO histo_mdl_user
 (school_year, id, username, last_update, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets)
 SELECT 2023, id, username, last_update, create_date, firstname, lastname, email, phone1, phone_mvola, address, city, matricule, autre_prenom, genre, datedenaissance, lieu_de_naissance, situation_matrimoniale, compte_fb, etablissement_origine, serie_bac, annee_bac, numero_cin, date_cin, lieu_cin, nom_pnom_par1, email_par1, phone_par1, profession_par1, adresse_par1, city_par1, nom_pnom_par2, phone_par2, profession_par2, centres_interets
@@ -8,27 +8,36 @@ FROM mdl_user mu WHERE mu.username IN (
     select uas.username from uac_showuser uas JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L2', 'L3')
 );
 
-
-
 select count(1) from histo_uac_showuser;
-
+-- Part 2
 INSERT IGNORE INTO histo_uac_showuser (school_year, username, roleid, secret, cohort_id, last_update, create_date)
 SELECT 2023, username, roleid, secret, cohort_id, last_update, create_date FROM uac_showuser uas_main WHERE uas_main.username IN (
     select uas.username from uac_showuser uas JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L2', 'L3')
 );
 
+-- Part 3
+INSERT IGNORE INTO histo_uac_user_info (school_year, id, living_configuration, assiduite_info, agent_id, last_update, create_date)
+SELECT 2023, id, living_configuration, assiduite_info, agent_id, last_update, create_date FROM uac_user_info uui WHERE uui.id IN (
+  select mu.id from uac_showuser uas JOIN mdl_user mu on mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L1', 'L3')
+)
+
+-- *****************************************************
+-- *****************************************************
+-- *****************************************************
+-- *****************************************************
+-- DELETE
 
 DELETE FROM mdl_user WHERE username IN (
     select uas.username from uac_showuser uas JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L2', 'L3')
 );
 
-
-
 DELETE FROM uac_showuser  WHERE username IN (
     SELECT huas.username FROM histo_uac_showuser huas WHERE huas.school_year = 2023
 );
 
-
+DELETE FROM histo_uac_user_info  WHERE id IN (
+    select mu.id from uac_showuser uas JOIN mdl_user mu on mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('L1', 'L3')
+);
 
 
 DELETE FROM mdl_user WHERE username = 'NJARRAK759';

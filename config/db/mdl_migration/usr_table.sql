@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_load_user` (
   `gsheet_id` BIGINT NOT NULL,
   `flow_id` BIGINT NULL,
   `core_status_matrimonial` CHAR(1) NULL,
+  `str_living_configuration` VARCHAR(50), -- if null then "en famille"
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`));
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`mdl_user` (
 
 -- this is to notify if we have data infos for the user;
 DROP TABLE IF EXISTS uac_user_info;
-CREATE TABLE IF NOT EXISTS `ACEA`.`uac_user_info` (
+CREATE TABLE IF NOT EXISTS uac_user_info (
   `id` BIGINT UNSIGNED NOT NULL,
   `living_configuration` CHAR(1) NOT NULL DEFAULT 'F' COMMENT 'C is for Colocation, F is for Family, A is for Alone',
   `assiduite_info` VARCHAR(250) NULL,

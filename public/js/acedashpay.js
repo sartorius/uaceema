@@ -962,7 +962,7 @@ function generateResumePayWorksheet(){
     return ws;
 }
 
-function generateTranchePayWorksheet(paramLines){
+function generateTrancheFFPayWorksheet(paramLines, param2Lines){
 
   //************************ START HEADER ************************
   
@@ -1040,6 +1040,71 @@ function generateTranchePayWorksheet(paramLines){
   }
 
 
+  let rowHeader8 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowHeader8);
+
+  let rowHeader9 = [
+    { v: 'État des frais fixes en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowHeader9);
+
+  let rowHeader10 = [
+    { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
+  rowCollection.push(rowHeader10);
+
+  let rowHeaderFF = [
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+    { v: '#', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+    { v: 'Étudiant', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } }
+  ];
+  rowCollection.push(rowHeaderFF);
+
+  let rowTitle = '';
+  for(let i=0; i<param2Lines.length; i++){
+    rowTitle = 'Frais fixe tout payé';
+    if(param2Lines[i].FF_COUNT == 'KO'){
+      rowTitle = 'Frais fixe non payé';
+    }
+    //is DEF_CELL_ODD
+    if(i % 2 === 0){
+      let rowHeaderLine = [
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+        { v: rowTitle, t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+        { v: param2Lines[i].COUNT + ' ', t: 's', s: { ...DEF_NBR_CELL_ODD } }
+      ];
+      rowCollection.push(rowHeaderLine);
+    }
+    else{
+        let rowHeaderLine = [
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: '', t: 's', s: { ...DEF_EMPTY_CELL } },
+          { v: rowTitle, t: 's', s: { ...DEF_HEADER_CELL_HEAVY } },
+          { v: param2Lines[i].COUNT + ' ', t: 's', s: { ...DEF_NBR_CELL } }
+        ];
+        rowCollection.push(rowHeaderLine);
+    }
+  }
+
   //************************ END HEADER ***********************
 
   const ws = XLSX.utils.aoa_to_sheet(rowCollection);
@@ -1071,7 +1136,7 @@ function generateGlobalPaymentExcel(){
   // dataTagToJsonArrayExcelGblComputeReport
   XLSX.utils.book_append_sheet(wb, generateResumePayWorksheet(), 'AU' + CONST_PARAM_YEAR);
 
-  XLSX.utils.book_append_sheet(wb, generateTranchePayWorksheet(dataPrepCountTrancheGridJsonArray), 'Tranche');
+  XLSX.utils.book_append_sheet(wb, generateTrancheFFPayWorksheet(dataPrepCountTrancheGridJsonArray, dataSumUpFFJsonArray), 'TrancheFF');
 
   // STEP 4: Write Excel file to browser
   XLSX.writeFile(wb, "RapportGlobalPaiement1m_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
@@ -1156,6 +1221,14 @@ $(document).ready(function() {
         }
       }
       
+      for(let i=0; i<dataSumUpFFJsonArray.length; i++){
+        if(dataSumUpFFJsonArray[i].FF_COUNT == 'KO'){
+          $('#disp-pv-ffko').html(dataSumUpFFJsonArray[i].COUNT);
+        }
+        else{
+          $('#disp-pv-ffok').html(dataSumUpFFJsonArray[i].COUNT);
+        }
+      }
       // ************* Specific case of the NUD Mvola
       $('#disp-pv-nud').html(renderAmount(NON_ATTR_MVOLA));
 
