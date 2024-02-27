@@ -289,7 +289,7 @@ SELECT vcc.short_classe AS CLASSE,
 	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
 	WHERE uel.duration_hour > 0
 	AND uel.day <= CURRENT_DATE
-	AND (uel.day > (CURDATE() + interval -(30) day))
+	AND (uel.day > (CURDATE() + interval -(35) day))
 	ORDER BY uel.day DESC;
 
 -- Find fill up here : https://docs.google.com/spreadsheets/d/1k0sESkSmMPVc2PPN-cL4oPznnEmClZLn5Qsjq4uDiZ0/edit?usp=sharing

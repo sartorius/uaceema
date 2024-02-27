@@ -1672,7 +1672,7 @@ function generateCourseReportCSV(){
 
   link.href =  csvUrl;
   link.style = "visibility:hidden";
-  link.download = 'RapportCoursAnnules30j_' + getReportACEDateStrFR(0).replaceAll('/', '_') + '.csv';
+  link.download = 'RapportCoursAnnules35j_' + getReportACEDateStrFR(0).replaceAll('/', '_') + '.csv';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
