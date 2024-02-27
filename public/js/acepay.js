@@ -951,20 +951,7 @@ $(document).ready(function() {
       // CREATE THE CUTS
       // Create the cut
       $( "#btn-addcut-1" ).click(function() {
-        console.log("You click on #btn-addcut-1");
-        updateTicketType('R');
-        logInAddPay('>>>>>>>>>>>>>>>> RÉDUCTION DE 10%');
-        logInAddPay('DIX POUR CENT');
-        logInAddPay(msgFooterRedPdt);
-        redPc = 10;
-  
-  
-        $("#addp-red-option").hide(100);
-        $("#addp-print").show(300);
-  
-      });
-      $( "#btn-addcut-2" ).click(function() {
-        console.log("You click on #btn-addcut-2");
+        //console.log("You click on #btn-addcut-1");
         updateTicketType('R');
         logInAddPay('>>>>>>>>>>>>>>>> RÉDUCTION DE 20%');
         logInAddPay('VINGT POUR CENT');
@@ -976,8 +963,8 @@ $(document).ready(function() {
         $("#addp-print").show(300);
   
       });
-      $( "#btn-addcut-3" ).click(function() {
-        console.log("You click on #btn-addcut-3");
+      $( "#btn-addcut-2" ).click(function() {
+        //console.log("You click on #btn-addcut-2");
         updateTicketType('R');
         logInAddPay('>>>>>>>>>>>>>>>> RÉDUCTION DE 50%');
         logInAddPay('CINQUANTE POUR CENT');
@@ -989,8 +976,21 @@ $(document).ready(function() {
         $("#addp-print").show(300);
   
       });
+      $( "#btn-addcut-3" ).click(function() {
+        //console.log("You click on #btn-addcut-3");
+        updateTicketType('R');
+        logInAddPay('>>>>>>>>>>>>>>>> RÉDUCTION DE 75%');
+        logInAddPay('SOIXANTE QUINZE POUR CENT');
+        logInAddPay(msgFooterRedPdt);
+        redPc = 75;
+  
+  
+        $("#addp-red-option").hide(100);
+        $("#addp-print").show(300);
+  
+      });
       $( "#btn-addcut-4" ).click(function() {
-        console.log("You click on #btn-addcut-4");
+        //console.log("You click on #btn-addcut-4");
         updateTicketType('R');
         logInAddPay('>>>>>>>>>>>>>>> RÉDUCTION DE 100%');
         logInAddPay('CENT POUR CENT');

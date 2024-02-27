@@ -403,8 +403,8 @@ SELECT
 
 
 -- scan view for student if late or not
-DROP VIEW IF EXISTS v_scan_for_late_user;
-CREATE VIEW v_scan_for_late_user AS
+DROP VIEW IF EXISTS v_tech_scan_for_late_user;
+CREATE VIEW v_tech_scan_for_late_user AS
 SELECT vo.VSH_USERNAME AS SCUSN, IFNULL(vl.REST_TO_PAY, vo.REST_TO_PAY) AS SCRTP, IFNULL(up.type_of_payment, 'N') AS SCLE, IFNULL(vo.NEGATIVE_IS_LATE, 0) AS SCNLATE, CASE WHEN t_FFCOUNT = 3 THEN 'OK' ELSE 'KO' END AS FF_COUNT
 		FROM v_original_to_pay_for_user vo
 				   LEFT JOIN (
@@ -436,8 +436,11 @@ SELECT vo.VSH_USERNAME AS SCUSN, IFNULL(vl.REST_TO_PAY, vo.REST_TO_PAY) AS SCRTP
                     ) t_min
                   ) ORDER BY vo.VSH_USERNAME;
 
-
-
+DROP VIEW IF EXISTS v_scan_for_late_user;
+CREATE VIEW v_scan_for_late_user AS
+SELECT uas.username AS SCUSN, IFNULL(vs.SCRTP, 0) AS SCRTP, IFNULL(vs.SCLE, 'N') AS SCLE, IFNULL(vs.SCNLATE, 100) AS SCNLATE, IFNULL(vs.FF_COUNT, 'OK') AS FF_COUNT
+  FROM uac_showuser uas LEFT JOIN v_tech_scan_for_late_user vs ON uas.username = vs.SCUSN
+WHERE uas.cohort_id IS NOT NULL;
 
 
 
