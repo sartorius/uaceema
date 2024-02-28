@@ -5,6 +5,7 @@ CREATE PROCEDURE `CLI_CRT_PayAddPayment` (IN param_agent_id BIGINT, IN param_use
 BEGIN
     DECLARE inv_status	CHAR(1);
     DECLARE inv_comment VARCHAR(35);
+    DECLARE count_duplicate SMALLINT;
     -- END OF DECLARE
     -- param_comment
 
@@ -16,10 +17,27 @@ BEGIN
         SET inv_comment = param_comment;
     END IF;
 
+    -- *****************************
+    -- *****************************
+    -- Workaround to avoid duplicate
+    -- *****************************
+    -- *****************************
+    SELECT COUNT(1) INTO count_duplicate
+    FROM uac_payment
+    WHERE payment_ref = param_ticket_ref
+      AND user_id = param_user_id
+      AND input_amount = param_input_amount
+      AND ref_fsc_id = param_fsc_id;
 
-    -- Set the correct status value
-    INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, comment, pay_date)
-      VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, inv_comment, CURRENT_TIMESTAMP);
+      
+
+    IF count_duplicate = 0 THEN
+          -- If the line already exist we dont need it again
+          -- This is a full workaround
+          -- Set the correct status value
+          INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, comment, pay_date)
+            VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, inv_comment, CURRENT_TIMESTAMP);
+    END IF;
 
 END$$
 -- Remove $$ for OVH

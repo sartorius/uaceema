@@ -1017,7 +1017,9 @@ $(document).ready(function() {
   
   
       // PRINT BUTTON !!!
-      $( "#addp-print" ).click(function() {
+      // Unbind to avoid mutiple fire
+      // $( "#addp-print" ).unbind().click(function() {
+      $("#addp-print").off('click').on('click', function() {
         //console.log("You click on #addp-print");
         // Choose the operation
         if(invOperation == 'R'){

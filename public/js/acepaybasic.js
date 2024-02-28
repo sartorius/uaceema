@@ -1064,8 +1064,10 @@ function displayMVODiscount(){
 function initializeMVODiscountButton(){
   for(let m=1; m<4; m++){
     // Add listener
-    $("#btn-case-" + m).off('click');
-    $( "#btn-case-" + m).click(function() {
+    // Avoid multiple call
+    //$("#btn-case-" + m).off('click');
+    //$( "#btn-case-" + m).click(function() {
+    $("#btn-case-" + m).off('click').on('click', function() {
 
         if(m == 1){
           // Nouveau
