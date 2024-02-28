@@ -1067,7 +1067,7 @@ function initializeMVODiscountButton(){
     // Avoid multiple call
     //$("#btn-case-" + m).off('click');
     //$( "#btn-case-" + m).click(function() {
-    $("#btn-case-" + m).off('click').on('click', function() {
+    $("#btn-case-" + m).off().on('click', function() {
 
         if(m == 1){
           // Nouveau
@@ -1113,6 +1113,11 @@ $(document).ready(function() {
       // Do something
       $( "#addpay-ace" ).keyup(function() {
         verifyMvoContentScan();
+      });
+
+      // Add click listener with unique firing event
+      $("#btn-attmvo").off().on('click', function() {
+        generateAttribuerMvo();
       });
     }
     else if($('#mg-graph-identifier').text() == 'man-pay'){

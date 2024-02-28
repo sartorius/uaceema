@@ -457,6 +457,8 @@ function setUniButtonsAndListener(){
   let totalUniLeftPay = 0;
   let atLeastOneFraisFixeIsOpen = 0;
 
+  let buttonList = new Array();
+
   let areAllDroitsShortCutAvailable = 'Y';
 
   
@@ -464,72 +466,90 @@ function setUniButtonsAndListener(){
 
   for(let i=0; i<dataPaymentForUserJsonArray.length; i++){
     if(dataPaymentForUserJsonArray[i].REF_TYPE.toString() == 'U'){
-      //Check first if we handling a new Tranche
-      // We have a new tranche code we need to handle it
-      // Set the data
-      invCodeTranche = dataPaymentForUserJsonArray[i].REF_CODE;
 
-      // We are on a Unique
-      $('#id-uni-' + invRefLineUnique).html(renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()));
-      $('#id-fscuni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_ID.toString());
-      // Hanlde late
-      if((dataPaymentForUserJsonArray[i].UP_STATUS ==  'N') &&
-            (dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0)){
-        $('#btn-uni-' + invRefLineUnique).removeClass('pay-opt-btn-t-a');
-        $('#btn-uni-' + invRefLineUnique).addClass('pay-opt-btn-t-late');
-        $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE + LATE_FLATICON);
+
+      if(!(buttonList.includes(dataPaymentForUserJsonArray[i].REF_ID))){
+          buttonList.push(dataPaymentForUserJsonArray[i].REF_ID);
+          //Check first if we handling a new Tranche
+          // We have a new tranche code we need to handle it
+          // Set the data
+          invCodeTranche = dataPaymentForUserJsonArray[i].REF_CODE;
+    
+          // We are on a Unique
+          $('#id-uni-' + invRefLineUnique).html(renderAmount(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()));
+          $('#id-fscuni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_ID.toString());
+    
+          // Hanlde late
+          if((dataPaymentForUserJsonArray[i].UP_STATUS ==  'N') &&
+                (dataPaymentForUserJsonArray[i].NEGATIVE_IS_LATE < 0)){
+            $('#btn-uni-' + invRefLineUnique).removeClass('pay-opt-btn-t-a');
+            $('#btn-uni-' + invRefLineUnique).addClass('pay-opt-btn-t-late');
+            $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE + LATE_FLATICON);
+          }
+          else{
+            $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
+          }
+          
+          if(dataPaymentForUserJsonArray[i].UP_STATUS ==  'N'){
+            $( "#btn-uni-" + invRefLineUnique).removeClass('deactive-btn');
+            $('#id-rawuniamt-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
+            totalUniLeftPay = totalUniLeftPay + parseInt(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
+            atLeastOneFraisFixeIsOpen = atLeastOneFraisFixeIsOpen + 1;
+    
+            let myUniPayment = {
+              fscId: dataPaymentForUserJsonArray[i].REF_ID.toString(),
+              typeOfPayment: 'Z',
+              inputAmount: dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()
+              };
+            payUniLeftOperationForUserJsonArray.push(myUniPayment);
+          }
+          else{
+    
+            // It has been paid
+            
+            $('#id-rawuniamt-' + invRefLineUnique).html('0');
+            $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
+            $( "#btn-uni-" + invRefLineUnique).addClass('deactive-btn');
+            console.log('It has been paid ' + invRefLineUnique);
+            // *************************************************************************************
+            // *************************************************************************************
+            // *************************************************************************************
+            // *********** Specific hardcode because of shortcut droits
+            // *************************************************************************************
+            // *************************************************************************************
+            // *************************************************************************************
+            // We are on the first line up droit
+            // We are Droit test entretien ou inscription
+            if((invRefLineUnique == 1) 
+                || (invRefLineUnique == 2)){
+                  areAllDroitsShortCutAvailable = 'N';
+            }
+            // *************************************************************************************
+          }
+          invRefLineUnique = invRefLineUnique + 1;
+
       }
       else{
-        $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
-      }
-      
-      if(dataPaymentForUserJsonArray[i].UP_STATUS ==  'N'){
-        $( "#btn-uni-" + invRefLineUnique).removeClass('deactive-btn');
-        $('#id-rawuniamt-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
-        totalUniLeftPay = totalUniLeftPay + parseInt(dataPaymentForUserJsonArray[i].REF_AMOUNT.toString());
-        atLeastOneFraisFixeIsOpen = atLeastOneFraisFixeIsOpen + 1;
+        // We need to check if included in the Button list already or not
+        // The issue is for discount case we have the ref id with Exemption and the same with cash
+        // If not exist we display it
 
-        let myUniPayment = {
-          fscId: dataPaymentForUserJsonArray[i].REF_ID.toString(),
-          typeOfPayment: 'Z',
-          inputAmount: dataPaymentForUserJsonArray[i].REF_AMOUNT.toString()
-          };
-        payUniLeftOperationForUserJsonArray.push(myUniPayment);
       }
-      else{
-        // It has been paid
-        $('#id-rawuniamt-' + invRefLineUnique).html('0');
-        $('#lbl-uni-' + invRefLineUnique).html(dataPaymentForUserJsonArray[i].REF_TITLE);
-        $( "#btn-uni-" + invRefLineUnique).addClass('deactive-btn');
-        
-        // *************************************************************************************
-        // *************************************************************************************
-        // *************************************************************************************
-        // *********** Specific hardcode because of shortcut droits
-        // *************************************************************************************
-        // *************************************************************************************
-        // *************************************************************************************
-        // We are on the first line up droit
-        // We are Droit test entretien ou inscription
-        if((invRefLineUnique == 1) 
-            || (invRefLineUnique == 2)){
-              areAllDroitsShortCutAvailable = 'N';
-        }
-        // *************************************************************************************
-      }
-      invRefLineUnique = invRefLineUnique + 1;
     }
     else{
       //Do nothing
       //We are not on a Unique
       //We are on a Tranche Payment
     }
-
+    
     // Handle the button totalite
     $("#id-uni-left").html(renderAmount(totalUniLeftPay.toString()));
 
 
   }
+
+  console.log("buttonList length: " + buttonList.length);
+  console.log(buttonList);
 
   // *************************************************************************************
   // *************************************************************************************
@@ -1019,7 +1039,7 @@ $(document).ready(function() {
       // PRINT BUTTON !!!
       // Unbind to avoid mutiple fire
       // $( "#addp-print" ).unbind().click(function() {
-      $("#addp-print").off('click').on('click', function() {
+      $("#addp-print").off().on('click', function() {
         //console.log("You click on #addp-print");
         // Choose the operation
         if(invOperation == 'R'){
@@ -1066,7 +1086,8 @@ $(document).ready(function() {
         // Then reclean all againt !!!
       });
   
-      $( "#btn-print-recap" ).click(function() {
+      //$( "#btn-print-recap" ).click(function() {
+      $("#btn-print-recap").off().on('click', function() {
         console.log("You click on #btn-print-recap");
         generateHistoryPrint();
         // Then reclean all againt !!!

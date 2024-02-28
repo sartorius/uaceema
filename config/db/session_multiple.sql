@@ -7,12 +7,9 @@ select * from uac_ref_frais_scolarite;
 
 
 -- to be investigated
-select payment_ref, count(1) from uac_payment up join uac_ref_frais_scolarite urf on up.ref_fsc_id = urf.id and urf.type = 'T'
-group by payment_ref
-having count(1) > 1
 
-select payment_ref, input_amount, ref_fsc_id, type_of_payment, count(1) from uac_payment up join uac_ref_frais_scolarite urf on up.ref_fsc_id = urf.id and urf.type = 'U'
-group by payment_ref, input_amount, ref_fsc_id, type_of_payment
+select payment_ref, user_id, input_amount, ref_fsc_id, type_of_payment, count(1) from uac_payment up join uac_ref_frais_scolarite urf on up.ref_fsc_id = urf.id and urf.type = 'U'
+group by payment_ref, user_id, input_amount, ref_fsc_id, type_of_payment
 having count(1) > 1
 
 

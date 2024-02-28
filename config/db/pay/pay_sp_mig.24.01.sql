@@ -27,9 +27,10 @@ BEGIN
     WHERE payment_ref = param_ticket_ref
       AND user_id = param_user_id
       AND input_amount = param_input_amount
+      AND type_of_payment = param_type_payment
       AND ref_fsc_id = param_fsc_id;
 
-      
+
 
     IF count_duplicate = 0 THEN
           -- If the line already exist we dont need it again
