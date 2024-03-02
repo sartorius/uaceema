@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
+use App\SessionUtils\SessionManager;
 use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
@@ -23,7 +24,7 @@ class AdminEDTController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -49,7 +50,7 @@ class AdminEDTController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -245,7 +246,7 @@ class AdminEDTController extends AbstractController
   {
 
       if (session_status() == PHP_SESSION_NONE) {
-          session_start();
+        SessionManager::getSecureSession();
       }
 
       $scale_right = ConnectionManager::whatScaleRight();
@@ -405,7 +406,7 @@ class AdminEDTController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+      SessionManager::getSecureSession();
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 
@@ -693,7 +694,7 @@ class AdminEDTController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+      SessionManager::getSecureSession();
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 

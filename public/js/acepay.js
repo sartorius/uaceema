@@ -835,7 +835,7 @@ $(document).ready(function() {
         invOperation = 'L';
         updateTicketType('L');
         logInAddPay('*** LETTRE ENGAGEMENT ***');
-        logInAddPay('Durée du délai : ' + LIMIT_LE_DAYS + ' jours');
+        logInAddPay('Délai maximum : ' + LIMIT_LE_DAYS + ' jours');
         logInAddPay(msgFooterLOC);
   
         $("#addp-mainop").hide(100);

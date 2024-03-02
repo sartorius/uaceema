@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
+use App\SessionUtils\SessionManager;
 use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;

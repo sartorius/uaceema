@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\DBUtils\MailManager;
 use Twig\Environment;
 use App\DBUtils\DBConnectionManager;
+use App\SessionUtils\SessionManager;
 use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
@@ -27,7 +28,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -80,7 +81,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -931,7 +932,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -989,7 +990,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -1415,7 +1416,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -1481,7 +1482,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
@@ -1523,7 +1524,7 @@ class AdminPayController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+        SessionManager::getSecureSession();
     }
 
     $scale_right = ConnectionManager::whatScaleRight();
