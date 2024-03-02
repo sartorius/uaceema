@@ -14,10 +14,9 @@
     // DISCOUNT
     let dataAllDispDiscountToJsonArray = JSON.parse('{{ result_alldisplay_discount_query | json_encode | raw }}');
     let dataAllSetUpDiscountToJsonArray = JSON.parse('{{ result_allsetup_discount_query | json_encode | raw }}');
+
+    const LIMIT_LE_DAYS = '{{ param_le_limit }}';
     
-
-
-     
     
     let myTicket = new Array();
     let myRecap = new Array();

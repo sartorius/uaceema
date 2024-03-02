@@ -2653,9 +2653,26 @@ img.part-img{
   border-radius: 3px;
 }
 
+.msg-dash-fds{
+  margin-top: 30px;
+  font-size: 0.7em;
+  text-align: center;
+  font-weight: 500;
+}
+
+.icon-light{
+  position: relative;
+  top: 2px;
+}
+
 .uac-step-purple{
   background-color: #d8ddff;
   color: black;
+}
+
+.uac-step-red{
+  background-color: #8a0000;
+  color: white;
 }
 
 .uac-step-yellow{

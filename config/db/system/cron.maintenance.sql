@@ -12,6 +12,9 @@ DELETE FROM uac_edt_master WHERE create_date < DATE_ADD(current_date, INTERVAL -
 DELETE FROM uac_edt_line WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
 DELETE FROM uac_load_jqedt WHERE create_date < DATE_ADD(current_date, INTERVAL -270 DAY);
 
+-- Delete log data
+DELETE FROM uac_sp_log WHERE create_date < DATE_ADD(current_date, INTERVAL -10 DAY);
+
 -- Delete old Load Mvola
 DELETE FROM uac_load_mvola WHERE status = 'DUP' AND create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
 
@@ -31,6 +34,8 @@ OPTIMIZE TABLE uac_assiduite;
 
 OPTIMIZE TABLE uac_connection_log;
 OPTIMIZE TABLE uac_studashboard_log;
+OPTIMIZE TABLE uac_sp_log;
+
 OPTIMIZE TABLE uac_working_flow;
 OPTIMIZE TABLE uac_assiduite_noexit;
 

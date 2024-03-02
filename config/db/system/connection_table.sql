@@ -138,3 +138,13 @@ SELECT mu.id AS mu_id,
 		mu.lastname,
 		ua.*
 FROM mdl_user mu JOIN uac_admin ua on mu.id = ua.id;
+
+
+DROP TABLE IF EXISTS uac_sp_log;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_sp_log` (
+ `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+ `sp_log` VARCHAR(150) NOT NULL,
+ `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`));
+
+-- INSERT INTO uac_sp_log (sp_log) VALUES ('This is a test');

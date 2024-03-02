@@ -38,6 +38,8 @@ BEGIN
           -- Set the correct status value
           INSERT INTO uac_payment (agent_id, user_id, ref_fsc_id, status, payment_ref, input_amount, type_of_payment, comment, pay_date)
             VALUES (param_agent_id, param_user_id, param_fsc_id, inv_status, param_ticket_ref, param_input_amount, param_type_payment, inv_comment, CURRENT_TIMESTAMP);
+    ELSE
+          INSERT INTO uac_sp_log (sp_log) VALUES (CONCAT('Duplicate CLI_CRT_PayAddPayment ', param_ticket_ref));
     END IF;
 
 END$$

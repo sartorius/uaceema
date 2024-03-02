@@ -229,6 +229,7 @@
             <i id="stpf-shortclasse" class="nrm-txt">{{ profile['SHORTCLASS'] }}</i>
         </div>
 
+        
 
         {% if from_admin == 'N' %}
               {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
@@ -285,6 +286,29 @@
                 {% endif %}
               </div>
         </div>
+
+
+        {# ################################ #}
+        {# ################################ #}
+        {# ################################ #}
+        {# PARAM FDS TO BE DISPLAYED OR NOT #}
+        {# ################################ #}
+        {# ################################ #}
+        {# ################################ #}
+        {% if param_does_pay_display == 'Y' %}
+                    {% if from_admin != 'N' %}
+                            {# We are not public dashboard so we check if module is available #}
+                            {% include 'Profile/_paymentblocklinesumup.html.twig' %}
+                    {% else %}
+                            {# We are public dashboard so we have to check several value #}
+                            {% if param_does_pay_public == 'Y' %}
+                                      {% include 'Profile/_paymentblocklinesumup.html.twig' %}
+                            {% endif %}
+                    {% endif %}
+        {% endif %}
+
+        
+
         {% if from_admin == 'S' %}
               {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
         <div class="disp-link carte-profile card-parent">
@@ -551,10 +575,13 @@
 {% endif %}
 
 
-
-{# param_does_pay_public #}
-
-
+{# ################################ #}
+{# ################################ #}
+{# ################################ #}
+{# PARAM FDS TO BE DISPLAYED OR NOT #}
+{# ################################ #}
+{# ################################ #}
+{# ################################ #}
 {% if param_does_pay_display == 'Y' %}
             {% if from_admin != 'N' %}
                     {# We are not public dashboard so we check if module is available #}

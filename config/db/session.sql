@@ -630,3 +630,15 @@ Revoir les diff un peu : _rawlargescreenedtheader.html.twig
 payUniLeftOperationForUserJsonArray
 payShortCutOperationForUserJsonArray
 generatePayDBAndPrint
+
+
+$("#addp-print").off('click').on('click', function() {
+
+$("#btn-attmvo").off('click').on('click', function() {
+	generateAttribuerMvo();
+});
+
+
+SAIDSAL379
+
+FELAVON723

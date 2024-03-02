@@ -1,0 +1,12 @@
+{# DISPLAY THE SUM UP FDS #}
+{% if result_query_sumupfds|length > 0 %}
+    {% if result_query_sumupfds[0]['RES_SCRTP'] > 0 %}
+        {# LATE because calculation #}
+        <div class="uac-step uac-step-yellow msg-dash-fds"><span class="icon-exclamation-triangle icon-light"></span>&nbsp;&nbsp;Frais de scolarité en retard </div><br>
+    {% else %}
+        <div class="uac-step uac-step-green msg-dash-fds"><span class="icon-check-square icon-light"></span>&nbsp;&nbsp;Frais de scolarité à jour </div><br>
+
+    {% endif %}
+{% else %}
+    <div class="uac-step uac-step-red msg-dash-fds"> ERROR192M </div><br>
+{% endif %}

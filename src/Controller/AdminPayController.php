@@ -123,6 +123,12 @@ class AdminPayController extends AbstractController
         $result_allsetup_discount_query = $dbconnectioninst->query($allsetup_discount_query)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_allsetup_discount_query: " . count($result_allsetup_discount_query));
 
+        $param_le_limit = 0;
+        $query_limit_le = " SELECT par_int AS LE_LIMIT FROM uac_param WHERE key_code = 'PAYLEXX'; ";
+        $result_query_limit_le = $dbconnectioninst->query($query_limit_le)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show result_query_limit_le: " . $result_query_limit_le[0]['LE_LIMIT']);
+        $param_le_limit = $result_query_limit_le[0]['LE_LIMIT'];
+
         
 
         $content = $twig->render('Admin/PAY/addpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -135,6 +141,7 @@ class AdminPayController extends AbstractController
                                                                 'result_alldisplay_discount_query'=>$result_alldisplay_discount_query,
                                                                 'result_allsetup_discount_query'=>$result_allsetup_discount_query,
                                                                 'result_get_token'=>$result_get_token,
+                                                                'param_le_limit'=>$param_le_limit,
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'errtype' => '']);
 

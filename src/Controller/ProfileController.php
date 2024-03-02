@@ -269,12 +269,22 @@ class ProfileController extends AbstractController{
       
                 $query_getsumpertranche = " CALL CLI_PAY_GetSumUpTranche('" . $param_username . "'); ";
                 $logger->debug("Show me query_getsumpertranche: " . $query_getsumpertranche);
+
+                $param_le_limit = 0;
+                $query_limit_le = " SELECT par_int AS LE_LIMIT FROM uac_param WHERE key_code = 'PAYLEXX'; ";
+                $result_query_limit_le = $dbconnectioninst->query($query_limit_le)->fetchAll(PDO::FETCH_ASSOC);
+                $logger->debug("Show result_query_limit_le: " . $result_query_limit_le[0]['LE_LIMIT']);
+                $param_le_limit = $result_query_limit_le[0]['LE_LIMIT'];
+
+                $query_sumupfds = "SELECT CASE WHEN (FF_COUNT = 'KO') THEN 1 WHEN (SCNLATE >= 0) THEN 0 WHEN (SCRTP > 0) AND (SCLE = 'L') AND (SCNLATE > -" . $param_le_limit . ") THEN 0 ELSE SCRTP END AS RES_SCRTP FROM v_scan_for_late_user WHERE SCUSN = '" . $param_username . "'; ";
+                $logger->debug("Show me query_sumupfds: " . $query_sumupfds);
       
                 //Be carefull if you have array of array
                 $dbconnectioninst = DBConnectionManager::getInstance();
       
                 $result_pay = $dbconnectioninst->query($query_getpay)->fetchAll(PDO::FETCH_ASSOC);
                 $result_frais = $dbconnectioninst->query($query_getfrais)->fetchAll(PDO::FETCH_ASSOC);
+                $result_query_sumupfds = $dbconnectioninst->query($query_sumupfds)->fetchAll(PDO::FETCH_ASSOC);
                 
                 $result_histo_pay = array();
                 if(count($result_frais) > 0){
@@ -289,8 +299,11 @@ class ProfileController extends AbstractController{
                 $logger->debug("Show me count resultSumPerTranche: " . count($resultSumPerTranche));
             }
             else{
+                $param_frais_mvola = 0;
+                $param_le_limit = 0;
                 $result_histo_pay = array();
                 $resultSumPerTranche = array();
+                $result_query_sumupfds = array();
             }
 
 
@@ -352,7 +365,9 @@ class ProfileController extends AbstractController{
                                       "param_does_pay_display"=>$param_does_pay_display,
                                       "param_does_pay_public"=>$param_does_pay_public,
                                       "result_histo_pay"=>$result_histo_pay,
+                                      "result_query_sumupfds"=>$result_query_sumupfds,
                                       "resultSumPerTranche"=>$resultSumPerTranche,
+                                      "param_le_limit"=>$param_le_limit,
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,
                                       "result_query_get_all_classes"=>$result_query_get_all_classes,
