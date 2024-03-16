@@ -81,14 +81,15 @@
               </div>
               <div class="col-lg-2">
               </div>
-              <br>
               <div class="col-lg-8 dipl-txt-sm">
                 Scan this QRCode to check that <strong>{{ diploma['UD_LASTNAME'] }} {{ diploma['UD_FIRSTNAME'] }}</strong> is owner of the diploma
                 {% if diploma['UD_LEVEL'] == 'L' %} Licence/Bachelor{% else %} Master{% endif %}, 
                 major {{ diploma['URM_TITLE'] }}, 
-                named <strong>{{ diploma['URDT_TYPE'] }}</strong>.<br>
-                The QRCode must redirect you on the <strong>official website uaceem.com</strong> of ACEEM University, the only institution with ability to certify this diploma.
-                <br>
+                named <strong>{{ diploma['URDT_TYPE'] }}</strong>.<br><hr><br>
+                The QRCode must redirect you on the official website uaceem.com of ACEEM University, the only institution with ability to certify this diploma.<br>
+                二维码必须将您重定向到 ACEEM 大学的官方网站 uaceem.com，这是唯一有能力证明此文凭的机构。<br>
+                El código QR debe redirigirte al sitio web oficial uaceem.com de la Universidad ACEEM, la única institución con la capacidad de certificar este diploma.<br>
+                Il codice QR deve indirizzarti al sito web ufficiale uaceem.com dell'Università ACEEM, l'unica istituzione con la capacità di certificare questo diploma.<br>
                 <br><br>
               </div>
               <div class="col-lg-2">
