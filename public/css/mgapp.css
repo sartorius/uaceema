@@ -188,6 +188,11 @@ h4 {
   background: url("../img/backgroundsttprov.jpg") no-repeat center center fixed;
 }
 
+
+.img-visit-guid{
+  background: url("../img/backgroundhome6.jpg") no-repeat center center fixed;
+}
+
 #home-entry {
   -webkit-background-size: cover;
   -moz-background-size: cover;

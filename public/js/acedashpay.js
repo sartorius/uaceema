@@ -883,13 +883,44 @@ function generateResumePayWorksheet(){
       //{ v: 'État des frais de scolarité du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
       { v: 'État des frais de scolarité en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
     ];
+    let rowHeader6a = [
+      //{ v: 'État des frais de scolarité du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      { v: 'Note 1 : les différents types de frais sont disponibles sur l\'écran Paiement > Frais de scolarité', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader6b = [
+      //{ v: 'État des frais de scolarité du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      { v: 'Note 2 : les recettes ne contiennent pas les réductions ni les exemptions', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
     let rowHeader7 = [
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
     ];
+    let rowHeaderRecYearDetU = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Recette frais fixe sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(recapYearDetailU), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderRecYearDetT = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Recette frais tranche sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(recapYearDetailT), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderRecYearDetF = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Recette frais additionnel sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(recapYearDetailF), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderRecYearDetM = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Recette frais divers sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: renderAmountExcel(recapYearDetailM), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
     let rowHeaderRecYear = [
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-      { v: 'Recette sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: 'Total des recettes sur l\'année : ', t: 's', s: { ...DEF_HEADER_CELL_HEAVY_RIGHT } },
       { v: renderAmountExcel(cobBenefitOfTheYear), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
+    ];
+    let rowHeaderRecYearDelim1 = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
     ];
     let rowHeaderRedYear = [
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
@@ -898,7 +929,7 @@ function generateResumePayWorksheet(){
     ];
     let rowHeaderExemptionYear = [
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
-      { v: 'Exemption sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: 'Exemption tous frais confondus sur l\'année : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
       { v: renderAmountExcel(cobExemptionOfTheYear), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
     ];
     let rowHeaderNUDYear = [
@@ -916,7 +947,7 @@ function generateResumePayWorksheet(){
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
     ];
     
-    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderRecYear, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear, rowHeader8, rowHeader9, rowHeader10];
+    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader6a, rowHeader6b, rowHeader7, rowHeaderRecYearDetU, rowHeaderRecYearDetT, rowHeaderRecYearDetF, rowHeaderRecYearDetM, rowHeaderRecYear, rowHeaderRecYearDelim1, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear, rowHeader8, rowHeader9, rowHeader10];
 
     if(dataRepMonthMentionJsonArray.length == 0){
       let rowHeader10 = [
@@ -988,6 +1019,9 @@ function generateTrancheFFPayWorksheet(paramLines, param2Lines){
   let rowHeader6 = [
     { v: 'État des tranches en date du ' + getACEDateStr('F'), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
+  let rowHeader6a = [
+    { v: 'Note 1 : Les tranches incluent les réductions et les exemptions', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+  ];
   let rowHeader7 = [
     { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
   ];
@@ -1004,7 +1038,7 @@ function generateTrancheFFPayWorksheet(paramLines, param2Lines){
     { v: 'Montant total', t: 's', s: { ...DEF_HEADER_CELL_HEAVY } }
   ];
   
-  let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader7, rowHeaderTranche];
+  let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader6a, rowHeader7, rowHeaderTranche];
 
 
   for(let i=0; i<paramLines.length; i++){
@@ -1136,7 +1170,7 @@ function generateGlobalPaymentExcel(){
   // dataTagToJsonArrayExcelGblComputeReport
   XLSX.utils.book_append_sheet(wb, generateResumePayWorksheet(), 'AU' + CONST_PARAM_YEAR);
 
-  XLSX.utils.book_append_sheet(wb, generateTrancheFFPayWorksheet(dataPrepCountTrancheGridJsonArray, dataSumUpFFJsonArray), 'TrancheFF');
+  XLSX.utils.book_append_sheet(wb, generateTrancheFFPayWorksheet(dataPrepCountTrancheGridJsonArray, dataSumUpFFJsonArray), 'TrancheFraisFixe');
 
   // STEP 4: Write Excel file to browser
   XLSX.writeFile(wb, "RapportGlobalPaiement1m_" + getReportACEDateStrFR(0).replaceAll('/', '_') + ".xlsx");
@@ -1220,6 +1254,35 @@ $(document).ready(function() {
             cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
       }
+
+      // Work on the recap year details
+      for(let i=0; i<dataYearDetRecapJsonArray.length; i++){
+        switch(dataYearDetRecapJsonArray[i].URF_TYPE) {
+          case 'U':
+            // code block
+            recapYearDetailU = parseInt(dataYearDetRecapJsonArray[i].UP_AMOUNT);
+            break;
+          case 'M':
+            // code block
+            recapYearDetailM = parseInt(dataYearDetRecapJsonArray[i].UP_AMOUNT);
+            break;
+          case 'T':
+            // code block
+            recapYearDetailT = parseInt(dataYearDetRecapJsonArray[i].UP_AMOUNT);
+            break;
+          case 'F':
+            // code block
+            recapYearDetailF = parseInt(dataYearDetRecapJsonArray[i].UP_AMOUNT);
+            break;
+          default:
+            // We have an error
+            recapYearDetailU = -1;
+            recapYearDetailM = -1;
+            recapYearDetailT = -1;
+            recapYearDetailF = -1;
+            throw "Unknown type ERR92098C";
+        }
+      }
       
       for(let i=0; i<dataSumUpFFJsonArray.length; i++){
         if(dataSumUpFFJsonArray[i].FF_COUNT == 'KO'){
@@ -1230,7 +1293,7 @@ $(document).ready(function() {
         }
       }
       // ************* Specific case of the NUD Mvola
-      $('#disp-pv-nud').html(renderAmount(NON_ATTR_MVOLA));
+      $('#disp-pv-nud').html(getAriaryValue(NON_ATTR_MVOLA));
 
 
       if(totalCashCheck > 0){

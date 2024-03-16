@@ -1,19 +1,56 @@
-/*
-function renderAmount(param){
-	var len = param.toString().length;
-	var result = '';
-	var k = 0;
-	for(var i=0;i<len+1;i++){
-		result = param.toString().substr(len-i,1) + result;
-		if(k == 3){
-			result = ' ' + result;
-			k = 0;
-		}
-		k++;
-	}
-	return result + ' AR';
+
+function generateRefFraisCSV(){
+  const csvContentType = "data:text/csv;charset=utf-8,%EF%BB%BF";
+  let csvContent = "";
+  let involvedArray = dataREFPAYToJsonArray;
+  const SEP_ = ";"
+
+let dataString = "#" + SEP_ 
+                  + "Titre" + SEP_ 
+                  + "Montant" + SEP_ 
+                  + "Paiement" + SEP_ 
+                  + "Limite" + SEP_ + "\n";
+csvContent += dataString;
+for(let i=0; i<involvedArray.length; i++){
+
+          dataString = involvedArray[i].id + SEP_ 
+              + involvedArray[i].title + SEP_ 
+              + renderAmount(involvedArray[i].amount) + SEP_;
+          
+          if(involvedArray[i].type == 'U'){
+            dataString +=  "Fixe" + SEP_ ;
+          }
+          else if(involvedArray[i].type == 'M'){
+            dataString +=  "Divers" + SEP_ ;
+          }
+          else if(involvedArray[i].type == 'F'){
+            dataString +=  "Additionnel" + SEP_ ;
+          }
+          else{
+            dataString +=  "Tranche" + SEP_ ;
+          }
+          dataString += convertSQLDateToDateStrFR(involvedArray[i].deadline) + SEP_ ;
+          // easy close here
+          csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
 }
-*/
+
+  //console.log('Click on csv');
+  //csvContent = encodeURI(csvContent);
+  let csvData = new Blob([csvContent], { type: csvContentType });
+
+  let link = document.createElement("a");
+  let csvUrl = URL.createObjectURL(csvData);
+
+  link.href =  csvUrl;
+  link.style = "visibility:hidden";
+  link.download = 'RapportRefFraisScolarite.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+}
+
+
 /***********************************************************************************************************/
 
 function loadRefPayGrid(){
@@ -55,10 +92,13 @@ function loadRefPayGrid(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(value == 'U'){
-              return "Unique";
+              return "Fixe";
             }
             else if(value == 'M'){
-              return "Multiple";
+              return "Divers";
+            }
+            else if(value == 'F'){
+              return "Additionnel";
             }
             else{
               return "Tranche";

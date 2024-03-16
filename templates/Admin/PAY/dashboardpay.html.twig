@@ -43,6 +43,11 @@
 
     let mvolaArray = new Array();
 
+    let recapYearDetailF = 0;
+    let recapYearDetailM = 0;
+    let recapYearDetailT = 0;
+    let recapYearDetailU = 0;
+
   </script>
 {% else %}
     <script>
@@ -95,10 +100,13 @@
 {% if result_rep_year_recap is defined and result_rep_year_recap is not null %}
   <script>
     let dataYearRecapJsonArray =JSON.parse('{{ result_rep_year_recap | json_encode | raw }}');
+    let dataYearDetRecapJsonArray =JSON.parse('{{ result_rep_year_det_recap | json_encode | raw }}');
+
   </script>
 {% else %}
     <script>
       let dataYearRecapJsonArray = new Array();
+      let dataYearDetRecapJsonArray = new Array();
     </script>
 {% endif %}
 

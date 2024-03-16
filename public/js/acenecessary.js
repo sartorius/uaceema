@@ -28,6 +28,7 @@ const DEF_CELL_BORDER = { top: { style: "thin", color: {rgb: "383838"} },
                         };
 
 const DEF_EMPTY_CELL = { font: { sz: 8, name: 'Arial' }};
+const DEF_HEADER_CELL_HEAVY_RIGHT = { font: { sz: 8, name: 'Arial', bold: true, color: {rgb: "FFFFFF"} }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_HEAVY_FILL} };
 const DEF_HEADER_CELL_HEAVY = { font: { sz: 8, name: 'Arial', bold: true, color: {rgb: "FFFFFF"} }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_HEAVY_FILL} };
 const DEF_HEADER_CELL = { font: { sz: 8, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
 const DEF_CELL = { font: { sz: 7, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'center' }, border: {...DEF_CELL_BORDER} };
@@ -101,6 +102,7 @@ function getCapitalize(param){
   return param.charAt(0).toUpperCase() + param.slice(1).toLowerCase();
 }
 
+// This is to get the current datetime
 // param can be : F for French /T for Technical/S for String Technical
 function getACEDateStr(param){
   let today = new Date();
@@ -122,12 +124,18 @@ function getACEDateStr(param){
   }
 }
 
+// This is to add days to the current day
 function getReportACEDateStrFR(paramDay){
   let today = new Date();
   let outDay = today.addDays(paramDay);
   let dateSTR = outDay.getDate().toString().padStart(2, '0')+'/'+(outDay.getMonth()+1).toString().padStart(2, '0')+'/'+outDay.getFullYear();
 
   return dateSTR;
+}
+
+function convertSQLDateToDateStrFR(param){
+  let refDate = new Date(Date.parse(param));
+  return formatterDateFR.format(refDate);
 }
 
 function getReportACEMonthYearStrFR(paramIntervalMonth){

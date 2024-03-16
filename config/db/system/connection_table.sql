@@ -148,3 +148,17 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_sp_log` (
 PRIMARY KEY (`id`));
 
 -- INSERT INTO uac_sp_log (sp_log) VALUES ('This is a test');
+
+
+DROP TABLE IF EXISTS uac_mvoline_attr_log;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_mvoline_attr_log` (
+ `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+ `log_agent_id` BIGINT,
+ `log_username` CHAR(10),
+ `log_mvola_id` BIGINT,
+ `log_attribution` CHAR(1),
+ `log_case_operation` CHAR(1),
+ `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`));
+
+-- If a line does not exists then we run it else we log

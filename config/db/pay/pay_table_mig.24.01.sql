@@ -155,6 +155,18 @@ CASE WHEN up.type_of_payment IN ('R') THEN 'R'
   WHEN up.type_of_payment IN ('E') THEN 'E'
   ELSE 'P' END;
 
+DROP VIEW IF EXISTS v_rep_year_det_recap;
+CREATE VIEW v_rep_year_det_recap AS
+SELECT
+  SUM(up.input_amount) AS UP_AMOUNT, urf.type AS URF_TYPE
+  FROM uac_payment up JOIN uac_ref_frais_scolarite urf
+                      ON up.ref_fsc_id = urf.id
+                      AND urf.type IN ('T', 'M', 'F', 'U')
+  WHERE up.status = 'P'
+  AND type_of_payment NOT IN ('E', 'R')
+GROUP BY urf.type;
+
+
 DROP VIEW IF EXISTS v_rep_month_per_mention;
 CREATE VIEW v_rep_month_per_mention AS
 SELECT mention AS VCC_MENTION, SUM(up.input_amount) AS UP_AMOUNT FROM uac_payment up

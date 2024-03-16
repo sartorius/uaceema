@@ -1594,6 +1594,10 @@ class AdminPayController extends AbstractController
         $logger->debug("Show rep_year_recap: " . $rep_year_recap);
         $result_rep_year_recap = $dbconnectioninst->query($rep_year_recap)->fetchAll(PDO::FETCH_ASSOC);
 
+        $rep_year_det_recap = " SELECT * FROM v_rep_year_det_recap; ";
+        $logger->debug("Show rep_year_det_recap: " . $rep_year_det_recap);
+        $result_rep_year_det_recap = $dbconnectioninst->query($rep_year_det_recap)->fetchAll(PDO::FETCH_ASSOC);
+
 
 
         $rep_all_red = " SELECT * FROM v_dash_all_reduction; ";
@@ -1650,6 +1654,7 @@ class AdminPayController extends AbstractController
                                                                 "result_today_nbr_check_pv"=>$result_today_nbr_check_pv,
                                                                 "result_rep_all_red"=>$result_rep_all_red,
                                                                 "result_rep_year_recap"=>$result_rep_year_recap,
+                                                                "result_rep_year_det_recap"=>$result_rep_year_det_recap,
                                                                 "result_rep_all_tranche"=>$result_rep_all_tranche,
                                                                 "result_rep_rec_journee"=>$result_rep_rec_journee,
                                                                 "result_query_rep_month_mention"=>$result_query_rep_month_mention,

@@ -14,6 +14,7 @@ DELETE FROM uac_load_jqedt WHERE create_date < DATE_ADD(current_date, INTERVAL -
 
 -- Delete log data
 DELETE FROM uac_sp_log WHERE create_date < DATE_ADD(current_date, INTERVAL -10 DAY);
+DELETE FROM uac_mvoline_attr_log WHERE create_date < DATE_ADD(current_date, INTERVAL -10 DAY);
 
 -- Delete old Load Mvola
 DELETE FROM uac_load_mvola WHERE status = 'DUP' AND create_date < DATE_ADD(current_date, INTERVAL -30 DAY);
