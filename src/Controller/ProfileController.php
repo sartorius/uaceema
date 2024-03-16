@@ -106,7 +106,7 @@ class ProfileController extends AbstractController{
             // I need to retrieve session information
             if($from_admin == 'S'){
               if (session_status() == PHP_SESSION_NONE) {
-                  session_start();
+                SessionManager::getSecureSession();
               }
           
               $scale_right = ConnectionManager::whatScaleRight();

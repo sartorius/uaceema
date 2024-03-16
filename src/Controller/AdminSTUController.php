@@ -31,7 +31,7 @@ class AdminSTUController extends AbstractController
     }
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+      SessionManager::getSecureSession();
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 
@@ -83,7 +83,7 @@ class AdminSTUController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+      SessionManager::getSecureSession();
     }
     //'scale_right' => ConnectionManager::whatScaleRight()
 

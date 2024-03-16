@@ -26,7 +26,7 @@ class AdminGradeController extends AbstractController{
 
     public function addgradetoexam(Environment $twig, LoggerInterface $logger){
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
     
         $scale_right = ConnectionManager::whatScaleRight();
@@ -164,7 +164,7 @@ class AdminGradeController extends AbstractController{
 
     public function loadgrascan(Environment $twig, LoggerInterface $logger){
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
     
         $scale_right = ConnectionManager::whatScaleRight();
@@ -260,7 +260,7 @@ class AdminGradeController extends AbstractController{
     public function cancelexam(Environment $twig, LoggerInterface $logger){
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
         $scale_right = ConnectionManager::whatScaleRight();
 
@@ -316,7 +316,7 @@ class AdminGradeController extends AbstractController{
         $max_file_size = 0;
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();
@@ -841,7 +841,7 @@ class AdminGradeController extends AbstractController{
 
     public function exampleFunction(Environment $twig, LoggerInterface $logger){
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
     
         $scale_right = ConnectionManager::whatScaleRight();
@@ -954,7 +954,7 @@ class AdminGradeController extends AbstractController{
     {
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();
@@ -1034,7 +1034,7 @@ class AdminGradeController extends AbstractController{
     {
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();
@@ -1073,7 +1073,7 @@ class AdminGradeController extends AbstractController{
     {
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();
@@ -1340,7 +1340,7 @@ class AdminGradeController extends AbstractController{
     {
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();
@@ -1418,7 +1418,7 @@ class AdminGradeController extends AbstractController{
     {
 
         if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+            SessionManager::getSecureSession();
         }
 
         $scale_right = ConnectionManager::whatScaleRight();

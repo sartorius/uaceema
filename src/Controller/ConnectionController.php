@@ -27,7 +27,7 @@ class ConnectionController extends AbstractController
   {
 
     if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+      SessionManager::getSecureSession();
     }
     if (session_status() != PHP_SESSION_NONE){
         // remove all session variables
