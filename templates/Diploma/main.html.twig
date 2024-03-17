@@ -3,6 +3,55 @@
 <div id="mg-graph-identifier">dip-mai</div>
 
 <div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="dip-head col-lg-6">
+      <div class="txt-md">
+        REPOBLIKAN’I MADAGASIKARA
+      </div>
+      <div class="txt-xs">
+        Fitiavana - Tanindrazana - Fandrosoana
+      </div>
+
+      <div>
+          <img src="{{ path('main') }}img/logoDiploma600x600.png" style="width:300px; height:300px; opacity: 1;"
+                      title="ACEEMCertificate" alt="ACEEM Certification">
+      </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="dip-title col-lg-6">
+      <div>
+        DIPLÔME VALIDE
+      </div>
+      <div>
+          <img src="{{ path('main') }}img/logoDiplomaLys600x100.png" style="width:240px; height:40px; opacity: 1;"
+                  title="ACEEMCertificate" alt="ACEEM Certification">
+      </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="dip-level col-lg-6">
+      <div>
+        {% if diploma['UD_LEVEL'] == 'L' %}LICENCE{% else %}MASTER{% endif %}
+      </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>
+
+
+<div class="row">
   <div class="col-lg-3 mgs-mainblk-txt">
   </div>
 
@@ -10,10 +59,6 @@
     <div class="mgs-questiondefinition">
       <div class="mg-verify-page">
           <div>
-            <div>
-                    <img src="{{ path('main') }}img/certificationDiplome01.png" style="width:350px; height:350px; opacity: 0.8;"
-                            title="ACEEMCertificate" alt="ACEEM Certification">
-            </div>
             <div class="middle-txt">
               
             </div>
@@ -27,7 +72,7 @@
                 intitulé <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 promotion {{ diploma['TITLE_YEAR'] }}
                 depuis l'année {{ diploma['CORE_YEAR'] }}.<br>
-                En foi de quoi, la présente attestation lui est délivrée pour servir et valoir ce que de droit.
+                En foi de quoi, la présente lui est délivrée pour servir et valoir ce que de droit.
                 <br><br>
               </div>
               <div class="col-lg-2">
@@ -41,7 +86,14 @@
                 named <strong>{{ diploma['URDT_TYPE'] }}</strong>,
                 school year {{ diploma['TITLE_YEAR'] }}
                 since {{ diploma['CORE_YEAR'] }}.<br>
-                In witness whereof, this certificate is issued to him or her to be used and to have the legal effect as appropriate.
+                In witness whereof, this is issued to him or her to be used and to have the legal effect as appropriate.
+                <br><hr><br>
+                <img src="{{ path('main') }}img/flag/uk.png" style="width:23px; height:14px; opacity: 1;" title="English lang" alt="English lang">&nbsp;The paper document with QR Code that you have must correspond to the information provided above. If this is not the case, please contact ACEEM University immediately via its website uaceem.com, the only institution capable of certifying its diplomas.<br>
+                <img src="{{ path('main') }}img/flag/china.png" style="width:23px; height:14px; opacity: 1;" title="China lang" alt="China lang">&nbsp;这是您的纸质文件，上面带有QR码，必须与上述提供的信息相符。如果情况不符，请立即通过其网站uaceem.com联系ACEEM大学，这是唯一能够证明其文凭的机构。<br>
+                <img src="{{ path('main') }}img/flag/spain.png" style="width:23px; height:14px; opacity: 1;" title="Spain lang" alt="Spain lang">&nbsp;El documento impreso con el código QR que tiene debe corresponder a la información proporcionada arriba. Si no es así, contacte inmediatamente a la universidad ACEEM a través de su sitio web uaceem.com, la única institución capaz de certificar sus diplomas.<br>
+                <img src="{{ path('main') }}img/flag/italy.png" style="width:23px; height:14px; opacity: 1;" title="Italy lang" alt="Italy lang">&nbsp;Il documento cartaceo con il codice QR che possiedi deve corrispondere alle informazioni fornite sopra. Se ciò non avviene, contatta immediatamente l'università ACEEM tramite il suo sito uaceem.com, l'unica istituzione in grado di certificare i suoi diplomi.<br>
+                <img src="{{ path('main') }}img/flag/japan.png" style="width:23px; height:14px; opacity: 1;" title="Japan lang" alt="Japan lang">&nbsp;お持ちのQRコード付き紙文書は、上記の情報と一致する必要があります。そうでない場合は、直ちにそのサイトuaceem.com経由でACEEM大学に連絡してください。この大学は、その学位を認定できる唯一の機関です。<br>
+                <br><br>
               </div>
               <div class="col-lg-2">
               </div>
