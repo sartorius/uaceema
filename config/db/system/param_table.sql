@@ -371,3 +371,15 @@ INSERT IGNORE INTO tech_number (id) VALUES (7);
 
 
 -- ----------------------------------------------------------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS uac_ref_ephemeride;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_ephemeride` (
+  `eph_day` CHAR(5) NOT NULL,
+  `eph_year` SMALLINT NOT NULL,
+  `description` VARCHAR(300) NOT NULL,
+  `day_366` SMALLINT UNSIGNED NOT NULL,
+  `category` TINYINT NOT NULL DEFAULT 9,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (`eph_day`));
+
+INSERT INTO uac_ref_ephemeride (eph_day, eph_year, description, day_366, category) VALUES (NULL, NULL, NULL, NULL);

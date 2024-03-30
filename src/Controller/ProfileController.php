@@ -352,6 +352,12 @@ class ProfileController extends AbstractController{
             $result_query_user_ass_info = $dbconnectioninst->query($query_user_ass_info)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_user_ass_info: " . count($result_query_user_ass_info));
 
+            $query_eph = " SELECT eph_year AS EPH_YEAR, description AS EPH_DESCRIPTION FROM uac_ref_ephemeride WHERE eph_day = DATE_FORMAT(CURDATE(), '%d-%m') ORDER BY RAND() LIMIT 2; ";
+            $logger->debug("Show me query_eph: " . $query_eph);
+
+            $result_query_eph = $dbconnectioninst->query($query_eph)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_eph: " . count($result_query_eph));
+
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'agent_id' => $agent_id,
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
@@ -368,6 +374,7 @@ class ProfileController extends AbstractController{
                                       "result_histo_pay"=>$result_histo_pay,
                                       "result_query_sumupfds"=>$result_query_sumupfds,
                                       "resultSumPerTranche"=>$resultSumPerTranche,
+                                      'result_query_eph'=>$result_query_eph,
                                       "param_le_limit"=>$param_le_limit,
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,

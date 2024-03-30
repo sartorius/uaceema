@@ -49,10 +49,10 @@ resultatconcours:
     path:       /resultatconcours
     controller: App\Controller\StaticController::resultatconcours
 login:
-    path:       /login
+    path:       /uaclogin
     controller: App\Controller\ConnectionController::login
 logout:
-    path:       /logout
+    path:       /uaclogout
     controller: App\Controller\ConnectionController::logout
 verify_connection:
     path:       /verify-connection

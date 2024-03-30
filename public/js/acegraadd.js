@@ -281,6 +281,26 @@ function fillUnitaryPageStudent(paramIndex, paramArray, classEdit, isOthGraList)
     return tempStrTable;
 }
 
+function reOrderListAndDisplay(){
+    console.log('in reOrderListAndDisplay currentOrder: ' + currentOrder);
+    // Order by Matricule
+    if(currentOrder == 'M'){
+        let dataAllUSRToJsonArraySorted = dataAllUSRToJsonArray.sort((a, b) => {
+            return (a.VSH_USERNAME.localeCompare(b.VSH_USERNAME));
+        });
+        dataAllUSRToJsonArray = dataAllUSRToJsonArraySorted;
+        currentOrder = 'U';
+    }
+    else{
+        let dataAllUSRToJsonArraySorted = dataAllUSRToJsonArray.sort((a, b) => {
+            return parseInt(a.VSH_SMATRICULE) - parseInt(b.VSH_SMATRICULE);
+        });
+        dataAllUSRToJsonArray = dataAllUSRToJsonArraySorted;
+        currentOrder = 'M';
+    }
+    fillStudent((parseInt(currentPage) - 1));
+    return true;
+}
 
 // First page is zero
 function fillStudent(paramPage){

@@ -62,7 +62,7 @@ class AdminGradeController extends AbstractController{
                     || ($exam_status == 'END')){
                     // Review cases !
                     // Data already exists. We need to load them.
-                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY ugg.id ASC; ";
+                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID, fGetMatriculeNum(vsh.MATRICULE) AS VSH_SMATRICULE FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY ugg.id ASC; ";
                     
                     $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.SHORTCLASS AS OTH_CLASS, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
                                                 . " 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT id FROM v_class_cohort vcc WHERE vcc.mention_code = '" . $exam_mention_code . "') AND vsh.ID NOT "
@@ -70,14 +70,14 @@ class AdminGradeController extends AbstractController{
                 }
                 else{
                     // Creation cases !
-                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_USERNAME ASC; ";
+                    $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, 'x' AS HID_GRA, 'x' AS GRA_STATUS, 'x' AS DIRTY_GRA, 0 AS GRA_ID, fGetMatriculeNum(vsh.MATRICULE) AS VSH_SMATRICULE FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ") ORDER BY VSH_SMATRICULE ASC; ";
                     
                     $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.SHORTCLASS AS OTH_CLASS, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
                                                 . " 'x' AS DIRTY_GRA, 0 AS GRA_ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT id FROM v_class_cohort vcc WHERE vcc.mention_code = '" . $exam_mention_code . "') AND vsh.ID NOT "
                                                 . " IN (SELECT vsh.ID FROM v_showuser vsh where vsh.cohort_id IN (SELECT cohort_id FROM uac_xref_subject_cohort WHERE subject_id = " . $inv_subject_id . ")); ";
                 }
                 
-                $logger->debug("Show me allusr_query: " . $allusr_query);
+                $logger->debug("Show me GRA allusr_query: " . $allusr_query);
                 $result_all_usr = $dbconnectioninst->query($allusr_query)->fetchAll(PDO::FETCH_ASSOC);
                 $logger->debug("Show me: " . count($result_all_usr));
                 
@@ -222,8 +222,8 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me nbr_of_stu_mod_query: " . $nbr_of_stu_mod_query);
             $result_nbr_of_stu_mod_query = $dbconnectioninst->query($nbr_of_stu_mod_query)->fetchAll(PDO::FETCH_ASSOC);
 
-            $allstu_query = " SELECT UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, fGetMatriculeNum(vsh.MATRICULE) AS VSH_SMATRICULE, vsh.COHORT_ID AS VSH_COHORT_ID from v_showuser vsh ORDER BY vsh.USERNAME ASC; ";
-            $logger->debug("Show me allstu_query: " . $allstu_query);
+            $allstu_query = " SELECT UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, fGetMatriculeNum(vsh.MATRICULE) AS VSH_SMATRICULE, vsh.COHORT_ID AS VSH_COHORT_ID from v_showuser vsh ORDER BY 4 ASC; ";
+            $logger->debug("Show me GRA allstu_query: " . $allstu_query);
             $result_allstu_query = $dbconnectioninst->query($allstu_query)->fetchAll(PDO::FETCH_ASSOC);
 
             $result_get_token = $this->getDailyTokenGRAStr($logger);

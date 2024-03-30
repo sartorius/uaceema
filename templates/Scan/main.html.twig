@@ -15,8 +15,11 @@
       let dataTagToJsonArray = JSON.parse(localStorage.getItem("listOfScanOut"));
   {% endif %}
 
-
-
+  {% if result_query_sumupfds is defined and result_query_sumupfds is not null %}
+      const DATA_STU_PAY_SUMUPJsonArray =JSON.parse('{{ result_query_sumupfds | json_encode | raw }}');
+  {% else %}
+      const DATA_STU_PAY_SUMUPJsonArray = new Array();
+  {% endif %}
 
   if((typeof dataTagToJsonArray === undefined) || (dataTagToJsonArray == null)){
       dataTagToJsonArray = new Array();
@@ -45,6 +48,25 @@
 
       <div class="row">
         <div class="col-lg-4 mgs-mainblk-txt">
+              <div class='mgs-note'>
+              Les informations qui sont vérifiées sont celles qui datent de la dernière actualisation de cette page. Nous vous conseillons donc de l'actualiser tous les matins. Si un étudiant met à jour ses FDS, si la page n'a pas été actualisée, son statut n'aura pas changé.
+              <br>
+              Une <strong>lettre d'engagement</strong> a une durée de validité de {{ param_le_limit }} jours.<br>
+              <hr>
+              Les status renvoyés par le scan<br>
+              <strong>Introuvable</strong><br>
+              Le scan ne retrouve pas le USERNAME dans la liste des étudiants. Re-essayez à nouveau en vérifiant bien que votre USERNAME est correctement affiché.<br>
+              <strong>ERR90</strong><br>
+              Votre USERNAME n'est pas au bon format : 7 lettres + 3 chiffres.<br>
+              <strong>Entrée orange &nbsp;<span class="icon-exclamation-triangle icon-light"></span></strong><br>
+              Les frais de scolarité sont en retard. Vérifiez vos paiements.<br>
+              <strong>Sortie orange &nbsp;<span class="icon-exclamation-triangle icon-light"></span></strong><br>
+              Les frais de scolarité sont en retard. Vérifiez vos paiements.<br>
+              <strong>Entrée verte &nbsp;<span class="icon-check-square icon-light"></span></strong><br>
+              Les frais de scolarité sont à jour.<br>
+              <strong>Sortie noire &nbsp;<span class="icon-check-square icon-light"></span></strong><br>
+              Les frais de scolarité sont à jour.<br>
+            </div>
 
         </div>
         <div class="col-lg-4 mgs-mainblk-txt ua-scan-mn">
@@ -68,7 +90,7 @@
             <button id="btn-load-bc" class="btn btn-default btn-lg btn-print btn-block">Charger les codes barres &nbsp;<i class="icon-cloud-upload nav-text"></i></button>
           </div>
           <div class="user-title acbc-read">
-              <span class="icon-barcode nav-icon-fa nav-text"></span>&nbsp;Codes Reconnus
+              <span class="icon-barcode nav-icon-fa nav-text"></span>&nbsp;Liste des scans
           </div>
 
           <div id="code-lu">
@@ -78,6 +100,7 @@
 
         </div>
         <div class="col-lg-4 mgs-mainblk-txt">
+
         </div>
       </div>
 

@@ -833,24 +833,36 @@ textarea[name=inputRef] {
 }
 
 .mgs-rd-o-in{
-  font-size: 1.1em;
+  font-size: 0.8em;
   color: white;
   background-color: #007041;
   border-radius: 4px;
 }
 
 .mgs-rd-o-out{
-  font-size: 1.1em;
+  font-size: 0.8em;
   color: white;
   background-color: black;
   border-radius: 4px;
 }
 
+.mgs-rd-late{
+  font-size: 0.8em;
+  color: white;
+  background-color: #b54f00;
+  border-radius: 4px;
+}
+
 .mgs-rd-o-err{
-  font-size: 1.1em;
+  font-size: 0.8em;
   color: white;
   background-color: #9D0000;
   border-radius: 4px;
+}
+
+.msg-rd-basic{
+  padding-top: 4px;
+  padding-right: 5px;
 }
 
 .ass-in-time{
@@ -1809,6 +1821,9 @@ textarea[name=inputRef] {
   color: #E90000;
   font-weight: 800;
   font-style: normal;
+}
+.ref-amt{
+  color: var(--main-gray-25);
 }
 .recap-dirty{
   color: rgb(0, 127, 40);
@@ -2906,4 +2921,34 @@ img.part-img{
 @media print {
   @page { margin: 0; }
   body { margin: 1.6cm; }
+}
+
+.uac-pag-blk{
+  margin-top: 3em;
+}
+.img-eph{
+  border-radius: 5%;
+}
+.nav-eph{
+  font-size: 8px;
+}
+.blk-eph{
+  margin-top: 4em;
+  margin-bottom: 3em;
+}
+.head-eph{
+  text-align: center;
+  color: #002C8A;
+}
+.gen-eph{
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.blk-eph-body{
+  margin-top: 2em;
+  text-align: center;
+}
+
+.mis-stu-gra{
+  min-height: 80px;
 }

@@ -277,8 +277,8 @@ function loadAllSubGrid(){
         { name: "URS_MENTION_CODE",
           title: "Mention",
           type: "text",
-          width: 10,
-          align: "left",
+          width: 20,
+          align: "center",
           headercss: "cell-ref-uac-sm-hd",
           css: "cell-ref-uac-sm",
           itemTemplate: function(value, item) {
@@ -307,7 +307,7 @@ function loadAllSubGrid(){
           }
         },
         { name: "URS_SEMESTER",
-          title: "Semestre",
+          title: "Sem.",
           type: "text",
           width: 10,
           align: "center",
@@ -450,7 +450,7 @@ function loadAllNivGrid(){
         { name: "URS_MENTION_CODE",
           title: "Mention",
           type: "text",
-          width: 20,
+          width: 15,
           align: "center",
           headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"
@@ -472,9 +472,9 @@ function loadAllNivGrid(){
           css: "cell-ref-uac-sm"
         },
         { name: "URS_CPT",
-          title: "Examen(s)",
+          title: "Nbr",
           type: "text",
-          width: 30,
+          width: 10,
           align: "center",
           headercss: "cell-dark-uac-sm-hd",
           css: "cell-ref-uac-sm"

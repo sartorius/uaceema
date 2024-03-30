@@ -1,0 +1,27 @@
+<hr>
+<div class="container blk-eph">
+        <div class="row">
+            <div class="col-1">
+            </div>
+            <div class="col-10">
+                <div id="blk-selfie" class="mgs-mainblk-txt">
+                    {% set eph_i = random(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']) %}
+                    <img src="{{ path('main') }}img/ephemeride/eph_{{ eph_i }}.jpeg" style="width:150px; height:150px; opacity: 1;" title="img ephemeride" alt="img ephemeride" class="uac-img-center img-eph">
+                </div>
+                <div class="pr-title head-eph gen-eph">
+                    <span class="icon-tv nav-icon-fa nav-text"></span>&nbsp;Éphémeride : ça s'est passé un <span id="eph-date">xxx</span>
+                </div>
+                <div class="blk-eph-body gen-eph">
+                    {% if result_query_eph|length > 0 %}
+                            {% for eph in result_query_eph %}
+                                <span class="icon-circle nav-eph"></span>&nbsp;{{ eph['EPH_YEAR'] }} : {{ eph['EPH_DESCRIPTION'] }}<br>
+                            {% endfor %}
+                    {% else %}
+                            <span class="icon-circle nav-eph"></span>&nbsp;Il n'y a pas d'évènement enregistré pour aujourd'hui.
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+</div>

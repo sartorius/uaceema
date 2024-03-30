@@ -19,6 +19,9 @@
     let pageLimit = {{ page_limit }};
     const PAD_POWER = 1;
 
+    // This can be M for Matricule (default) or U for Username
+    let currentOrder = 'M';
+
     const PAGE_MAX = {{ page_maximum }};
     const GET_TOKEN = "{{ result_get_token }}";
     const AGENT_ID = {{ id }};
@@ -168,6 +171,7 @@
         <div id="gra-app" class="gra-btn-bar">
             <button onclick="applyCrossBookmark('{{ default_bookmark }}')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>
             <button onclick="applyCrossBookmark('R')" class="btn btn-outline-dark btn-md btn-blk-export"><i class="icon-times nav-text"></i></button>
+            <button onclick="reOrderListAndDisplay()" class="btn btn-outline-dark btn-md btn-blk-export" {% if (exam_status == 'FED') %}disabled{% endif %}><i class="icon-sort-amount-asc nav-text"></i></button>
         </div>
         <div id="gra-app-pers" class="gra-btn-bar">
             <button id="prs-bkmk" onclick="applyPersoParam()" class="btn btn-dark btn-md btn-blk-export"><i class="icon-bolt nav-text"></i></button>

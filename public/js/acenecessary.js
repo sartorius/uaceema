@@ -202,6 +202,76 @@ function getReportACEMonthYearStrFR(paramIntervalMonth){
   return getReturnValue +outDay.getFullYear();
 }
 
+// getWrittenFRLongDateStrFR(0, 'Y');
+function getWrittenFRLongDateStrFR(paramIntervalMonth, paramYear){
+  let today = new Date();
+  let outDay = today.addDays(0);
+
+  let getMonth = (parseInt(outDay.getMonth())+1) + paramIntervalMonth;
+  getMonth = (getMonth < 1) ? (getMonth + 12) : getMonth;
+  let getReturnValue = '';
+  switch(getMonth) {
+    case 1:
+      getReturnValue = 'janvier';
+      // code block
+      break;
+    case 2:
+      getReturnValue = 'février';
+      // code block
+      break;
+    case 3:
+      getReturnValue = 'mars';
+      // code block
+      break;
+    case 4:
+      getReturnValue = 'avril';
+      // code block
+      break;
+    case 5:
+      getReturnValue = 'mai';
+      // code block
+      break;
+    case 6:
+      getReturnValue = 'juin';
+      // code block
+      break;
+    case 7:
+      getReturnValue = 'juillet';
+      // code block
+      break;
+    case 8:
+      getReturnValue = 'aout';
+      // code block
+      break;
+    case 9:
+      getReturnValue = 'septembre';
+      // code block
+      break;
+    case 10:
+      getReturnValue = 'octobre';
+      // code block
+      break;
+    case 11:
+      getReturnValue = 'novembre';
+      // code block
+      break;
+    case 12:
+      getReturnValue = 'décembre';
+      // code block
+      break;
+    default:
+      getReturnValue = 'err2917P ';
+      // code block
+  }
+
+  if(paramYear ==  'Y'){
+    return outDay.getDate() + ' ' + getReturnValue + ' ' + outDay.getFullYear();
+  }
+  else{
+    return outDay.getDate() + ' ' + getReturnValue ;
+  }
+}
+
 
 function isNullMvo(param){
   return (param ==  null ? '' : param);

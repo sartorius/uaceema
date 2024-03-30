@@ -31,7 +31,22 @@ class ScanController extends AbstractController
 
         $twig_page = '';
 
+        // This is working for in and out scan
         if(isset($rule) && (($rule == 'in') or ($rule == 'out'))){
+            //Be carefull if you have array of array
+            $dbconnectioninst = DBConnectionManager::getInstance();
+
+            $param_le_limit = 0;
+            $query_limit_le = " SELECT par_int AS LE_LIMIT FROM uac_param WHERE key_code = 'PAYLEXX'; ";
+            $result_query_limit_le = $dbconnectioninst->query($query_limit_le)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show result_query_limit_le: " . $result_query_limit_le[0]['LE_LIMIT']);
+            $param_le_limit = $result_query_limit_le[0]['LE_LIMIT'];
+
+            $query_sumupfds = "SELECT UPPER(SCUSN) AS RES_USN, CASE WHEN (FF_COUNT = 'KO') THEN 1 WHEN (SCNLATE >= 0) THEN 0 WHEN (SCRTP > 0) AND (SCLE = 'L') AND (SCNLATE > -" . $param_le_limit . ") THEN 0 ELSE SCRTP END AS RES_SCRTP FROM v_scan_for_late_user ; ";
+            $logger->debug("Show me query_sumupfds: " . $query_sumupfds);
+            $result_query_sumupfds = $dbconnectioninst->query($query_sumupfds)->fetchAll(PDO::FETCH_ASSOC);
+
+
             $twig_page = 'Scan/main.html.twig';
         }
         else{
@@ -44,6 +59,8 @@ class ScanController extends AbstractController
                                                   'lastname' => $_SESSION["lastname"],
                                                   'id' => $_SESSION["id"],
                                                   'rule' => $rule,
+                                                  "result_query_sumupfds"=>$result_query_sumupfds,
+                                                  "param_le_limit"=>$param_le_limit,
                                                   'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     else{

@@ -262,7 +262,7 @@ function loadHistoPayGrid(){
             }
           },
           { name: "UP_INPUT_AMOUNT",
-            title: "Déja payé",
+            title: "Payé",
             type: "text",
             width: 60,
             align: "right",
@@ -337,10 +337,10 @@ function loadHistoPayGrid(){
             css: "cell-ref-xs",
             itemTemplate: function(value, item) {
               if(value == null){
-                return renderAmount('0');
+                return '<span class="ref-amt">' + renderAmount('0') + '</span>';
               }
               else{
-                return renderAmount(value);
+                return '<span class="ref-amt">' + renderAmount(value)+ '</span>';
               }
             }
           },
@@ -683,6 +683,23 @@ function convertWordAZERTY(inputStr){
   }
   return retValue;
 }
+
+function verifyExistAndFDS(param){
+  let foundParam = 'N';
+  for(let i=0; i<DATA_STU_PAY_SUMUPJsonArray.length; i++){
+    if(DATA_STU_PAY_SUMUPJsonArray[i].RES_USN == param){
+      //We found so we went out
+      if(parseInt(DATA_STU_PAY_SUMUPJsonArray[i].RES_SCRTP) > 0){
+        return 'L';
+      }
+      else{
+        return 'P';
+      }
+    }
+  }
+  return foundParam;
+}
+
 function verityContentScan(){
   // Do something
 
@@ -697,14 +714,34 @@ function verityContentScan(){
       readInput = convertWordAZERTY(originalRedInput).replace(/[^a-z0-9]/gi,'').toUpperCase();
     }
 
-    let scanOrderToCheck = ' <i class="mgs-rd-o-err">&nbsp;ERR90&nbsp;</i>';
+    let scanOrderToCheck = ' <i class="mgs-rd-o-err msg-rd-basic">&nbsp;ERR90&nbsp;</i>';
     if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
       // Only if the read is clean
-      if(($('#mg-graph-identifier').text() == 'ua-scan-in')){
-        scanOrderToCheck = ' <i class="mgs-rd-o-in">&nbsp;Entrée&nbsp;</i>';
+      // Here we do a check to know if the readInput is foundable and has paid.
+      // N is Not found; P is FDS paid; L is Late
+      let dispExistFDS = verifyExistAndFDS(readInput);
+      if(dispExistFDS == 'P'){
+        // On time
+        if(($('#mg-graph-identifier').text() == 'ua-scan-in')){
+          scanOrderToCheck = ' <span class="mgs-rd-o-in msg-rd-basic">&nbsp;Entrée&nbsp;<span class="icon-check-square icon-light"></span></span>';
+        }
+        else{
+          scanOrderToCheck = ' <span class="mgs-rd-o-out msg-rd-basic">&nbsp;Sortie&nbsp;<span class="icon-check-square icon-light"></span></span>';
+        }
+
+      }
+      else if(dispExistFDS == 'L'){
+        // LATE
+        if(($('#mg-graph-identifier').text() == 'ua-scan-in')){
+          scanOrderToCheck = ' <span class="mgs-rd-late msg-rd-basic">&nbsp;Entrée&nbsp;<span class="icon-exclamation-triangle icon-light"></span>&nbsp;FDS</span>';
+        }
+        else{
+          scanOrderToCheck = ' <span class="mgs-rd-late msg-rd-basic">&nbsp;Sortie&nbsp;<span class="icon-exclamation-triangle icon-light"></span>&nbsp;FDS</span>';
+        }
+
       }
       else{
-        scanOrderToCheck = ' <i class="mgs-rd-o-out">&nbsp;Sortie&nbsp;</i>';
+        scanOrderToCheck = ' <span class="mgs-rd-o-err msg-rd-basic">&nbsp;Introuvable&nbsp;</span>';
       }
     }
 
@@ -2290,6 +2327,9 @@ $(document).ready(function() {
     /******************  END  : PAYMENT *****************/
     /****************************************************/
     /****************************************************/
+    
+    // Ephemeride
+    $('#eph-date').html(getWrittenFRLongDateStrFR(0, 'N'));
   }
   else if($('#mg-graph-identifier').text() == 'dash-ass'){
     // Do nothing dash-ass
