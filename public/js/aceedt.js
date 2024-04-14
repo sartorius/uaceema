@@ -925,7 +925,8 @@ function saveCourse(){
                     courseRoom: tempCourseRoom,
                     teacherName: tempTeacherName,
                     teacherId: tempTeacherId,
-                    courseRoomCapacity: (tempCourseRoomId == 0 ? 10000 : tempCourseRoomCapacity),
+                    // dataAllRoomToJsonArray[0].capacity should be 10000
+                    courseRoomCapacity: (tempCourseRoomId == 0 ? parseInt(dataAllRoomToJsonArray[0].capacity) : tempCourseRoomCapacity),
                     refEnglishDay: getRefEnglishDay(tempCourseId)
                     /*
                     courseId: tempCourseId,
@@ -1038,16 +1039,20 @@ function loadExistingIfExist(courseId){
       // Do nothing because it is not 
     };
 
-
-    tempCourseRoom = myEDTArray[index].courseRoom;
-    tempCourseRoomId = myEDTArray[index].courseRoomId;
-    tempCourseRoomCapacity = myEDTArray[index].courseRoomCapacity;
+    // This must work only if the capacity is working
+    // Else we have the issue A
     //in case of overcapacity we need to force in non specifié
     if(tempCountStu > tempCourseRoomCapacity){
       $("#my-room-select").val(0);
+      tempCourseRoom = dataAllRoomToJsonArray[0].name;
+      tempCourseRoomId = 0;
+      tempCourseRoomCapacity = parseInt(dataAllRoomToJsonArray[0].capacity);
     }
     else{
       $("#my-room-select").val(tempCourseRoomId);
+      tempCourseRoom = myEDTArray[index].courseRoom;
+      tempCourseRoomId = myEDTArray[index].courseRoomId;
+      tempCourseRoomCapacity = myEDTArray[index].courseRoomCapacity;
     }
 
     if(myEDTArray[index].teacherId > 0){

@@ -274,7 +274,7 @@
 
                 <span class="carte-noedit icon-birthday-cake nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  &nbsp;{{ profile['GENRE'] }}&nbsp;{{ profile['AGE'] }}ans, né{% if profile['GENRE'] == 'F' %}e{% endif %} le {{ profile['BIRTHDAY'] }}</i><br>
                 <span class="carte-noedit icon-certificate nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  {{ profile['BAC'] }} </i><br>
-                <span class="icon-medkit nav-icon-fa-sm nav-text"></span>
+                <span class="icon-medkit nav-icon-fa-sm nav-text"></span>&nbsp;
                 {% if profile['PARENT_PHONE'] is not null %} 
                     <i id="stpf-telpar1" class="nrm-txt">{{ profile['PARENT_PHONE']|slice(0, 3) }} {{ profile['PARENT_PHONE']|slice(3, 2) }} {{ profile['PARENT_PHONE']|slice(5, 2) }} {{ profile['PARENT_PHONE']|slice(7, 3) }}</i>
                 {% endif %}<br>

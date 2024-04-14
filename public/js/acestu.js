@@ -648,8 +648,8 @@ function generateAllMngStudentReportCSV(){
 function generateProfileModifyDB(){
   $('#stu-details-modal').modal('hide');
 
-  invModifyLastname = removeAllQuotes($('#pf-lastname').val().trim());
-  invModifyFirstname = removeAllQuotes($('#pf-firstname').val().trim());
+  invModifyLastname = removeAllQuotes($('#pf-lastname').val().trim()).toUpperCase();
+  invModifyFirstname = getCapitalize(removeAllQuotes($('#pf-firstname').val().trim()));
   invModifyOtherFirstname = removeAllQuotes($('#pf-othfirstname').val().trim());
   invModifyMatricule = $('#pf-matricule').val();
   invModifyTelStu = $('#pf-telstu').val();
