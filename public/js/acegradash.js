@@ -261,7 +261,7 @@ function verboseStatAVGOneExam(param){
       return 'Au dessus';
   }
   else{
-      return 'En dessus';
+      return 'En dessous';
   }
 }
 

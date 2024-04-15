@@ -272,7 +272,7 @@
 
               <div class="carte-profile blc-inline">
 
-                <span class="carte-noedit icon-birthday-cake nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  &nbsp;{{ profile['GENRE'] }}&nbsp;{{ profile['AGE'] }}ans, né{% if profile['GENRE'] == 'F' %}e{% endif %} le {{ profile['BIRTHDAY'] }}</i><br>
+                <span class="carte-noedit icon-birthday-cake nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  &nbsp;{{ profile['GENRE'] }}{{ profile['AGE'] }} né{% if profile['GENRE'] == 'F' %}e{% endif %} le {{ profile['BIRTHDAY'] }} {{ profile['PL_BIRTH']|slice(0, 14) }}{% if profile['PL_BIRTH']|length > 14 %}[...]{% endif %}</i><br>
                 <span class="carte-noedit icon-certificate nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt">  {{ profile['BAC'] }} </i><br>
                 <span class="icon-medkit nav-icon-fa-sm nav-text"></span>&nbsp;
                 {% if profile['PARENT_PHONE'] is not null %} 

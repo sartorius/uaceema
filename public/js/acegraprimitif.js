@@ -41,13 +41,13 @@ function loadPrimitifMain(){
     //console.log('in : loadPrimitifMain');
     let tabStr = '<table>';
 
-    const EMPTY_HEAD_PRELINE_SUBJ = '<tr class="head-prim-line"><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th>';
+    const EMPTY_HEAD_PRELINE_SUBJ = '<tr id="hd-pri-subj" class="hd-freez head-prim-line"><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th>';
     const EMPTY_HEAD_PRELINE = '<th class="prim-emp"></th><th class="prim-emp"></th><th class="prim-emp"></th><th style="text-align: right;">';
 
     // Line of subject
 
     // Line of semester
-    let headerStr = '<tr>' + '<th>' + SHORT_CLASS + '</th><th>' + YEAR + '</th><th></th><th style="text-align: right;">' + 'Semestre' + '</th>';
+    let headerStr = '<tr id="hd-pri-sem" class="hd-freez head-prim-std">' + '<th>' + SHORT_CLASS + '</th><th>' + YEAR + '</th><th></th><th style="text-align: right;">' + 'Semestre' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_SEMESTER + '</th>';
     }
@@ -55,7 +55,7 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of Reference
-    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + '#' + '</th>';
+    headerStr = '<tr id="hd-pri-subjid" class="hd-freez head-prim-std">' + EMPTY_HEAD_PRELINE + '#' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_ID + '</th>';
     }
@@ -70,7 +70,7 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of credit
-    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + sumOfCredit/10 + '/60&nbsp;Crédits' + '</th>';
+    headerStr = '<tr id="hd-pri-crd" class="hd-freez head-prim-std">' + EMPTY_HEAD_PRELINE + sumOfCredit/10 + '/60&nbsp;Crédits' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].URS_CREDIT/10 + '</th>';
     }
@@ -78,7 +78,7 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of credit
-    headerStr = '<tr>' + EMPTY_HEAD_PRELINE + 'Moyenne' + '</th>';
+    headerStr = '<tr id="hd-pri-avg" class="hd-freez head-prim-std">' + EMPTY_HEAD_PRELINE + 'Moyenne' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGG_AVG + '</th>';
     }
@@ -86,7 +86,7 @@ function loadPrimitifMain(){
     tabStr += headerStr;
 
     // Line of date
-    headerStr = "<tr style='border-bottom: 2.5px solid black;'>" + EMPTY_HEAD_PRELINE + 'Date' + '</th>';
+    headerStr = "<tr id='hd-pri-date' class='hd-freez head-prim-std'>" + EMPTY_HEAD_PRELINE + 'Date' + '</th>';
     for(let i=0; i<NBR_EXAM; i++){
       headerStr += "<th class='gra-c' style='width: 60px;'>" + dataPrimitifLineToJsonArray[i].UGM_DATE + '</th>';
     }

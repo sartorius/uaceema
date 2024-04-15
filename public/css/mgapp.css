@@ -2722,6 +2722,31 @@ img.part-img{
   font-style: normal;
 }
 
+#main-pri table{
+  border-collapse: separate; /* Don't collapse */
+  border-spacing: 0;
+}
+
+#main-pri table th {
+  /* Apply both top and bottom borders to the <th> */
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+#main-pri table td {
+  /* For cells, apply the border to one of each side only (right but not left, bottom but not top) */
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+
+#main-pri table th:first-child,
+#main-pri table td:first-child {
+  /* Apply a left border on the first <td> or <th> in a row */
+  border-left: 2px solid;
+}
+
 .head-prim{
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -2737,6 +2762,34 @@ img.part-img{
 
 .head-prim-line{
   height: 210px;
+}
+.head-prim-std{
+  height: 32px;
+}
+/*  ***************************************** TH freeze is here ***************************************** */
+.hd-freez th{
+  position: sticky;
+  z-index: 100;
+}
+
+#hd-pri-sem th{
+  top: 82px;
+}
+#hd-pri-subjid th{
+  top: 114px;
+}
+#hd-pri-subj th{
+  /* head-prim-line is 210 */
+  top: 146px;
+}
+#hd-pri-crd th{
+  top: 356px;
+}
+#hd-pri-avg th{
+  top: 388px;
+}
+#hd-pri-date th{
+  top: 420px;
 }
 
 .i-rouge{

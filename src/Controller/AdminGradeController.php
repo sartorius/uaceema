@@ -1045,9 +1045,9 @@ class AdminGradeController extends AbstractController{
 
             $dbconnectioninst = DBConnectionManager::getInstance();
             
-            $query_missing_stu = " SELECT vpl.*, vpl.URS_NIVEAU_CODE AS EXAM_NIVEAU, vcc.niveau AS STU_NIVEAU FROM v_primitif_line vpl JOIN v_class_cohort vcc ON vpl.VSH_COHORT_ID = vcc.id "
-                              .  " WHERE NOT(vpl.URS_NIVEAU_CODE = vcc.niveau) ORDER BY UGG_ID DESC; ";
-            $logger->debug("missingstudent - Firstname: " . $_SESSION["firstname"]);
+            $query_missing_stu = " SELECT vpl.*, vpl.URS_NIVEAU_CODE AS EXAM_NIVEAU, vpl.URS_NIVEAU_CODE AS STU_NIVEAU FROM v_primitif_line vpl LEFT JOIN uac_xref_subject_cohort xref "
+                              .  " ON vpl.VSH_COHORT_ID = xref.cohort_id AND vpl.URS_ID = xref.subject_id  WHERE xref.cohort_id IS NULL ORDER BY UGG_ID DESC; ";
+            $logger->debug("Show me query_missing_stu: " . $query_missing_stu);
             
 
             $result_query_missing_stu = $dbconnectioninst->query($query_missing_stu)->fetchAll(PDO::FETCH_ASSOC);
