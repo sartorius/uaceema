@@ -1,0 +1,112 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+{% if all_just is defined and all_just is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+    let dataCategoryToJsonArray = JSON.parse('{{ result_query_all_category | json_encode | raw }}');
+
+
+    let dataAllJUSTToJsonArray = JSON.parse('{{ all_just | json_encode | raw }}');
+
+    let tempInitTicket = 'na'
+    let tempCategoryCode = 0;
+    let tempCategory = "na";
+    let tempAmountJust = 0;
+    let tempTypeOfPayment = 'na';
+    let tempComment = 'na';
+
+    let myTicket = new Array();
+    let ticketRef = '';
+
+    const paddChar = '.';
+    const maxLgTicket = 45;
+    const maxLgRecap = 38;
+    const sizeTime = 12;
+    const sepTime = ' ';
+
+    // We init here the filter value
+	let filtereddataAllJUSTToJsonArray = Array.from(dataAllJUSTToJsonArray);
+    // Create our number formatter.
+    const GET_TOKEN = '{{ result_get_token }}';
+    const WRITE_ACCESS = '{{ write_access }}';
+    const formatterCurrency = new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'MGA'
+
+      // These options are needed to round to whole numbers if that's what you want.
+      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
+
+
+
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllJUSTToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">man-just</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h1>Manager Justificatif</h1>
+    <hr>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-pay" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-pay" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1">
+    
+    <button onclick="generateAllJustCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+    
+  </div>
+  <div class="col-2">
+        {% if (write_access == 'Y') %}
+            <button id="crt-just" onclick="showAddModal()" class="btn btn-outline-dark btn-md btn-blk-menu"><span class="icon-clipboard-1 nav-text"></span>&nbsp;Créer justificatif</button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
+  </div>
+
+
+  <div class="col-4">
+  </div>
+
+  <div class="col-1">
+  </div>
+</div>
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllJUST">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+
+
+{% include 'Admin/PAY/_modaladdjust.html.twig' %}
+{% include 'Admin/PAY/_modaljustdetails.html.twig' %}
+{% include 'RawTemplate/SPE/_footer.w.payjust.jsgrid.mgchart.html.twig' %}

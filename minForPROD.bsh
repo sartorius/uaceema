@@ -20,6 +20,8 @@ echo 'aceidentificationcommon.js';
 uglifyjs public/js/aceidentificationcommon.js -o public/js/aceidentificationcommon.min.js;
 echo 'acepay.js';
 uglifyjs public/js/acepay.js -o public/js/acepay.min.js;
+echo 'acepayjust.js';
+uglifyjs public/js/acepayjust.js -o public/js/acepayjust.min.js;
 echo 'aceedt.js';
 uglifyjs public/js/aceedt.js -o public/js/aceedt.min.js;
 echo 'acepublicedt.js';

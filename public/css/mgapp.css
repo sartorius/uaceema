@@ -3005,3 +3005,17 @@ img.part-img{
 .mis-stu-gra{
   min-height: 80px;
 }
+
+#add-just-blk{
+  height: 600px;
+}
+
+#disp-just-ticket{
+  border-right: 0.5px solid #555555;
+  padding-left: 70px;
+}
+#fill-just-ticket{
+  padding-top: 100px;
+  padding-left: 70px;
+  padding-right: 40px;
+}

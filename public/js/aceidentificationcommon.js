@@ -389,6 +389,18 @@ function getAllOPEAmount(paramCode){
   return 'ERR6239';
 }
 
+/*
+function addPayUserExists(paramReadInput){
+  let convertParamValue = convertWordAZERTY(paramReadInput).toUpperCase();
+  if(addPayUserExistsGenuine(convertParamValue)){
+    $('#addpay-ace').val(convertParamValue);
+    return true;
+  }
+  else{
+    return addPayUserExistsGenuine(paramReadInput);
+  }
+}
+*/
 
 function addPayUserExists(val){
   for (let i = 0; i < dataAllUSRNToJsonArray.length; i++) {
@@ -581,6 +593,7 @@ function verityAddComContentScan(){
 
     let originalRedInput = $('#addpay-ace').val();
     let readInput = $('#addpay-ace').val().replace(/[^a-z0-9]/gi,'').toUpperCase();
+    let convertParamValue = convertWordAZERTY(readInput).toUpperCase();
     //console.log("Diagnostic 2 Read Input : " + readInput.length + ' : ' + readInput + ' - ' + originalRedInput + ' 0/' + convertWordAZERTY(originalRedInput) + ' 1/' + convertWordAZERTY(originalRedInput).toUpperCase() + ' 2/' + convertWordAZERTY(originalRedInput).toUpperCase().replace(/[^a-z0-9]/gi,'') + ' 3/' + convertWordAZERTY(originalRedInput).toLowerCase().replace(/[^a-z0-9]/gi,''));
 
     if(readInput.length < 10){
@@ -593,7 +606,22 @@ function verityAddComContentScan(){
     if(/[a-zA-Z0-9]{9}[0-9]/.test(readInput)){
       // Only if the read is clean
       currentTicketMode = 'P';
-      if(addPayUserExists(readInput)){
+      //console.log('Read input 1 convertWordAZERTY');
+      /*****************************/
+      /*****************************/
+      /*****************************/
+      /*** UGLY BUG FIX Conversion */
+      /*****************************/
+      /*****************************/
+      /*****************************/
+      if(addPayUserExists(convertParamValue)){
+        readInput = convertParamValue;
+        $('#addpay-ace').val(readInput);
+        /********************************************************** FOUND **********************************************************/
+        scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
+        commonOperationIfFoundUsername(readInput);
+      }
+      else if(addPayUserExists(readInput)){
         /********************************************************** FOUND **********************************************************/
         scanValidToDisplay = ' <i class="mgs-rd-o-in">&nbsp;Étudiant valide&nbsp;</i>';
         commonOperationIfFoundUsername(readInput);

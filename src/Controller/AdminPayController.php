@@ -1497,12 +1497,12 @@ class AdminPayController extends AbstractController
         $query_all_pay = " SELECT * FROM v_all_pay; ";
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
-        $logger->debug("query_all_edt: " . $query_all_pay);
+        $logger->debug("query_all_pay: " . $query_all_pay);
 
 
         $dbconnectioninst = DBConnectionManager::getInstance();
         $result_all_pay = $dbconnectioninst->query($query_all_pay)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me query_all_mvo: " . count($result_all_pay));
+        $logger->debug("Show me count result_all_pay: " . count($result_all_pay));
 
         $content = $twig->render('Admin/PAY/managerpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
@@ -1510,6 +1510,65 @@ class AdminPayController extends AbstractController
                                                                 'id' => $_SESSION["id"],
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'all_pay' => $result_all_pay,
+                                                                'errtype' => '']);
+
+    }
+    else{
+        // Error Code 404
+        $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+    }
+    return new Response($content);
+  }
+
+  // Manager just pay allow anyone with payment rights to see but there will be access only for write
+  public function managerjust(Environment $twig, LoggerInterface $logger)
+  {
+
+    if (session_status() == PHP_SESSION_NONE) {
+        SessionManager::getSecureSession();
+    }
+
+    $scale_right = ConnectionManager::whatScaleRight();
+    $logger->debug("scale_right: " . $scale_right);
+
+
+
+
+
+
+
+
+    if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
+
+
+        $dbconnectioninst = DBConnectionManager::getInstance();
+
+        $query_all_just = " SELECT * FROM v_all_just; ";
+        $logger->debug("query_all_just: " . $query_all_just);
+        $result_all_just = $dbconnectioninst->query($query_all_just)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me count result_all_just: " . count($result_all_just));
+
+        $query_all_category = " SELECT * FROM uac_ref_just_category; ";
+        $logger->debug("query_all_category: " . $query_all_category);
+        $result_query_all_category = $dbconnectioninst->query($query_all_category)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me count result_query_all_category: " . count($result_query_all_category));
+
+        $result_get_token = $this->getDailyTokenPayStr($logger);
+        $write_access = 'N';
+        if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+            $write_access = 'Y';
+        }
+
+
+        $content = $twig->render('Admin/PAY/managerjust.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                'firstname' => $_SESSION["firstname"],
+                                                                'lastname' => $_SESSION["lastname"],
+                                                                'id' => $_SESSION["id"],
+                                                                'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                'result_get_token'=>$result_get_token,
+                                                                'write_access' => $write_access,
+                                                                'all_just' => $result_all_just,
+                                                                'result_query_all_category' => $result_query_all_category,
                                                                 'errtype' => '']);
 
     }

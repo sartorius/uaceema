@@ -431,14 +431,14 @@ function loadSumUpGrid(){
             css: "cell-ref-sm-mono"
           },
           { name: "TRANCHE_AMOUNT",
-            title: "Montant",
+            title: "Ref.",
             type: "text",
             width: 50,
             align: "right",
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              return renderAmount(value);
+              return '<span class="ref-amt">' + renderAmount(value) + '</span>';
             }
           },
           { name: "ALREADY_PAID",
