@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 use \PDO;
 
 class ProfileController extends AbstractController{
-  private static $my_exact_access_right = 41;
+  private static $my_exact_access_right = 42;
 
   public function show(Environment $twig, LoggerInterface $logger, $page, $week)
   {

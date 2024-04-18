@@ -40,7 +40,6 @@ function getLogInAddJust(someMsg){
     let time = getTicketTime();
   
     let appendLog = '';
-    let myBreak = '<br>';
 
     // I am not on init here
     appendLog = (someMsg.substring(0, (maxLgTicket - sizeTime)) + sepTime + time).toString().padStart(maxLgTicket, paddChar);
@@ -53,6 +52,12 @@ function getLogInAddJust(someMsg){
     */
     return appendLog;
 };
+function displayLogInJust(){
+    let appendLog = '';
+    let myBreak = '<br>';
+    getLogInAddJust(someMsg);
+    $('#pay-sc-log-tra').html(myLog + myBreak + appendLog);
+}
 function showAddModal(){
     tempInitTicket = 'na'
     tempCategoryCode = 0;
