@@ -155,6 +155,7 @@ function initAllPAYGrid(){
       filtereddataAllPAYToJsonArray = dataAllPAYToJsonArray.filter(function (el) {
                                         return el.raw_data.includes($('#filter-all-pay').val().toUpperCase())
                                     });
+        $("#mst-filcnt").html(filtereddataAllPAYToJsonArray.length);
         loadAllPAYGrid();
     }
     else if(($('#filter-all-pay').val().length < 2)) {
@@ -168,6 +169,7 @@ function initAllPAYGrid(){
   
   function clearDataAllPAY(){
     filtereddataAllPAYToJsonArray = Array.from(dataAllPAYToJsonArray);
+    $("#mst-filcnt").html(filtereddataAllPAYToJsonArray.length);
     loadAllPAYGrid();
   };
 
@@ -496,6 +498,7 @@ function initAllMVOGrid(){
       filteredDataAllMVOToJsonArray = dataAllMVOToJsonArray.filter(function (el) {
                                         return el.raw_data.includes($('#filter-all-mvo').val().toUpperCase())
                                     });
+      $("#mst-filcnt").html(filteredDataAllMVOToJsonArray.length);
       loadAllMVOGrid();
     }
     else if(($('#filter-all-mvo').val().length < 2)) {
@@ -509,6 +512,7 @@ function initAllMVOGrid(){
   
   function clearDataAllMVO(){
     filteredDataAllMVOToJsonArray = Array.from(dataAllMVOToJsonArray);
+    $("#mst-filcnt").html(filteredDataAllMVOToJsonArray.length);
     loadAllMVOGrid();
   };
   

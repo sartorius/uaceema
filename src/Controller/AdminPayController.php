@@ -289,6 +289,85 @@ class AdminPayController extends AbstractController
       400);
   }
 
+  public function generateJustDB(Request $request, LoggerInterface $logger)
+  {
+
+
+      // This is optional.
+      // Only include it if the function is reserved for ajax calls only.
+      if (!$request->isXmlHttpRequest()) {
+          return new JsonResponse(array(
+              'status' => 'Error',
+              'message' => 'Error'),
+          400);
+      }
+
+      if(isset($request->request))
+      {
+
+          // Token control
+          $result_get_token = $this->getDailyTokenPayStr($logger);
+          $param_token = $request->request->get('token');
+
+          if(strcmp($result_get_token, $param_token) !== 0){
+              // We need to out as error
+              // This may be a corrupted action
+              return new JsonResponse(array(
+                  'status' => 'Error',
+                  'message' => 'Err122 ticket corrompu'),
+              400);
+          }
+
+          // Get data from ajax
+          $param_just_ref = $request->request->get('paramJustRef');
+          $param_tech_hd = $request->request->get('paramTechHd');
+          $param_agent_id = $request->request->get('currentAgentIdStr');
+          $param_category_code = $request->request->get('paramCategoryCode');
+          $param_amount_just = $request->request->get('paramAmountJust');
+          $param_type_of_payment = $request->request->get('paramTypeOfPayment');
+          $param_comment = $request->request->get('paramComment');
+
+          
+          //echo $param_jsondata[0]['username'];
+          //INSERT INTO uac_facilite_payment (user_id, ticket_ref, category, red_pc, status) VALUES (
+          $query_value = " CALL CLI_CRT_PayAddJust (" 
+                            . $param_category_code .", '" . $param_just_ref . "', '" . $param_tech_hd . "', " . $param_amount_just . ", '" . $param_type_of_payment . "', " 
+                            . $param_agent_id . ", '" . $param_comment . "');  ";
+
+          $logger->debug("Show me generateJustDB query_value: " . $query_value);
+          //Be carefull if you have array of array
+          $dbconnectioninst = DBConnectionManager::getInstance();
+          $result = $dbconnectioninst->query($query_value)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("Show me generateJustDB count SP: " . count($result) . ' last id: ' . $result[0]['JUST_LAST_ID']);
+
+          /*
+          $query_value_last_id = " SELECT LAST_INSERT_ID() AS JUST_NEW_ID; ";
+          $result_last_id = $dbconnectioninst->query($query_value_last_id)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("Show me generateJustDB last ID: " . $result_last_id[0]['JUST_NEW_ID']);
+          */
+          //$logger->debug("Show me generateJustDB last ID: " .implode(', ', $result) . ' count : ' . count($result));
+          //$logger->debug("Show me generateJustDB last ID: " . $result[0]['JUST_NEW_ID']);
+
+
+        //$logger->debug("Show result_last_mvola: " . $result_last_mvola[0]['LAST_DATE']);
+
+
+          // Send all this back to client
+          return new JsonResponse(array(
+              'status' => 'OK',
+              'paramTicketRef' => $param_just_ref,
+              'justLastID' => $result[0]['JUST_LAST_ID'],
+              'message' => 'Tout est OK: ' . $param_just_ref . '/ '),
+          200);
+      }
+
+      // If we reach this point, it means that something went wrong
+      return new JsonResponse(array(
+          'status' => 'Error',
+          'message' => 'Error generation ticket justificatif'),
+      400);
+  }
+
   public function generateOpeMultiDB(Request $request, LoggerInterface $logger)
   {
 
@@ -1543,7 +1622,23 @@ class AdminPayController extends AbstractController
 
         $dbconnectioninst = DBConnectionManager::getInstance();
 
-        $query_all_just = " SELECT * FROM v_all_just; ";
+        // In case we have a cancellation
+        $confirm_cancel_id = 0;
+        if(isset($_POST["confirm-cancel-id"])){
+            $confirm_cancel_id = $_POST["confirm-cancel-id"];
+            // We are in a cancel case
+            $query_cancel_id = " UPDATE uac_just SET status = 'C', agent_id = " . $_SESSION["id"] . " WHERE id = " . $confirm_cancel_id . "; ";
+            $result_query_cancel_id = $dbconnectioninst->query($query_cancel_id)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("managerjust query_cancel_id: " . $query_cancel_id);
+            $logger->debug("count result_query_cancel_id: " . count($result_query_cancel_id));
+        }
+
+
+
+
+
+
+        $query_all_just = " SELECT * FROM v_all_just ORDER BY 1 DESC; ";
         $logger->debug("query_all_just: " . $query_all_just);
         $result_all_just = $dbconnectioninst->query($query_all_just)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me count result_all_just: " . count($result_all_just));
@@ -1563,11 +1658,12 @@ class AdminPayController extends AbstractController
         $content = $twig->render('Admin/PAY/managerjust.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
-                                                                'id' => $_SESSION["id"],
+                                                                'agent_id' => $_SESSION["id"],
                                                                 'scale_right' => ConnectionManager::whatScaleRight(),
                                                                 'result_get_token'=>$result_get_token,
                                                                 'write_access' => $write_access,
                                                                 'all_just' => $result_all_just,
+                                                                'confirm_cancel_id' => $confirm_cancel_id,
                                                                 'result_query_all_category' => $result_query_all_category,
                                                                 'errtype' => '']);
 
@@ -1577,6 +1673,61 @@ class AdminPayController extends AbstractController
         $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
     }
     return new Response($content);
+  }
+
+
+
+    
+  public function canceljust(Environment $twig, LoggerInterface $logger){
+
+      if (session_status() == PHP_SESSION_NONE) {
+          SessionManager::getSecureSession();
+      }
+      $scale_right = ConnectionManager::whatScaleRight();
+
+      if(isset($_POST["fJustRef"])
+          && isset($_POST["fId"])
+          && isset($_POST["fJustDate"])
+          && isset($_POST["fCategory"])
+          && isset($_POST["fAmount"])
+          && isset($_POST["fComment"])
+          ){
+          if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+              $logger->debug("cancelexam : Firstname: " . $_SESSION["firstname"]);
+  
+              $param_just_ref = $_POST["fJustRef"];
+              $param_just_id = $_POST["fId"];
+              $param_just_date = $_POST["fJustDate"];
+              $param_category = $_POST["fCategory"];
+              $param_amount = $_POST["fAmount"];
+              $param_comment = $_POST["fComment"];
+  
+              $confirmation_msg = '<strong>Reference : </strong>' . $param_just_ref 
+                                . '<br><strong>ID : </strong>' . $param_just_id 
+                                . '<br><strong>Date de paiement : </strong>' . $param_just_date 
+                                . '<br><strong>Catégorie : </strong>' . $param_category 
+                                . '<br><strong>Montant : </strong>' . $param_amount 
+                                . '<br><strong>Commentaire: </strong>' . $param_comment;
+              
+              $content = $twig->render('Admin/PAY/canceljust.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
+                                                                                  'firstname' => $_SESSION["firstname"],
+                                                                                  'lastname' => $_SESSION["lastname"],
+                                                                                  'id' => $_SESSION["id"],
+                                                                                  'confirmation_msg' => $confirmation_msg,
+                                                                                  'just_id' => $param_just_id,
+                                                                                  'scale_right' => ConnectionManager::whatScaleRight()]
+                                                                              );
+  
+          }
+          else{
+              // Error Code 404
+              $content = $twig->render('Static/error736.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+          }
+      }
+      else{
+          $content = $twig->render('Static/error404.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+      }
+      return new Response($content);
   }
 
   public function dashboardpay(Environment $twig, LoggerInterface $logger)

@@ -181,6 +181,15 @@ generateCertificatScoDB:
 generateOpeMultiDB:
     path:       /generateOpeMultiDB
     controller: App\Controller\AdminPayController::generateOpeMultiDB
+generateJustDB:
+    path:       /generateJustDB
+    controller: App\Controller\AdminPayController::generateJustDB
+canceljust:
+    path:       /canceljust
+    controller: App\Controller\AdminPayController::canceljust
+confirmcanceljust:
+    path:       /confirmcanceljust
+    controller: App\Controller\AdminPayController::managerjust
 checkandloadmvo:
     path:       /checkandloadmvo
     controller: App\Controller\AdminPayController::checkandloadmvo

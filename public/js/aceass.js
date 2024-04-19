@@ -198,6 +198,13 @@ function loadHistoPayGrid(){
               }
             }
           },
+          { name: "UP_TYPE_OF_PAYMENT",
+            title: "T",
+            type: "text",
+            width: 10,
+            headercss: "cell-ref-sm-hd",
+            css: "cell-ref-xs"
+          },
           { name: "UP_PAY_DATE_READ",
             title: "Date",
             type: "text",

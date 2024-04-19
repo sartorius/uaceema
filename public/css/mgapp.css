@@ -267,7 +267,9 @@ h4 {
   z-index: 100;
 }
 
-
+.hard-fix-btn{
+  height: 100%;
+}
 
 
 .mapouter{
@@ -1613,6 +1615,7 @@ textarea[name=inputRef] {
 
 #past-msg-edt,
 #profile-save-btn,
+#just-save-btn,
 #exist-msg-edt{
   display: none;
 }
@@ -1829,6 +1832,10 @@ textarea[name=inputRef] {
   color: rgb(0, 127, 40);
   font-weight: 800;
   font-style: normal;
+}
+
+.recap-blue{
+  color: rgb(0, 47, 255);
 }
 
 .recap-deactivate{
@@ -2865,7 +2872,8 @@ img.part-img{
 #parcours-opt{
   padding-left: 200px;
 }
-#subj-crd-input{
+#subj-crd-input,
+#amt-just-input{
   resize: none;
   text-align: center;
 }
@@ -3007,15 +3015,26 @@ img.part-img{
 }
 
 #add-just-blk{
-  height: 600px;
+  height: 750px;
 }
 
 #disp-just-ticket{
+  margin-top: 90px;
   border-right: 0.5px solid #555555;
-  padding-left: 70px;
+  padding-left: 60px;
 }
 #fill-just-ticket{
   padding-top: 100px;
   padding-left: 70px;
   padding-right: 40px;
+}
+#cat-det{
+  height: 30px;
+}
+.just-sc-log-tra-txt{
+  font-family: Courier;
+  font-size: 0.9em;
+}
+.desc-sm{
+  font-size: 0.8em;
 }

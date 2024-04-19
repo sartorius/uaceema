@@ -14,7 +14,7 @@
 
                     <div id="pay-sc-log" class="blk-log-pay">
                     <i class="icon-arrow-down nav-text"></i>&nbsp;Ticket&nbsp;<i id="sh-ticketref"></i>
-                    <div id="pay-sc-log-tra" class="pay-sc-log-tra-txt">
+                    <div id="pay-sc-log-tra" class="just-sc-log-tra-txt">
                     </div>
                     </div>
                 </div>
@@ -30,8 +30,34 @@
                     </div>
                     <div id="cat-det">
                     </div>
-
-
+                    <hr>
+                    <div id="subj-crd-blk">
+                        Entrez le montant en ariary (min. 100 Ar) :
+                        <div id="othg-gra" class="othg-blk-det">
+                            <textarea id="amt-just-input" rows="1" cols="16" class="othg-txta ok-txtar" onkeyup="validateAmountJust()"></textarea>
+                        </div>
+                    </div>
+                    <div class="menu-dropdown">
+                        <div id='modal-crs-status'>
+                          Type justifié :<br>
+                          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                            <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group active"><i class="icon-money nav-text"></i>&nbsp;Cash</button>
+                            <button id="stt-h" type="button" value="H" class="btn btn-outline-secondary stt-group"><i class="icon-pencil-square-o nav-text"></i>&nbsp;Chèque</button>
+                          </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <i class="icon-quote-right"></i>&nbsp;Commentaire
+                    <br>
+                    <div id='pro-details-ass'>
+                        <div class="edt-status-light nrm-txt">Nombre de caractère(s) restant(s) : <i id="just-cmt-length"></i></div>
+                        <textarea id="just-cmt" class="prof-note-input" placeholder="Entrez un commentaire" style="resize: none;"  name="w3review" rows="2" cols="48" onKeyUp='manageJustComment()'></textarea>
+                    </div>
+                    <hr>
+                    <div id="just-save-btn">
+                        <button type="button" onclick="generateNewJustDB()" class="btn btn-default btn-lg btn-block"><i class="icon-print nav-text"></i>&nbsp;Valider et imprimer reçu</button>
+                    </div>
+                    <br>
                 </div>
             </div>
       </div>

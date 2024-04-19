@@ -102,6 +102,16 @@ function getCapitalize(param){
   return param.charAt(0).toUpperCase() + param.slice(1).toLowerCase();
 }
 
+
+function splitStringPerSize(chaine, paramSize) {
+  let tailleSousChaine = paramSize;
+  const sousChaines = [];
+  for (let i = 0; i < chaine.length; i += tailleSousChaine) {
+      sousChaines.push(chaine.slice(i, i + tailleSousChaine));
+  }
+  return sousChaines;
+}
+
 // This is to get the current datetime
 // param can be : F for French /T for Technical/S for String Technical
 function getACEDateStr(param){
@@ -125,6 +135,7 @@ function getACEDateStr(param){
 }
 
 // This is to add days to the current day
+// getReportACEDateStrFR(0) is date of today
 function getReportACEDateStrFR(paramDay){
   let today = new Date();
   let outDay = today.addDays(paramDay);

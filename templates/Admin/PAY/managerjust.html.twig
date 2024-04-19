@@ -1,3 +1,4 @@
+{% include 'Dirty/dirtyjspdf.html.twig' %}
 {% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
 {% if all_just is defined and all_just is not null %}
   <script>
@@ -6,13 +7,23 @@
 
 
     let dataAllJUSTToJsonArray = JSON.parse('{{ all_just | json_encode | raw }}');
+    // We init here the filter value
+	  let filtereddataAllJUSTToJsonArray = Array.from(dataAllJUSTToJsonArray);
+    let confirmCancelId = {{ confirm_cancel_id }};
+    
+    
+    let tempCurrentDate = '';
+
 
     let tempInitTicket = 'na'
     let tempCategoryCode = 0;
     let tempCategory = "na";
+    let tempCommentMandatory = "Y";
     let tempAmountJust = 0;
-    let tempTypeOfPayment = 'na';
+    let tempTypeOfPayment = 'C';
     let tempComment = 'na';
+    let tempCleanComment = 'na';
+    let tempJustRef = 'na'
 
     let myTicket = new Array();
     let ticketRef = '';
@@ -23,11 +34,19 @@
     const sizeTime = 12;
     const sepTime = ' ';
 
-    // We init here the filter value
-	let filtereddataAllJUSTToJsonArray = Array.from(dataAllJUSTToJsonArray);
+    const msgFooterJUST = 'DATE, SIGNATURE ET CACHET CAISSE';
+
+    const maxPrintTicket = sizeTime - 3;
+    const maxPadLeft = 5;
+
+    // Maximum 1Milliard
+    const MAX_AMT_JUST_VALUE = 1000000000;
+    const MAX_NOTE_LENGTH = 100;
+
     // Create our number formatter.
     const GET_TOKEN = '{{ result_get_token }}';
     const WRITE_ACCESS = '{{ write_access }}';
+    const CURRENT_AGENT_ID_STR = "{{ agent_id }}";
     const formatterCurrency = new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: 'MGA'
@@ -58,6 +77,9 @@
   <div class="col-10">
     <h1>Manager Justificatif</h1>
     <hr>
+    <div class="mgs-note-banner">
+      Nombre de justification : <i id='mst-filcnt'>{{ all_just|length }}</i> sur {{ all_just|length }} - seuls les justificatifs du jour peuvent être annulés.
+    </div>
   </div>
   <div class="col-1">
   </div>
@@ -67,15 +89,17 @@
   </div>
 
   <div class="col-2 fil-el">
-    <textarea class="form-control" rows="1" id="filter-all-pay" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+    <textarea class="form-control" rows="1" id="filter-all-just" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
+
   <div class="col-1 fil-el">
-    <button id="re-init-dash-pay" type="button" class="btn btn-md btn-block btn-default">
+    <button id="re-init-dash-just" type="button" class="btn btn-md hard-fix-btn btn-block btn-default">
       <i class="icon-refresh"></i>
     </button>
   </div>
-  <div class="col-1">
-    
+
+
+  <div class="col-1">  
     <button onclick="generateAllJustCSV()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
     
   </div>
@@ -105,8 +129,8 @@
   </div>
 </div>
 
-
+<img id="logo-carte" src="{{ path('main') }}img/logotext_black600x200.png" style="width:620px; height: 200px; opacity: 1;" class="img-carte" >
 
 {% include 'Admin/PAY/_modaladdjust.html.twig' %}
-{% include 'Admin/PAY/_modaljustdetails.html.twig' %}
+{% include 'Admin/PAY/_gotocanfrommng.html.twig' %}
 {% include 'RawTemplate/SPE/_footer.w.payjust.jsgrid.mgchart.html.twig' %}
