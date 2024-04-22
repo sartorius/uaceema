@@ -82,8 +82,8 @@ CREATE VIEW v_dsh_day_just AS
     AND uj.status = 'P'
     GROUP BY type_of_payment ORDER BY type_of_payment;
 
-DROP VIEW IF EXISTS v_dsh_day_nbr_check;
-CREATE VIEW v_dsh_day_nbr_check AS
+DROP VIEW IF EXISTS v_dsh_just_day_nbr_check;
+CREATE VIEW v_dsh_just_day_nbr_check AS
     SELECT COUNT(1) AS DSH_JUST_DAY_NBR_CHECK FROM uac_just uj
     WHERE uj.pay_date > CURRENT_DATE
     AND uj.status = 'P'

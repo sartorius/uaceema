@@ -1858,7 +1858,7 @@ class AdminPayController extends AbstractController
         $result_query_all_just_day = $dbconnectioninst->query($query_all_just_day)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_all_just_day: " . count($result_query_all_just_day));
 
-        $query_all_just_day_nbr_check = " SELECT * FROM v_dsh_day_nbr_check; ";
+        $query_all_just_day_nbr_check = " SELECT * FROM v_dsh_just_day_nbr_check; ";
         $logger->debug("Show query_all_just_day_nbr_check: " . $query_all_just_day_nbr_check);
         $result_query_all_just_day_nbr_check = $dbconnectioninst->query($query_all_just_day_nbr_check)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_all_just_day_nbr_check: " . count($result_query_all_just_day_nbr_check));
