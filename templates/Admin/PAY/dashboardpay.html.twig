@@ -9,6 +9,14 @@
 
     let dataSumUpFFJsonArray =JSON.parse('{{ result_query_get_sumup_ff | json_encode | raw }}');
 
+    let dataJustCurDayJsonArray =JSON.parse('{{ result_query_all_just_day | json_encode | raw }}');
+    let dataJustCurDayNbrCheckJsonArray =JSON.parse('{{ result_query_all_just_day_nbr_check | json_encode | raw }}');
+
+    let dataMonthJustJsonArray =JSON.parse('{{ result_query_rep_month_just | json_encode | raw }}');
+    let cobTotalCashJust = 0;
+    let cobTotalCheckJust = 0;
+    let cobTotalNbrCheckJust = 0;
+
     const NON_ATTR_MVOLA = "{{ param_non_attr_mvola }}";
     const CONST_PARAM_YEAR = "{{ param_year }}";
     // Create our number formatter.
@@ -47,6 +55,7 @@
     let recapYearDetailM = 0;
     let recapYearDetailT = 0;
     let recapYearDetailU = 0;
+    const RECAP_YEAR_JUST = {{ result_query_rep_all_just }};
 
   </script>
 {% else %}
@@ -181,6 +190,7 @@
     Recette sur l'année :<br>
     Réduction sur l'année :<br>
     Exemption sur l'année :<br>
+    Justificatif sur l'année :<br>
     Réduction aujourd'hui :<br>
     Compte courant Mvola :<br>
     Non attribué Mvola :<br>
@@ -191,6 +201,7 @@
     <i id="disp-py-ben" class="disp-amt-mono">na</i><br>
     <i id="disp-py-red" class="disp-amt-mono">na</i><br>
     <i id="disp-py-exm" class="disp-amt-mono">na</i><br>
+    <i id="disp-py-jus" class="line-ju-res disp-amt-mono">na</i><br>
     <i id="disp-pv-red" class="line-pv-res disp-amt-mono">na</i><br>
     <i id="disp-pv-smv" class="disp-amt-mono">na</i><br>
     <i id="disp-pv-nud" class="disp-amt-mono">na</i><br>
@@ -199,14 +210,22 @@
   </div>
   <div class="col-2 cell-1-pv">
     Cash :<br>
-    <span id="disp-pv-nbr-chq">0</span>&nbsp;Chèque<i id="orth-pv-nbr-chq"></i> :<br>
-    Transfert/TPE :<br>
+    <span id="disp-pv-nbr-chq">0</span>&nbsp;Chèque<span id="orth-pv-nbr-chq"></span> :<br>
+    Transfert/TPE :
+    <br>
+    Cash :<br>
+    <span id="disp-ju-nbr-chq">0</span>&nbsp;Chèque<span id="orth-ju-nbr-chq"></span> :
+    <hr>
     <strong>Total :</strong><br>
   </div>
   <div class="col-2 cell-1-pv">
     <i id="disp-pv-csh" class="line-pv-res disp-amt-mono">na</i><br>
     <i id="disp-pv-chq" class="line-pv-res disp-amt-mono">na</i><br>
-    <i id="disp-pv-ttp" class="line-pv-res disp-amt-mono">na</i><br>
+    <i id="disp-pv-ttp" class="line-pv-res disp-amt-mono">na</i>
+    <br>
+    <i id="disp-ju-csh" class="line-ju-res disp-amt-mono">na</i><br>
+    <i id="disp-ju-chq" class="line-ju-res disp-amt-mono">na</i>
+    <hr>
     <i id="disp-pv-tot" class="line-pv-res disp-amt-mono">na</i><br>
   </div>
   <div class="col-1">

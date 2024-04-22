@@ -937,17 +937,22 @@ function generateResumePayWorksheet(){
       { v: 'Non attribué Mvola : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
       { v: renderAmountExcel(NON_ATTR_MVOLA), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
     ];
+    let rowHeaderJUSTYear = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Justificatif : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+      { v: (RECAP_YEAR_JUST == 0) ? renderAmountExcel(RECAP_YEAR_JUST) : renderAmountExcelNegative(RECAP_YEAR_JUST), t: 's', s: { ...DEF_RESUME_VAL_CELL_LRED } }
+    ];
     let rowHeader8 = [
       { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
     ];
     let rowHeader9 = [
-      { v: 'État des paiements du mois ' + (getReportACEMonthYearStrFR(-1)).toUpperCase(), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      { v: 'État des paiements depuis le ' + (getWrittenFRLongDateStrFR(-1, 'Y')), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
     ];
     let rowHeader10 = [
       { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
     ];
     
-    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader6a, rowHeader6b, rowHeader7, rowHeaderRecYearDetU, rowHeaderRecYearDetT, rowHeaderRecYearDetF, rowHeaderRecYearDetM, rowHeaderRecYear, rowHeaderRecYearDelim1, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear, rowHeader8, rowHeader9, rowHeader10];
+    let rowCollection = [rowHeader1, rowHeader2, rowHeader3, rowHeader4, rowHeader5, rowHeader6, rowHeader6a, rowHeader6b, rowHeader7, rowHeaderRecYearDetU, rowHeaderRecYearDetT, rowHeaderRecYearDetF, rowHeaderRecYearDetM, rowHeaderRecYear, rowHeaderRecYearDelim1, rowHeaderRedYear, rowHeaderExemptionYear, rowHeaderNUDYear, rowHeaderJUSTYear, rowHeader8, rowHeader9, rowHeader10];
 
     if(dataRepMonthMentionJsonArray.length == 0){
       let rowHeader10 = [
@@ -967,6 +972,42 @@ function generateResumePayWorksheet(){
             { v: renderAmountExcel(dataRepMonthMentionJsonArray[i].UP_AMOUNT), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
           ];
           rowCollection.push(rowHeaderExemptionYear);
+      }
+    }
+
+    let rowHeader11 = [
+      { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader12 = [
+      { v: 'État des justificatifs depuis le ' + (getWrittenFRLongDateStrFR(-1, 'Y')), t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader12b = [
+      { v: 'Note 3 : les détails des justificatifs sont disponibles dans un autre rapport détaillé ', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeader13 = [
+      { v: '', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+    ];
+
+    rowCollection.push(rowHeader11); rowCollection.push(rowHeader12); rowCollection.push(rowHeader12b); rowCollection.push(rowHeader13);
+
+    if(dataMonthJustJsonArray.length == 0){
+      let rowHeader10JUST = [
+        { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+      ];
+      rowCollection.push(rowHeader10JUST);
+      let rowHeader11JUST = [
+        { v: 'Pas de justificatif enregistré ', t: 's', s: { ...DEF_HEADER_CARTOUCHE } }
+      ];
+      rowCollection.push(rowHeader11JUST);
+    }
+    else{
+      for(let i=0; i<dataMonthJustJsonArray.length; i++){
+          let rowHeaderMonthJUST = [
+            { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+            { v: getCapitalize(dataMonthJustJsonArray[i].URJ_TITLE) + ' : ', t: 's', s: { ...DEF_RESUME_HDR_CELL } },
+            { v: renderAmountExcelNegative(dataMonthJustJsonArray[i].MONTH_AMT), t: 's', s: { ...DEF_RESUME_VAL_CELL_LRED } }
+          ];
+          rowCollection.push(rowHeaderMonthJUST);
       }
     }
        
@@ -1201,6 +1242,7 @@ $(document).ready(function() {
       let totalCashCheck = 0;
 
       // dataTodayNbrCheckPVJsonArray dataTodayPVJsonArray
+      // Get Payment
       for(let i=0; i<dataTodayPVJsonArray.length ; i++){
         if(dataTodayPVJsonArray[i].TOD_TYPE_OF_PAYMENT == 'C'){
             //$('#disp-pv-csh').html(formatterCurrency.format(dataTodayPVJsonArray[i].TOD_AMOUNT).replace("MGA", "AR"));
@@ -1228,8 +1270,32 @@ $(document).ready(function() {
         }
         else{
             //We do nothing yet as Exemptions i not displayed at all
+            console.log('ERR892J');
         }
       }
+
+      // Get JUSTIFICATIF
+      for(let i=0; i<dataJustCurDayJsonArray.length ; i++){
+        if(dataJustCurDayJsonArray[i].DSH_JUST_DAY_TYP == 'C'){
+            $('#disp-ju-csh').html('- ' + getAriaryValue(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT));
+            totalCashCheck = totalCashCheck - parseInt(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT);
+            cobTotalCashJust = parseInt(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT);
+        }
+        else if(dataJustCurDayJsonArray[i].DSH_JUST_DAY_TYP == 'H'){
+            $('#disp-ju-chq').html('- ' + getAriaryValue(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT));
+            totalCashCheck = totalCashCheck - parseInt(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT);
+            cobTotalCheckJust = parseInt(dataJustCurDayJsonArray[i].DSH_JUST_DAY_AMT);
+        }
+        else{
+            //We do nothing yet as Exemptions i not displayed at all
+            console.log('ERR292J');
+        }
+      }
+      $('#disp-ju-nbr-chq').html(dataJustCurDayNbrCheckJsonArray[0].DSH_JUST_DAY_NBR_CHECK);
+      if(parseInt(dataJustCurDayNbrCheckJsonArray[0].DSH_JUST_DAY_NBR_CHECK) > 0){
+        $('#orth-ju-nbr-chq').html('s');
+      }
+      
 
       // ********************************************************************
       // ********************************************************************
@@ -1254,6 +1320,8 @@ $(document).ready(function() {
             cobReductionOfTheYear = parseInt(dataYearRecapJsonArray[i].UP_AMOUNT);
         }
       }
+
+      $('#disp-py-jus').html("- " + getAriaryValue(RECAP_YEAR_JUST));
 
       // Work on the recap year details
       for(let i=0; i<dataYearDetRecapJsonArray.length; i++){
@@ -1296,9 +1364,16 @@ $(document).ready(function() {
       $('#disp-pv-nud').html(getAriaryValue(NON_ATTR_MVOLA));
 
 
-      if(totalCashCheck > 0){
+      if(!(totalCashCheck == 0)){
         //$('#disp-pv-tot').html(formatterCurrency.format(totalCashCheck).replace("MGA", "AR"));
-        $('#disp-pv-tot').html(getAriaryValue(totalCashCheck));
+        if(totalCashCheck > 0){
+          $('#disp-pv-tot').html(getAriaryValue(totalCashCheck));
+          $('#disp-pv-tot').addClass('line-pv-res').removeClass('line-ju-res');
+        }
+        else{
+          $('#disp-pv-tot').html('- '+ getAriaryValue(Math.abs(totalCashCheck)));
+          $('#disp-pv-tot').addClass('line-ju-res').removeClass('line-pv-res');
+        }
         cobTotalOfTheDay = parseInt(totalCashCheck);
       }
 
@@ -1310,17 +1385,24 @@ $(document).ready(function() {
         }
         cobNbrCheqOfTheDay = parseInt(dataTodayNbrCheckPVJsonArray[0].TOD_NBR_OF_CHECK);
       }
-
+      const SEPARATOR_TICKET = '-----------------';
       cobArray.push('RECETTE.ANNEE....' + (renderAmount(cobBenefitOfTheYear.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('REDUCTION.ANNEE..' + (renderAmount(cobReductionOfTheYear.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('EXEMPTION.ANNEE..' + (renderAmount(cobExemptionOfTheYear.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('SOLDE.MVOLA......' + (renderAmount(SOLDE_MVOLA.toString())).padStart(maxLgRecap, paddChar));
-
+      cobArray.push(SEPARATOR_TICKET);
       cobArray.push('REDUCTION.AUJ....' + (renderAmount(cobReductionOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('CASH.AUJ.........' + (renderAmount(cobCashOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('CHEQUE.AUJ.......' + (renderAmount(cobCheqOfTheDay.toString())).padStart(maxLgRecap, paddChar));
-      cobArray.push('NBR.CHEQUE.AUJ...' + (cobNbrCheqOfTheDay.toString()).padStart(maxLgRecap, paddChar));
+      cobArray.push('NBR.CHEQ.AUJ.....' + (cobNbrCheqOfTheDay.toString()).padStart(maxLgRecap, paddChar));
       cobArray.push('VIR/TPE.AUJ......' + (renderAmount(cobVirmTpeOfTheDay.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push(SEPARATOR_TICKET);
+
+      cobArray.push('JUST.CASH.AUJ....' + ('-' + renderAmount(cobTotalCashJust.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('JUST.CHEQUE.AUJ..' + ('-' + renderAmount(cobTotalCheckJust.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('JUST.NBR.CHEQ.AUJ' + (cobTotalNbrCheckJust.toString()).padStart(maxLgRecap, paddChar));
+      cobArray.push(SEPARATOR_TICKET);
+
       cobArray.push('TOTAL.AUJ........' + (renderAmount(totalCashCheck.toString())).padStart(maxLgRecap, paddChar));
 
 

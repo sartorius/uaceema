@@ -49,6 +49,7 @@ SELECT
   uj.cat_id AS UJ_CAT_ID,
   uj.status AS UJ_STATUS,
   DATE_FORMAT(uj.pay_date, '%d/%m/%Y') AS UJ_PAY_DATE,
+  uj.pay_date AS UJ_TECH_PAY_DATE,
   uj.just_ref AS UJ_JUST_REF,
   uj.input_amount AS UJ_AMT,
   uj.type_of_payment AS UJ_TYPE,
@@ -73,3 +74,24 @@ SELECT
   ) AS raw_data
 FROM uac_just uj JOIN uac_ref_just_category urj ON uj.cat_id = urj.id
                   JOIN mdl_user mu ON mu.id = uj.agent_id;
+
+DROP VIEW IF EXISTS v_dsh_day_just;
+CREATE VIEW v_dsh_day_just AS
+    SELECT type_of_payment AS DSH_JUST_DAY_TYP, SUM(input_amount) AS DSH_JUST_DAY_AMT FROM uac_just uj
+    WHERE uj.pay_date > CURRENT_DATE
+    AND uj.status = 'P'
+    GROUP BY type_of_payment ORDER BY type_of_payment;
+
+DROP VIEW IF EXISTS v_dsh_day_nbr_check;
+CREATE VIEW v_dsh_day_nbr_check AS
+    SELECT COUNT(1) AS DSH_JUST_DAY_NBR_CHECK FROM uac_just uj
+    WHERE uj.pay_date > CURRENT_DATE
+    AND uj.status = 'P'
+    AND uj.type_of_payment = 'H';
+
+
+DROP VIEW IF EXISTS v_rep_month_just;
+CREATE VIEW v_rep_month_just AS
+  SELECT URJ_TITLE, URJ_CODE, SUM(UJ_AMT) AS MONTH_AMT FROM v_all_just
+  WHERE UJ_TECH_PAY_DATE > DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)
+  GROUP BY URJ_TITLE, URJ_CODE;

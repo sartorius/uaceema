@@ -54,7 +54,7 @@ function generateNewJustDB(){
                 URJ_COMMENT_MAND: 'Y',
                 URJ_WR_LIMIT: 0,
                 URJ_ORDER: 0,
-                UJ_WARN: 0,
+                UJ_WARN: (tempAmountJust > tempAmountWarn ? 'Y' : 'N'),
                 IS_DIRTY: 'Y',
                 raw_data: (tempCategory + tempJustRef + tempCleanComment).toUpperCase()
             };
@@ -299,6 +299,7 @@ function showAddModal(){
     tempCategoryCode = 0;
     tempCategory = "na";
     tempAmountJust = 0;
+    tempAmountWarn = 0;
     tempTypeOfPayment = 'C';
     tempComment = 'na';
     tempCleanComment = 'na';
@@ -389,6 +390,7 @@ function selectCategory(paramId){
     tempCategoryCode = dataCategoryToJsonArray[paramId].id;
     tempCategory = dataCategoryToJsonArray[paramId].title;
     tempCommentMandatory = dataCategoryToJsonArray[paramId].mandatory_comment;
+    tempAmountWarn = parseInt(dataCategoryToJsonArray[paramId].warn_limit);
 
     
     $('#drp-select').html(tempCategory);
@@ -474,7 +476,7 @@ function loadAllJUSTGrid(){
           css: "cell-ref-sm",
           itemTemplate: function(value, item) {
             if(item.UJ_WARN == 'Y'){
-                return '<span class="recap-mis">' + renderAmount(value) + '</span>';
+                return '<span class="line-ju-res">' + renderAmount(value) + '</span>';
             }
             else{
                 return renderAmount(value);
@@ -549,7 +551,7 @@ function loadAllJUSTGrid(){
                     return '<button onclick="goToCanJUST(' + value +  ')" class="btn btn-dark"><span class="icon-trash-o"></span></button>';
                 }
                 else{
-                    return '<span class="icon-trash-o"></span>';
+                    return '<span class="icon-trash"></span>';
                 }
             }
             else{

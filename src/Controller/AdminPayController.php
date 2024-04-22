@@ -1846,6 +1846,35 @@ class AdminPayController extends AbstractController
         $result_query_get_sumup_ff = $dbconnectioninst->query($query_get_sumup_ff)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_get_sumup_ff: " . count($result_query_get_sumup_ff));
 
+        /************************************************************/
+        /************************************************************/
+        /************************************************************/
+        /************************************************************/
+        /************************************************************/
+        /************************************************************/
+
+        $query_all_just_day = " SELECT * FROM v_dsh_day_just; ";
+        $logger->debug("Show query_all_just_day: " . $query_all_just_day);
+        $result_query_all_just_day = $dbconnectioninst->query($query_all_just_day)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_all_just_day: " . count($result_query_all_just_day));
+
+        $query_all_just_day_nbr_check = " SELECT * FROM v_dsh_day_nbr_check; ";
+        $logger->debug("Show query_all_just_day_nbr_check: " . $query_all_just_day_nbr_check);
+        $result_query_all_just_day_nbr_check = $dbconnectioninst->query($query_all_just_day_nbr_check)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_all_just_day_nbr_check: " . count($result_query_all_just_day_nbr_check));
+
+        $query_rep_month_just = " SELECT * FROM v_rep_month_just; ";
+        $logger->debug("Show me query_rep_month_just: " . $query_rep_month_just);
+
+        $result_query_rep_month_just = $dbconnectioninst->query($query_rep_month_just)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_rep_month_just: " . count($result_query_rep_month_just));
+
+        $query_rep_all_just = " SELECT SUM(input_amount) AS ALL_JUST_AMT FROM uac_just; ";
+        $logger->debug("Show me query_rep_all_just: " . $query_rep_all_just);
+
+        $result_query_rep_all_just = $dbconnectioninst->query($query_rep_all_just)->fetchAll(PDO::FETCH_ASSOC);
+        $logger->debug("Show me result_query_rep_all_just: " . count($result_query_rep_all_just));
+
         $content = $twig->render('Admin/PAY/dashboardpay.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                 'firstname' => $_SESSION["firstname"],
                                                                 'lastname' => $_SESSION["lastname"],
@@ -1869,6 +1898,10 @@ class AdminPayController extends AbstractController
                                                                 "result_rep_rec_journee"=>$result_rep_rec_journee,
                                                                 "result_query_rep_month_mention"=>$result_query_rep_month_mention,
                                                                 "result_query_get_sumup_ff"=>$result_query_get_sumup_ff,
+                                                                "result_query_all_just_day"=>$result_query_all_just_day,
+                                                                "result_query_rep_month_just"=>$result_query_rep_month_just,
+                                                                "result_query_all_just_day_nbr_check"=>$result_query_all_just_day_nbr_check,
+                                                                "result_query_rep_all_just"=>$result_query_rep_all_just[0]['ALL_JUST_AMT'],
                                                                 "param_non_attr_mvola"=>$result_query_nud_mvola[0]['NUD_AMOUNT'],
                                                                 'param_year' => $result_query_param_year[0]['PARAM_YEAR'],
                                                                 'errtype' => '']);
