@@ -21,6 +21,8 @@
 
     const GET_TOKEN = "{{ result_get_token }}";
     const MAX_CREDIT_VALUE = 50.1;
+    const WRITE_ACCESS_SUBJECT = '{{ access_write_subject }}';
+    
 
     let tempMentionCode = "";
     let tempMention = "";
@@ -68,11 +70,11 @@
   <div class="col-1">
   </div>
   <div class="col-2 fil-el">
-    <h3>Note<h3>
+    <h3>Note</h3>
     <textarea class="form-control" rows="1" id="filter-all-niv" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
   <div class="col-1 fil-el">
-    <h3>&nbsp;<h3>
+    <h3>&nbsp;</h3>
     <button id="re-init-dash-niv" type="button" class="btn btn-md btn-block btn-dark">
       <i class="icon-refresh"></i>
     </button>
@@ -82,20 +84,24 @@
   </div>
 
   <div class="col-3 fil-el">
-    <h3>Sujet<h3>
+    <h3>Sujet</h3>
     <textarea class="form-control" rows="1" id="filter-all-sub" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
   </div>
   <div class="col-1 fil-el">
-    <h3>&nbsp;<h3>
+    <h3>&nbsp;</h3>
     <button id="re-init-dash-sub" type="button" class="btn btn-md btn-block btn-default">
       <i class="icon-refresh"></i>
     </button>
   </div>
   <div class="col-2 fil-el">
-    <h3>&nbsp;<h3>
-    <button id="gra-new-sub" type="button" onclick="createNewGRASubject()" class="btn btn-md btn-block btn-outline-dark">
-      <i class="icon-files"></i>&nbsp;Nouveau sujet
-    </button>
+    <h3>&nbsp;</h3>
+        {% if (access_write_subject == 'Y') %}
+              <button id="gra-new-sub" type="button" onclick="createNewGRASubject()" class="btn btn-md btn-block btn-outline-dark">
+                <i class="icon-files"></i>&nbsp;Nouveau sujet
+              </button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
   </div>
 
   <div class="col-1">

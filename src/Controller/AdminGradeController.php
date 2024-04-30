@@ -18,6 +18,7 @@ use \ZipArchive;
 
 class AdminGradeController extends AbstractController{
     private static $my_exact_access_right = 41;
+    private static $my_exact_access_right_create_subject = 40;
     private static $my_minimum_access_right = 39;
 
     private static $my_gra_repository = "/img/ace_gra";
@@ -1139,6 +1140,11 @@ class AdminGradeController extends AbstractController{
             $logger->debug("Show me result_query_subj_class: " . count($result_query_subj_class));
 
             $result_get_token = $this->getDailyTokenGRAStr($logger);
+
+            $access_write_subject = "N";
+            if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right == self::$my_exact_access_right_create_subject) || ($scale_right > 99))){
+                $access_write_subject = "Y";
+            }
             
             $content = $twig->render('Admin/GRA/managerprimitif.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
@@ -1152,6 +1158,7 @@ class AdminGradeController extends AbstractController{
                                                                     'result_query_subj_semester' => $result_query_subj_semester,
                                                                     'result_query_subj_parcours' => $result_query_subj_parcours,
                                                                     'result_query_subj_class' => $result_query_subj_class,
+                                                                    'access_write_subject' => $access_write_subject,
                                                                     'errtype' => '']); 
         }
         else{

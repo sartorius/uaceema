@@ -376,7 +376,8 @@ function loadAllSubGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-center",
           itemTemplate: function(value, item) {
-            if(parseInt(item.GRA_EXIST_EXAM_ID) == 0){
+            if((WRITE_ACCESS_SUBJECT == 'Y') 
+                  && (parseInt(item.GRA_EXIST_EXAM_ID) == 0)){
               return '<button class="btn btn-dark tg-del" onclick="deleteSubjectDialog(' + value + ', \'' + item.URS_SUBJECT_TITLE + '\', \'' + item.URS_MENTION_CODE + '/' + item.URS_NIVEAU_CODE + '/' + item.URS_SEMESTER + '/' + item.ALL_PARCOURS + '\')"><i class="icon-trash-o"></i></button>';
             }
             else{

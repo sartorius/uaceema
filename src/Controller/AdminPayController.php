@@ -1869,7 +1869,7 @@ class AdminPayController extends AbstractController
         $result_query_rep_month_just = $dbconnectioninst->query($query_rep_month_just)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_query_rep_month_just: " . count($result_query_rep_month_just));
 
-        $query_rep_all_just = " SELECT SUM(input_amount) AS ALL_JUST_AMT FROM uac_just; ";
+        $query_rep_all_just = " SELECT IFNULL(SUM(input_amount), 0) AS ALL_JUST_AMT FROM uac_just; ";
         $logger->debug("Show me query_rep_all_just: " . $query_rep_all_just);
 
         $result_query_rep_all_just = $dbconnectioninst->query($query_rep_all_just)->fetchAll(PDO::FETCH_ASSOC);

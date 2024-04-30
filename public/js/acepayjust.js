@@ -546,16 +546,17 @@ function loadAllJUSTGrid(){
           headercss: "cell-ref-sm-hd",
           css: "cell-ref-sm-center",
           itemTemplate: function(value, item) {
-            if(item.UJ_PAY_DATE == tempCurrentDate){
-                if(item.UJ_STATUS == 'P'){
-                    return '<button onclick="goToCanJUST(' + value +  ')" class="btn btn-dark"><span class="icon-trash-o"></span></button>';
-                }
-                else{
-                    return '<span class="icon-trash"></span>';
-                }
+            if((WRITE_ACCESS == 'Y') 
+                && (item.UJ_PAY_DATE == tempCurrentDate)){
+                    if(item.UJ_STATUS == 'P'){
+                        return '<button onclick="goToCanJUST(' + value +  ')" class="btn btn-dark"><span class="icon-trash-o"></span></button>';
+                    }
+                    else{
+                        return '<span class="icon-trash"></span>';
+                    }
             }
             else{
-              return '';
+              return '<span class="recap-deactivate icon-trash-o"></span>';
             }
           }
         }

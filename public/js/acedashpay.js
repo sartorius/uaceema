@@ -858,6 +858,7 @@ function prepareJsonDataPayTranche(){
 
 function generateResumePayWorksheet(){
 
+    let totalAmountMonthly = 0;
     //************************ START HEADER ************************
     
     let rowHeader1 = [
@@ -965,6 +966,7 @@ function generateResumePayWorksheet(){
       rowCollection.push(rowHeader11);
     }
     else{
+      let subTotalPayMonth = 0;
       for(let i=0; i<dataRepMonthMentionJsonArray.length; i++){
           let rowHeaderExemptionYear = [
             { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
@@ -972,7 +974,18 @@ function generateResumePayWorksheet(){
             { v: renderAmountExcel(dataRepMonthMentionJsonArray[i].UP_AMOUNT), t: 's', s: { ...DEF_RESUME_VAL_CELL } }
           ];
           rowCollection.push(rowHeaderExemptionYear);
+          subTotalPayMonth = parseInt(subTotalPayMonth) + parseInt(dataRepMonthMentionJsonArray[i].UP_AMOUNT);
       }
+
+      // Sub total
+      totalAmountMonthly = totalAmountMonthly + parseInt(subTotalPayMonth);
+      let rowHeaderExemptionYear = [
+        { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+        { v: 'Sous total mensuel paiements' + ' : ', t: 's', s: { ...DEF_HEADER_CELL_HEAVY_RIGHT } },
+        { v: renderAmountExcel(subTotalPayMonth), t: 's', s: { ...DEF_RESUME_VAL_CELL_LGRAY } }
+      ];
+      rowCollection.push(rowHeaderExemptionYear);
+
     }
 
     let rowHeader11 = [
@@ -1001,6 +1014,7 @@ function generateResumePayWorksheet(){
       rowCollection.push(rowHeader11JUST);
     }
     else{
+      let subTotalJustMonth = 0;
       for(let i=0; i<dataMonthJustJsonArray.length; i++){
           let rowHeaderMonthJUST = [
             { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
@@ -1008,9 +1022,29 @@ function generateResumePayWorksheet(){
             { v: renderAmountExcelNegative(dataMonthJustJsonArray[i].MONTH_AMT), t: 's', s: { ...DEF_RESUME_VAL_CELL_LRED } }
           ];
           rowCollection.push(rowHeaderMonthJUST);
+          subTotalJustMonth = parseInt(subTotalJustMonth) + parseInt(dataMonthJustJsonArray[i].MONTH_AMT);
       }
+
+      // Sub total
+      totalAmountMonthly = totalAmountMonthly - parseInt(subTotalJustMonth);
+      let rowHeaderMonthJUST = [
+        { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+        { v: 'Sous total mensuel justificatifs' + ' : ', t: 's', s: { ...DEF_HEADER_CELL_HEAVY_RIGHT } },
+        { v: renderAmountExcelNegative(subTotalJustMonth), t: 's', s: { ...DEF_RESUME_VAL_CELL_LGRAY } }
+      ];
+      rowCollection.push(rowHeaderMonthJUST);
     }
-       
+
+
+    let rowHeaderTotalEmpty = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } }
+    ];
+    let rowHeaderMonthTotal = [
+      { v: '', t: 's', s: { DEF_HEADER_CARTOUCHE } },
+      { v: 'Total mensuel' + ' : ', t: 's', s: { ...DEF_HEADER_CELL_HEAVY_RIGHT } },
+      { v: renderAmountExcel(totalAmountMonthly), t: 's', s: { ...DEF_RESUME_VAL_CELL_LGRAY } }
+    ];
+    rowCollection.push(rowHeaderTotalEmpty); rowCollection.push(rowHeaderMonthTotal);
 
     //************************ END HEADER ***********************
 
@@ -1321,7 +1355,9 @@ $(document).ready(function() {
         }
       }
 
-      $('#disp-py-jus').html("- " + getAriaryValue(RECAP_YEAR_JUST));
+      if(RECAP_YEAR_JUST != 0){
+        $('#disp-py-jus').html("- " + getAriaryValue(RECAP_YEAR_JUST));
+      }
 
       // Work on the recap year details
       for(let i=0; i<dataYearDetRecapJsonArray.length; i++){
@@ -1398,8 +1434,8 @@ $(document).ready(function() {
       cobArray.push('VIR/TPE.AUJ......' + (renderAmount(cobVirmTpeOfTheDay.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push(SEPARATOR_TICKET);
 
-      cobArray.push('JUST.CASH.AUJ....' + ('-' + renderAmount(cobTotalCashJust.toString())).padStart(maxLgRecap, paddChar));
-      cobArray.push('JUST.CHEQUE.AUJ..' + ('-' + renderAmount(cobTotalCheckJust.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('JUST.CASH.AUJ....' + ((cobTotalCashJust == 0 ? '.' : '-') + renderAmount(cobTotalCashJust.toString())).padStart(maxLgRecap, paddChar));
+      cobArray.push('JUST.CHEQUE.AUJ..' + ((cobTotalCheckJust == 0 ? '.' : '-') + renderAmount(cobTotalCheckJust.toString())).padStart(maxLgRecap, paddChar));
       cobArray.push('JUST.NBR.CHEQ.AUJ' + (cobTotalNbrCheckJust.toString()).padStart(maxLgRecap, paddChar));
       cobArray.push(SEPARATOR_TICKET);
 

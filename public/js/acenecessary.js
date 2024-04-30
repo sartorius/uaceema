@@ -17,6 +17,7 @@ const DEF_FOOTER_CARTOUCHE = { font: { sz: 6, name: 'Arial' }, alignment: { vert
 const DEF_ROW_DFT_SETUP = { 'hpt': DEF_ROW_DFT };
 const DEF_CELL_HEADER_FILL = { fgColor: { rgb: 'EDECFF' } };
 const DEF_CELL_HEADER_FILL_LRED = { fgColor: { rgb: 'FFCBCB' } };
+const DEF_CELL_HEADER_FILL_LGRAY = { fgColor: { rgb: 'DBDBDB' } };
 const DEF_CELL_HEADER_WHITE = { fgColor: { rgb: 'FFFFFF' } };
 const DEF_CELL_HEADER_HEAVY_FILL = { fgColor: { rgb: '1C1C1C' } };
 const DEF_CELL_ODD_FILL = { fgColor: { rgb: 'F4F7FF' } };
@@ -47,6 +48,7 @@ const DEF_CELL_MONO = { font: { sz: 7, name: 'Courier New', bold: true }, alignm
 const DEF_RESUME_HDR_CELL = { font: { sz: 9, name: 'Arial' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL} };
 const DEF_RESUME_VAL_CELL = { font: { sz: 9, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_WHITE} };
 const DEF_RESUME_VAL_CELL_LRED = { font: { sz: 9, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL_LRED} };
+const DEF_RESUME_VAL_CELL_LGRAY = { font: { sz: 9, name: 'Roboto Mono' }, alignment: { wrapText: true, vertical: 'center', horizontal: 'right' }, border: {...DEF_CELL_BORDER}, fill: {...DEF_CELL_HEADER_FILL_LGRAY} };
 
 function removeAccentuated(param){
   return param.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
