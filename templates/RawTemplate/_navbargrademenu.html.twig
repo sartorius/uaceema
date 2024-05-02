@@ -10,8 +10,12 @@
                 <hr>
                 <a class="dropdown-item" href="/missingstudent"><span class="icon-medkit nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Étudiant manquant</span></a>
                 {# if (scale_right is defined) and (scale_right is not null) and ((scale_right == 41) or (scale_right > 99)) #}
-                <hr>
-                <a class="dropdown-item" href="/loadgrascan"><span class="icon-clipboard nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Charger scan</span></a>
+                {# 41 is the access to create subject #}
+                {# 42 is the access to write grade #}
+                {% if (scale_right is defined) and (scale_right is not null) and ((scale_right == 41) or (scale_right == 42) or (scale_right > 99)) %}
+                  <hr>
+                  <a class="dropdown-item" href="/loadgrascan"><span class="icon-clipboard nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Charger scan</span></a>
+                {% endif %}
           </div>
         </li>
 {% endif %}

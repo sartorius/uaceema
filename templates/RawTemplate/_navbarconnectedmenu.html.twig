@@ -19,10 +19,11 @@
                 <a class="dropdown-item" href="/managerdiploma"><span class="icon-graduation-cap nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Manager diplôme</span></a>
                 <hr>
             {% endif %}
-            <a class="dropdown-item" href="/scan/in"><span class="icon-sign-in nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan entrée</span></a>
-
-            <a class="dropdown-item" href="/scan/out"><span class="icon-sign-out nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan sortie</span></a>
-            <a class="dropdown-item" href="/checklastscan"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Vérifier scan</span></a>
+            {% if (scale_right is defined) and (scale_right is not null) and ((scale_right < 20) or (scale_right > 99)) %}
+                <a class="dropdown-item" href="/scan/in"><span class="icon-sign-in nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan entrée</span></a>
+                <a class="dropdown-item" href="/scan/out"><span class="icon-sign-out nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan sortie</span></a>
+            {% endif %}
+            <a class="dropdown-item" href="/checklastscan"><span class="icon-eye nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Scan assiduité</span></a>
             <hr>
             <a class="dropdown-item" href="/uaclogout"><span class="icon-sign-out-1 nav-icon-fa nav-text"></span>&nbsp;<span class="ace-nav-adj">Déconnecter</span> </a>
           </div>

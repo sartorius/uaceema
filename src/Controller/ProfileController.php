@@ -16,7 +16,10 @@ use Psr\Log\LoggerInterface;
 use \PDO;
 
 class ProfileController extends AbstractController{
+  // The exact access right to allow modify student data
   private static $my_exact_access_right = 42;
+  // - Teach access write
+  private static $my_exact_teacher_access_right = 45;
 
   public function show(Environment $twig, LoggerInterface $logger, $page, $week)
   {
@@ -358,6 +361,22 @@ class ProfileController extends AbstractController{
             $result_query_eph = $dbconnectioninst->query($query_eph)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_eph: " . count($result_query_eph));
 
+            
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /****************************************************************    IS TEACHER ?    ***********************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+            /***********************************************************************************************************************************************************/
+
+            //By default it is not teacher
+            $is_teacher = 'N';
+            $teach_clause = '';
+            if(isset($scale_right) && ($scale_right == self::$my_exact_teacher_access_right)){
+                $is_teacher = 'Y';
+            }
+
             $content = $twig->render('Profile/main.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight(), 'profile' => $result[0],
                                       'agent_id' => $agent_id,
                                       'assiduites' => $result_assiduite, 'moodle_url' => $_ENV['MDL_URL'], 'current_url' => $_ENV['MAIN_URL'],
@@ -378,6 +397,7 @@ class ProfileController extends AbstractController{
                                       "param_le_limit"=>$param_le_limit,
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,
+                                      "is_teacher"=>$is_teacher,
                                       "result_query_get_all_classes"=>$result_query_get_all_classes,
                                       "result_query_get_all_mention"=>$result_query_get_all_mention,
                                       "result_query_stat_ass"=>$result_query_stat_ass,

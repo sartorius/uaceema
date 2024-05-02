@@ -342,6 +342,7 @@ function getVerboseExamStatus(param, isText){
   if(isText ==  'Y'){
     startTagLoa = '';
     startTagRev = '';
+    startTagEnd = '';
     endTag = '';
   }
   // NEW > LOA > FED > END -- CAN

@@ -58,6 +58,7 @@
       const GET_TOKEN = '{{ result_get_token }}';
       const WRITE_ACCESS = '{{ write_access }}';
       const GENDER_H_F = '{{ profile['GENRE'] }}';
+      const IS_TEACHER = '{{ is_teacher }}';
 
       const MAX_NOTE_LENGTH = 230;
 
@@ -308,12 +309,12 @@
         {% endif %}
 
         
-
-        {% if from_admin == 'S' %}
+        {# Teacher does not get the secret link #}
+        {% if ((from_admin == 'S') and (is_teacher == 'N')) %}
               {# from_admin N : default No - S : Student from Manager Etudiant - A : Assiduite from Dashboard Retard #}
-        <div class="disp-link carte-profile card-parent">
-            <span class="icon-key-1 nav-icon-fa-sm nav-text"></span>&nbsp;{{ current_url }}/profile/{{ profile['PAGE'] }}
-        </div>
+              <div class="disp-link carte-profile card-parent">
+                  <span class="icon-key-1 nav-icon-fa-sm nav-text"></span>&nbsp;{{ current_url }}/profile/{{ profile['PAGE'] }}
+              </div>
         {% endif %}
 
         {% if write_access == 'Y' %}
@@ -584,16 +585,20 @@
 {# ################################ #}
 {# ################################ #}
 {# ################################ #}
-{% if param_does_pay_display == 'Y' %}
-            {% if from_admin != 'N' %}
-                    {# We are not public dashboard so we check if module is available #}
-                    {% include 'Profile/_paymentblock.html.twig' %}
-            {% else %}
-                    {# We are public dashboard so we have to check several value #}
-                    {% if param_does_pay_public == 'Y' %}
-                              {% include 'Profile/_paymentblock.html.twig' %}
+
+{# TEACHER never see payment #}
+{% if is_teacher == 'N' %}
+        {% if param_does_pay_display == 'Y' %}
+                    {% if from_admin != 'N' %}
+                            {# We are not public dashboard so we check if module is available #}
+                            {% include 'Profile/_paymentblock.html.twig' %}
+                    {% else %}
+                            {# We are public dashboard so we have to check several value #}
+                            {% if param_does_pay_public == 'Y' %}
+                                      {% include 'Profile/_paymentblock.html.twig' %}
+                            {% endif %}
                     {% endif %}
-            {% endif %}
+        {% endif %}
 {% endif %}
 
 {% if (((from_admin == 'N') and (param_does_gra_public == 'Y'))

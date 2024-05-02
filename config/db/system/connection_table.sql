@@ -162,3 +162,136 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_mvoline_attr_log` (
 PRIMARY KEY (`id`));
 
 -- If a line does not exists then we run it else we log
+
+
+
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1827, 'sehrakx010', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Seheno', 'RAKOTONDRASOA', 'timetotestme21@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1828, 'domrakx011', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Domoina', 'RAMANANTSEHENO', 'timetotestme22@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1829, 'jeaandr012', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Jean', 'ANDRIANTSOA', 'timetotestme23@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1830, 'elirast013', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Elisée', 'RASTEFANO', 'timetotestme24@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1831, 'marrobi014', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Marie', 'ROBIVELO', 'timetotestme25@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1832, 'cleandr015', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Clément', 'ANDRIANIERENANA', 'timetotestme26@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1833, 'borrana016', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Boris', 'RANAIVOSOA', 'timetotestme27@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+-- Teacher
+INSERT IGNORE INTO `mdl_user` (`id`, `username`, `last_update`, `create_date`, `firstname`, `lastname`, `email`, `phone1`, `phone_mvola`, `address`, `city`, `matricule`, `autre_prenom`, `genre`, `datedenaissance`, `lieu_de_naissance`, `situation_matrimoniale`, `compte_fb`, `etablissement_origine`, `serie_bac`, `annee_bac`, `numero_cin`, `date_cin`, `lieu_cin`, `nom_pnom_par1`, `email_par1`, `phone_par1`, `profession_par1`, `adresse_par1`, `city_par1`, `nom_pnom_par2`, `phone_par2`, `profession_par2`, `centres_interets`)
+VALUES
+	(1834, 'herrakx017', '2022-11-26 12:50:11', '2022-11-26 12:50:11', 'Herizo', 'RAKOTONANAHARY', 'timetotestme28@test.com', '0344950074', NULL, 'PRVO 26B', 'Manakambahiny', 'na', NULL, 'X', '1970-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**************************/
+/**
+lelezardvertdelariziere
+lenuageblancdanslecielbleu
+lebareanoirdelavictoire
+lecameleondetouteslescouleurs
+lebleulevertlerougedelaforet
+lelivrerosesurlatablejauneenbois
+leburgeralaviandeetsaladeverte
+lebouclierbleuprotegedeslancesnoires
+**/
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1827, '15114b3bbfcb87659c6dea930d3fd662', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1828, 'ff848c37a93e14b1fef2119f121ead0d', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1829, '529bd8849c850b24f33cafb956ea185a', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1830, '71647dabc6b4d8c69c42248affa8f811', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1831, 'b221d83cb0575f74a829ca4a4cec8e91', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1832, '7271818e12577414f74a1fcc70a61654', NULL, 45, 'Chef de mention', 0);
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1833, '1fe0387dcfff33fdbb0b8346b8b9827c', NULL, 45, 'Chef de mention', 0);
+--
+INSERT INTO `uac_admin` (`id`, `pwd`, `last_connection`, `scale_right`, `role`, `accounting_write`)
+VALUES
+	(1834, 'f60316f1d87ada7a9bbb9509b37ae6b5', NULL, 45, 'Chef de mention', 0);
+
+-- DELETE FROM uac_admin WHERE id IN (1827, 1828, 1829, 1830, 1831, 1832, 1833, 1834);
+-- UPDATE uac_admin SET scale_right = 45 WHERE id IN (1827, 1828, 1829, 1830, 1831, 1832, 1833, 1834);
+
+
+-- This is for teacher
+DROP TABLE IF EXISTS uac_teacher;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_teacher` (
+  `id` BIGINT NOT NULL,
+  `mention_code` CHAR(5) NOT NULL,
+  `teacher_level` CHAR(1) NOT NULL DEFAULT 'P' COMMENT 'C is for Chef de Mention and P is for Professeur',
+  `description` VARCHAR(60) NOT NULL,
+  `last_connection` DATETIME NULL,
+  PRIMARY KEY (`id`));
+
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1827, 'GESTI', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1828, 'ECONO', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1829, 'SIENS', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1830, 'INFOE', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1831, 'DROIT', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1832, 'COMMU', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1833, 'RIDXX', 'C', 'Chef de mention');
+INSERT INTO uac_teacher (`id`, `mention_code`, `teacher_level`, `description`)
+VALUES (1834, 'MBSXX', 'C', 'Chef de mention');
+
+
+DROP VIEW IF EXISTS v_showteacher;
+CREATE VIEW v_showteacher AS
+SELECT mu.id AS mu_id,
+		mu.username,
+		mu.firstname,
+		mu.lastname,
+    ut.mention_code,
+    ut.teacher_level,
+    ut.description,
+		ua.*
+FROM mdl_user mu JOIN uac_admin ua on mu.id = ua.id
+                 JOIN uac_teacher ut on ut.id = ua.id;

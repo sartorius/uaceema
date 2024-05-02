@@ -437,7 +437,7 @@ function loadAllExamGrid(){
           css: "cell-ref-sm-center",
           itemTemplate: function(value, item) {
             if(item.UGM_STATUS == 'CAN'){
-              return '<i class="icon-trash"></i>';
+              return '<i class="recap-deactivate icon-trash"></i>';
             }
             else{
               if(EDIT_ACCESS == 'Y'){

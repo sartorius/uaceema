@@ -16,6 +16,7 @@
     const MAX_STR_L1 = 45;
     const MAX_STR_L2 = 30;
     const MAX_STR_L3 = 30;
+    const IS_TEACHER = "{{ is_teacher }}";
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
@@ -38,7 +39,9 @@
         <i class="uac-step uac-step-purple">Nouveau</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step uac-step-purple">à saisir</i> &nbsp;
         <i class="icon-chevron-circle-right nav-text"></i>&nbsp; <i class="uac-step uac-step-purple">à vérifier</i> &nbsp;<i class="icon-chevron-circle-right nav-text"></i>&nbsp; 
         <i class="uac-step uac-step-purple">Terminé</i>
-        <br>Seuls les examens terminés peuvent être consultés par tout le monde.
+        <div class="mgs-note-banner">
+          Seuls les examens terminés peuvent être consultés par tout le monde.
+        </div>
     <hr>
     <div class="mgs-note-banner">
       Nombre d'examen(s) : <i id='count-exam'>{{ result_all_ugm|length }}</i> sur {{ result_all_ugm|length }}.

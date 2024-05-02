@@ -17,9 +17,18 @@ use \PDO;
 use \ZipArchive;
 
 class AdminGradeController extends AbstractController{
+    // - to write grade
+    // - Standard WRITE access right
     private static $my_exact_access_right = 41;
-    private static $my_exact_access_right_create_subject = 40;
+
+    // Be carefull the access right 42 is used for
+    // - Subject creation
+    // - Student profile modification
+    private static $my_exact_access_right_create_subject = 42;
     private static $my_minimum_access_right = 39;
+
+    // - Teacher access
+    private static $my_exact_teacher_access_right = 45;
 
     private static $my_gra_repository = "/img/ace_gra";
 
@@ -994,8 +1003,15 @@ class AdminGradeController extends AbstractController{
                 }
             }
             
+            //By default it is not teacher
+            $is_teacher = 'N';
+            $teach_clause = '';
+            if(isset($scale_right) && ($scale_right == self::$my_exact_teacher_access_right)){
+                $is_teacher = 'Y';
+                $teach_clause = " AND URS_MENTION_CODE IN ( SELECT utea.mention_code FROM uac_teacher utea WHERE utea.id = " . $_SESSION["id"] . ") ";
+            }
 
-            $query_all_ugm = " SELECT * FROM v_master_exam ORDER BY UGM_TECH_LAST_UPDATE DESC; ";
+            $query_all_ugm = " SELECT * FROM v_master_exam WHERE 1 = 1 " . $teach_clause . " ORDER BY UGM_TECH_LAST_UPDATE DESC; ";
             $logger->debug("query_all_ugm: " . $query_all_ugm);
             $logger->debug("managergraexam - Firstname: " . $_SESSION["firstname"]);
             
@@ -1016,6 +1032,7 @@ class AdminGradeController extends AbstractController{
                                                                     'id' => $_SESSION["id"],
                                                                     'scale_right' => ConnectionManager::whatScaleRight(),
                                                                     'edit_access' => $edit_access,
+                                                                    'is_teacher' => $is_teacher,
                                                                     'confirm_cancel_id' => $confirm_cancel_id,
                                                                     'create_grades_master_id' => $create_grades_master_id,
                                                                     'review_grades_master_id' => $review_grades_master_id,
@@ -1084,15 +1101,25 @@ class AdminGradeController extends AbstractController{
         if(isset($scale_right) && ($scale_right > self::$my_minimum_access_right)){
 
             $dbconnectioninst = DBConnectionManager::getInstance();
+
+            //By default it is not teacher
+            $is_teacher = 'N';
+            $teach_clause_primitive = '';
+            $teach_clause_subject = '';
+            if(isset($scale_right) && ($scale_right == self::$my_exact_teacher_access_right)){
+                $is_teacher = 'Y';
+                $teach_clause_primitive = " AND URS_MENTION_CODE IN ( SELECT utea.mention_code FROM uac_teacher utea WHERE utea.id = " . $_SESSION["id"] . ") ";
+                $teach_clause_subject = " AND URS_MENTION_CODE IN ( SELECT utea.mention_code FROM uac_teacher utea WHERE utea.id = " . $_SESSION["id"] . ") ";
+            }
             
-            $query_all_primitif_niv = " SELECT * FROM v_primitif_niv; ";
+            $query_all_primitif_niv = " SELECT * FROM v_primitif_niv WHERE 1 = 1 " . $teach_clause_primitive . " ORDER BY URS_MENTION_CODE, VCC_ID; ";
             $logger->debug("query_all_primitif_level: " . $query_all_primitif_niv);
             $logger->debug("managergragrade - Firstname: " . $_SESSION["firstname"]);
             
             $result_query_all_primitif_niv = $dbconnectioninst->query($query_all_primitif_niv)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_query_all_primitif_niv: " . count($result_query_all_primitif_niv));
 
-            $query_all_subject = " SELECT * FROM v_ref_subject; ";
+            $query_all_subject = " SELECT * FROM v_ref_subject WHERE 1 = 1 " . $teach_clause_subject . " ; ";
             $logger->debug("query_all_subject: " . $query_all_subject);
             $logger->debug("managergragrade - Firstname: " . $_SESSION["firstname"]);
             
@@ -1159,6 +1186,7 @@ class AdminGradeController extends AbstractController{
                                                                     'result_query_subj_parcours' => $result_query_subj_parcours,
                                                                     'result_query_subj_class' => $result_query_subj_class,
                                                                     'access_write_subject' => $access_write_subject,
+                                                                    'is_teacher' => $is_teacher,
                                                                     'errtype' => '']); 
         }
         else{

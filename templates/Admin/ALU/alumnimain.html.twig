@@ -4,11 +4,37 @@
   <div id="univ-entry"  class="img-home{{ home_i }} col-lg-12">
   </div>
   <div id="home-greet" class="col-lg-6">
-    Alumni : anciens élèves
+    Anciens élèves
   </div>
 </div>
 
-{% include 'RawTemplate/_inprogress.html.twig' %}
-
+<div class="row">
+    <div class="col-lg-3">
+    </div>
+    <div class="uac-pag-blk col-lg-6">
+        <div>
+            <h1>Bienvenue</h1>
+            Chers alumnis,<br>
+            Nous sommes ravis de vous accueillir au sein de notre communauté d’anciens étudiants. Votre présence enrichit notre université et perpétue l’esprit de camaraderie et d’excellence qui nous caractérise. Nous nous engageons à vous tenir informés des dernières nouvelles et événements qui vous concernent. Ensemble, continuons à tisser des liens forts et à célébrer le patrimoine de notre alma mater.
+        </div>
+        <br><hr><br>
+        <div>
+            <h1><span class="icon-linkedin-square nav-text"></span>&nbsp;LinkedIn</h1>
+            Nous vous invitons à rejoindre <a href="https://www.linkedin.com/school/universite-aceem/">notre LinkedIn Université ACEEM</a>. LinkedIn est la plateforme idéale pour rester connecté avec le réseau professionnel mondial et découvrir des opportunités de carrière exceptionnelles. Elle vous permet de mettre en valeur vos compétences et votre parcours, tout en vous donnant accès à des ressources précieuses pour votre développement professionnel continu. En rejoignant LinkedIn, vous ouvrez la porte à un échange enrichissant avec des professionnels et des experts de votre domaine, garantissant ainsi une visibilité accrue dans votre secteur.
+            <br><br>
+            <h3>Suivez-nous</h3>
+            Cliquez sur suivre pour être tenu au courant de nos dernières activités.<br><br>
+            <img src="{{ path('main') }}img/alumni/LinkedIntuto1.png" style="width:450px;"
+                            title="Suivre sur LinkedIn" alt="Suivre sur LinkedIn" class="uac-img-center error-img">
+            <br><br>
+            <h3>Ajoutez-nous en formation</h3>
+            Nous avons réussi à faire reconnaître l'Université comme un établissement d'enseignement supérieur par LinkedIn. Pour devenir un ancien, vous devez ajouter en formation l'Université ACEEM.<br><br>
+            <img src="{{ path('main') }}img/alumni/LinkedIntuto3.png" style="width:450px;"
+                            title="Ancien sur LinkedIn" alt="Ancien sur LinkedIn" class="uac-img-center error-img">
+        </div>
+    </div>
+    <div class="col-lg-3">
+    </div>
+</div>
 
 {% include 'RawTemplate/_footer.html.twig' %}

@@ -15,8 +15,9 @@ use App\DBUtils\ConnectionManager;
 use Psr\Log\LoggerInterface;
 use \PDO;
 
-class AdminSTUController extends AbstractController
-{
+class AdminSTUController extends AbstractController{
+  // - Teacher access
+  private static $my_exact_teacher_access_right = 45;
 
   public function managerstu(Environment $twig, LoggerInterface $logger)
   {
@@ -44,6 +45,15 @@ class AdminSTUController extends AbstractController
     if(isset($scale_right) && ($scale_right > 4)){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
+        //By default it is not teacher
+        $is_teacher = 'N';
+        $teach_clause = '';
+        if(isset($scale_right) && ($scale_right == self::$my_exact_teacher_access_right)){
+            $is_teacher = 'Y';
+            $teach_clause = " AND vaco.mention_code IN ( SELECT utea.mention_code FROM uac_teacher utea WHERE utea.id = " . $_SESSION["id"] . ") ";
+        }
+
+
 
         $allstu_query = " SELECT mu.id AS ID, UPPER(mu.username) AS USERNAME, mu.matricule AS MATRICULE, uas.secret AS SECRET, CONCAT(CAST(uas.secret AS CHAR), UPPER(uas.username)) AS PAGE, "
                               . " fCapitalizeStr(REPLACE(UPPER(mu.firstname), \"'\", \" \")) AS FIRSTNAME, REPLACE(UPPER(mu.lastname), \"'\", \" \") AS LASTNAME, mu.genre AS GENRE, mu.situation_matrimoniale AS SITM, mu.email AS EMAIL, vaco.id AS CLASS_ID, "
@@ -54,7 +64,8 @@ class AdminSTUController extends AbstractController
                               . " ifnull(mu.phone_par2, 'na') AS PHONEPAR2, fEscapeStr(ifnull(mu.centres_interets, 'na')) AS CENTINT, "
                               . " REPLACE(UPPER(CONCAT(mu.username, mu.firstname, mu.lastname, vaco.mention, vaco.niveau, vaco.parcours, vaco.groupe, vaco.short_classe, mu.matricule)), \"'\", \" \") AS raw_data "
                               . " FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username "
-                              . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id "
+                              . " JOIN v_class_cohort vaco ON vaco.id = uas.cohort_id WHERE 1 = 1 "
+                              . $teach_clause
                               . " ORDER BY CONCAT(CLASS_NIVEAU, CLASS_MENTION) ASC; ";
 
         $logger->debug("Show me allstu_query: " . $allstu_query);
@@ -67,6 +78,7 @@ class AdminSTUController extends AbstractController
                                                                   'lastname' => $_SESSION["lastname"],
                                                                   'id' => $_SESSION["id"],
                                                                   'result_all_stu'=>$result_all_stu,
+                                                                  'is_teacher'=>$is_teacher,
                                                                   'scale_right' => ConnectionManager::whatScaleRight(),
                                                                   'errtype' => '']);
 
