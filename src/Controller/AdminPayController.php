@@ -1627,7 +1627,7 @@ class AdminPayController extends AbstractController
         if(isset($_POST["confirm-cancel-id"])){
             $confirm_cancel_id = $_POST["confirm-cancel-id"];
             // We are in a cancel case
-            $query_cancel_id = " UPDATE uac_just SET status = 'C', agent_id = " . $_SESSION["id"] . " WHERE id = " . $confirm_cancel_id . "; ";
+            $query_cancel_id = " UPDATE uac_just SET status = 'C', agent_id = " . $_SESSION["id"] . " , last_update = CURRENT_TIMESTAMP WHERE id = " . $confirm_cancel_id . "; ";
             $result_query_cancel_id = $dbconnectioninst->query($query_cancel_id)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("managerjust query_cancel_id: " . $query_cancel_id);
             $logger->debug("count result_query_cancel_id: " . count($result_query_cancel_id));
@@ -1637,8 +1637,9 @@ class AdminPayController extends AbstractController
 
 
 
-
-        $query_all_just = " SELECT * FROM v_all_just ORDER BY 1 DESC; ";
+        // J is for Justificatif de caisse
+        // K is for Justificatif de coffre
+        $query_all_just = " SELECT * FROM v_all_just WHERE UJ_CAT_FAMILY = 'J' ORDER BY 1 DESC; ";
         $logger->debug("query_all_just: " . $query_all_just);
         $result_all_just = $dbconnectioninst->query($query_all_just)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me count result_all_just: " . count($result_all_just));

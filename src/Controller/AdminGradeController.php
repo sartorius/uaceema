@@ -1015,6 +1015,8 @@ class AdminGradeController extends AbstractController{
             $logger->debug("query_all_ugm: " . $query_all_ugm);
             $logger->debug("managergraexam - Firstname: " . $_SESSION["firstname"]);
             
+            $query_count_last_ugm = " SELECT COUNT(1) AS COUNT_LAST_UGM FROM v_ref_subject WHERE GRA_EXIST_EXAM_ID = 0 " . $teach_clause . " ; ";
+            $logger->debug("query_count_last_ugm: " . $query_count_last_ugm);
 
             if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
                 $edit_access = 'Y';
@@ -1026,6 +1028,9 @@ class AdminGradeController extends AbstractController{
             $result_all_ugm = $dbconnectioninst->query($query_all_ugm)->fetchAll(PDO::FETCH_ASSOC);
             $logger->debug("Show me result_all_ugm: " . count($result_all_ugm));
 
+            $result_query_count_last_ugm = $dbconnectioninst->query($query_count_last_ugm)->fetchAll(PDO::FETCH_ASSOC);
+            $logger->debug("Show me result_query_count_last_ugm: " . count($result_query_count_last_ugm));
+
             $content = $twig->render('Admin/GRA/managergraexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
@@ -1036,6 +1041,7 @@ class AdminGradeController extends AbstractController{
                                                                     'confirm_cancel_id' => $confirm_cancel_id,
                                                                     'create_grades_master_id' => $create_grades_master_id,
                                                                     'review_grades_master_id' => $review_grades_master_id,
+                                                                    'result_query_count_last_ugm' => $result_query_count_last_ugm[0]["COUNT_LAST_UGM"],
                                                                     'result_all_ugm' => $result_all_ugm,
                                                                     'errtype' => '']);
 

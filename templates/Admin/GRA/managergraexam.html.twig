@@ -17,6 +17,8 @@
     const MAX_STR_L2 = 30;
     const MAX_STR_L3 = 30;
     const IS_TEACHER = "{{ is_teacher }}";
+
+    const EXAM_LAST = "{{ result_query_count_last_ugm }}";
     // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
     // let dataTagToJsonArray = JSON.parse(dataTagToJson);
   </script>
@@ -44,7 +46,7 @@
         </div>
     <hr>
     <div class="mgs-note-banner">
-      Nombre d'examen(s) : <i id='count-exam'>{{ result_all_ugm|length }}</i> sur {{ result_all_ugm|length }}.
+      Nombre d'examen(s) : <i id='count-exam'>{{ result_all_ugm|length }}</i> sur {{ result_all_ugm|length }}.&nbsp;Sujet restant à saisir : {{ result_query_count_last_ugm }}.
     </div>
   </div>
   <div class="col-1">
