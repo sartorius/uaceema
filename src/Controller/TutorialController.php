@@ -40,6 +40,18 @@ class TutorialController extends AbstractController
 
     return new Response($content);
   }
+  public function helplmd(Environment $twig)
+  {
+
+    $debug_session = "Pass variable to check";
+
+    // This email works !!
+    //MailManager::sendSimpleEmail();
+
+    $content = $twig->render('Tutorial/helplmd.html.twig', ['debug' => $debug_session, 'amiconnected' => ConnectionManager::amIConnectedOrNot(), 'scale_right' => ConnectionManager::whatScaleRight()]);
+
+    return new Response($content);
+  }
   public function concours(Environment $twig)
   {
 

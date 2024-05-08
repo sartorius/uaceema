@@ -18,7 +18,7 @@ RETURNS VARCHAR(1000)
 DETERMINISTIC
 BEGIN
 	RETURN REPLACE(
-	    REPLACE(input, '\r', '\\r'),
+	    REPLACE(REPLACE(input, "\t", " "), '\r', '\\r'),
 	    '\n',
 	    '\\n'
 	);

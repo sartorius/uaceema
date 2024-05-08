@@ -28,7 +28,7 @@ function loadGraGrid(){
   if(window.screen.availWidth < 1100){
     refGraField = [
           { name: "URS_TITLE",
-            title: "Examen",
+            title: "Élément constitutif",
             type: "text",
             align: "left",
             headercss: "cell-ref-sm-hd",
@@ -56,10 +56,13 @@ function loadGraGrid(){
               }
               else{
                 if(parseFloat(value) < 7){
-                  return "<i class='recap-mis'>" + value + "</i>";
+                  return "<i class='recap-mis'>" + value  + "</i>";
+                }
+                else if(parseFloat(value) < 10){
+                  return "<i class='recap-qui'>" + value  + "</i>";
                 }
                 else{
-                  return value;
+                  return "<i class='recap-val'>" + value  + "</i>";
                 }
               }
             }
@@ -69,7 +72,7 @@ function loadGraGrid(){
   else{
     refGraField = [
                 { name: "URS_TITLE",
-                  title: "Examen",
+                  title: "Élément constitutif",
                   type: "text",
                   align: "left",
                   headercss: "cell-ref-sm-hd",
@@ -97,10 +100,13 @@ function loadGraGrid(){
                     }
                     else{
                       if(parseFloat(value) < 7){
-                        return "<i class='recap-mis'>" + value + "</i>";
+                        return "<i class='recap-mis'>" + value  + "</i>";
+                      }
+                      else if(parseFloat(value) < 10){
+                        return "<i class='recap-qui'>" + value  + "</i>";
                       }
                       else{
-                        return value;
+                        return "<i class='recap-val'>" + value  + "</i>";
                       }
                     }
                   }
@@ -128,17 +134,6 @@ function loadGraGrid(){
                   align: "right",
                   headercss: "cell-ref-sm-hd",
                   css: "cell-ref-xs"
-                },
-                { name: "URS_CREDIT",
-                  title: "Crédit",
-                  type: "number",
-                  width: 20,
-                  align: "right",
-                  headercss: "cell-ref-sm-hd",
-                  css: "cell-ref-xs",
-                  itemTemplate: function(value, item){
-                    return (value/10);
-                  }
                 }
       ];
   }
@@ -410,11 +405,16 @@ function loadSumUpGrid(){
             headercss: "cell-ref-sm-hd",
             css: "cell-ref-sm",
             itemTemplate: function(value, item) {
-              if(parseInt(value) < 0){
-                return '<i class="recap-mis">Retard</i>';
+              if(parseInt(item.REST_TO_PAY) > 0){
+                  if(parseInt(value) < 0){
+                    return '<i class="recap-mis">Retard ' + item.TRANCHE_DDL + '</i>';
+                  }
+                  else{
+                    return '<i class="status-ok">Attente ' + item.TRANCHE_DDL + '</i>';
+                  }
               }
               else{
-                return '<i class="status-ok">Attente</i>';
+                return '<i class="status-ok">Payé</i>';
               }
             }
           }
