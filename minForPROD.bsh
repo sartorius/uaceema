@@ -24,6 +24,8 @@ echo 'acepayjust.js';
 uglifyjs public/js/acepayjust.js -o public/js/acepayjust.min.js;
 echo 'aceedt.js';
 uglifyjs public/js/aceedt.js -o public/js/aceedt.min.js;
+echo 'acetea.js';
+uglifyjs public/js/acetea.js -o public/js/acetea.min.js;
 echo 'acepublicedt.js';
 uglifyjs public/js/acepublicedt.js -o public/js/acepublicedt.min.js;
 echo 'acegraadd.js';

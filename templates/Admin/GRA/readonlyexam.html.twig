@@ -6,7 +6,7 @@
     let dataOneExamToJsonArray = JSON.parse('{{ result_one_ugm | json_encode | raw }}');
     let dataAllGradeToJsonArray = JSON.parse('{{ result_all_ugg | json_encode | raw }}');
     // We init here the filter value
-	let filteredDataAllGradeToJsonArray = Array.from(dataAllGradeToJsonArray);
+	  let filteredDataAllGradeToJsonArray = Array.from(dataAllGradeToJsonArray);
 
     // Statistics  
     let dataStatAverageArray = JSON.parse('{{ result_stat_average | json_encode | raw }}');
@@ -73,7 +73,10 @@
     <button onclick="generateAllGraReport()" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
     
   </div>
-  <div class="col-3">
+  <div class="col-1">
+    <button onclick="goToEndScan({{ master_id }})" class="btn btn-outline-dark"><i class="icon-clipboard"></i>&nbsp;Revoir scan</button>
+  </div>
+  <div class="col-2">
 
   </div>
 
@@ -105,5 +108,6 @@
   </div>
 </div>
 
-
+{# Necessary go to exam scan #}
+{% include 'Admin/GRA/_gotoexamforgradefrommng.html.twig' %}
 {% include 'RawTemplate/SPE/_footer.w.gradash.jsgrid.mgchart.html.twig' %}

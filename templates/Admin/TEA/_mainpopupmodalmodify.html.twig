@@ -1,0 +1,124 @@
+<!-- Modal -->
+<div class="modal fade" id="tea-details-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div id="stu-contener" class="modal-content">
+      <div class="modal-header">
+        <strong>Modifier&nbsp;<i id='title-stu-details' class='nrm-txt'></i></strong>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class='popup-box-details'>
+            <i class="icon-person"></i>&nbsp;Détails modifiables<br>
+                <div class="mgs-note-nopad">
+                  Les informations en gris sont facultatives.
+                </div>
+                <div id="disp-err-msg" class="mgs-note-nopad-err">
+                </div>
+                <div id='pro-details-stu'>
+                    <div class="menu-dropdown">
+                        <div id='modal-crs-status'>
+                          <i class="edt-status-gray nrm-txt">Titre</i><br>
+                          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                            <button id="tit-o" type="button" value="O" class="btn btn-outline-secondary tit-group active">Monsieur</button>
+                            <button id="tit-a" type="button" value="A" class="btn btn-outline-secondary tit-group">Madame</button>
+                            <button id="tit-p" type="button" value="P" class="btn btn-outline-secondary tit-group">Professeur</button>
+                            <button id="tit-d" type="button" value="D" class="btn btn-outline-secondary tit-group">Docteur</button>
+                            <button id="tit-m" type="button" value="M" class="btn btn-outline-secondary tit-group">Maître</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="edt-status-gray nrm-txt">Nom de famille</div>
+                    <textarea id="pf-lastname" class="prof-note-input" placeholder="Entrez le nom de famille" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                    
+                    <div class="menu-dropdown">
+                      <div class="split-mod-prof">
+                          <i class="edt-status-gray nrm-txt">Premier prénom</i><br>
+                          <textarea id="pf-firstname" class="prof-note-input" placeholder="Entrez le premier prénom" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                      <div>
+                          <i class="edt-status-light nrm-txt">Autres prénoms</i><br>
+                          <textarea id="pf-othfirstname" class="prof-note-input" placeholder="Aucun" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                    </div>
+                    <div class="menu-dropdown">
+                      <div class="split-mod-prof">
+                          <i class="edt-status-gray nrm-txt">Téléphone</i><br>
+                          <textarea id="pf-telmain" class="prof-note-input" placeholder="Entrez le téléphone principal" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                      <div>
+                          <i class="edt-status-light nrm-txt">Téléphone alternatif</i><br>
+                          <textarea id="pf-telalt" class="prof-note-input" placeholder="Entrez le téléphone alternatif" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                      </div>
+                    </div>
+                    <div class="edt-status-gray nrm-txt">Email</div>
+                    <textarea id="pf-email" class="prof-note-input" placeholder="Entrez email" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeProfBtn()'></textarea>
+                    
+                    <div class="menu-dropdown">
+                        <div id='modal-crs-status'>
+                          <i class="edt-status-gray nrm-txt">Contrat</i><br>
+                          <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                            <button id="stt-p" type="button" value="P" class="btn btn-outline-secondary stt-group active">Professeur</button>
+                            <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group">Assistant</button>
+                            <button id="stt-t" type="button" value="T" class="btn btn-outline-secondary stt-group">Titulaire</button>
+                            <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group">Consultant</button>
+                            <button id="stt-m" type="button" value="M" class="btn btn-outline-secondary stt-group">Maître de conférence</button>
+                            <button id="stt-e" type="button" value="E" class="btn btn-outline-secondary stt-group">Exceptionnel</button>
+                            <button id="stt-o" type="button" value="O" class="btn btn-outline-secondary stt-group">Autre</button>
+                          </div>
+                        </div>
+                    </div>
+                    <br>
+                    <i class="edt-status-gray nrm-txt">Mention de l'enseignant : </i><br>
+                    <div id="menu-checkboxbtn">
+                        <div id="parcours-opt">
+                            {% for mention_code in result_allmention_code %}
+                                <div class="form-check">
+                                    <input class="form-check-input all-mention" type="checkbox" onclick="manageSaveChangeProfBtn()" value="{{ mention_code['par_code'] }}" id="id-{{ mention_code['par_code'] }}" checked>
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        {{ mention_code['par_code'] }}
+                                    </label>
+                                </div>
+
+                            {% endfor %}
+                            {# 
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Checked checkbox
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" checked>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Checked checkbox2
+                                </label>
+                            </div>
+                            #}
+                        </div>
+                    </div>
+                    <i id="inv-class-txt" class="edt-status nrm-txt"></i><br>
+                    <div class="mgs-note-nopad">
+                      Si la case est bloquée et cochée, c'est que l'enseignant a déjà eu un cours ou un examen pour cette mention cette année, elle ne peut plus être décochée.
+                      Si la case est bloquée et décochée, il s'agit sûrement d'un copier coller d'EDT avec un enseignant d'une autre mention. Dans ce cas, contactez le support et indiquez l'erreur ERR3W92.
+                    </div>
+                </div>
+                <br>
+            <hr>
+            <i class="icon-clock-o"></i>&nbsp;Remarques (visibles du chef de mention & de l'administration)
+            <br>
+            <div id='pro-details-ass'>
+                <div class="edt-status-light nrm-txt">Nombre de caractère(s) restant(s) : <i id="noteass-length"></i></div>
+                <textarea id="pf-noteass" class="prof-note-input" placeholder="Entrez une note d'information vis à vis de l'enseignant" style="resize: none;"  name="w3review" rows="3" cols="67" onKeyUp='manageNoteModifyTeacher()'></textarea>
+            </div>
+            <div id="profile-save-btn">
+              <button type="button" onclick="generateTeacherModifyCreateDB()" class="btn btn-default btn-lg btn-block"><i class="icon-floppy-disk"></i>&nbsp;Enregistrer</button>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-dismiss="modal">Annuler</button>
+      </div>
+    </div>
+  </div>
+</div>

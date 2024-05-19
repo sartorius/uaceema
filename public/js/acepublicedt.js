@@ -209,6 +209,87 @@ function goToAllEDT(paramAnchor){
   document.getElementById('edt-ttl' + paramAnchor).scrollIntoView(scrollOptions); 
 }
 
+
+
+
+function loadAllTeaGrid(){
+  refTeaField = [
+      { name: "TEA_ID",
+        title: "#",
+        type: "number",
+        width: 3,
+        align: "center",
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "name",
+        title: "Nom",
+        type: "text",
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm"
+      },
+      { name: "MANSUM_P_SHIFT_DURATION",
+        title: "Cours présent",
+        type: "number",
+        width: 20,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          if (value ==  0){
+            return '0';
+          }
+          else if( (value % 2) > 0){
+            return Math.floor(value / 2) + 'h30';
+          }
+          else{
+            return Math.floor(value / 2) + 'h00';
+          }
+        }
+      },
+      { name: "MANSUM_M_SHIFT_DURATION",
+        title: "Cours absent",
+        type: "number",
+        width: 20,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-sm",
+        itemTemplate: function(value, item) {
+          if (value ==  0){
+            return '0';
+          }
+          else if( (value % 2) > 0){
+            return Math.floor(value / 2) + 'h30';
+          }
+          else{
+            return Math.floor(value / 2) + 'h00';
+          }
+        }
+      },
+      { name: "TEA_ALL_MENTION_CODE",
+        title: "Mention(s)",
+        type: "text",
+        width: 60,
+        headercss: "cell-ref-uac-sm-hd",
+        css: "cell-ref-uac-xxs"
+      }
+  ];
+  $("#jsGridAllTEA").jsGrid({
+      height: "auto",
+      width: "100%",
+      noDataContent: "Aucun enseignant disponible",
+      pageIndex: 1,
+      pageSize: 50,
+      pagePrevText: "Prec",
+      pageNextText: "Suiv",
+      pageFirstText: "Prem",
+      pageLastText: "Dern",
+      sorting: true,
+      paging: true,
+      data: dataAllTEAToJsonArray,
+      fields: refTeaField
+  });
+}
+
+
 /***********************************************************************************************************/
 
 $(document).ready(function() {
@@ -234,7 +315,8 @@ $(document).ready(function() {
     else if($('#mg-graph-identifier').text() == 'all-edt'){
       // Do something
       // We are in all EDT
-      if(dataAllEDTLoadToJsonArray[0].course_id != null){
+      if((dataAllEDTLoadToJsonArray.length > 0)
+          && (dataAllEDTLoadToJsonArray[0].course_id != null)){
         let invMasterId = dataAllEDTLoadToJsonArray[0].master_id;
         for(let i=0; i<dataAllEDTLoadToJsonArray.length; i++){
           if(invMasterId == dataAllEDTLoadToJsonArray[i].master_id){
@@ -259,7 +341,7 @@ $(document).ready(function() {
       else{
         // We do nothing as the EDT is empty
       }
-
+      loadAllTeaGrid();
     }
     else if($('#mg-graph-identifier').text() == 'xxx'){
       // Do something

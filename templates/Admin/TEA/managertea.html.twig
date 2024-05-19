@@ -1,0 +1,155 @@
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
+
+
+{% if result_allteach_query is defined and result_allteach_query is not null %}
+  <script>
+    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
+
+    let dataAllTEAToJsonArray =JSON.parse('{{ result_allteach_query | json_encode | raw }}');
+    // We init here the filter value
+		var filtereddataAllTEAToJsonArray = Array.from(dataAllTEAToJsonArray);
+    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
+    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
+
+    const ARRAY_REF_MENTION_CODE =JSON.parse('{{ result_allmention_code | json_encode | raw }}');
+    const ARRAY_REF_ALL_TITLE =JSON.parse('{{ result_alltitle | json_encode | raw }}');
+    const ARRAY_REF_ALL_CONTRACT =JSON.parse('{{ result_allcontract | json_encode | raw }}');
+
+
+    // REPORT
+    let dataTagToJsonArrayCourseReportM0 =JSON.parse('{{ result_query_course_report_m0 | json_encode | raw }}');
+    let dataTagToJsonArrayCourseReportM1 =JSON.parse('{{ result_query_course_report_m1 | json_encode | raw }}');
+
+    const EDIT_ACCESS = "{{ edit_access }}";
+    const IS_TEACHER = "{{ is_teacher }}";
+    const CURRENT_AGENT_ID_STR = "{{ id }}";
+    const GET_TOKEN = '{{ result_get_token }}';
+
+    
+
+    const MAX_NOTE_LENGTH = 245;
+    // N is for NEUTRAL/ C is for Creation and E for Edit
+    let invMode = "N";
+
+    let invArrayId = 0;
+    let invId = 0;
+    let invTitleHTMLCode = "";
+    let invTitle = "";
+    let invTEA_ALL_MENTION_CODE = "";
+    let blockTEA_UEL_ALL_MENTION_CODE = "";
+    let blockTEA_UGM_ALL_MENTION_CODE = "";
+    let invContractHTMLCode = "";
+    let invContract = "";
+    //let invContract_label = "";
+    let invEmail = "";
+
+    
+
+    let invName = "";
+    
+    let invFirstname = "";
+    let invLastname = "";
+    let invOtherFirstname = "";
+    let invPhoneAlt = "";
+    let invPhoneMain = "";
+    let invComment = "";
+
+  </script>
+{% else %}
+    // Error
+    <script>
+      let dataAllTEAToJsonArray = "";
+    </script>
+{% endif %}
+
+
+<div id="mg-graph-identifier">man-tea</div>
+
+
+
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <h1>Manager enseignant</h1>
+
+    <hr>
+    <div class="mgs-note-banner">
+        Nombre d'enseignant : <i id='count-tea'>{{ result_allteach_query|length }}</i> sur {{ result_allteach_query|length }}. Les statistiques sont basées sur les EDT du mois courant jusqu'aux données connues aujourd'hui.
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+<div class="row dash-bar" id="grid-crit-blc">
+  <div class="col-1">
+  </div>
+
+  <div class="col-2 fil-el">
+    <textarea class="form-control" rows="1" id="filter-all-tea" placeholder="Filtrez min. 2 caractères" style="resize: none;"></textarea>
+  </div>
+  <div class="col-1 fil-el">
+    <button id="re-init-dash-tea" type="button" class="btn btn-md btn-block btn-default">
+      <i class="icon-refresh"></i>
+    </button>
+  </div>
+  <div class="col-1 fil-el">
+    <button type="button" onclick="generateAllTeacherCSV()" id="uac-tea-all-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Rapport</button>
+  </div>
+  <div class="col-1 fil-el">
+    <button type="button" onclick="generateCourseReportCSV(0)" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours courant</button>
+  </div>
+  <div class="col-1 fil-el">
+    <button type="button" onclick="generateCourseReportCSV(-1)" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours précédent</button>
+  </div>
+  <div class="col-1">
+  </div>
+
+  <div class="col-2">
+        {% if (edit_access == 'Y') %}
+            <button id="crt-just" onclick="showCreateTeacherModal()" class="btn btn-outline-dark btn-md btn-blk-menu"><span class="icon-plus-square nav-text"></span>&nbsp;Ajouter enseignant</button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
+  </div>
+  <div class="col-1">
+  </div>
+
+  <div class="col-1 fil-el">
+  </div>
+
+
+
+
+  <div class="col-1">
+  </div>
+</div>
+
+
+<div class="row" id="grid-all-blc">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+    <div id="jsGridAllTEA">
+    </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-1">
+  </div>
+  <div class="col-10">
+      <div class="mgs-note-banner">
+          PST : indique le temps de cours ce mois-ci que le professeur a présenté.
+          ABS : indique le temps de cours ce mois où le professeur a été absent.
+      </div>
+  </div>
+  <div class="col-1">
+  </div>
+</div>
+{% include 'Admin/TEA/_mainpopupmodalmodify.html.twig' %}
+{% include 'Admin/TEA/_mainpopupmodalreadonly.html.twig' %}
+{% include 'RawTemplate/SPE/_footer.tea.w.jsgrid.mgchart.html.twig' %}

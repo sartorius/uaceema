@@ -245,6 +245,17 @@ class StaticController extends AbstractController
             $result_query_get_all_edt = array();
             $techInvMonday = "";
           }
+
+          $allteach_query = " SELECT urt.*, TEA_ID, TEA_ALL_MENTION_CODE, IFNULL(SUM_P_SHIFT_DURATION, 0) AS MANSUM_P_SHIFT_DURATION, IFNULL(SUM_M_SHIFT_DURATION, 0) AS MANSUM_M_SHIFT_DURATION "
+                          . " FROM uac_ref_teacher urt JOIN v_all_mention_teacher vat ON urt.id = vat.TEA_ID "
+                          . " LEFT JOIN v_all_presented_per_teacher vp ON vp.VPC_TEA_ID = urt.id "
+                          . " LEFT JOIN v_all_missing_per_teacher vm ON vm.VMC_TEA_ID = urt.id "
+                          . " WHERE 1=1 AND (IFNULL(SUM_P_SHIFT_DURATION, 0) + IFNULL(SUM_M_SHIFT_DURATION, 0)) > 0 ORDER BY MANSUM_P_SHIFT_DURATION DESC; ";
+
+          $logger->debug("Show me allteach_query: " . $allteach_query);
+          $dbconnectioninst = DBConnectionManager::getInstance();
+          $result_allteach_query = $dbconnectioninst->query($allteach_query)->fetchAll(PDO::FETCH_ASSOC);
+          $logger->debug("Show me: " . count($result_allteach_query));
           
           
           $content = $twig->render('Static/gotoalledt.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
@@ -253,6 +264,7 @@ class StaticController extends AbstractController
                                                                   'result_query_get_all_master_id' => $result_query_get_all_master_id,
                                                                   'result_query_get_all_edt' => $result_query_get_all_edt,
                                                                   'techInvMonday' => $techInvMonday,
+                                                                  'result_allteach_query' => $result_allteach_query,
                                                                   'errtype' => '']);
                                                                   
       }

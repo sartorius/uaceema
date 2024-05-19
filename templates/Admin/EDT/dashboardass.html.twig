@@ -59,20 +59,6 @@
     </script>
 {% endif %}
 
-{% if result_course_report is defined and result_course_report is not null %}
-  <script>
-    //let dataTagToJson = '<%= @resultSet.map{|o| Hash[o.each_pair.to_a] }.to_json %>';
-
-    let dataTagToJsonArrayCourseReport =JSON.parse('{{ result_course_report | json_encode | raw }}');
-    // dataTagToJson = dataTagToJson.replace(/&quot;/g,"\"");
-    // let dataTagToJsonArray = JSON.parse(dataTagToJson);
-  </script>
-{% else %}
-    <script>
-      let dataTagToJsonArrayCourseReport = "";
-    </script>
-{% endif %}
-
 {% if result_query_excel_global_report is defined and result_query_excel_global_report is not null %}
   <script>
 
@@ -108,7 +94,6 @@
   </div>
   <div class="col-10">
     <button type="button" id="uac-ass-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Assiduité</button>
-    &nbsp;<button type="button" id="uac-course-glb-csv" class="btn btn-dark"><i class="icon-file-text-o"></i>&nbsp;Cours annulés</button>
     &nbsp;<button type="button" id="uac-abs-pdt-xls" class="btn btn-outline-dark"><i class="icon-file-excel-o"></i>&nbsp;Global</button>
   </div>
   <div class="col-1">

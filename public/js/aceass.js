@@ -1694,34 +1694,6 @@ function generateGlobalAssCSV(){
   document.body.removeChild(link);
 }
 
-function generateCourseReportCSV(){
-	const csvContentType = "data:text/csv;charset=utf-8,";
-  let csvContent = "";
-  const SEP_ = ";"
-
-	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Detail du cours" + SEP_ + "Debute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nbr etudiant total dans la classe" + SEP_ + "Journee non-comptee" + SEP_ + "\n";
-	csvContent += dataString;
-	for(var i=0; i<dataTagToJsonArrayCourseReport.length; i++){
-		dataString = dataTagToJsonArrayCourseReport[i].CLASSE + SEP_ + dataTagToJsonArrayCourseReport[i].JOUR + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DATE + SEP_ +  dataTagToJsonArrayCourseReport[i].MOIS + SEP_ +  dataTagToJsonArrayCourseReport[i].COURSE_STATUS + SEP_ + dataTagToJsonArrayCourseReport[i].COURS_DETAILS + SEP_ + dataTagToJsonArrayCourseReport[i].DEBUT_COURS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_ABS + SEP_ + dataTagToJsonArrayCourseReport[i].NBR_QUI + SEP_ + dataTagToJsonArrayCourseReport[i].NUMBER_STUD + SEP_  + dataTagToJsonArrayCourseReport[i].OFF_DAY + SEP_ ;
-    // easy close here
-    csvContent += i < dataTagToJsonArrayCourseReport.length ? dataString+ "\n" : dataString;
-	}
-
-  //console.log('Click on csv');
-	let encodedUri = encodeURI(csvContent);
-  let csvData = new Blob([csvContent], { type: csvContentType });
-
-	let link = document.createElement("a");
-  let csvUrl = URL.createObjectURL(csvData);
-
-  link.href =  csvUrl;
-  link.style = "visibility:hidden";
-  link.download = 'RapportCoursAnnules35j_' + getReportACEDateStrFR(0).replaceAll('/', '_') + '.csv';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
 /*
 function generateGlobalPsdXLS_todelete(){
   
@@ -2343,9 +2315,6 @@ $(document).ready(function() {
     runStat();
     $( "#uac-ass-glb-csv" ).click(function() {
       generateGlobalAssCSV();
-    });
-    $( "#uac-course-glb-csv" ).click(function() {
-      generateCourseReportCSV();
     });
     $( "#uac-abs-pdt-xls" ).click(function() {
       generateGlobalPsdXLS();

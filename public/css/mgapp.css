@@ -708,6 +708,15 @@ textarea[name=inputRef] {
     color: var(--light-ace-color);
 }
 
+.user-title-nalive{
+  font-family: "Roboto Mono" !important;
+  text-align: center;
+  font-weight: lighter;
+  font-size: 15px;
+  margin-bottom: 40px;
+  color: var(--err-ace-color);
+}
+
 @media (min-width:414px){
       .user-title{
           font-family: "Roboto Mono" !important;
@@ -716,6 +725,15 @@ textarea[name=inputRef] {
           font-size: 30px;
           margin-bottom: 40px;
           color: var(--light-ace-color);
+      }
+
+      .user-title-nalive{
+        font-family: "Roboto Mono" !important;
+        text-align: center;
+        font-weight: lighter;
+        font-size: 30px;
+        margin-bottom: 40px;
+        color: var(--err-ace-color);
       }
 }
 
@@ -1772,6 +1790,10 @@ textarea[name=inputRef] {
 .cell-ref-uac-sm{
   font-size: 13px;
 }
+
+.cell-ref-uac-xxs{
+  font-size: 9px;
+}
 .cell-ref-uac-sm-hd{
   font-size: 13px;
   color: white;
@@ -2032,6 +2054,14 @@ img.part-img{
   color: var(--main-ace-color);
 }
 
+.ro-popup{
+  font-size: 23px;
+  color: var(--light-violet-80);
+}
+
+.pop-left-el{
+  width: 45%;
+}
 
 .mention-txt-over{
   text-align: left;

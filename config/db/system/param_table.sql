@@ -383,3 +383,9 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_ephemeride` (
   INDEX (`eph_day`));
 
 INSERT INTO uac_ref_ephemeride (eph_day, eph_year, description, day_366, category) VALUES (NULL, NULL, NULL, NULL);
+
+
+
+ALTER TABLE mdl_user
+ADD COLUMN `still_alive` CHAR(1) NOT NULL DEFAULT 'Y'
+AFTER email;

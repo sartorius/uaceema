@@ -18,6 +18,8 @@ use \ZipArchive;
 
 class AdminEDTController extends AbstractController
 {
+  // - Same as EDT
+  private static $my_exact_edtmng_teachermng_access_right = 11;
 
   //publishAllS1
   public function publishAllS1(Environment $twig, LoggerInterface $logger)
@@ -29,7 +31,7 @@ class AdminEDTController extends AbstractController
 
     $scale_right = ConnectionManager::whatScaleRight();
     // Must be exactly 11 or more than 99
-    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+    if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
 
         $import_query = " CALL CLI_GET_PublishAllEDTS1(); ";
         $dbconnectioninst = DBConnectionManager::getInstance();
@@ -55,10 +57,10 @@ class AdminEDTController extends AbstractController
 
     $scale_right = ConnectionManager::whatScaleRight();
     // Must be exactly 8 or more than 99
-    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+    if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
 
         $edit_rights = 'N';
-        if(($scale_right == 11) || ($scale_right > 99)){
+        if(($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99)){
           $edit_rights = 'Y';
         }
         $mode = 'CRT';
@@ -251,7 +253,7 @@ class AdminEDTController extends AbstractController
 
       $scale_right = ConnectionManager::whatScaleRight();
       // Must be exactly 8 or more than 99
-      if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+      if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
           // We are good
       }
       else{
@@ -461,13 +463,13 @@ class AdminEDTController extends AbstractController
                   $result_get_token = $this->getDailyTokenEDTStr($logger);
 
                   $edit_rights = 'N';
-                  if(($scale_right == 11) || ($scale_right > 99)){
+                  if(($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99)){
                     $edit_rights = 'Y';
                   }
                   $mode = 'LOA'; //'mode' => $mode,
 
                   $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ", 'N')";
-                  if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+                  if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
                       $import_query = "CALL CLI_GET_SHOWJQEDTForADM(" . $master_id . ", 'Y')";
                   }
                   $logger->debug("Show me import_query: " . $import_query);
@@ -751,8 +753,7 @@ class AdminEDTController extends AbstractController
         $logger->debug("Show me query_excel_global_compute_report: " . $query_excel_global_compute_report);
         
 
-        $query_course_report = " SELECT * FROM rep_course_dash; ";
-        $logger->debug("Show me query_course_report: " . $query_course_report);
+        
 
         $query_lastupd = " select DATE_FORMAT(MAX(last_update), '%d-%m-%Y à %Hh%i') AS LASTUPDATE from uac_working_flow where flow_code IN ('ASSIDUI') order by 1 desc; ";
         $logger->debug("Show me query_lastupd: " . $query_lastupd);
@@ -778,8 +779,7 @@ class AdminEDTController extends AbstractController
         $result_report = $dbconnectioninst->query($query_report)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_report: " . count($result_report));
 
-        $result_course_report = $dbconnectioninst->query($query_course_report)->fetchAll(PDO::FETCH_ASSOC);
-        $logger->debug("Show me result_course_report: " . count($result_course_report));
+        
 
         $result_lastupd = $dbconnectioninst->query($query_lastupd)->fetchAll(PDO::FETCH_ASSOC);
         $logger->debug("Show me result_lastupd: " . count($result_lastupd));
@@ -805,7 +805,6 @@ class AdminEDTController extends AbstractController
                                                                   'stats_mis'=>$result_stat_mis,
                                                                   'stats_mis_pp'=>$result_stat_mis_pp,
                                                                   'result_report'=>$result_report,
-                                                                  'result_course_report'=>$result_course_report,
                                                                   'result_query_excel_global_report'=>$result_query_excel_global_report,
                                                                   'result_query_excel_global_compute_report'=>$result_query_excel_global_compute_report,
                                                                   'result_lastupd'=>$result_lastupd,
@@ -912,7 +911,7 @@ class AdminEDTController extends AbstractController
         
 
         $query_all_edt = "CALL CLI_GET_MngEDTp3('N')";
-        if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+        if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
             $create_edt_right = 'Y';
             $query_all_edt = "CALL CLI_GET_MngEDTp3('Y')";
         }
@@ -1001,7 +1000,7 @@ class AdminEDTController extends AbstractController
     $logger->debug("scale_right: " . $scale_right);
     $maxziplimit = $_ENV['ZIP_LIMIT'];
     // Must be exactly 8 or more than 99
-    if(isset($scale_right) &&  (($scale_right == 11) || ($scale_right > 99))){
+    if(isset($scale_right) &&  (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
 
 
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
@@ -1036,7 +1035,7 @@ class AdminEDTController extends AbstractController
 
     $scale_right = ConnectionManager::whatScaleRight();
     // Must be exactly 8 or more than 99
-    if(isset($scale_right) && (($scale_right == 11) || ($scale_right > 99))){
+    if(isset($scale_right) && (($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99))){
         $logger->debug("Firstname: " . $_SESSION["firstname"]);
 
         $maxziplimit = $_ENV['ZIP_LIMIT'];
@@ -1427,7 +1426,7 @@ class AdminEDTController extends AbstractController
                     if ($monday > $current_date){
                       // Everything is fine as we look to upload in future
                     }
-                    elseif(($scale_right == 11) || ($scale_right > 99)){
+                    elseif(($scale_right == self::$my_exact_edtmng_teachermng_access_right) || ($scale_right > 99)){
                       // It is still OK
                       $overpassday = date("d/m/Y", time());
                     }
@@ -1438,7 +1437,7 @@ class AdminEDTController extends AbstractController
 
                       $report_comment =  '<span class="err"><span class="icon-exclamation-circle nav-icon-fa nav-text"></span>&nbsp;ERRB192 Erreur : vous ne pouvez pas charger d\'emploi du temps pour une semaine en cours ou passée.</span>' . '<br>'
                                                         . 'Semaine chargée : ' . $monday . ' Nous sommes le: ' . $current_date . '<br><br>'
-                                                        . 'Désolé ! <span class="err">Si cette opération est nécessaire, vous devez avoir les droits de priorité 11. Vos droits actuels sont de ' . $scale_right . '.</span>. Contactez nous dans ce cas. ' . '<br>'
+                                                        . 'Désolé ! <span class="err">Si cette opération est nécessaire, vous devez avoir les droits de priorité 11*. Vos droits actuels sont de ' . $scale_right . '.</span>. Contactez nous dans ce cas. ' . '<br>'
                                                         . 'Si le problème persiste, veuillez contacter le support technique.<br><br><br>'
                                                         . $report_comment;
 

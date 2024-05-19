@@ -1,4 +1,6 @@
 -- Report are here
+-- Obsolete see the one in mig
+/*
 DROP VIEW IF EXISTS rep_course_dash;
 CREATE VIEW rep_course_dash AS
 SELECT vcc.short_classe AS CLASSE,
@@ -57,7 +59,7 @@ SELECT vcc.short_classe AS CLASSE,
 	AND uel.course_status NOT IN ('1', '2')
 	AND uel.day <= CURRENT_DATE
 	ORDER BY uel.day DESC;
-
+*/
 
 DROP VIEW IF EXISTS rep_no_exit;
 CREATE VIEW rep_no_exit AS

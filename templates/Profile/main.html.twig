@@ -223,7 +223,7 @@
         {% include 'Cartezp/_rawdisplayphoto.html.twig' %}
 
 
-        <div class="user-title">
+        <div class="{% if profile['STU_STILL_ALIVE'] == 'Y' %} user-title {% else %} user-title-nalive {% endif %}">
             <i id="stpf-firstname" class="nrm-txt">{{ profile['FIRSTNAME']|capitalize }}</i> <i id="stpf-lastname" class="nrm-txt">{{ profile['LASTNAME'] }}</i>
         </div>
         <div class="user-subtitle">
@@ -257,17 +257,21 @@
                 <span class="carte-noedit icon-envelope-o nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['EMAIL']|slice(0, 35)|lower }}  </i><br>
                 <span class="carte-noedit icon-envelope-square nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['ADDRESS']|slice(0, 30) }}  </i><br>
                 <span class="carte-noedit icon-thumb-tack nav-icon-fa-sm nav-text"></span><i class="carte-noedit nrm-txt"> {{ profile['CITY']|upper }}  </i><br>
-                {% if result_query_user_ass_info|length > 0 %} 
-                  {% if (result_query_user_ass_info[0]['living_configuration'] == 'F') %} 
-                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
-                  {% elseif (result_query_user_ass_info[0]['living_configuration'] == 'C') %}
-                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en colocation</i>
-                  {% else %}
-                      <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit seul{% if profile['GENRE'] == 'F' %}e{% endif %}</i>
-                  {% endif %}
+                {% if profile['STU_STILL_ALIVE'] == 'Y' %} 
+                        {% if result_query_user_ass_info|length > 0 %} 
+                          {% if (result_query_user_ass_info[0]['living_configuration'] == 'F') %} 
+                              <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
+                          {% elseif (result_query_user_ass_info[0]['living_configuration'] == 'C') %}
+                              <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en colocation</i>
+                          {% else %}
+                              <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit seul{% if profile['GENRE'] == 'F' %}e{% endif %}</i>
+                          {% endif %}
+                        {% else %}
+                          {# Default case #}
+                          <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
+                        {% endif %}
                 {% else %}
-                  {# Default case #}
-                  <span class="icon-group-half nav-icon-fa-sm nav-text"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt">Vit en famille</i>
+                        <span class="icon-exclamation-triangle nav-icon-fa-sm nav-text recap-mis"></span>&nbsp;<i id="stpf-livingconf" class="nrm-txt recap-mis">A abandonné</i>
                 {% endif %}
               </div>
 

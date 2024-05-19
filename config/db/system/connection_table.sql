@@ -81,6 +81,7 @@ SELECT
            mu.lieu_de_naissance AS PL_BIRTH,
            mu.serie_bac AS BAC,
            mu.annee_bac AS YEAR_BAC,
+           mu.still_alive AS STU_STILL_ALIVE,
            DATE_FORMAT(mu.datedenaissance, "%d/%m/%Y") AS BIRTHDAY,
            DATE_FORMAT(mu.datedenaissance, "%m") AS MONTHBDAY,
            vcc.short_classe AS SHORTCLASS,
@@ -89,7 +90,6 @@ SELECT
            IFNULL(mu.city_par1, '') AS PARENT_CITY
   FROM mdl_user mu JOIN uac_showuser uas ON mu.username = uas.username
                   JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id;
-
 
 DROP TABLE IF EXISTS uac_connection_log;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_connection_log` (

@@ -5,6 +5,9 @@ Date.prototype.addDays = function(days) {
   return date;
 }
 
+const EMAIL_REG = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+
+
 const GLOBAL_SEP_ = ";";
 const DEF_ROW_DFT = 20;
 

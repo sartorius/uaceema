@@ -766,6 +766,12 @@ function iniModeOfTheAddGrade(){
         $('#title-add-gra').html('Saisir notes');
         $('#disp-status-cart').html(getVerboseExamStatus(EXAM_STATUS, 'N'));
     }
+    else if(EXAM_STATUS == 'END'){
+        mode = 'O';
+        $('#title-add-gra').html('Revoir les scans & notes');
+        //$('#disp-status-cart').html('<i class="uac-step uac-step-purple">Lecture seule' + addMsg + '</i>');
+        $('#disp-status-cart').html(getVerboseExamStatus(EXAM_STATUS, 'N'));
+    }
     else{
         mode = 'O';
         $('#title-add-gra').html('Voir notes');

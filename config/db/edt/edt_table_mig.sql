@@ -226,71 +226,81 @@ SELECT
 	  AND uel.day > DATE_ADD(CURRENT_DATE, INTERVAL -9 DAY)
 	  ORDER BY uel.day DESC;
 
--- Report are here
-DROP VIEW IF EXISTS rep_course_dash;
-CREATE VIEW rep_course_dash AS
-SELECT vcc.short_classe AS CLASSE,
-	CASE
-                      WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
-                      WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"
-                      WHEN UPPER(DAYNAME(uel.day)) = 'WEDNESDAY' THEN "Mercredi"
-                      WHEN UPPER(DAYNAME(uel.day)) = 'THURSDAY' THEN "Jeudi"
-                      WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
-                      ELSE "Samedi"
-                      END AS JOUR,
-    CASE WHEN uel.course_status = "A" THEN "Présenté sur site"
-         WHEN uel.course_status = "M" THEN "Prof Absent"
-         WHEN uel.course_status = "H" THEN "Présenté hors site"
-         WHEN uel.course_status = "O" THEN "Présenté optionnel"
-    ELSE "Annulé" END AS COURSE_STATUS,
-    REPLACE(CONCAT(fEscapeLineFeed(fEscapeStr(uel.raw_course_title)), ' ', urt.name,
-                CASE WHEN uel.start_time IS NOT NULL THEN CONCAT(" - Début ", uel.start_time) ELSE "" END,
-                CASE WHEN uel.end_time IS NOT NULL THEN CONCAT(" - Fin ", uel.end_time) ELSE "" END), '\\n', ' - ') AS COURS_DETAILS,
-    DATE_FORMAT(uel.day, "%d/%m") AS COURS_DATE,
-    CASE
-                      WHEN DATE_FORMAT(uel.day, "%m") = '01' THEN "Janvier"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '02' THEN "Février"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '03' THEN "Mars"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '04' THEN "Avril"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '05' THEN "Mai"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '06' THEN "Juin"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '07' THEN "Juillet"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '08' THEN "Aout"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '09' THEN "Septembre"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '10' THEN "Octobre"
-                      WHEN DATE_FORMAT(uel.day, "%m") = '11' THEN "Novembre"
-                      ELSE "Décembre"
-                      END AS MOIS,
-    CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN '00' ELSE uel.min_starts_at END) AS DEBUT_COURS,
-    CASE WHEN t_abs.abs_cnt IS NULL THEN 0 ELSE t_abs.abs_cnt END AS NBR_ABS,
-    CASE WHEN t_qui.qui_cnt IS NULL THEN 0 ELSE t_qui.qui_cnt END AS NBR_QUI, t_cohort_count.cohort_count AS NUMBER_STUD,
-    CASE WHEN uao.id IS NULL THEN 'NON' ELSE 'OUI' END AS OFF_DAY, uel.day AS TECH_DAY, uel.hour_starts_at AS TECH_HOUR
-	FROM (
-		SELECT edt_id AS abs_edt_id, count(1) AS abs_cnt
-		FROM uac_assiduite
-		WHERE status = 'ABS'
-		GROUP BY edt_id
-  ) t_abs RIGHT JOIN uac_edt_line uel ON uel.id = t_abs.abs_edt_id
-                JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
-	 LEFT JOIN (
-		SELECT edt_id AS qui_edt_id, count(1) AS qui_cnt
-		FROM uac_assiduite
-		WHERE status = 'QUI'
-		GROUP BY edt_id
-	 ) t_qui ON uel.id = t_qui.qui_edt_id
-	 JOIN uac_edt_master uem ON uel.master_id = uem.id
-								AND uem.visibility = 'V'
-	JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
-	JOIN (
-	SELECT cohort_id AS vshcohort_id, count(1) AS cohort_count
-	FROM v_showuser
-	GROUP BY cohort_id
-	) t_cohort_count ON t_cohort_count.vshcohort_id = uem.cohort_id
-	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
-	WHERE uel.duration_hour > 0
-	AND uel.day <= CURRENT_DATE
+
+    -- Report are here
+    -- This is a report to see course which has been presented
+    -- And see the teacher missing courses
+    DROP VIEW IF EXISTS rep_course_dash;
+    CREATE VIEW rep_course_dash AS
+    SELECT vcc.short_classe AS CLASSE,
+      urt.name AS TEACHER,
+      urt.id AS TEACHER_ID,
+    	CASE
+                          WHEN UPPER(DAYNAME(uel.day)) = 'MONDAY' THEN "Lundi"
+                          WHEN UPPER(DAYNAME(uel.day)) = 'TUESDAY' THEN "Mardi"
+                          WHEN UPPER(DAYNAME(uel.day)) = 'WEDNESDAY' THEN "Mercredi"
+                          WHEN UPPER(DAYNAME(uel.day)) = 'THURSDAY' THEN "Jeudi"
+                          WHEN UPPER(DAYNAME(uel.day)) = 'FRIDAY' THEN "Vendredi"
+                          ELSE "Samedi"
+                          END AS JOUR,
+        CASE WHEN uel.course_status = "A" THEN "Présenté sur site"
+             WHEN uel.course_status = "M" THEN "Prof Absent"
+             WHEN uel.course_status = "H" THEN "Présenté hors site"
+             WHEN uel.course_status = "O" THEN "Présenté optionnel"
+        ELSE "Annulé" END AS COURSE_STATUS,
+        uel.shift_duration/2 AS DURATION_HOUR,
+        REPLACE(CONCAT(fEscapeLineFeed(fEscapeStr(uel.raw_course_title)), ' ', urt.name,
+                    CASE WHEN uel.start_time IS NOT NULL THEN CONCAT(" - Début ", uel.start_time) ELSE "" END,
+                    CASE WHEN uel.end_time IS NOT NULL THEN CONCAT(" - Fin ", uel.end_time) ELSE "" END), '\\n', ' - ') AS COURS_DETAILS,
+        DATE_FORMAT(uel.day, "%d/%m") AS COURS_DATE,
+        CASE
+                          WHEN DATE_FORMAT(uel.day, "%m") = '01' THEN "Janvier"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '02' THEN "Février"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '03' THEN "Mars"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '04' THEN "Avril"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '05' THEN "Mai"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '06' THEN "Juin"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '07' THEN "Juillet"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '08' THEN "Aout"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '09' THEN "Septembre"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '10' THEN "Octobre"
+                          WHEN DATE_FORMAT(uel.day, "%m") = '11' THEN "Novembre"
+                          ELSE "Décembre"
+                          END AS MOIS,
+        CONCAT(uel.hour_starts_at, 'h', CASE WHEN (CHAR_LENGTH(uel.min_starts_at) = 1) THEN '00' ELSE uel.min_starts_at END) AS DEBUT_COURS,
+        CASE WHEN t_abs.abs_cnt IS NULL THEN 0 ELSE t_abs.abs_cnt END AS NBR_ABS,
+        CASE WHEN t_qui.qui_cnt IS NULL THEN 0 ELSE t_qui.qui_cnt END AS NBR_QUI, t_cohort_count.cohort_count AS NUMBER_STUD,
+        CASE WHEN uao.id IS NULL THEN 'NON' ELSE 'OUI' END AS OFF_DAY, uel.day AS TECH_DAY, uel.hour_starts_at AS TECH_HOUR,
+        uel.day AS UEL_TECH_DAY
+    	FROM (
+    		SELECT edt_id AS abs_edt_id, count(1) AS abs_cnt
+    		FROM uac_assiduite
+    		WHERE status = 'ABS'
+    		GROUP BY edt_id
+      ) t_abs RIGHT JOIN uac_edt_line uel ON uel.id = t_abs.abs_edt_id
+                    JOIN uac_ref_teacher urt ON urt.id = uel.teacher_id
+    	 LEFT JOIN (
+    		SELECT edt_id AS qui_edt_id, count(1) AS qui_cnt
+    		FROM uac_assiduite
+    		WHERE status = 'QUI'
+    		GROUP BY edt_id
+    	 ) t_qui ON uel.id = t_qui.qui_edt_id
+    	 JOIN uac_edt_master uem ON uel.master_id = uem.id
+    								AND uem.visibility = 'V'
+    	JOIN v_class_cohort vcc ON vcc.id = uem.cohort_id
+    	JOIN (
+    	SELECT cohort_id AS vshcohort_id, count(1) AS cohort_count
+    	FROM v_showuser
+    	GROUP BY cohort_id
+    	) t_cohort_count ON t_cohort_count.vshcohort_id = uem.cohort_id
+    	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
+    	WHERE (uel.duration_hour + uel.duration_min) > 0
+    	AND uel.day <= CURRENT_DATE;
+  -- Add clause use UEL_TECH_DAY
+  /*
 	AND (uel.day > (CURDATE() + interval -(35) day))
 	ORDER BY uel.day DESC;
+  */
 
 -- Find fill up here : https://docs.google.com/spreadsheets/d/1k0sESkSmMPVc2PPN-cL4oPznnEmClZLn5Qsjq4uDiZ0/edit?usp=sharing
 -- INSERT INTO uac_ref_teacher (id, name) VALUES (NULL, NULL);

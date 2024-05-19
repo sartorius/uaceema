@@ -1,4 +1,5 @@
-{% include 'RawTemplate/_hearder.html.twig' %}
+{# include 'RawTemplate/_hearder.html.twig' #}
+{% include 'RawTemplate/_hearder.w.jsgrid.html.twig' %}
 {% set free_i = random(['1', '2', '3', '4', '5', '6', '7']) %}
 
 
@@ -6,6 +7,8 @@
 {% if result_query_get_all_edt is defined and result_query_get_all_edt is not null %}
     <script>
       let dataAllEDTLoadToJsonArray = JSON.parse('{{ result_query_get_all_edt | json_encode | raw }}');
+
+      let dataAllTEAToJsonArray =JSON.parse('{{ result_allteach_query | json_encode | raw }}');
 
         // Data to be filled for the EDT
         let dataLoadToJsonArray = new Array();
@@ -43,15 +46,17 @@
         <hr>
         {% if result_query_get_all_master_id|length > 0 %}
             Voici la liste des emplois du temps publié(s) de cette semaine :<br>
+            <button type="button" class="btn btn-outline-dark btn-list-ace btn-lg" onclick="goToAllEDT('-recap-all')">Récapitulatif mensuel</button> <br>
             {% for el in result_query_get_all_master_id %}
                 <button type="button" class="btn btn-dark btn-list-ace" onclick="goToAllEDT({{ el.UEM_ID }})">{{ el.VCC_SHORT_CLASS }}</button> <br>
             {% endfor %}
             <hr>
             <div class="mgs-note">
-                <i class="icon-exclamation-circle nav-icon-fa-sm nav-text"></i>NA : indique "non applicable" le titre de l'emploi du temps ou le groupe de la classe peut être na.
+                <i class="icon-exclamation-circle nav-icon-fa-sm nav-text"></i>&nbsp;NA : indique "non applicable" le titre de l'emploi du temps ou le groupe de la classe peut être na.<br>
+                <i class="icon-bar-chart nav-icon-fa-sm nav-text"></i>&nbsp;Le récapitulatif mensuel contient les données du mois en cours basé sur les données déjà partagés sur cette même page.
             </div>
         {% else %}
-            Aucun emploi du temps n'a été publié pour cette semaine.
+            Aucun emploi du temps n'a été publié pour cette semaine. Pour rappel, les chefs de mention sont tenus de fournir les emplois du temps de la semaine le jeudi précédent au plus tard.
         {% endif %}
         </div>
     </div>
@@ -78,5 +83,24 @@
     {% endfor %}
 {% endif %}
 
+
+
+<div class="row" id="grid-all-tea">
+  <div class="col-2">
+  </div>
+  <div class="col-8">
+    <hr>
+    <div id='edt-ttl-recap-all'></div>
+    <h1>Récapitulatif mensuel</h1>
+      <div class="mgs-note-banner">
+          Ceci est un récapitulatif mensuel basé sur les EDT du mois en cours. Le détails complet des cours du mois est disponible sur l'écran Manager Enseignant accessible aux chefs de mention et à l'administration.<br>
+          Le calcul est encore en phase de test et n'est pas pris en compte administrativement. Si vous constatez une erreur, décrivez-nous précisément le problème et ce qu'il faut changer via admin@uaceem.com 
+      </div>
+    <div id="jsGridAllTEA">
+    </div>
+  </div>
+  <div class="col-2">
+  </div>
+</div>
 
 {% include 'RawTemplate/SPE/_footeralledtpublic.html.twig' %}

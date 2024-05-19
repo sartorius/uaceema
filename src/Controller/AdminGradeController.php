@@ -1511,6 +1511,7 @@ class AdminGradeController extends AbstractController{
                                                                         'lastname' => $_SESSION["lastname"],
                                                                         'id' => $_SESSION["id"],
                                                                         'scale_right' => ConnectionManager::whatScaleRight(),
+                                                                        'master_id' => $master_id,
                                                                         'result_one_ugm' => $result_one_ugm,
                                                                         'result_all_ugg' => $result_all_ugg,
                                                                         'result_class_per_subject_query' => $result_class_per_subject_query,

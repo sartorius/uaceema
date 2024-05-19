@@ -116,6 +116,12 @@ dashboardass:
 managerstu:
     path:       /managerstu
     controller: App\Controller\AdminSTUController::managerstu
+managertea:
+    path:       /managertea
+    controller: App\Controller\AdminTeacherController::managertea
+generateTeacherModifyCreateDB:
+    path:       /generateTeacherModifyCreateDB
+    controller: App\Controller\AdminTeacherController::generateTeacherModifyCreateDB
 checklastscan:
     path:       /checklastscan
     controller: App\Controller\AdminSTUController::checklastscan
