@@ -984,7 +984,7 @@ function generateCourseReportCSV(paramMonth){
                   + SEP_ + involvedArray[i].NUMBER_STUD 
                   + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : parseFloat((parseInt(involvedArray[i].NUMBER_STUD) - (parseInt(involvedArray[i].NBR_ABS))) * 100 / (parseInt(involvedArray[i].NUMBER_STUD))).toFixed(2))
                   // Be carefull of the division per zero
-                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : ( parseInt(involvedArray[i].NUMBER_STUD) == parseInt(involvedArray[i].NBR_ABS) ? 0 : parseFloat((parseInt(involvedArray[i].NBR_QUI)) * 100 / (parseInt(involvedArray[i].NUMBER_STUD) - parseInt(involvedArray[i].NBR_ABS))).toFixed(2)))
+                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : ( parseInt(involvedArray[i].NUMBER_STUD) == parseInt(involvedArray[i].NBR_ABS) ? "na" : parseFloat((parseInt(involvedArray[i].NBR_QUI)) * 100 / (parseInt(involvedArray[i].NUMBER_STUD) - parseInt(involvedArray[i].NBR_ABS))).toFixed(2)))
                   + SEP_  + involvedArray[i].OFF_DAY + SEP_ + involvedArray[i].COURS_DETAILS + SEP_ ;
     // easy close here
     csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
