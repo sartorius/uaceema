@@ -506,6 +506,29 @@ function hydrateMyTeacher(paramId){
   $('#pf-email').val(invEmail);
   $('#pf-noteass').val(invComment);
 
+
+
+  // INITIALISATION OF ALL CHECK BOX
+  //Manage mention list
+  for(let j=0; j<ARRAY_REF_MENTION_CODE.length; j++){
+    document.getElementById("id-" + ARRAY_REF_MENTION_CODE[j].par_code).checked = false;
+    document.getElementById("id-" + ARRAY_REF_MENTION_CODE[j].par_code).disabled = false;
+  }
+  let listOfMentionCode = invTEA_ALL_MENTION_CODE.split('/');
+  for(let i=0; i<listOfMentionCode.length; i++){
+    if(listOfMentionCode[i].length > 0){
+      document.getElementById("id-" + listOfMentionCode[i]).checked = true;
+    }
+    else{
+      // Do nothing. In the simple case, there will be an end separator
+    }
+  }
+
+  // Now we have to block if any course uel or exam is passed
+  // blockTEA_UEL_ALL_MENTION_CODE blockTEA_UGM_ALL_MENTION_CODE
+  disableHydrateBlockedCheckbox(blockTEA_UEL_ALL_MENTION_CODE);
+  disableHydrateBlockedCheckbox(blockTEA_UGM_ALL_MENTION_CODE);
+
   // Handle the specific option cases updateProfStatus('stt-'+invModifyLivingConfiguration.toLowerCase());
   /*
   <button id="tit-o" type="button" value="O" class="btn btn-outline-secondary tit-group active">Monsieur</button>
@@ -583,27 +606,6 @@ function hydrateMyTeacher(paramId){
       // code block
   }
   manageNoteModifyTeacher(true);
-
-  // INITIALISATION OF ALL CHECK BOX
-  //Manage mention list
-  for(let j=0; j<ARRAY_REF_MENTION_CODE.length; j++){
-    document.getElementById("id-" + ARRAY_REF_MENTION_CODE[j].par_code).checked = false;
-    document.getElementById("id-" + ARRAY_REF_MENTION_CODE[j].par_code).disabled = false;
-  }
-  let listOfMentionCode = invTEA_ALL_MENTION_CODE.split('/');
-  for(let i=0; i<listOfMentionCode.length; i++){
-    if(listOfMentionCode[i].length > 0){
-      document.getElementById("id-" + listOfMentionCode[i]).checked = true;
-    }
-    else{
-      // Do nothing. In the simple case, there will be an end separator
-    }
-  }
-
-  // Now we have to block if any course uel or exam is passed
-  // blockTEA_UEL_ALL_MENTION_CODE blockTEA_UGM_ALL_MENTION_CODE
-  disableHydrateBlockedCheckbox(blockTEA_UEL_ALL_MENTION_CODE);
-  disableHydrateBlockedCheckbox(blockTEA_UGM_ALL_MENTION_CODE);
 
 }
 
