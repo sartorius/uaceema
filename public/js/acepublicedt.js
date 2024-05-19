@@ -215,7 +215,7 @@ function goToAllEDT(paramAnchor){
 function loadAllTeaGrid(){
   refTeaField = [
       { name: "TEA_ID",
-        title: "#",
+        title: "id.",
         type: "number",
         width: 3,
         align: "center",
@@ -231,7 +231,7 @@ function loadAllTeaGrid(){
       { name: "MANSUM_P_SHIFT_DURATION",
         title: "Durée cours présent",
         type: "number",
-        width: 25,
+        width: 30,
         headercss: "cell-ref-uac-sm-hd",
         css: "cell-ref-uac-sm",
         itemTemplate: function(value, item) {
@@ -249,7 +249,7 @@ function loadAllTeaGrid(){
       { name: "MANSUM_M_SHIFT_DURATION",
         title: "Durée cours absent",
         type: "number",
-        width: 25,
+        width: 30,
         headercss: "cell-ref-uac-sm-hd",
         css: "cell-ref-uac-sm",
         itemTemplate: function(value, item) {
