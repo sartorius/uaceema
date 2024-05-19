@@ -972,10 +972,17 @@ function generateCourseReportCSV(paramMonth){
     verboseMonth = "MoisPrecedent_";
   }
 
-	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Enseignant en charge" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Durée en heure" + SEP_ + "Debute" + SEP_ + "Nombre absence" + SEP_ + "Nombre quittant" + SEP_ + "Nbr etudiant total dans la classe" + SEP_ + "Journee non-comptee" + SEP_ + "Detail du cours" + SEP_ + "\n";
+	let dataString = "Classe" + SEP_ + "Jour" + SEP_ + "Enseignant en charge" + SEP_ + "Date du cours" + SEP_  + "Mois du cours" + SEP_  + "Status du cours" + SEP_ + "Durée en heure" + SEP_ + "Debute" + SEP_ + "Nombre absence" + SEP_ + "Qav. - Nombre quittant" + SEP_ + "Nbr etudiant total dans la classe" + SEP_ + "%Présent" + SEP_ + "%Qav." + SEP_ + "Journee non-comptee" + SEP_ + "Detail du cours" + SEP_ + "\n";
 	csvContent += dataString;
 	for(var i=0; i<involvedArray.length; i++){
-		dataString = involvedArray[i].CLASSE + SEP_ + involvedArray[i].JOUR + SEP_ + involvedArray[i].TEACHER + SEP_ + involvedArray[i].COURS_DATE + SEP_ +  involvedArray[i].MOIS + SEP_ +  involvedArray[i].COURSE_STATUS + SEP_ + parseFloat(involvedArray[i].DURATION_HOUR).toFixed(1) + SEP_ + involvedArray[i].DEBUT_COURS + SEP_ + involvedArray[i].NBR_ABS + SEP_ + involvedArray[i].NBR_QUI + SEP_ + involvedArray[i].NUMBER_STUD + SEP_  + involvedArray[i].OFF_DAY + SEP_ + involvedArray[i].COURS_DETAILS + SEP_ ;
+		dataString = involvedArray[i].CLASSE + SEP_ + involvedArray[i].JOUR + SEP_ + involvedArray[i].TEACHER + SEP_ + involvedArray[i].COURS_DATE + SEP_ +  involvedArray[i].MOIS + SEP_ +  involvedArray[i].COURSE_STATUS 
+                  + SEP_ + parseFloat(involvedArray[i].DURATION_HOUR).toFixed(1) + SEP_ + involvedArray[i].DEBUT_COURS 
+                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : involvedArray[i].NBR_ABS)
+                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : involvedArray[i].NBR_QUI)
+                  + SEP_ + involvedArray[i].NUMBER_STUD 
+                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : parseFloat((parseInt(involvedArray[i].NUMBER_STUD) - (parseInt(involvedArray[i].NBR_ABS))) * 100 / (parseInt(involvedArray[i].NUMBER_STUD))).toFixed(2))
+                  + SEP_ + (involvedArray[i].COURSE_CAN_BE_STAT == "N" ? "na" : parseFloat((parseInt(involvedArray[i].NBR_QUI)) * 100 / (parseInt(involvedArray[i].NUMBER_STUD) - parseInt(involvedArray[i].NBR_ABS))).toFixed(2))
+                  + SEP_  + involvedArray[i].OFF_DAY + SEP_ + involvedArray[i].COURS_DETAILS + SEP_ ;
     // easy close here
     csvContent += i < involvedArray.length ? dataString+ "\n" : dataString;
 	}

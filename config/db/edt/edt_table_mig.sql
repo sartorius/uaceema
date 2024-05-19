@@ -248,6 +248,8 @@ SELECT
              WHEN uel.course_status = "H" THEN "Présenté hors site"
              WHEN uel.course_status = "O" THEN "Présenté optionnel"
         ELSE "Annulé" END AS COURSE_STATUS,
+        -- We need to stat if the course can be statistic
+        CASE WHEN (uel.course_status IN ("M", "C") OR (uel.day > (CURDATE() + interval -(1) day))) THEN "N" ELSE "Y" END AS COURSE_CAN_BE_STAT,
         uel.shift_duration/2 AS DURATION_HOUR,
         REPLACE(CONCAT(fEscapeLineFeed(fEscapeStr(uel.raw_course_title)), ' ', urt.name,
                     CASE WHEN uel.start_time IS NOT NULL THEN CONCAT(" - Début ", uel.start_time) ELSE "" END,
@@ -295,9 +297,11 @@ SELECT
     	) t_cohort_count ON t_cohort_count.vshcohort_id = uem.cohort_id
     	LEFT JOIN uac_assiduite_off uao ON uao.working_date = uel.day
     	WHERE (uel.duration_hour + uel.duration_min) > 0
-    	AND uel.day <= CURRENT_DATE;
+      -- Restrict to 90 days
+    	AND (uel.day > (CURDATE() + interval -(90) day));
   -- Add clause use UEL_TECH_DAY
   /*
+  AND uel.day <= CURRENT_DATE;
 	AND (uel.day > (CURDATE() + interval -(35) day))
 	ORDER BY uel.day DESC;
   */
