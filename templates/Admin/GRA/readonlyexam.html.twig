@@ -11,6 +11,9 @@
     // Statistics  
     let dataStatAverageArray = JSON.parse('{{ result_stat_average | json_encode | raw }}');
     let dataStatGradeRepArray = JSON.parse('{{ result_stat_grade_rep | json_encode | raw }}');
+
+    // This is to see if we can have access to the written exam
+    const WRITE_ACCESS = '{{ write_access }}';
     
   </script>
 {% else %}
@@ -74,7 +77,11 @@
     
   </div>
   <div class="col-1">
-    <button onclick="goToEndScan({{ master_id }})" class="btn btn-outline-dark"><i class="icon-clipboard"></i>&nbsp;Revoir scan</button>
+        {% if (write_access == 'Y') %}
+              <button onclick="goToEndScan({{ master_id }})" class="btn btn-outline-dark"><i class="icon-clipboard"></i>&nbsp;Revoir scan</button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
   </div>
   <div class="col-2">
 

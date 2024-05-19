@@ -1505,6 +1505,14 @@ class AdminGradeController extends AbstractController{
                                     . " GROUP BY CATEGORY, ORD ORDER BY ORD; ";
                 $logger->debug("Show stat_grade_rep: " . $stat_grade_rep);
                 $result_stat_grade_rep = $dbconnectioninst->query($stat_grade_rep)->fetchAll(PDO::FETCH_ASSOC);
+
+                
+                
+                $write_access = 'N';
+                if(isset($scale_right) &&  (($scale_right == self::$my_exact_access_right) || ($scale_right > 99))){
+                    $write_access = 'Y';
+                }
+                
     
                 $content = $twig->render('Admin/GRA/readonlyexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                         'firstname' => $_SESSION["firstname"],
@@ -1512,6 +1520,7 @@ class AdminGradeController extends AbstractController{
                                                                         'id' => $_SESSION["id"],
                                                                         'scale_right' => ConnectionManager::whatScaleRight(),
                                                                         'master_id' => $master_id,
+                                                                        'write_access' => $write_access,
                                                                         'result_one_ugm' => $result_one_ugm,
                                                                         'result_all_ugg' => $result_all_ugg,
                                                                         'result_class_per_subject_query' => $result_class_per_subject_query,
