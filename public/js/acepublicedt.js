@@ -229,9 +229,9 @@ function loadAllTeaGrid(){
         css: "cell-ref-uac-sm"
       },
       { name: "MANSUM_P_SHIFT_DURATION",
-        title: "Cours présent",
+        title: "Durée cours présent",
         type: "number",
-        width: 20,
+        width: 25,
         headercss: "cell-ref-uac-sm-hd",
         css: "cell-ref-uac-sm",
         itemTemplate: function(value, item) {
@@ -239,17 +239,17 @@ function loadAllTeaGrid(){
             return '0';
           }
           else if( (value % 2) > 0){
-            return Math.floor(value / 2) + 'h30';
+            return Math.floor(value / 2) + '.5';
           }
           else{
-            return Math.floor(value / 2) + 'h00';
+            return Math.floor(value / 2) + '.0';
           }
         }
       },
       { name: "MANSUM_M_SHIFT_DURATION",
-        title: "Cours absent",
+        title: "Durée cours absent",
         type: "number",
-        width: 20,
+        width: 25,
         headercss: "cell-ref-uac-sm-hd",
         css: "cell-ref-uac-sm",
         itemTemplate: function(value, item) {
@@ -257,10 +257,10 @@ function loadAllTeaGrid(){
             return '0';
           }
           else if( (value % 2) > 0){
-            return Math.floor(value / 2) + 'h30';
+            return Math.floor(value / 2) + '.5';
           }
           else{
-            return Math.floor(value / 2) + 'h00';
+            return Math.floor(value / 2) + '.0';
           }
         }
       },

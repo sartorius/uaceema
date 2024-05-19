@@ -792,10 +792,10 @@ function loadAllTeaGrid(){
               return '0';
             }
             else if( (value % 2) > 0){
-              return Math.floor(value / 2) + 'h30';
+              return Math.floor(value / 2) + '.5';
             }
             else{
-              return Math.floor(value / 2) + 'h00';
+              return Math.floor(value / 2) + '.0';
             }
           }
         },
@@ -810,10 +810,10 @@ function loadAllTeaGrid(){
               return '0';
             }
             else if( (value % 2) > 0){
-              return Math.floor(value / 2) + 'h30';
+              return Math.floor(value / 2) + '.5';
             }
             else{
-              return Math.floor(value / 2) + 'h00';
+              return Math.floor(value / 2) + '.0';
             }
           }
         },
