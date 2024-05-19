@@ -250,7 +250,7 @@ class StaticController extends AbstractController
                           . " FROM uac_ref_teacher urt JOIN v_all_mention_teacher vat ON urt.id = vat.TEA_ID "
                           . " LEFT JOIN v_all_presented_per_teacher vp ON vp.VPC_TEA_ID = urt.id "
                           . " LEFT JOIN v_all_missing_per_teacher vm ON vm.VMC_TEA_ID = urt.id "
-                          . " WHERE 1=1 AND (IFNULL(SUM_P_SHIFT_DURATION, 0) + IFNULL(SUM_M_SHIFT_DURATION, 0)) > 0 ORDER BY MANSUM_P_SHIFT_DURATION DESC; ";
+                          . " WHERE 1=1 AND (IFNULL(SUM_P_SHIFT_DURATION, 0) + IFNULL(SUM_M_SHIFT_DURATION, 0)) > 0 ORDER BY UPPER(CONCAT(urt.lastname, urt.firstname)) ASC; ";
 
           $logger->debug("Show me allteach_query: " . $allteach_query);
           $dbconnectioninst = DBConnectionManager::getInstance();
