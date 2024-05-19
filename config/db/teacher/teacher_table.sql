@@ -121,12 +121,20 @@ SELECT ugm.teacher_id AS UGM_TEA_ID, GROUP_CONCAT(DISTINCT vcc.mention_code
 								 		GROUP BY ugm.teacher_id;
 
 
+DROP VIEW IF EXISTS v_u_edt_line_per_teacher_permonth;
+CREATE VIEW v_u_edt_line_per_teacher_permonth AS
+SELECT DISTINCT uel.teacher_id, uel.day, uel.course_status, uel.hour_starts_at, uel.min_starts_at, uel.shift_duration
+FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id
+																							 AND uem.visibility = 'V'
+WHERE uel.teacher_id > 0
+AND (uel.day between  DATE_FORMAT(NOW() ,'%Y-%m-01') AND last_day(curdate()));
+
 -- All presented courses current month
 -- C is for cancelled and M is for Prof absent
 DROP VIEW IF EXISTS v_all_presented_per_teacher;
 CREATE VIEW v_all_presented_per_teacher AS
-SELECT uel.teacher_id AS VPC_TEA_ID, SUM(uel.shift_duration) AS SUM_P_SHIFT_DURATION FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id
-																							 AND uem.visibility = 'V'
+SELECT uel.teacher_id AS VPC_TEA_ID, SUM(uel.shift_duration) AS SUM_P_SHIFT_DURATION
+FROM v_u_edt_line_per_teacher_permonth uel
 WHERE uel.teacher_id > 0
 AND (uel.day between  DATE_FORMAT(NOW() ,'%Y-%m-01') AND last_day(curdate()))
 AND uel.course_status NOT IN ('C', 'M')
@@ -137,8 +145,8 @@ GROUP BY uel.teacher_id;
 -- M is for Prof Absent
 DROP VIEW IF EXISTS v_all_missing_per_teacher;
 CREATE VIEW v_all_missing_per_teacher AS
-SELECT uel.teacher_id AS VMC_TEA_ID, SUM(uel.shift_duration) AS SUM_M_SHIFT_DURATION FROM uac_edt_line uel JOIN uac_edt_master uem ON uel.master_id = uem.id
-																							 AND uem.visibility = 'V'
+SELECT uel.teacher_id AS VMC_TEA_ID, SUM(uel.shift_duration) AS SUM_M_SHIFT_DURATION
+FROM v_u_edt_line_per_teacher_permonth uel
 WHERE uel.teacher_id > 0
 AND (uel.day between  DATE_FORMAT(NOW() ,'%Y-%m-01') AND last_day(curdate()))
 AND uel.course_status IN ('M')
