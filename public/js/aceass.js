@@ -2284,7 +2284,7 @@ $(document).ready(function() {
           loadGraGrid();
           initGraShortCut();
           if(CAN_WE_DISPLAY_TEMP_GRA == 'N'){
-              $('#jury-info').html("Les notes ne sont plus visibles sur le dashboard étudiant parce que le jury a fini de délibérer.<br>Les résultats finaux sont affichés en papier à l'université.")
+              $('#jury-info').html("Les notes ne sont plus visibles sur le dashboard étudiant parce que le jury a fini de délibérer.<br>Les résultats finaux sont affichés en papier à l'université.");
           }
       }
       else if(paramDispGraPublic == 'Y'){
