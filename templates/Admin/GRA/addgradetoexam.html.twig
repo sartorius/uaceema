@@ -62,11 +62,18 @@
 <div class="row  btn-banner btn-layer">
     <div class="col-1">
     </div>
-    <div class="col-2 menu-dropdown">
+    <div class="col-2">
         <a class="btn btn-outline-dark btn-sm btn-up-menu" href="/managergraexam" role="button"><span class="icon-arrow-left nav-text"></span>&nbsp;&nbsp;Manager examen</a>
     </div>
-    <div class="col-8">
+    <div class="col-7">
 
+    </div>
+    <div class="col-1">
+        {% if (exam_status == 'END') %}
+            <button onclick="goToRollback({{ master_id }})" class="btn btn-dark"><i class="icon-gavel"></i>&nbsp;Modifier</button>
+        {% else %}
+            {# Display nothing #}
+        {% endif %}
     </div>
 </div>
 
@@ -233,6 +240,8 @@
 
 
 
+{# Necessary go to exam scan #}
+{% include 'Admin/GRA/_gotoexamforgradefrommng.html.twig' %}
 {% include 'Admin/GRA/_modaladdgra.html.twig' %}
 {% include 'Admin/GRA/_gotomngfromgrade.html.twig' %}
 {% include 'RawTemplate/SPE/_footeraddgratoexam.html.twig' %}

@@ -193,8 +193,10 @@ function runStatDashboardPay(){
 
 function goToEndScan(paramGraId){
   $("#read-master-id").val(paramGraId);
+  $("#read-rollback-order").val('N');
   $("#mg-grade-master-id-form").submit();
 }
+
 
 function generateAllGraReport(){
     const csvContentType = "data:text/csv;charset=utf-8,";

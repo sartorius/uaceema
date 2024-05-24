@@ -65,6 +65,23 @@ class AdminGradeController extends AbstractController{
                 $inv_subject_id = $result_get_exam_query[0]['UGM_SUBJECT_ID'];
                 $exam_status = $result_get_exam_query[0]['UGM_STATUS'];
                 $exam_mention_code = $result_get_exam_query[0]['URS_MENTION_CODE'];
+
+                // We have to handle the rollback here : read-rollback-order
+                $rollback_subquery = "";
+                if((isset($_POST["read-rollback-order"]))
+                        && ($_POST["read-rollback-order"] != null)){
+                    if(($exam_status == 'END') && ($_POST["read-rollback-order"] == 'Y')){
+                        // The rollback work only on END status else we do not change
+                        $rollback_subquery = "UPDATE uac_gra_master SET last_update = CURRENT_TIMESTAMP, status = 'FED' WHERE id = " . $post_master_id . " AND last_agent_id NOT IN (" . $_SESSION["id"] . "); ";
+                        $exam_status = 'FED';
+
+                        $result_rollback_subquery = $dbconnectioninst->query($rollback_subquery)->fetchAll(PDO::FETCH_ASSOC);
+                        $logger->debug("Show me result_rollback_subquery: " . count($result_rollback_subquery));
+                    }
+                    //Else we do nothing
+                }
+
+
                 // TODO Review list of stu
                 // NEW* > LOA > FED > REV* > END*
                 if(($exam_status == 'FED')
@@ -72,6 +89,7 @@ class AdminGradeController extends AbstractController{
                     || ($exam_status == 'END')){
                     // Review cases !
                     // Data already exists. We need to load them.
+                    // Be carefull the rollback is performed here !
                     $allusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, ugg.grade AS HID_GRA, ugg.gra_status AS GRA_STATUS, 'N' AS DIRTY_GRA, ugg.id AS GRA_ID, fGetMatriculeNum(vsh.MATRICULE) AS VSH_SMATRICULE FROM v_showuser vsh JOIN uac_gra_grade ugg ON vsh.ID = ugg.user_id AND ugg.master_id = " . $post_master_id . " ORDER BY ugg.id ASC; ";
                     
                     $allothermentionusr_query = " SELECT vsh.ID AS VSH_ID, vsh.FIRSTNAME AS VSH_FIRSTNAME, vsh.LASTNAME AS VSH_LASTNAME, UPPER(vsh.USERNAME) AS VSH_USERNAME, vsh.SHORTCLASS AS OTH_CLASS, 'x' AS HID_GRA, 'x' AS GRA_STATUS, "
@@ -136,14 +154,16 @@ class AdminGradeController extends AbstractController{
                                         . " JOIN v_class_cohort vcc ON vcc.id = xref.cohort_id WHERE urs.id = " . $result_get_exam_query[0]['UGM_SUBJECT_ID'] . " GROUP BY urs.id; ";
                 $logger->debug("Show me class_per_subject_query: " . $class_per_subject_query);
                 $result_class_per_subject_query = $dbconnectioninst->query($class_per_subject_query)->fetchAll(PDO::FETCH_ASSOC);
-    
+
+               
                 
                 $content = $twig->render('Admin/GRA/addgradetoexam.html.twig', ['amiconnected' => ConnectionManager::amIConnectedOrNot(),
                                                                     'firstname' => $_SESSION["firstname"],
                                                                     'lastname' => $_SESSION["lastname"],
                                                                     'id' => $_SESSION["id"],
-                                                                    'result_get_token' => $result_get_token,
                                                                     'result_all_usr' => $result_all_usr,
+                                                                    'result_get_token' => $result_get_token,
+                                                                    'master_id' => $post_master_id,
                                                                     'result_allothermentionusr_query' => $result_allothermentionusr_query,
                                                                     'post_master_id' => $post_master_id,
                                                                     'exam_status' => $exam_status,

@@ -785,6 +785,11 @@ function iniModeOfTheAddGrade(){
 }
 
 
+function goToRollback(paramGraId){
+    $("#read-master-id").val(paramGraId);
+    $("#read-rollback-order").val('Y');
+    $("#mg-grade-master-id-form").submit();
+}
 
 
 $(document).ready(function() {

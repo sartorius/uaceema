@@ -291,18 +291,40 @@ function initAllExamGrid(){
         filterDataAllExam();
     });
     $('#re-init-dash-exa').click(function() {
-      $('#filter-all-exa').val('');
-      clearDataAllExam();
+      updateFilterSTTStatus('stt-a');
+      //This will call : clearDataAllExam();
     });
 }
   
 function filterDataAllExam(){
+    let currentFilter = retrieveWhichFilterIsActive();
+
     if(($('#filter-all-exa').val().length > 1) && ($('#filter-all-exa').val().length < 35)){
       //console.log('We need to filter !' + $('#filter-all').val());
       filtereddataAllExamToJsonArray = dataAllExamToJsonArray.filter(function (el) {
-                                        return el.raw_data.includes($('#filter-all-exa').val().toUpperCase())
+                                        if(currentFilter == "ALL"){
+                                          if (el.raw_data.includes($('#filter-all-exa').val().toUpperCase())){
+                                            return el;
+                                          }
+                                        }
+                                        else{
+                                          if ((el.raw_data.includes($('#filter-all-exa').val().toUpperCase())) 
+                                                && (el.UGM_STATUS == currentFilter)){
+                                            return el;
+                                          }
+                                        }
+                                        //return el.raw_data.includes($('#filter-all-exa').val().toUpperCase())
                                     });
         loadAllExamGrid();
+    }
+    else if((currentFilter != "ALL") && ($('#filter-all-exa').val().length < 2)){
+                filtereddataAllExamToJsonArray = dataAllExamToJsonArray.filter(function (el) {
+                          if (el.UGM_STATUS == currentFilter){
+                            return el;
+                          }
+                });
+                loadAllExamGrid();
+
     }
     else if(($('#filter-all-exa').val().length < 2)) {
       // We clear data
@@ -523,6 +545,48 @@ function goToConfirmExam(param){
   $("#mg-confirm-cancel-id-form").submit();
 }
 
+function updateFilterSTTStatus(activeId){
+  $('.stt-group').removeClass('active');  // Remove any existing active classes
+  $('#' + activeId).addClass('active'); // Add the class to the nth element
+  // Do the operation filter
+  //console.log('updateFilterSTTStatus: ' + activeId);
+  
+  switch(activeId) {
+    case 'stt-a':
+      // code block
+      // We will get all line and it is same as re-init
+      $('#filter-all-exa').val('');
+      clearDataAllExam();
+      break;
+    case 'stt-f':
+      // code block
+      filterDataAllExam();
+      break;
+    case 'stt-e':
+      // code block
+      filterDataAllExam();
+      break;
+    default:
+      // code block
+      console.log('ERR829STT');
+  }
+}
+
+function retrieveWhichFilterIsActive(){
+    if(document.getElementById("stt-a").classList.contains("active")){
+      return 'ALL';
+    }
+    else if(document.getElementById("stt-f").classList.contains("active")){
+      return 'FED';
+    }
+    else if(document.getElementById("stt-e").classList.contains("active")){
+      return 'END';
+    }
+    else{
+      return 'ALL';
+    }
+}
+
 $(document).ready(function() {
     console.log('We are in Gra Manager');
 
@@ -544,6 +608,10 @@ $(document).ready(function() {
         showHeaderAlertMsg("La revue des notes de l'examen #" + reviewMasterId + " a été terminée avec succès.", 'Y');
         setTimeout(closeAlertMsg, 7000);
       }
+
+      $( ".stt-group" ).click(function() {
+        updateFilterSTTStatus(this.id);
+      });
     }
     else if($('#mg-graph-identifier').text() == 'mis-stu'){
       initAllMissingStuGradGrid();
