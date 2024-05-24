@@ -70,7 +70,11 @@
     </div>
     <div class="col-1">
         {% if (exam_status == 'END') %}
-            <button onclick="goToRollback({{ master_id }})" class="btn btn-dark"><i class="icon-gavel"></i>&nbsp;Modifier</button>
+            {% if (last_agent_id_same_as_current == 'Y') %}
+                <button onclick="goToRollback({{ master_id }})" class="btn btn-dark edit-sel-off" disabled><i class="icon-gavel"></i>&nbsp;Modifier</button>
+            {% else %}
+                <button onclick="goToRollback({{ master_id }})" class="btn btn-dark"><i class="icon-gavel"></i>&nbsp;Modifier</button>
+            {% endif %}
         {% else %}
             {# Display nothing #}
         {% endif %}
