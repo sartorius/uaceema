@@ -334,10 +334,16 @@ class ProfileController extends AbstractController{
             $param_does_gra_public = $result_does_gra_public[0]['par_code'];
             $result_query_all_grade = array();
 
+            $param_display_temp_gra = 'N';
             if($param_does_gra_module == 'Y'){
               $query_all_grade = " SELECT * FROM v_stu_grade WHERE UGG_STU_ID=" . $result[0]['ID'] . "; ";
               $result_query_all_grade = $dbconnectioninst->query($query_all_grade)->fetchAll(PDO::FETCH_ASSOC);
               $logger->debug("Show result_query_all_grade: " . count($result_query_all_grade));
+
+              $query_get_display_temp_gra_param = " SELECT display_temp_grade AS DISP_PARAM FROM uac_class_cohort_param WHERE id =  " . $result[0]['COHORT_ID'] . " ; ";
+              $result_query_get_display_temp_gra_param = $dbconnectioninst->query($query_get_display_temp_gra_param)->fetchAll(PDO::FETCH_ASSOC);
+              $logger->debug("Show result_query_get_display_temp_gra_param: " . count($result_query_get_display_temp_gra_param));
+              $param_display_temp_gra = $result_query_get_display_temp_gra_param[0]['DISP_PARAM'];
             }
 
 
@@ -398,6 +404,7 @@ class ProfileController extends AbstractController{
                                       "param_frais_mvola"=>$param_frais_mvola,
                                       "result_last_mvola"=>$result_last_mvola,
                                       "is_teacher"=>$is_teacher,
+                                      "param_display_temp_gra"=>$param_display_temp_gra,
                                       "result_query_get_all_classes"=>$result_query_get_all_classes,
                                       "result_query_get_all_mention"=>$result_query_get_all_mention,
                                       "result_query_stat_ass"=>$result_query_stat_ass,

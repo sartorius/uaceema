@@ -2283,12 +2283,19 @@ $(document).ready(function() {
       if(paramDispGraAdmin == 'Y'){
           loadGraGrid();
           initGraShortCut();
+          if(CAN_WE_DISPLAY_TEMP_GRA == 'N'){
+              $('#jury-info').html("Les notes ne sont plus visibles sur le dashboard étudiant parce que le jury a fini de délibérer.<br>Les résultats finaux sont affichés en papier à l'université.")
+          }
       }
       else if(paramDispGraPublic == 'Y'){
           initGraShortCut();
           if(doesPaymentLateExist()){
             // Payment late exists
             $('#jsGridStuGrade').html("<div id='gra-late-warn'>Veuillez régler vos frais de scolarité en retard pour afficher votre tableau de notes&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span></div>");
+          }
+          else if(CAN_WE_DISPLAY_TEMP_GRA == 'N'){
+            //In that case the jury has already given the grade and are published at school
+            $('#jsGridStuGrade').html("<div id='gra-late-warn'>Le jury a fini de délibérer et vos résultats définitifs de l'année scolaire sont affichés en papier à l'université.<br>Ils ne sont plus disponibles sur votre dashboard.&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span></div>");
           }
           else{
             // There is no payment late so we can show grades

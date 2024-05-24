@@ -37,3 +37,5 @@ SELECT 15, 50;
 
 INSERT INTO uac_xref_cohort_fsc (fsc_id, cohort_id)
 SELECT 16, 50;
+
+INSERT IGNORE INTO uac_class_cohort_param (id) VALUE (16);

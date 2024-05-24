@@ -349,12 +349,13 @@ select * from uac_cohort uc
 
 DROP VIEW IF EXISTS v_class_cohort;
 CREATE VIEW v_class_cohort AS
-SELECT 	uc.id AS id, urm.title AS mention, urm.par_code AS mention_code, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 10)) AS short_classe
+SELECT 	uc.id AS id, urm.title AS mention, urm.par_code AS mention_code, uc.niveau AS niveau, urp.title AS parcours, urg.title AS groupe, uccp.display_temp_grade AS param_diplay_temp_gra, CONCAT(uc.niveau, '/', SUBSTRING(urm.title, 1, 5), '/', SUBSTRING(urp.title, 1, 5), '/', SUBSTRING(urg.title, 1, 10)) AS short_classe
                         FROM uac_cohort uc
               				  JOIN uac_ref_mention urm ON urm.par_code = uc.mention
               					JOIN uac_ref_niveau urn ON urn.par_code = uc.niveau
               					JOIN uac_ref_parcours urp ON urp.id = uc.parcours_id
-              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id;
+              					JOIN uac_ref_groupe urg ON urg.id = uc.groupe_id
+                        JOIN uac_class_cohort_param uccp ON uccp.id = uc.id;
 
 
 DROP TABLE IF EXISTS tech_number;
@@ -384,7 +385,13 @@ CREATE TABLE IF NOT EXISTS `ACEA`.`uac_ref_ephemeride` (
 
 INSERT INTO uac_ref_ephemeride (eph_day, eph_year, description, day_366, category) VALUES (NULL, NULL, NULL, NULL);
 
-
+DROP TABLE IF EXISTS uac_class_cohort_param;
+CREATE TABLE IF NOT EXISTS `ACEA`.`uac_class_cohort_param` (
+  `id` INT UNSIGNED NOT NULL,
+  `display_temp_grade` CHAR(1) NOT NULL DEFAULT 'Y' COMMENT 'We display temp grade until jury did not deliberate yet',
+  `last_update` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`));
 
 ALTER TABLE mdl_user
 ADD COLUMN `still_alive` CHAR(1) NOT NULL DEFAULT 'Y'
