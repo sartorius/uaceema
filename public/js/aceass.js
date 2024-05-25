@@ -2284,7 +2284,7 @@ $(document).ready(function() {
           loadGraGrid();
           initGraShortCut();
           if(CAN_WE_DISPLAY_TEMP_GRA == 'N'){
-              $('#jury-info').html("Les notes ne sont plus visibles sur le dashboard étudiant parce que le jury a fini de délibérer.<br>Les résultats finaux sont affichés en papier à l'université.");
+              $('#jury-info').html("Vous continuez à les voir en tant qu'administrateur mais les notes ne sont plus visibles sur le dashboard étudiant parce que le jury a fini de délibérer.<br>Les résultats finaux sont affichés en papier à l'université&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span>");
           }
       }
       else if(paramDispGraPublic == 'Y'){
@@ -2295,7 +2295,7 @@ $(document).ready(function() {
           }
           else if(CAN_WE_DISPLAY_TEMP_GRA == 'N'){
             //In that case the jury has already given the grade and are published at school
-            $('#jsGridStuGrade').html("<div id='gra-late-warn'>Le jury a fini de délibérer et vos résultats définitifs de l'année scolaire sont affichés en papier à l'université.<br>Ils ne sont plus disponibles sur votre dashboard.&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span></div>");
+            $('#jsGridStuGrade').html("<div id='gra-late-warn'>Le jury a fini de délibérer et vos résultats définitifs de l'année scolaire sont affichés en papier à l'université.<br>Les notes temporaires des éléments constitutifs ne sont plus disponibles sur votre dashboard&nbsp;<span class='icon-exclamation-triangle nav-icon-fa-sm nav-text'></span></div>");
           }
           else{
             // There is no payment late so we can show grades
