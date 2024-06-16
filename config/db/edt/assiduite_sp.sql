@@ -292,12 +292,12 @@ BEGIN
 
     -- We need to loop all past days
     SELECT COUNT(1) INTO count_past_todo
-      FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+      FROM uac_working_flow uwf WHERE uwf.status = 'QUE' AND flow_code = 'QUEASSI';
 
     WHILE i < count_past_todo DO
       -- INITIALIZATION
       SELECT MAX(id) INTO inv_uwf_id
-          FROM uac_working_flow uwf WHERE uwf.status = 'QUE';
+          FROM uac_working_flow uwf WHERE uwf.status = 'QUE' AND flow_code = 'QUEASSI';
 
       SELECT working_date INTO inv_date
           FROM uac_working_flow uwf WHERE id = inv_uwf_id;

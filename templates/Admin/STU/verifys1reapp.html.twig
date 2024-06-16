@@ -1,0 +1,191 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">v-reapp</div>
+<script>
+  
+    const UNCHANGED_VALUE = 'NA';
+    const CUR_YEAR = "{{ cur_year }}";
+    const PREV_YEAR = "{{ prev_year }}";
+
+    const FOUND_USERNAME = "{{ found_username }}";
+    const LOCALE_NAME = "{{ result_get_token }}";
+    //23ee5b542ef8532abccdd1eb093d4c98
+
+    const DATA_GET_ALL_MENTION_ToJsonArray = JSON.parse('{{ result_query_get_all_mention | json_encode | raw }}');
+    const DATA_GET_ALL_CLASS_ToJsonArray = JSON.parse('{{ result_query_get_all_classes | json_encode | raw }}');
+
+    let tempClasseID = 0;
+    let invModifyLivingConfiguration = "{{ found_living_configuration }}";
+
+    let tempMentionCode = UNCHANGED_VALUE;
+    let tempClasse = UNCHANGED_VALUE;
+
+    let invLastname = "";
+    let invFirstname = "";
+    let invOthfirstname = "";
+    let invMatricule = "";
+    let invTelstu = "";
+
+    let invMakeUpCode = "O";
+</script>
+
+
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Re-inscription&nbsp;{{ cur_year }}</h1>
+    <hr>
+    {% if found_username == "na" %}
+          <div class="mgs-note-nopad">
+              Nous n'avons pas réussi à vous identifier avec <strong>votre username [{{ param_username }}]</strong>, ni avec <strong>votre email [{{ param_email }}]</strong>.<br>
+              Pour rappel, ça doit être l'email que vous avez utilisé pour vous inscrire l'an dernier.
+              <br>
+              Si vous avez bien été inscrit à l'Université ACEEM l'an dernier&nbsp;{{ prev_year }}, nous vous invitons à re-essayer. Sinon écrivez nous à <span class="recap-blue">admin@uaceem.com</span> avec en sujet de l'email [Problème re-inscription].
+              <br><br>
+              <div class="center">
+                  <a href="/reapplication2738193929" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Essayer encore une fois&nbsp;&nbsp;</a>
+              </div>
+          </div>
+          <br>
+          <hr>
+          <br>
+          {% include 'Admin/STU/_blockgoogleform.html.twig' %}
+    {% else %}
+          <div id="found-form" class="mgs-note-nopad">
+              Nous vous avons retrouvé <strong>votre username [{{ found_username }}]</strong> !<br>
+              Bon retour parmi nous ! Nous sommes heureux de vous revoir.<br><br><br>
+              Voici les informations que nous avons retrouvé. <strong>Si elles ne sont pas bonnes ou ne sont plus à jour, nous vous invitons à les modifier directement.</strong><br>
+
+              <br>
+                    <div id='pro-details-stu'>
+                        <div id="email-disp-err-msg" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <div class="edt-status-gray nrm-txt">Email actuel*</div>
+                        <div class="mgs-note-nopad">Vous devez avoir accès à votre email, nous allons envoyer dessus les communications et votre lien dashboard</div>
+                        <textarea id="pf-email" class="prof-note-input textarea-reapp" placeholder="Entrez votre email actuel" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_email }}</textarea>
+                        
+                        <div id="lastname-disp-err-msg" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <div class="edt-status-gray nrm-txt">Nom de famille*</div>
+                        <textarea id="pf-lastname" class="prof-note-input textarea-reapp" placeholder="Entrez le nom de famille" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_lastname }}</textarea>
+                        
+                        <div id="firstname-disp-err-msg" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <i class="edt-status-gray nrm-txt">Premier prénom*</i><br>
+                        <textarea id="pf-firstname" class="prof-note-input textarea-reapp" placeholder="Entrez le premier prénom" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_firstname }}</textarea>
+
+                        
+                        <i class="edt-status-light nrm-txt">Autres prénoms</i><br>
+                        <textarea id="pf-othfirstname" class="prof-note-input textarea-reapp" placeholder="Aucun" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_otherfirstname }}</textarea>
+                        
+                        <div id="matricule-disp-err-msg" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <i class="edt-status-gray nrm-txt">Matricule pour&nbsp;{{ cur_year }}*</i><br>
+                        <textarea id="pf-matricule" class="prof-note-input textarea-reapp" placeholder="Entrez le matricule" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_matricule }}</textarea>
+
+                        <div id="telstu-disp-err-msg" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <i class="edt-status-gray nrm-txt">Téléphone*</i><br>
+                        <textarea id="pf-telstu" class="prof-note-input textarea-reapp" placeholder="Entrez le téléphone de l'étudiant" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='manageSaveChangeReappBtn()'>{{ found_phone1 }}</textarea>
+                        
+                        <hr>
+                        <div class="menu-dropdown">
+                            <div id='modal-crs-status'>
+
+                              <div class="mgs-note-nopad">
+                                <span class="icon-exclamation-triangle nav-text"></span>&nbsp;Indiquez nous clairement si vous vivez seul(e). Pour des raisons de sécurité, nous accordons plus d'attention aux étudiants qui sont seuls chez eux.
+                              </div>
+                              <br>
+                              <i class="edt-status-gray nrm-txt">Vous vivez</i><br>
+                              <div id="crs-status" class="btn-group" role="group" aria-label="Status">
+                                <button id="stt-f" type="button" value="F" class="btn btn-outline-secondary stt-group {% if found_living_configuration == "F" %}active{% endif %}">En famille</button>
+                                <button id="stt-c" type="button" value="C" class="btn btn-outline-secondary stt-group {% if found_living_configuration == "C" %}active{% endif %}">En colocation</button>
+                                <button id="stt-a" type="button" value="A" class="btn btn-outline-secondary stt-group {% if found_living_configuration == "A" %}active{% endif %}">Seul(e)</button>
+                              </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <br>
+                        <div>
+                            <span class="edt-status-light nrm-txt">Votre classe de l'année scolaire dernière&nbsp;{{ prev_year }} était :</span><br>
+                            <span class="edt-status-light nrm-txt">{{ found_vcc_short_classe }}</span>
+                        </div>
+                        <hr>
+                        <div id="disp-err-msg-1" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <i class="edt-status-gray nrm-txt">Votre classe pour l'année scolaire&nbsp;{{ cur_year }}</i><br>
+                        <div class="pro-class-sel menu-dropdown">
+                            
+                            <div class="dropdown btn-ace-menu">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i id="drp-select">Mention</i>
+                                </button>
+                                <div id="dpmention-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pro-class-sel menu-dropdown">
+
+                            <div class="dropdown btn-ace-menu">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownClasse" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i id="selected-class">Classe</i>
+                                </button>
+                                <div id="dpclasse-opt"  class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <a class="dropdown-item" >Sélectionnez une mention</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="disp-err-msg-makeup" class="mgs-note-nopad-err">
+                          &nbsp;
+                        </div>
+                        <hr>
+                        <br>
+                        <i class="edt-status-gray nrm-txt">Passez-vous complètement en année supérieure ?</i><br>
+                        <div class="pro-class-sel menu-dropdown">
+                            
+                            <div class="dropdown btn-ace-menu">
+                                <button class="btn btn-outline-dark dropdown-toggle" type="button" id="dropdownMention" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i id="drp-select-makeup">Oui, j'ai validé tous mes crédits</i>
+                                </button>
+                                <div id="dpmakeup-opt" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <a class="dropdown-item" onclick="selectMakeUpReapp('O', 'Oui, j\'ai validé tous mes crédits')">Oui, j'ai validé tous mes crédits</a>
+                                      <a class="dropdown-item" onclick="selectMakeUpReapp('N', 'Oui mais il me reste des crédits non validés')">Oui mais il me reste des crédits non validés</a>
+                                      <a class="dropdown-item" onclick="selectMakeUpReapp('R', 'Non, je redouble')">Non, je redouble</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br><br><br>
+                    <div id="profile-save-btn">
+                      <div class="mgs-note-nopad">
+                        <span class="icon-exclamation-triangle"></span>&nbsp;Avant de <strong>confirmer votre re-inscription</strong> vérifiez bien toutes vos informations, ces données seront utilisées pour <strong>vos frais de scolarité, vos notes et votre diplôme</strong>. Il ne doit pas y avoir d'erreur. Vous êtes responsable de ces déclarations.<br><br>
+                      </div>
+                      <button type="button" onclick="gotoSubmitReappEnd()" class="btn btn-default btn-lg btn-block">Je confirme</button>
+                    </div>
+          </div>
+          <div id="not-found-form" class="mgs-note-nopad">
+              Désolé mais une erreur vient de se produire. Peut-être avait vous cliqué sur la flèche retour (ou "Précédent") sur votre navigateur ? Nous vous invitons à re-essayer. Sinon écrivez nous à <span class="recap-blue">admin@uaceem.com</span> avec en sujet de l'email [Problème re-inscription].
+              <br><br>
+              <div class="center">
+                  <a href="/reapplication2738193929" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Essayer encore une fois&nbsp;&nbsp;</a>
+              </div>
+          </div>
+    {% endif %}
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'Admin/STU/_gotosubmitreapplyend.html.twig' %}
+{% include 'RawTemplate/SPE/_footer.w.reapplication.html.twig' %}

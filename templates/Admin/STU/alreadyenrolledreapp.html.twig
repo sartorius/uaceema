@@ -1,0 +1,27 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">alrd-reapp</div>
+
+
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Re-inscription&nbsp;{{ cur_year }}</h1>
+    <hr>
+        <div class="mgs-note-nopad">
+            Le username <strong>[{{ param_username }}]</strong> et/ou email <strong>[{{ param_email }}]</strong> que vous avez indiqué est déjà inscrit pour l'année&nbsp;{{ cur_year }}. Un email contenant votre lien vers votre dashboard doit vous arriver sous 24h.<br>
+            Si vous pensez qu'il s'agit d'une erreur écrivez-nous à <span class="recap-blue">admin@uaceem.com</span> avec en sujet de l'email [Problème re-inscription].<br>
+            Sinon vous pouvez :
+            <br><br>
+            <div class="center">
+                <a href="/reapplication2738193929" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Essayer encore une fois&nbsp;&nbsp;</a>
+            </div>
+        </div>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footer.w.reapplication.html.twig' %}

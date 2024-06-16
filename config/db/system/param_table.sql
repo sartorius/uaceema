@@ -97,6 +97,17 @@ INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES (
 INSERT IGNORE INTO uac_param (key_code, description, par_int, par_code) VALUES ('GRAJPGL', 'Taille limite fichier JPG en ko', 300, NULL);
 
 
+
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('CYEARTC', 'Current year technical', '2024');
+
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('PYEARTC', 'Previous year technical', '2023');
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('PYEARAA', 'Previous year verbose', '2022-23');
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('APPLNKL', 'Google app link form licence new', 'https://forms.gle/4HyFVNyeEm1ZkPkF8');
+INSERT IGNORE INTO uac_param (key_code, description, par_value) VALUES ('APPLNKM', 'Google app link form master new', 'https://forms.gle/bC2FyQCWMZtUL9GPA');
+
+
+
+
 DROP TABLE IF EXISTS uac_working_flow;
 CREATE TABLE IF NOT EXISTS `ACEA`.`uac_working_flow` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,

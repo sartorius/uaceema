@@ -1396,6 +1396,7 @@ textarea[name=inputRef] {
   font-size: 11px;
 }
 
+/* Big screen come after */
 @media (min-width:414px){
   .edt-cell-in{
     font-size: 9px;
@@ -1443,6 +1444,7 @@ textarea[name=inputRef] {
   padding-left: 5px;
 }
 
+/* Big screen come after */
 @media (min-width:414px){
   .edt-cell-dt{
     text-align: center;
@@ -1634,6 +1636,7 @@ textarea[name=inputRef] {
 #past-msg-edt,
 #profile-save-btn,
 #just-save-btn,
+#not-found-form,
 #exist-msg-edt{
   display: none;
 }
@@ -2942,12 +2945,24 @@ img.part-img{
   margin-top: 15px;
   margin-bottom: 20px;
 }
+
 .prof-note-input{
-  padding: 10px;
-  font-size: 20px;
+  padding: 7px;
+  font-size: 16px;
   color:rgb(106, 76, 131);
   margin-bottom: 20px;
 }
+
+/* Big screen come after ! */
+@media (min-width:414px){
+  .prof-note-input{
+    padding: 10px;
+    font-size: 20px;
+    color:rgb(106, 76, 131);
+    margin-bottom: 20px;
+  }
+}
+
 .split-mod-prof{
   margin-right: 3.4em;
 }
@@ -3069,4 +3084,16 @@ img.part-img{
 }
 .desc-sm{
   font-size: 0.8em;
+}
+
+.reapp-blk{
+  padding-top: 50px;
+}
+
+.textarea-reapp{
+  width: 100%;
+}
+
+.btn-reapp{
+  margin-top: 20px;
 }

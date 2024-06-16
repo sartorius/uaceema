@@ -30,7 +30,7 @@ SELECT 2023, username, roleid, secret, cohort_id, last_update, create_date FROM 
 INSERT INTO histo_uac_user_info (school_year, id, living_configuration, assiduite_info, agent_id, last_update, create_date)
 SELECT 2023, id, living_configuration, assiduite_info, agent_id, last_update, create_date FROM uac_user_info uui WHERE uui.id IN (
   select mu.id from uac_showuser uas JOIN mdl_user mu on mu.username = uas.username JOIN v_class_cohort vcc ON vcc.id = uas.cohort_id AND vcc.niveau IN ('M1', 'M2')
-)
+);
 
 
 -- *****************************************************

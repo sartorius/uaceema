@@ -1,0 +1,70 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">e-reapp</div>
+<script>
+  
+    const UNCHANGED_VALUE = 'NA';
+
+    const PARAM_USERNAME = "{{ param_username }}";
+</script>
+
+
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Re-inscription&nbsp;{{ cur_year }}</h1>
+    <hr>
+    
+        <div class="mgs-note-nopad">
+            {% if is_already_enrolled == "Y" %}
+                <h2>Déjà inscrit</h2>
+                L'étudiant avec le <strong>username [{{ param_username }}]</strong> est déjà inscrit à l'Université ACEEM pour l'année&nbsp;{{ cur_year }}.<br>
+                Si vous venez de vous inscrire, vous allez recevoir un email sous 24h contenant votre lien vers votre dashboard.
+            {% else %}
+                {% if result_save_reapp == "KO" %}
+                        <h2>Erreur 176A</h2>
+                        <img src="{{ path('main') }}img/Error176A_500px.png" style="width:500px; opacity: 1;"
+                                        title="UACEEM Reinscription" alt="UACEEM Reinscription" class="uac-img-center error-img">
+                        Malheureusement, <strong>username [{{ param_username }}]</strong>, nous n'avons pas réussi à vous inscrire à l'Université ACEEM pour l'année&nbsp;{{ cur_year }} !<br>
+                        Contactez-nous à <span class="recap-blue">admin@uaceem.com</span> avec en sujet de l'email [Problème re-inscription 176A].<br>
+                        Sinon vous pouvez :
+                        <br><br>
+                        <div class="center">
+                            <a href="/reapplication2738193929" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Essayer encore une fois&nbsp;&nbsp;</a>
+                        </div>
+                {% elseif result_save_reapp == "DUP" %}
+                        <h2>Erreur doublon email</h2>
+                        <img src="{{ path('main') }}img/Error12DUP_500px.png" style="width:500px; opacity: 1;"
+                                        title="UACEEM Reinscription" alt="UACEEM Reinscription" class="uac-img-center error-img">
+                        Malheureusement, votre re-inscription a échoué. Cet email [<strong>{{ param_email }}</strong>], est déjà utilisé par un étudiant de l'Université ACEEM pour l'année&nbsp;{{ cur_year }} !<br>
+                        <br>
+                        Si vous pensez qu'il s'agit d'une erreur, contactez-nous à <span class="recap-blue">admin@uaceem.com</span> avec en sujet de l'email [Problème re-inscription email].<br>
+                        Sinon vous pouvez :
+                        <br><br>
+                        <div class="center">
+                            <a href="/reapplication2738193929" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Essayer encore une fois&nbsp;&nbsp;</a>
+                        </div>
+                {% else %}
+                        <h2>Validé !</h2>
+                        <img src="{{ path('main') }}img/successReapp.jpg" style="width:500px; opacity: 1;"
+                                        title="UACEEM Reinscription" alt="UACEEM Reinscription" class="uac-img-center error-img"><br><br><br>
+                        Bravo <strong>{{ param_username }}</strong> ! Vous êtes correctement inscrit(e) à l'Université ACEEM pour l'année&nbsp;{{ cur_year }} !<br>
+                        Vous allez recevoir un email sous 24h contenant votre lien vers votre dashboard.
+                {% endif %}
+            {% endif %}
+            <br>
+            En attendant, nous vous invitons à revenir sur l'accueil du site de l'Université ACEEM.
+            <br><br>
+            <div class="center">
+                <a href="/" class="btn btn-outline-dark btn-reapp btn-lg" role="button">&nbsp;&nbsp;Retour à l'accueil&nbsp;&nbsp;</a>
+            </div>
+        </div>
+        <br>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+
+{% include 'RawTemplate/SPE/_footer.w.reapplication.html.twig' %}

@@ -1,0 +1,68 @@
+{% include 'RawTemplate/_hearder.html.twig' %}
+<div id="mg-graph-identifier">f-reapp</div>
+<script>
+  
+    const CUR_YEAR = "{{ cur_year }}";
+    const PREV_YEAR = "{{ prev_year }}";
+    const LOCALE_NAME = "{{ result_get_token }}";
+    let invUsername = '';
+    let invEmail = '';
+</script>
+
+
+
+
+<div class="row">
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+  <div class="col-lg-6 mgs-mainblk-txt">
+    <h1>Re-inscription&nbsp;{{ cur_year }}</h1>
+    <hr>
+    <div class="mgs-note">
+        Bonjour, si vous êtes sur cette page, c'est que vous souhaitez vous inscrire à nouveau à l'Université ACEEM pour&nbsp;{{ cur_year }}&nbsp;et que vous remplissez la condition suivante :<br><br>
+        <ul>
+          <li>Vous êtiez déjà étudiant à l'Université ACEEM l'année scolaire dernière : &nbsp;{{ prev_year }}&nbsp;</li>
+        </ul>
+        {% include 'Admin/STU/_blockgoogleform.html.twig' %}
+    </div>
+    <br>
+    <hr>
+    <div class="mgs-note-nopad">
+        Si vous êtiez déjà étudiant l'an dernier alors vous êtes autorisé à vous inscrire. Remplissez l'une ou les deux informations suivantes :<br>
+    </div>
+
+    <div class="reapp-blk">
+        <div id="disp-err-msg" class="mgs-note-nopad-err">
+          &nbsp;
+        </div>
+        <i class="edt-status-gray nrm-txt">Username</i><br>
+        <textarea id="pf-username" class="prof-note-input textarea-reapp" placeholder="Entrez votre USERNAME" style="resize: none;"  name="w3review" rows="1" cols="29" onKeyUp='verifyUsernameOrEmail()'></textarea>
+        
+        <div class="edt-status-gray nrm-txt">Email</div>
+        <div class="mgs-note-nopad">
+            C'est l'email que vous avez utilisé pour vous inscrire l'an dernier même si vous n'avez plus accès.<br>
+        </div>
+        <textarea id="pf-email" class="prof-note-input textarea-reapp" placeholder="Entrez votre email" style="resize: none;"  name="w3review" rows="1" cols="67" onKeyUp='verifyUsernameOrEmail()'></textarea>
+        
+        
+    </div>
+  </div>
+  <div class="col-lg-3 mgs-mainblk-txt">
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-3">
+  </div>
+  <div class="col-lg-6">
+          <div id="profile-save-btn">
+            <button type="button" onclick="gotoStep1Reapp()" class="btn btn-default btn-lg btn-block">Continuer&nbsp;<i class="icon-arrow-circle-right nav-icon-fa nav-text"></i></button>
+          </div>
+  </div>
+  <div class="col-lg-3">
+  </div>
+</div>
+
+
+
+{% include 'Admin/STU/_gotoverifyreapps1.html.twig' %}
+{% include 'RawTemplate/SPE/_footer.w.reapplication.html.twig' %}

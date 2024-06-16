@@ -116,6 +116,15 @@ dashboardass:
 managerstu:
     path:       /managerstu
     controller: App\Controller\AdminSTUController::managerstu
+reapplication:
+    path:       /reapplication2738193929
+    controller: App\Controller\AdminSTUController::reapplication
+verifys1reapp:
+    path:       /verifys1reapp83928398982739827392837928328
+    controller: App\Controller\AdminSTUController::verifys1reapp
+submitreapp:
+    path:       /submitreapp09928398982739827938837928328
+    controller: App\Controller\AdminSTUController::submitreapp
 managertea:
     path:       /managertea
     controller: App\Controller\AdminTeacherController::managertea
