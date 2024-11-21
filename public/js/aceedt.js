@@ -1196,7 +1196,7 @@ $(document).ready(function() {
       }
       editMode = 'N';
       //Set Title
-      $('#ttl-note-input').val(dataLoadToJsonArray[0].master_title);
+      $('#ttl-note-input').val(removeNonASCII(dataLoadToJsonArray[0].master_title));
       switchTitleEdit(editMode);
       
     }

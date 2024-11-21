@@ -61,6 +61,10 @@ function removeAllQuotes(param){
   return param.replace(/"/g, '').replace(/'/g, '');
 }
 
+function removeNonASCII(param){
+  return param.replace(/[^\x20-\x7E]/g, "").replace(/"/g, '').replace(/'/g, '');
+}
+
 // Depreciated !!!
 // Use the renderAmount instead !
 function getAriaryValue(value){
